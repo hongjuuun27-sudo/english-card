@@ -11,6 +11,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>한 장 영어</title>
+<!-- 웹앱 설치용(같은 폴더에 manifest·아이콘·sw.js가 있을 때만 동작, 없어도 앱은 정상 동작) -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
   :root{
     color-scheme: dark;
@@ -289,36 +293,20 @@
   }
   .hint.gone{ opacity:0; max-height:0; margin-top:0; }
 
-  /* ---------- 표현 패널 ---------- */
-  .expr-wrap{
-    display:grid; grid-template-rows:0fr;
-    opacity:0; visibility:hidden;
-    transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, visibility 0s linear .4s;
+  /* ---------- 대사 속 핵심 표현 (밑줄, 누르면 예문·썰) ---------- */
+  .xp{
+    text-decoration:underline;
+    text-decoration-color:var(--accent);
+    text-decoration-thickness:2px;
+    text-underline-offset:4px;
+    border-radius:4px;
+    cursor:pointer;
+    transition:background-color .15s ease;
   }
-  .expr-clip{ overflow:hidden; min-height:0; }
-  .card.open .expr-wrap{
-    grid-template-rows:1fr; opacity:1; visibility:visible;
-    transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1), opacity .35s ease .05s, visibility 0s;
-  }
-  .expr{ padding-top:30px; }
-  .expr-label{
-    display:flex; justify-content:space-between; align-items:baseline;
-    font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint);
-    margin-bottom:6px;
-  }
-  .expr-label small{ font-size:12.5px; font-weight:400; letter-spacing:0; }
-  .expr-item{ padding:14px 0 16px; border-top:1px solid var(--line); }
-  .chip{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:8px 12px 8px 15px; border-radius:999px;
-    font-size:17px; font-weight:650; line-height:1.3;
-    color:var(--accent); background:var(--accent-soft);
-    border:1px solid var(--accent-line);
-    transition:transform .12s ease, background-color .2s ease;
-  }
-  .chip:active{ transform:scale(.96); }
-  .chip svg{ width:16px; height:16px; opacity:.8; flex:none; }
-  .expr-ko{ margin:10px 2px 0; font-size:17px; line-height:1.62; color:var(--text-2); }
+  .xp:active{ background:var(--accent-soft); }
+  .blank.shown .xp{ text-decoration-color:rgba(255,255,255,.75); }
+  .blank.shown .xp:active{ background:rgba(255,255,255,.14); }
+  .xp-ko{ margin:12px 0 4px; font-size:16.5px; line-height:1.65; color:var(--text-2); }
 
   /* ---------- 하단 버튼 ---------- */
   .bottom{
@@ -336,16 +324,15 @@
     transition:transform .12s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
   }
   .btn:active{ transform:scale(.98); }
-  .more{ flex:1; }
-  .more svg{ width:18px; height:18px; transition:transform .35s ease; }
-  .card.open .more svg{ transform:rotate(180deg); }
+  .restart{ flex:1; }
   .ko-btn{ flex:none; width:78px; font-size:16px; color:var(--muted); }
-  .play-all{ flex:none; width:58px; color:var(--accent); }
-  .play-all svg{ width:22px; height:22px; }
-  .play-all .i-stop{ display:none; }
-  .card.playing-all .play-all{ background:var(--accent-soft); border-color:var(--accent-line); }
-  .card.playing-all .play-all .i-play{ display:none; }
-  .card.playing-all .play-all .i-stop{ display:block; }
+  .pa-main{ flex:1; color:var(--accent); }
+  .pa-main svg{ width:20px; height:20px; }
+  .card.pa-playing .pa-main, .card.pa-paused .pa-main{ background:var(--accent-soft); border-color:var(--accent-line); }
+  .pa-stop{ flex:none; width:58px; color:var(--text); }
+  .pa-stop svg{ width:20px; height:20px; }
+  .pa-stop:disabled{ opacity:.35; cursor:default; }
+  .pa-stop:disabled:active{ transform:none; }
   .ko-btn[aria-pressed="true"]{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
   .swipe-hint{ font-size:12.5px; color:var(--faint); }
 
@@ -535,6 +522,42 @@
     border:1px solid var(--line);
   }
   .q-label{ font-size:12.5px; font-weight:700; letter-spacing:.06em; color:var(--accent); }
+  .q-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .q-change{
+    font-size:13.5px; font-weight:600; color:var(--accent);
+    padding:6px 10px; margin:-6px -8px -6px 0; border-radius:999px;
+  }
+  .q-change:active{ background:var(--accent-soft); }
+  .q-pick{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .q-pick[hidden]{ display:none; }
+  .q-opt{
+    display:block; width:100%; text-align:left;
+    padding:12px 14px; border-radius:14px;
+    background:var(--bg); border:1px solid var(--line);
+  }
+  .q-opt:active{ transform:scale(.99); }
+  .q-opt .o-en{ display:block; font-size:16px; font-weight:600; line-height:1.45; color:var(--text); }
+  .q-opt .o-ko{ display:block; margin-top:3px; font-size:13.5px; line-height:1.5; color:var(--muted); }
+  .q-opt .o-note{ display:block; margin-top:5px; font-size:12.5px; color:var(--faint); }
+  .q-opt[aria-pressed="true"]{ border-color:var(--accent); background:var(--accent-soft); }
+  .q-opt:disabled{ opacity:.45; cursor:default; }
+  .w-tabs{ display:flex; gap:8px; margin-top:18px; overflow-x:auto; scrollbar-width:none; }
+  .w-tabs::-webkit-scrollbar{ display:none; }
+  .w-tab{
+    flex:none; display:inline-flex; align-items:center; gap:6px;
+    height:38px; padding:0 15px; border-radius:999px;
+    font-size:15px; font-weight:600; color:var(--muted);
+    background:var(--bg-2); border:1px solid var(--line);
+  }
+  .w-tab[aria-selected="true"]{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .w-tab.add{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .w-tab .x{
+    display:grid; place-items:center; width:20px; height:20px; margin-right:-7px;
+    border-radius:50%; font-size:12px; line-height:1; background:rgba(0,0,0,.15);
+  }
+  .h-item + .h-item{ margin-top:18px; padding-top:16px; border-top:1px dashed var(--line); }
+  .h-num{ margin-bottom:6px; font-size:12px; font-weight:700; letter-spacing:.04em; color:var(--accent); }
+  .h-more{ flex:none; font-size:12.5px; color:var(--faint); }
   .q-en{ margin:8px 0 0; font-size:21px; line-height:1.4; font-weight:650; letter-spacing:-.01em; }
   .q-ko{ margin:8px 0 0; font-size:15px; line-height:1.55; color:var(--muted); }
   .w-label{ display:block; margin:26px 2px 8px; font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint); }
@@ -624,10 +647,16 @@
         <button class="gear" id="wGear" type="button" aria-label="글쓰기 설정"></button>
       </header>
 
+      <div class="w-tabs" id="wTabs" role="tablist" aria-label="오늘 쓴 글"></div>
+
       <div class="q-card">
-        <div class="q-label">오늘의 질문</div>
+        <div class="q-head">
+          <div class="q-label">오늘의 질문</div>
+          <button class="q-change" id="qChange" type="button" aria-expanded="false">다른 질문 고르기</button>
+        </div>
         <p class="q-en" id="qEn"></p>
         <p class="q-ko" id="qKo"></p>
+        <div class="q-pick" id="qPick" hidden></div>
       </div>
 
       <label class="w-label" for="wText">내 글</label>
@@ -1345,6 +1374,7 @@ const CARDS = [
       },
       {
         phrase: "stay in",
+        forms: ["stayed in"],
         ko: "'집에 있다, 안 나가다'라는 뜻이에요. 외출하지 않고 집에서 쉴 때 써요. 반대는 go out(놀러 나가다). 동료가 I just stayed in.이라고 하면 '그냥 집에 있었어'예요.",
         examples: [
           { en: "Let's just stay in and order pizza tonight.", ko: "오늘 밤엔 그냥 집에서 피자 시켜 먹자." },
@@ -1418,6 +1448,481 @@ const CARDS = [
         story: {
           en: "So I was on a flight to New York last month, and the woman next to me was from my tiny hometown. Turns out she went to the same elementary school and even had the same teacher. We kept saying, “Small world!” like twenty times. By the end of the flight, she'd invited me to her daughter's wedding.",
           ko: "지난달에 뉴욕 가는 비행기를 탔는데, 옆자리 아주머니가 우리 작은 고향 출신이었어. 알고 보니 같은 초등학교를 나왔고 담임 선생님까지 같았어. 우리 둘이 “세상 좁다!”를 한 스무 번은 했어. 비행 끝날 때쯤엔 아주머니가 딸 결혼식에 나를 초대하셨어."
+        }
+      }
+    ]
+  },
+  {
+    id: 13,
+    category: "카페·식당",
+    title: "인기 맛집에서 웨이팅하기",
+    situation: "주말 아침, 줄이 긴 브런치집에 왔어요. 기다려야 하는지 묻고 대기 명단에 이름을 올린 뒤, 바깥 자리를 부탁하고 싶어요.",
+    dialogue: [
+      { who: "staff", en: "Hi, welcome in! How many in your party?", ko: "안녕하세요, 어서 오세요! 몇 분이세요?" },
+      { who: "me", en: "Just two. Is there a wait right now?", ko: "두 명이요. 지금 기다려야 하나요?" },
+      { who: "staff", en: "Yeah, it's about thirty minutes. Want me to put you down?", ko: "네, 30분 정도요. 대기 명단에 올려 드릴까요?" },
+      { who: "me", en: "Sure, could you put us down under Kim?", ko: "네, 김으로 올려 주시겠어요?" },
+      { who: "staff", en: "Got it. We'll text you when your table's ready.", ko: "알겠습니다. 자리 준비되면 문자 드릴게요." },
+      { who: "me", en: "Great. Do you mind if we sit outside?", ko: "좋아요. 혹시 바깥 자리에 앉아도 될까요?" },
+      { who: "staff", en: "Not at all. I'll make a note of it.", ko: "물론이죠. 메모해 둘게요." },
+      { who: "me", en: "Perfect, thanks so much!", ko: "좋아요, 정말 감사해요!" }
+    ],
+    expressions: [
+      {
+        phrase: "put ~ down",
+        ko: "'(명단에) ~를 올려 두다, 적어 두다'라는 뜻이에요. 식당 대기 명단, 예약, 참가자 명단에 이름을 올릴 때 써요. Put me down for ~는 '~에 나도 끼워 줘/신청할게'예요. 비슷한 표현: sign ~ up",
+        examples: [
+          { en: "Can you put me down for two tickets?", ko: "저 티켓 두 장으로 올려 주실래요?" },
+          { en: "Put me down for the team dinner on Friday.", ko: "금요일 회식에 저도 참석으로 적어 주세요." },
+          { en: "I put us down for a table at seven.", ko: "7시에 우리 테이블 예약 걸어 놨어." },
+          { en: "Should I put you down as a maybe for the party?", ko: "파티에 너는 '아마도'로 적어 둘까?" },
+          { en: "The hotel put us down for a late checkout.", ko: "호텔에서 우리를 레이트 체크아웃으로 적어 줬어." }
+        ],
+        story: {
+          en: "So my friend asked who wanted to join her pottery class, and I said, “Put me down!” without really thinking. Turns out it's every Saturday at 8 a.m. for two months. I've made three very ugly bowls so far. My mom says she loves them, though.",
+          ko: "친구가 도자기 수업 같이 들을 사람 있냐길래 별생각 없이 “나 넣어 줘!” 했거든. 알고 보니 두 달 동안 매주 토요일 아침 8시더라. 지금까지 엄청 못생긴 그릇을 세 개 만들었어. 그래도 엄마는 너무 좋대."
+        }
+      },
+      {
+        phrase: "Do you mind if ~?",
+        ko: "'~해도 될까요?'라는 공손한 부탁이에요. 대답이 헷갈리는데, 괜찮다는 대답은 Not at all.(전혀요 = 괜찮아요)이나 Go ahead.예요. 비슷한 표현: Is it okay if ~? / Can I ~?",
+        examples: [
+          { en: "Do you mind if I sit here?", ko: "여기 앉아도 될까요?" },
+          { en: "Do you mind if I leave a little early today?", ko: "오늘 조금 일찍 가도 될까요?" },
+          { en: "Do you mind if I open the window?", ko: "창문 좀 열어도 될까요?" },
+          { en: "Do you mind if we split the check?", ko: "계산 나눠서 해도 될까요?" },
+          { en: "Do you mind if I try this on?", ko: "이거 입어 봐도 될까요?" }
+        ],
+        story: {
+          en: "On the subway yesterday, an older lady asked me, “Do you mind if I sit here?” and pointed at the seat my bag was on. I was so embarrassed that I grabbed my bag and almost spilled my coffee on her. She just laughed and offered me a piece of candy. Honestly, she was way cooler than me.",
+          ko: "어제 지하철에서 어떤 할머니가 내 가방이 놓인 자리를 가리키면서 “여기 앉아도 될까요?” 하셨어. 너무 민망해서 가방을 홱 치우다가 할머니한테 커피를 쏟을 뻔했지. 할머니는 그냥 웃으시면서 사탕 하나를 주셨어. 솔직히 나보다 훨씬 멋있으셨어."
+        }
+      },
+      {
+        phrase: "make a note of ~",
+        ko: "'~를 메모해 두다, 기억해 두다'라는 뜻이에요. 직원이 요청 사항을 적어 둘 때 자주 들려요. 나도 '기억해 둘게'라고 할 때 써요. 비슷한 표현: write ~ down / keep ~ in mind",
+        examples: [
+          { en: "I'll make a note of your allergy for the kitchen.", ko: "주방에 알레르기 있으시다고 메모해 둘게요." },
+          { en: "Let me make a note of that before I forget.", ko: "잊어버리기 전에 메모해 둘게요." },
+          { en: "Make a note of the hotel address just in case.", ko: "혹시 모르니까 호텔 주소 적어 둬." },
+          { en: "I'll make a note of your birthday this time, I promise!", ko: "이번엔 네 생일 꼭 적어 둘게, 약속해!" },
+          { en: "We'll make a note of your request for a quiet room.", ko: "조용한 방을 원하신다고 메모해 두겠습니다." }
+        ],
+        story: {
+          en: "My coworker told me she's allergic to peanuts, so I said I'd make a note of it for the team lunch. Then I totally forgot and ordered pad thai for everyone. Luckily, she noticed right away and just ate the spring rolls. Now there's a sticky note on my monitor that says “NO PEANUTS” in giant letters.",
+          ko: "동료가 땅콩 알레르기가 있다고 해서 팀 점심 때 기억해 두겠다고 했거든. 그러고는 완전 까먹고 다 같이 팟타이를 시켜 버렸어. 다행히 동료가 바로 알아채서 스프링롤만 먹었어. 이제 내 모니터엔 커다란 글씨로 “땅콩 금지”라고 쓴 포스트잇이 붙어 있어."
+        }
+      }
+    ]
+  },
+  {
+    id: 14,
+    category: "공항·숙소",
+    title: "공항 카운터에서 짐 부치기",
+    situation: "공항 항공사 카운터에서 체크인해요. 짐을 부치고 창가 자리를 부탁한 다음, 보조배터리를 기내에 들고 타도 되는지 물어보려고 해요.",
+    dialogue: [
+      { who: "staff", en: "Next, please! Where are you flying today?", ko: "다음 분이요! 오늘 어디로 가세요?" },
+      { who: "me", en: "To Chicago. Here's my passport.", ko: "시카고요. 여기 여권이요." },
+      { who: "staff", en: "Thanks. Are you checking any bags today?", ko: "감사합니다. 오늘 부치실 짐 있으세요?" },
+      { who: "me", en: "Just one. I'd like to check this suitcase.", ko: "하나요. 이 캐리어 부치고 싶어요." },
+      { who: "staff", en: "Sure. Go ahead and put it on the scale.", ko: "네. 저울 위에 올려 주세요." },
+      { who: "me", en: "Is it possible to get a window seat?", ko: "창가 자리로 받을 수 있을까요?" },
+      { who: "staff", en: "Let me see… Yep, I've got one in row 22.", ko: "잠시만요… 네, 22열에 하나 있네요." },
+      { who: "me", en: "Awesome. Can I bring this power bank on board?", ko: "좋아요. 이 보조배터리 기내에 가지고 타도 돼요?" },
+      { who: "staff", en: "Yes, but it has to stay in your carry-on.", ko: "네, 대신 기내용 가방에 넣어 두셔야 해요." }
+    ],
+    expressions: [
+      {
+        phrase: "I'd like to ~.",
+        ko: "'~하고 싶어요'를 공손하게 말하는 패턴이에요. I want to보다 훨씬 부드러워서 가게·호텔·공항에서 요청할 때 딱이에요. 비슷한 표현: Can I ~? / I was hoping to ~.",
+        examples: [
+          { en: "I'd like to check in, please.", ko: "체크인하고 싶어요." },
+          { en: "I'd like to make a reservation for Friday night.", ko: "금요일 저녁으로 예약하고 싶어요." },
+          { en: "I'd like to return this jacket.", ko: "이 재킷 반품하고 싶어요." },
+          { en: "I'd like to talk to you about the schedule.", ko: "일정에 대해 얘기 좀 하고 싶어요." },
+          { en: "I'd like to propose a toast to the happy couple!", ko: "행복한 두 사람을 위해 건배를 제안하고 싶어요!" }
+        ],
+        story: {
+          en: "Last week I called my bank to close an old account. The guy on the phone asked what he could do for me, and I said, “I'd like to close my account,” super politely. He spent twenty minutes trying to convince me to stay with free coffee mugs. I hung up with no account and, somehow, two mugs on the way.",
+          ko: "지난주에 오래된 계좌를 해지하려고 은행에 전화했거든. 상담원이 뭘 도와드릴까요 하길래 아주 공손하게 “계좌를 해지하고 싶어요.” 했지. 그 사람이 공짜 머그잔을 내세우면서 20분 동안 붙잡더라. 결국 계좌는 없어졌는데, 어쩌다 보니 머그잔 두 개가 배송 오는 중이야."
+        }
+      },
+      {
+        phrase: "Go ahead and ~.",
+        ko: "'(그럼) ~하세요'라는 뜻이에요. 직원이 다음 할 일을 안내할 때 정말 자주 쓰는 말이에요. 명령처럼 딱딱하지 않고 '편하게 ~하시면 돼요' 느낌이에요. 그냥 Go ahead.는 '그러세요/먼저 하세요'예요.",
+        examples: [
+          { en: "Go ahead and have a seat. The doctor will be right with you.", ko: "앉아 계세요. 의사 선생님이 곧 오실 거예요." },
+          { en: "Go ahead and start without me. I'm running late.", ko: "나 없이 먼저 시작해. 나 좀 늦어." },
+          { en: "Go ahead and order. I'm still deciding.", ko: "먼저 시켜. 난 아직 고르는 중이야." },
+          { en: "Go ahead and send me the draft when it's ready.", ko: "초안 준비되면 보내 주세요." },
+          { en: "Go ahead and tap your card on the reader.", ko: "카드 리더기에 카드 대 주세요." }
+        ],
+        story: {
+          en: "So I was getting my new ID photo taken, and the lady said, “Go ahead and look at the camera.” I wasn't ready at all, and the flash went off mid-blink. Now my ID photo looks like I just woke up from a hundred-year nap. I have to live with it for ten years.",
+          ko: "새 신분증 사진을 찍는데 직원이 “카메라 보세요.” 하더라. 나는 전혀 준비가 안 됐는데, 눈 깜빡이는 순간에 플래시가 터졌어. 이제 내 신분증 사진은 백 년 잠에서 막 깬 사람 같아. 이걸 10년 동안 들고 다녀야 해."
+        }
+      },
+      {
+        phrase: "Is it possible to ~?",
+        ko: "'~할 수 있을까요?'라는 뜻이에요. 안 될 수도 있는 부탁을 조심스럽게 꺼낼 때 좋아요. 자리 변경, 일정 조정, 예외 요청에 딱이에요. 비슷한 표현: Would it be possible to ~?(더 공손)",
+        examples: [
+          { en: "Is it possible to change my flight to Sunday?", ko: "비행기를 일요일로 바꿀 수 있을까요?" },
+          { en: "Is it possible to get the sauce on the side?", ko: "소스를 따로 주실 수 있을까요?" },
+          { en: "Is it possible to work from home on Friday?", ko: "금요일에 재택근무해도 될까요?" },
+          { en: "Is it possible to get a room with a view?", ko: "전망 좋은 방으로 받을 수 있을까요?" },
+          { en: "Is it possible to hold this for me until tomorrow?", ko: "이거 내일까지 맡아 주실 수 있을까요?" }
+        ],
+        story: {
+          en: "At my cousin's wedding, the photographer asked if we had any special requests. My grandma raised her hand and said, “Is it possible to make me look twenty years younger?” Everyone lost it, including the photographer. The photos came out great, though, and she looks amazing in all of them.",
+          ko: "사촌 결혼식에서 사진작가가 따로 원하는 거 있냐고 물어봤거든. 우리 할머니가 손을 번쩍 들고 “저 스무 살 어려 보이게 해 줄 수 있어요?” 하시는 거야. 사진작가까지 다 같이 빵 터졌어. 그래도 사진은 진짜 잘 나왔고, 할머니는 모든 사진에서 너무 멋있으셔."
+        }
+      },
+      {
+        phrase: "Can I bring ~?",
+        ko: "'~ 가져가도/데려가도 돼요?'라는 뜻이에요. 기내 반입, 파티에 친구 데려가기, 음식 반입 등을 물을 때 써요. on board(기내에), to the party(파티에)처럼 뒤에 장소를 붙여요. 비슷한 표현: Am I allowed to bring ~?",
+        examples: [
+          { en: "Can I bring a friend to the party?", ko: "파티에 친구 데려가도 돼?" },
+          { en: "Can I bring my own wine to this restaurant?", ko: "이 식당에 와인 가져가도 돼요?" },
+          { en: "Can I bring my laptop to the interview?", ko: "면접에 노트북 가져가도 될까요?" },
+          { en: "Can I bring this water bottle through security?", ko: "이 물병 가지고 보안 검색대 통과해도 돼요?" },
+          { en: "Can I bring my dog inside the store?", ko: "가게 안에 강아지 데리고 들어가도 돼요?" }
+        ],
+        story: {
+          en: "My friend invited me to her birthday dinner, so I texted her, “Can I bring my roommate?” She said sure, but then my roommate showed up with her boyfriend, and he brought his brother. By the end of the night, there were more of my people at the table than hers. She still hasn't let me forget it.",
+          ko: "친구가 생일 저녁에 초대해서 “룸메이트 데려가도 돼?” 하고 문자했거든. 괜찮다길래 갔는데, 룸메이트가 남자친구를 데려오고, 그 남자친구는 또 자기 형을 데려왔어. 밤이 끝날 즈음엔 테이블에 친구 쪽 사람보다 내 쪽 사람이 더 많았어. 친구는 아직도 그 얘기를 해."
+        }
+      }
+    ]
+  },
+  {
+    id: 15,
+    category: "이동·쇼핑",
+    title: "버스 타고 목적지 확인하기",
+    situation: "처음 가는 도시에서 버스를 타요. 이 버스가 미술관에 가는지 확인하고, 어디서 내려야 하는지 기사님께 알려 달라고 하고 싶어요.",
+    dialogue: [
+      { who: "me", en: "Hi, does this bus go to the art museum?", ko: "안녕하세요, 이 버스 미술관 가요?" },
+      { who: "driver", en: "Yep, hop on. It's about six stops from here.", ko: "네, 타세요. 여기서 여섯 정거장쯤이에요." },
+      { who: "me", en: "Great. Can I pay with my card?", ko: "좋아요. 카드로 내도 돼요?" },
+      { who: "driver", en: "Sure, just tap it right there.", ko: "네, 저기에 대시면 돼요." },
+      { who: "me", en: "Could you tell me when to get off?", ko: "어디서 내려야 하는지 알려 주실 수 있어요?" },
+      { who: "driver", en: "No problem. I'll give you a heads-up.", ko: "그럼요. 미리 말씀드릴게요." },
+      { who: "driver", en: "Okay, this is you! The museum's right across the street.", ko: "자, 여기서 내리세요! 미술관은 길 바로 건너편이에요." },
+      { who: "me", en: "Thanks so much. Have a good one!", ko: "정말 감사해요. 좋은 하루 보내세요!" }
+    ],
+    expressions: [
+      {
+        phrase: "Does this ~ go to ~?",
+        ko: "'이 ~ ~에 가요?'라는 뜻이에요. 버스, 지하철, 기차가 목적지에 가는지 확인할 때 쓰는 패턴이에요. bus, train, shuttle만 바꿔 끼우면 돼요. 비슷한 표현: Is this the right bus for ~?",
+        examples: [
+          { en: "Does this train go to Brooklyn?", ko: "이 지하철 브루클린 가요?" },
+          { en: "Does this shuttle go to the airport?", ko: "이 셔틀 공항 가요?" },
+          { en: "Does this road go to the beach?", ko: "이 길로 가면 해변 나와요?" },
+          { en: "Does this elevator go to the rooftop bar?", ko: "이 엘리베이터 루프톱 바까지 가요?" },
+          { en: "Does this hallway go to the conference rooms?", ko: "이 복도로 가면 회의실 나와요?" }
+        ],
+        story: {
+          en: "Last summer in Rome, I jumped on a bus and asked the driver, “Does this bus go to the Colosseum?” He nodded, so I sat down and relaxed. Forty minutes later, I was somewhere in the countryside surrounded by sheep. Turns out he just didn't speak English and was being polite.",
+          ko: "작년 여름에 로마에서 버스에 올라타면서 기사님께 “이 버스 콜로세움 가요?” 하고 물었거든. 고개를 끄덕이시길래 편하게 앉아 있었지. 40분 뒤에 나는 양들에 둘러싸인 시골 어딘가에 있었어. 알고 보니 기사님이 영어를 못 하셔서 그냥 예의상 끄덕이신 거였어."
+        }
+      },
+      {
+        phrase: "hop on",
+        forms: ["hopped on"],
+        ko: "'(버스·차·자전거에) 올라타다'라는 뜻이에요. get on보다 가볍고 캐주얼한 느낌이에요. 반대는 hop off(내리다). '참여하다'라는 뜻으로 hop on a call(통화에 들어오다)처럼도 써요.",
+        examples: [
+          { en: "Hop on, I'll give you a ride home.", ko: "타, 집까지 태워 줄게." },
+          { en: "Let's hop on the ferry to the island.", ko: "섬 가는 페리 타자." },
+          { en: "Can you hop on a quick call at three?", ko: "3시에 잠깐 통화 들어올 수 있어요?" },
+          { en: "Just hop on the next train. It's faster.", ko: "그냥 다음 열차 타. 그게 더 빨라." },
+          { en: "You can hop on one of those city bikes right outside.", ko: "바로 밖에 있는 공공 자전거 타고 가면 돼요." }
+        ],
+        story: {
+          en: "So I was running late for a job interview yesterday, and a bus was just pulling away. The driver saw me sprinting, stopped, and yelled, “Hop on, hurry up!” I made it to the interview with two minutes to spare. If I get the job, I'm sending that driver a thank-you card.",
+          ko: "어제 면접에 늦어서 뛰어가는데 버스가 막 출발하고 있었거든. 기사님이 내가 전력 질주하는 걸 보고 멈추더니 “타요, 빨리!” 하고 소리치셨어. 덕분에 면접에 2분 남기고 도착했어. 합격하면 그 기사님께 감사 카드 보낼 거야."
+        }
+      },
+      {
+        phrase: "get off",
+        ko: "'(버스·지하철·비행기에서) 내리다'라는 뜻이에요. 어디서 내리는지 물을 때 Where should I get off?를 꼭 기억하세요. 반대는 get on(타다). get off work(퇴근하다)도 자주 써요.",
+        examples: [
+          { en: "Where should I get off for Central Park?", ko: "센트럴파크 가려면 어디서 내려야 해요?" },
+          { en: "What time do you get off work today?", ko: "오늘 몇 시에 퇴근해?" },
+          { en: "We need to get off at the next stop.", ko: "우리 다음 정거장에서 내려야 해." },
+          { en: "Please stay seated until it's time to get off the plane.", ko: "비행기에서 내릴 때까지 자리에 앉아 계세요." },
+          { en: "Let's get off here and walk the rest of the way.", ko: "여기서 내려서 나머지는 걸어가자." }
+        ],
+        story: {
+          en: "I fell asleep on the subway after a long day at work and completely forgot to get off. When I woke up, I was at the very last stop, and it was almost midnight. I had to take a forty-dollar taxi all the way back. Most expensive nap of my life.",
+          ko: "회사에서 긴 하루를 보내고 지하철에서 잠들어서 내리는 걸 완전히 까먹었어. 눈을 떠 보니 종점이었고, 거의 자정이었어. 결국 40달러짜리 택시를 타고 돌아와야 했지. 내 인생에서 제일 비싼 낮잠이었어."
+        }
+      },
+      {
+        phrase: "give ~ a heads-up",
+        ko: "'~에게 미리 알려 주다, 귀띔해 주다'라는 뜻이에요. 나중에 놀라지 않게 미리 말해 줄 때 써요. Thanks for the heads-up!(미리 알려 줘서 고마워!)도 정말 자주 들려요.",
+        examples: [
+          { en: "Can you give me a heads-up before the boss comes in?", ko: "팀장님 오시기 전에 미리 좀 알려 줄래?" },
+          { en: "I'll give you a heads-up when the food's almost ready.", ko: "음식 거의 다 되면 미리 알려 줄게." },
+          { en: "Just to give you a heads-up, the pool is closed today.", ko: "미리 말씀드리면, 오늘 수영장은 문을 닫아요." },
+          { en: "Give me a heads-up if you're running late.", ko: "늦을 것 같으면 미리 말해 줘." },
+          { en: "The airline should give us a heads-up about any delays.", ko: "항공사가 지연되면 미리 알려 줘야 하는데." }
+        ],
+        story: {
+          en: "My roommate texted me yesterday, “Just to give you a heads-up, my parents are coming over tonight.” I looked around, and our apartment looked like a tornado had hit it. I spent the next two hours cleaning like my life depended on it. Her mom still asked why the couch smelled like pizza.",
+          ko: "어제 룸메이트가 “미리 말해 두는데, 오늘 밤에 우리 부모님 오셔.” 하고 문자를 보냈어. 주위를 둘러보니까 우리 집이 토네이도가 휩쓸고 간 꼴이더라. 그 뒤로 두 시간 동안 목숨 걸고 청소했어. 그래도 룸메이트 어머니가 소파에서 왜 피자 냄새가 나냐고 물어보셨어."
+        }
+      }
+    ]
+  },
+  {
+    id: 16,
+    category: "이동·쇼핑",
+    title: "옷 교환·환불하기",
+    situation: "지난주에 산 바지가 작아요. 영수증을 들고 가게에 다시 와서, 더 큰 사이즈로 바꾸고 싶어요.",
+    dialogue: [
+      { who: "clerk", en: "Hi there! What can I help you with?", ko: "안녕하세요! 뭘 도와드릴까요?" },
+      { who: "me", en: "Hi, I bought these pants last week.", ko: "안녕하세요, 지난주에 이 바지를 샀는데요." },
+      { who: "me", en: "Unfortunately, they're a little too small.", ko: "아쉽게도 조금 작아요." },
+      { who: "clerk", en: "Oh no. Do you have the receipt with you?", ko: "아이고. 영수증 갖고 계세요?" },
+      { who: "me", en: "Yep, here it is.", ko: "네, 여기 있어요." },
+      { who: "clerk", en: "Great. Would you like a refund or an exchange?", ko: "좋아요. 환불해 드릴까요, 교환해 드릴까요?" },
+      { who: "me", en: "Can I exchange them for a bigger size?", ko: "더 큰 사이즈로 바꿀 수 있을까요?" },
+      { who: "clerk", en: "Of course. Let me grab a pair in a thirty-two.", ko: "물론이죠. 32 사이즈로 하나 가져올게요." },
+      { who: "me", en: "Thanks. Sorry for the hassle!", ko: "감사해요. 번거롭게 해서 죄송해요!" }
+    ],
+    expressions: [
+      {
+        phrase: "Would you like ~ or ~?",
+        ko: "'~로 하실래요, ~로 하실래요?'라는 뜻이에요. 점원이 선택지를 줄 때 거의 이 패턴이에요. 대답은 고른 것만 말하면 끝: An exchange, please. 비슷한 표현: Do you want ~ or ~?(더 캐주얼)",
+        examples: [
+          { en: "Would you like soup or salad with that?", ko: "수프로 하실래요, 샐러드로 하실래요?" },
+          { en: "Would you like a window or an aisle seat?", ko: "창가 자리로 하실래요, 통로 자리로 하실래요?" },
+          { en: "Would you like to meet on Monday or Tuesday?", ko: "월요일에 만날까요, 화요일에 만날까요?" },
+          { en: "Would you like a bag or are you okay?", ko: "봉투 드릴까요, 괜찮으세요?" },
+          { en: "Would you like tea or coffee?", ko: "차 마실래, 커피 마실래?" }
+        ],
+        story: {
+          en: "So I went to a fancy restaurant for my birthday, and the waiter asked, “Would you like still or sparkling water?” I panicked and just said, “Yes.” He smiled and brought me both without saying a word. Honestly, it was the classiest mistake I've ever made.",
+          ko: "생일이라 고급 식당에 갔는데 웨이터가 “일반 물로 드릴까요, 탄산수로 드릴까요?” 하고 묻는 거야. 당황해서 그냥 “네.”라고 해 버렸어. 웨이터는 웃으면서 아무 말 없이 두 개 다 가져다줬어. 솔직히 내 인생에서 제일 우아한 실수였어."
+        }
+      },
+      {
+        phrase: "exchange ~ for ~",
+        ko: "'~를 ~로 바꾸다/교환하다'라는 뜻이에요. 가게에서 사이즈나 색을 바꿀 때 써요. 환전할 때도 exchange dollars for won처럼 똑같이 써요. 비슷한 표현: swap ~ for ~(캐주얼)",
+        examples: [
+          { en: "Can I exchange this shirt for a medium?", ko: "이 셔츠 미디엄으로 바꿀 수 있어요?" },
+          { en: "I need to exchange some dollars for won.", ko: "달러를 원화로 좀 바꿔야 해요." },
+          { en: "Could I exchange the fries for a side salad?", ko: "감자튀김 대신 사이드 샐러드로 바꿀 수 있을까요?" },
+          { en: "Let's exchange numbers for the group chat.", ko: "단톡방 만들게 번호 교환하자." },
+          { en: "Can I exchange my ticket for an earlier train?", ko: "표를 더 이른 기차로 바꿀 수 있을까요?" }
+        ],
+        story: {
+          en: "For my birthday, my aunt got me a sweater that was, honestly, the ugliest thing I've ever seen. I went to the store to exchange it for something else, and the cashier said, “Oh, I love this one!” I felt so bad that I almost kept it. In the end, I swapped it for a scarf, and she bought the sweater herself.",
+          ko: "생일에 이모가 스웨터를 사 주셨는데, 솔직히 내가 본 것 중에 제일 못생긴 옷이었어. 다른 걸로 바꾸려고 가게에 갔더니 계산원이 “어머, 저 이거 너무 좋아해요!” 하는 거야. 너무 미안해서 그냥 가질 뻔했어. 결국 목도리로 바꿨고, 그 스웨터는 계산원이 직접 샀어."
+        }
+      },
+      {
+        phrase: "Let me grab ~.",
+        ko: "'~ 좀 가져올게요/챙길게요'라는 뜻이에요. grab은 원래 '잡다'인데 대화에선 '가볍게 가져오다, 사다, 먹다'로 엄청 자주 써요. grab a coffee(커피 한잔하다), grab lunch(점심 먹다)도 같은 느낌이에요.",
+        examples: [
+          { en: "Let me grab my jacket, and I'll be right out.", ko: "재킷만 챙겨서 바로 나갈게." },
+          { en: "Let me grab a menu for you.", ko: "메뉴 가져다 드릴게요." },
+          { en: "Let me grab a pen so I can write this down.", ko: "이거 적게 펜 좀 가져올게요." },
+          { en: "Let me grab the car while you get the bags.", ko: "너 짐 챙기는 동안 내가 차 가져올게." },
+          { en: "Let me grab a basket real quick.", ko: "장바구니 좀 얼른 가져올게." }
+        ],
+        story: {
+          en: "Yesterday my friend came over and said, “Let me grab a snack from your fridge.” Ten minutes later, she'd eaten half of my birthday cake. I was saving that for my actual birthday this weekend. She's buying me a new one, and it better have extra frosting.",
+          ko: "어제 친구가 놀러 와서 “냉장고에서 간식 좀 꺼내 먹을게.” 하더라. 10분 뒤에 보니 내 생일 케이크를 반이나 먹어 버렸어. 이번 주말 진짜 내 생일 때 먹으려고 아껴 둔 거였는데. 친구가 새로 사 주기로 했는데, 크림 듬뿍 올라간 걸로 사 와야 할 거야."
+        }
+      },
+      {
+        phrase: "Sorry for ~.",
+        ko: "'~해서 미안해요'라는 뜻이에요. for 뒤에 명사나 -ing를 붙여요: Sorry for the wait.(기다리게 해서 죄송해요), Sorry for being late. 가볍게 사과할 때 만능 패턴이에요. 비슷한 표현: Sorry about ~.",
+        examples: [
+          { en: "Sorry for the wait. Your table is ready.", ko: "기다리게 해서 죄송해요. 자리 준비됐어요." },
+          { en: "Sorry for being late. Traffic was crazy.", ko: "늦어서 미안해. 차가 엄청 막혔어." },
+          { en: "Sorry for the confusion in my last email.", ko: "지난 메일로 헷갈리게 해서 죄송해요." },
+          { en: "Sorry for the noise last night.", ko: "어젯밤에 시끄럽게 해서 죄송해요." },
+          { en: "Sorry for the mess, we're restocking right now.", ko: "어수선해서 죄송해요, 지금 물건 채우는 중이에요." }
+        ],
+        story: {
+          en: "Last night I accidentally sent a voice message meant for my best friend to my boss. It was me complaining about my week for, like, three minutes straight. This morning I emailed him, “Sorry for the weird message last night!” and he replied with just a thumbs-up. I still don't know if he listened to it.",
+          ko: "어젯밤에 제일 친한 친구한테 보내려던 음성 메시지를 실수로 팀장님한테 보내 버렸어. 한 3분 동안 이번 주 힘들었던 걸 쭉 늘어놓는 내용이었지. 오늘 아침에 “어젯밤에 이상한 메시지 보내서 죄송해요!” 하고 메일 보냈더니 엄지 이모티콘 하나만 왔어. 팀장님이 그걸 들었는지 아직도 모르겠어."
+        }
+      }
+    ]
+  },
+  {
+    id: 17,
+    category: "일상 대화",
+    title: "친구와 주말 약속 잡기",
+    situation: "오랜만에 친구한테서 연락이 왔어요. 이번 주말에 만날 날짜와 갈 곳을 정하려고 해요.",
+    dialogue: [
+      { who: "friend", en: "Hey! It's been forever. Are you free this weekend?", ko: "야! 진짜 오랜만이다. 이번 주말에 시간 돼?" },
+      { who: "me", en: "I think so! What did you have in mind?", ko: "될 것 같아! 뭐 생각해 둔 거 있어?" },
+      { who: "friend", en: "There's a new Thai place downtown. Wanna check it out?", ko: "시내에 새로 생긴 태국 음식점이 있는데. 가 볼래?" },
+      { who: "me", en: "I'm down! How about Saturday around six?", ko: "좋아! 토요일 6시쯤 어때?" },
+      { who: "friend", en: "Saturday works. Should I invite Jenny too?", ko: "토요일 좋아. 제니도 부를까?" },
+      { who: "me", en: "Sure, the more the merrier.", ko: "그래, 많을수록 좋지." },
+      { who: "me", en: "Let me know if anything changes.", ko: "혹시 뭐 바뀌면 알려 줘." },
+      { who: "friend", en: "Will do. Can't wait to catch up!", ko: "그럴게. 그동안 못 한 얘기 빨리 하고 싶다!" }
+    ],
+    expressions: [
+      {
+        phrase: "Are you free ~?",
+        ko: "'~에 시간 돼?'라는 뜻이에요. 약속 잡을 때 제일 먼저 꺼내는 말이에요. 뒤에 this weekend, tonight, on Friday처럼 시간을 붙여요. 대답: Yeah, I'm free! / Sorry, I'm busy. 비슷한 표현: Do you have time ~?",
+        examples: [
+          { en: "Are you free for a quick call this afternoon?", ko: "오늘 오후에 잠깐 통화할 시간 돼요?" },
+          { en: "Are you free tonight? Let's grab dinner.", ko: "오늘 밤에 시간 돼? 저녁 먹자." },
+          { en: "Are you free on Sunday? Mom wants a family lunch.", ko: "일요일에 시간 돼? 엄마가 가족끼리 점심 먹재." },
+          { en: "Are you free to show me around when I visit Seoul?", ko: "내가 서울 갈 때 구경시켜 줄 시간 돼?" },
+          { en: "Are you free next Tuesday for a fitting?", ko: "다음 주 화요일에 치수 재러 오실 수 있어요?" }
+        ],
+        story: {
+          en: "My friend texted me, “Are you free tonight?” and I got excited, thinking it was a dinner invite. I said yes right away and even put on a nice shirt. Turns out she needed help putting together a bookshelf from IKEA. Three hours and zero dinner later, we finally finished it.",
+          ko: "친구가 “오늘 밤에 시간 돼?” 하고 문자를 보냈길래 저녁 먹자는 줄 알고 신났거든. 바로 된다고 하고 예쁜 셔츠까지 입었어. 알고 보니 이케아 책장 조립하는 걸 도와 달라는 거였어. 세 시간 동안 저녁도 못 먹고 겨우 다 만들었어."
+        }
+      },
+      {
+        phrase: "check ~ out",
+        ko: "'~를 (가서) 구경하다, 확인해 보다'라는 뜻이에요. 새로 생긴 가게, 영상, 장소를 '한번 가 보자/봐 봐' 할 때 써요. 대상이 it, this처럼 짧으면 check it out처럼 가운데 넣어요. 호텔 '체크아웃'과는 다른 뜻이에요.",
+        examples: [
+          { en: "You have to check out this café near my office.", ko: "우리 회사 근처에 있는 이 카페 꼭 가 봐." },
+          { en: "Let's check out the night market tonight.", ko: "오늘 밤에 야시장 구경 가자." },
+          { en: "Check out this video, it's hilarious.", ko: "이 영상 봐 봐, 완전 웃겨." },
+          { en: "Can you check out the new design and tell me what you think?", ko: "새 디자인 한번 보고 어떤지 말해 줄래요?" },
+          { en: "I want to check out the sale at the mall.", ko: "쇼핑몰 세일 구경하러 가고 싶어." }
+        ],
+        story: {
+          en: "Last weekend my friend dragged me to check out an escape room everyone was talking about. We were supposed to escape in sixty minutes, but we got stuck in the first room for forty. The staff gave us so many hints that it felt like they solved it for us. We still took a victory photo, though.",
+          ko: "지난 주말에 친구가 요즘 다들 얘기하는 방탈출 카페에 가 보자고 나를 끌고 갔어. 60분 안에 탈출해야 하는데, 첫 번째 방에서만 40분을 갇혀 있었어. 직원이 힌트를 너무 많이 줘서 거의 직원이 대신 푼 느낌이었어. 그래도 승리 기념사진은 찍었지."
+        }
+      },
+      {
+        phrase: "How about ~?",
+        ko: "'~ 어때?'라는 뜻이에요. 시간, 장소, 아이디어를 제안할 때 쓰는 만능 패턴이에요. 뒤에 명사나 -ing를 붙여요: How about Friday? / How about getting pizza? 비슷한 표현: What about ~? / Why don't we ~?",
+        examples: [
+          { en: "How about Italian tonight?", ko: "오늘 저녁 이탈리아 음식 어때?" },
+          { en: "How about we push the meeting to three?", ko: "회의를 3시로 미루는 거 어때요?" },
+          { en: "How about taking the train instead of driving?", ko: "운전 말고 기차 타는 거 어때?" },
+          { en: "How about this one in blue?", ko: "이거 파란색은 어떠세요?" },
+          { en: "How about a movie night at my place?", ko: "우리 집에서 영화 보는 거 어때?" }
+        ],
+        story: {
+          en: "My sister and I spent forty minutes deciding what to eat last night. Every time I said, “How about sushi?” she said she wasn't in the mood. Every time she suggested something, I said no too. We ended up eating cereal at 10 p.m., and honestly, it was perfect.",
+          ko: "어젯밤에 언니랑 뭘 먹을지 정하는 데만 40분을 썼어. 내가 “초밥 어때?” 할 때마다 언니는 별로 안 당긴대. 언니가 뭘 제안하면 나도 싫다고 했고. 결국 밤 10시에 시리얼을 먹었는데, 솔직히 완벽했어."
+        }
+      },
+      {
+        phrase: "Let me know if ~.",
+        ko: "'~하면 알려 줘'라는 뜻이에요. 약속, 일, 부탁을 마무리할 때 자주 붙이는 말이에요. if 대신 when(~하면 그때)도 많이 써요. 비슷한 표현: Keep me posted.(계속 소식 알려 줘)",
+        examples: [
+          { en: "Let me know if you need anything else.", ko: "더 필요한 거 있으면 말씀하세요." },
+          { en: "Let me know if you're running late.", ko: "늦을 것 같으면 알려 줘." },
+          { en: "Let me know if you have any questions about the report.", ko: "보고서 관련해서 궁금한 점 있으면 알려 주세요." },
+          { en: "Let me know if the food is too spicy.", ko: "음식이 너무 매우면 말씀해 주세요." },
+          { en: "Let me know if you want to share a cab to the airport.", ko: "공항까지 택시 같이 탈 거면 알려 줘." }
+        ],
+        story: {
+          en: "I told my new neighbor, “Let me know if you ever need anything!” just to be nice. The next day, she knocked on my door and asked to borrow my vacuum, my ladder, and some sugar. Now we bake cookies together every Sunday. Best neighbor ever, honestly.",
+          ko: "새로 이사 온 이웃한테 그냥 예의상 “필요한 거 있으면 언제든 말해요!” 했거든. 다음 날 그 이웃이 문을 두드리더니 청소기, 사다리, 설탕을 빌려 달래. 지금은 일요일마다 같이 쿠키를 구워. 솔직히 최고의 이웃이야."
+        }
+      },
+      {
+        phrase: "catch up",
+        forms: ["catching up"],
+        ko: "'(오랜만에) 근황을 나누다, 밀린 얘기를 하다'라는 뜻이에요. 오래 못 본 친구에게 We should catch up!(얼굴 한번 보자/얘기 좀 하자)처럼 정말 자주 써요. '밀린 걸 따라잡다'라는 뜻도 있어요: catch up on work.",
+        examples: [
+          { en: "Let's grab coffee and catch up soon!", ko: "조만간 커피 마시면서 근황 얘기하자!" },
+          { en: "I need to catch up on emails after my vacation.", ko: "휴가 다녀와서 밀린 메일 처리해야 해." },
+          { en: "We spent the whole dinner trying to catch up.", ko: "저녁 내내 밀린 얘기 하느라 바빴어." },
+          { en: "I want to catch up on sleep this weekend.", ko: "이번 주말엔 밀린 잠 좀 자고 싶어." },
+          { en: "Go ahead, I'll catch up with you at the gate.", ko: "먼저 가, 게이트에서 따라갈게." }
+        ],
+        story: {
+          en: "I ran into my high school best friend at the airport last month, totally by accident. We both had two hours before our flights, so we sat down to catch up. We talked so much that I almost missed my boarding call. Now we video chat every Sunday.",
+          ko: "지난달에 공항에서 고등학교 때 단짝을 완전 우연히 만났어. 둘 다 비행기 타기까지 두 시간이 남아서 앉아서 그동안 못 한 얘기를 했지. 얘기를 너무 많이 해서 탑승 안내를 놓칠 뻔했어. 지금은 일요일마다 영상 통화해."
+        }
+      }
+    ]
+  },
+  {
+    id: 18,
+    category: "생활·건강",
+    title: "약국에서 증상 말하기",
+    situation: "여행 중에 감기 기운이 있어요. 약국에서 약사에게 증상을 말하고 기침약을 추천받으려고 해요.",
+    dialogue: [
+      { who: "pharmacist", en: "Hi there. What can I help you find?", ko: "안녕하세요. 뭘 찾으세요?" },
+      { who: "me", en: "Hi, I think I'm coming down with a cold.", ko: "안녕하세요, 감기에 걸린 것 같아요." },
+      { who: "pharmacist", en: "Oh no. What kind of symptoms are you having?", ko: "저런. 어떤 증상이 있으세요?" },
+      { who: "me", en: "I have a sore throat and a runny nose.", ko: "목이 아프고 콧물이 나요." },
+      { who: "me", en: "I've been coughing since yesterday.", ko: "어제부터 기침을 하고 있어요." },
+      { who: "pharmacist", en: "Okay. Any allergies to medication?", ko: "그렇군요. 약 알레르기 있으세요?" },
+      { who: "me", en: "No. Do you have anything for a cough?", ko: "아니요. 기침약 같은 거 있어요?" },
+      { who: "pharmacist", en: "Try this one. Take two every six hours with food.", ko: "이걸로 드셔 보세요. 여섯 시간마다 두 알씩, 식사와 함께 드세요." },
+      { who: "me", en: "Got it. Does it make you drowsy?", ko: "알겠어요. 먹으면 졸려요?" },
+      { who: "pharmacist", en: "It might, so don't take it before driving.", ko: "그럴 수 있으니까 운전하기 전엔 드시지 마세요." }
+    ],
+    expressions: [
+      {
+        phrase: "come down with ~",
+        forms: ["coming down with ~", "came down with ~"],
+        ko: "'(감기 등에) 걸리다, 걸리려고 하다'라는 뜻이에요. 막 아프기 시작할 때 I think I'm coming down with something.(뭔가 걸린 것 같아)처럼 써요. 뒤에 a cold(감기), the flu(독감)를 붙여요.",
+        examples: [
+          { en: "I'm coming down with something, so I'll work from home today.", ko: "뭔가 걸린 것 같아서 오늘은 재택근무할게요." },
+          { en: "Half of our tour group came down with the flu.", ko: "우리 투어 일행 절반이 독감에 걸렸어." },
+          { en: "Drink some tea so you don't come down with a cold.", ko: "감기 안 걸리게 차 좀 마셔." },
+          { en: "You look pale. Are you coming down with something?", ko: "너 얼굴이 창백해. 어디 아픈 거 아니야?" },
+          { en: "I always come down with something right before a big trip.", ko: "난 꼭 큰 여행 직전에 뭔가에 걸리더라." }
+        ],
+        story: {
+          en: "So right before my trip to Japan, I started coming down with a cold. I was so scared it would ruin the whole trip that I drank, like, ten cups of ginger tea. By the time I landed in Tokyo, I felt totally fine. Now I swear by ginger tea for everything.",
+          ko: "일본 여행 바로 전에 감기 기운이 오기 시작했거든. 여행을 통째로 망칠까 봐 너무 무서워서 생강차를 한 열 잔은 마셨어. 도쿄에 도착할 때쯤엔 완전히 멀쩡해졌어. 이제 나는 뭐든 생강차로 해결하는 사람이 됐어."
+        }
+      },
+      {
+        phrase: "I have a ~.",
+        ko: "'~가 있어요'라는 뜻으로, 증상을 말할 때 제일 쉬운 패턴이에요: I have a headache(두통), a fever(열), a sore throat(목 아픔), a runny nose(콧물). 질문이나 요청 앞에도 써요: I have a question. 비슷한 표현: My ~ hurts.(~가 아파요)",
+        examples: [
+          { en: "I have a headache, so I'll skip the meeting.", ko: "머리가 아파서 회의는 빠질게요." },
+          { en: "I have a quick question about my bill.", ko: "계산서에 대해 잠깐 여쭤볼 게 있어요." },
+          { en: "I have a fever. Can I cancel my tour?", ko: "열이 나는데, 투어 취소할 수 있을까요?" },
+          { en: "I have a sore throat from singing karaoke all night.", ko: "밤새 노래방에서 노래해서 목이 아파." },
+          { en: "I have a food allergy, so no nuts, please.", ko: "음식 알레르기가 있어서 견과류는 빼 주세요." }
+        ],
+        story: {
+          en: "Last Friday I told my boss, “I have a terrible headache,” and left work early. I went straight home and took a long nap. Then I went out for dinner and ran into my whole team at the same restaurant. I've never eaten soup so dramatically.",
+          ko: "지난 금요일에 팀장님께 “머리가 너무 아파요.” 하고 일찍 퇴근했거든. 집에 가자마자 낮잠을 푹 잤지. 그러고 저녁 먹으러 나갔는데 같은 식당에서 우리 팀 전체를 딱 마주쳤어. 그렇게 아픈 척하면서 수프를 먹어 본 건 처음이야."
+        }
+      },
+      {
+        phrase: "I've been ~ing.",
+        ko: "'(계속) ~하고 있어요'라는 뜻이에요. 어떤 일이 얼마 동안 이어지고 있는지 말할 때 써요. 증상을 말할 때 I've been coughing for two days.처럼 since(~부터), for(~ 동안)를 붙이면 완벽해요.",
+        examples: [
+          { en: "I've been working here for about a year.", ko: "여기서 일한 지 1년쯤 됐어요." },
+          { en: "I've been waiting for twenty minutes. Is our order coming?", ko: "20분째 기다리고 있는데요. 주문한 거 나오나요?" },
+          { en: "I've been meaning to call you!", ko: "너한테 계속 전화하려고 했었어!" },
+          { en: "I've been traveling around Europe for a month.", ko: "한 달째 유럽 여행 중이에요." },
+          { en: "I've been sneezing all morning.", ko: "아침 내내 재채기가 나요." }
+        ],
+        story: {
+          en: "I've been trying to wake up at 6 a.m. every day this month. The first week went great, and I felt like a productivity genius. The second week, I started hitting snooze five times every morning. Now I'm back to waking up at eight, but I tell everyone I'm still trying.",
+          ko: "이번 달엔 매일 아침 6시에 일어나려고 노력 중이야. 첫 주는 완벽해서 내가 무슨 생산성 천재 같았어. 둘째 주부터는 매일 아침 알람을 다섯 번씩 미루기 시작했지. 지금은 다시 8시에 일어나는데, 사람들한텐 아직 노력 중이라고 말해."
+        }
+      },
+      {
+        phrase: "Do you have anything for ~?",
+        ko: "'~에 듣는 거(약) 있어요?'라는 뜻이에요. 약국에서 증상 뒤에 붙여 말하면 끝이에요. 가게에서 '~용으로 쓸 만한 거 있어요?'라는 뜻으로도 써요.",
+        examples: [
+          { en: "Do you have anything for a headache?", ko: "두통약 같은 거 있어요?" },
+          { en: "Do you have anything for sunburn?", ko: "햇볕에 탄 데 바르는 거 있어요?" },
+          { en: "Do you have anything for a five-year-old's birthday?", ko: "다섯 살 생일 선물로 괜찮은 거 있어요?" },
+          { en: "Do you have anything for people who don't eat meat?", ko: "고기 안 먹는 사람이 먹을 만한 메뉴 있어요?" },
+          { en: "Do you have anything for jet lag?", ko: "시차 적응에 도움 되는 거 있어요?" }
+        ],
+        story: {
+          en: "So on my trip to Bali, I got the worst sunburn of my life on the very first day. I walked into a pharmacy looking like a lobster and asked, “Do you have anything for this?” The pharmacist didn't say a word, she just handed me a giant bottle of aloe. I basically lived in that aloe for the rest of the week.",
+          ko: "발리 여행 첫날에 인생 최악으로 햇볕에 탔거든. 랍스터 같은 몰골로 약국에 들어가서 “이거에 바를 거 있어요?” 하고 물었어. 약사는 아무 말 없이 커다란 알로에 한 통을 건네주더라. 남은 일주일 동안 거의 그 알로에를 바르고 살았어."
         }
       }
     ]
@@ -1498,10 +2003,10 @@ const QUESTIONS = [
 
 const WHO_LABEL = {
   staff: "직원", server: "직원", officer: "심사관", clerk: "직원", driver: "기사님",
-  friend: "친구", coworker: "동료", local: "현지인", neighbor: "이웃", stranger: "처음 본 사람"
+  friend: "친구", coworker: "동료", local: "현지인", neighbor: "이웃", stranger: "처음 본 사람", pharmacist: "약사"
 };
-const CATEGORY_HUE = { "카페·식당": 32, "공항·숙소": 208, "이동·쇼핑": 275, "일상 대화": 150 };
-const CATEGORY_EMOJI = { "카페·식당": "☕", "공항·숙소": "✈️", "이동·쇼핑": "🛍️", "일상 대화": "💬" };
+const CATEGORY_HUE = { "카페·식당": 32, "공항·숙소": 208, "이동·쇼핑": 275, "일상 대화": 150, "생활·건강": 350 };
+const CATEGORY_EMOJI = { "카페·식당": "☕", "공항·숙소": "✈️", "이동·쇼핑": "🛍️", "일상 대화": "💬", "생활·건강": "💊" };
 
 /* ElevenLabs 기본 제공 목소리 (미국 영어) */
 const EL_VOICES = [
@@ -1556,8 +2061,8 @@ const toastEl = document.getElementById("toast");
 const ICON_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 const ICON_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 const ICON_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
-const ICON_PLAY = '<svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.8-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg>' +
-  '<svg class="i-stop" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>';
+const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.8-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.4"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.4"/></svg>';
 const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
 const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>';
@@ -1576,20 +2081,25 @@ function hueOf(category) {
   return h;
 }
 
-/* "Can I get ~?" → ["Can I get"] 처럼 고정된 부분만 뽑아 강조에 사용 */
-function phraseParts(phrase) {
-  return String(phrase)
-    .split(/~|\/|…|\.\.\./)
-    .map(s => s.trim().replace(/^[\s,.!?]+|[\s,.!?]+$/g, ""))
-    .filter(s => s.length > 2);
-}
-function decorate(text, phrase) {
-  let html = esc(text);
-  const parts = phraseParts(phrase).map(p => reEsc(esc(p))).sort((a, b) => b.length - a.length);
-  if (parts.length) {
-    html = html.replace(new RegExp("\\b(" + parts.join("|") + ")\\b", "gi"), "<mark>$1</mark>");
-  }
-  return html;
+/* 예문·썰에서 표현 부분을 형광펜으로 (밑줄과 같은 규칙으로 찾음) */
+function decorate(text, ex) {
+  const ranges = [];
+  exprSources(ex).forEach(src => {
+    const re = new RegExp(src, "gi");
+    let m;
+    while ((m = re.exec(text))) {
+      if (!m[0].length) { re.lastIndex++; continue; }
+      ranges.push([m.index, m.index + m[0].length]);
+    }
+  });
+  ranges.sort((a, b) => a[0] - b[0] || (b[1] - b[0]) - (a[1] - a[0]));
+  let html = "", pos = 0;
+  ranges.forEach(r => {
+    if (r[0] < pos) return;
+    html += esc(text.slice(pos, r[0])) + "<mark>" + esc(text.slice(r[0], r[1])) + "</mark>";
+    pos = r[1];
+  });
+  return html + esc(text.slice(pos));
 }
 
 function buzz() {
@@ -1606,6 +2116,47 @@ function toast(msg) {
 
 function spkAttrs(text, who) {
   return ' data-say="' + esc(text) + '" data-who="' + who + '"';
+}
+
+/* ---------- 핵심 표현 찾기: phrase의 ~ 자리는 아무 단어, forms는 활용형(예: stayed in) ---------- */
+function patternSource(p) {
+  const parts = String(p).split("~")
+    .map(s => s.trim().replace(/^[\s,.!?]+|[\s,.!?]+$/g, ""))
+    .filter(Boolean);
+  if (!parts.length) return null;
+  let src = parts.map(reEsc).join(".{1,40}?");
+  if (/^\w/.test(parts[0])) src = "\\b" + src;
+  if (/\w$/.test(parts[parts.length - 1])) src += "\\b";
+  return src;
+}
+function exprSources(e) {
+  return [e.phrase].concat(e.forms || []).map(patternSource).filter(Boolean);
+}
+function exprFound(e, text) {
+  return exprSources(e).some(src => new RegExp(src, "i").test(text));
+}
+/* 대사 안의 핵심 표현에 밑줄(누르면 예문·썰) */
+function markExpressions(text, card, ci) {
+  const ranges = [];
+  (card.expressions || []).forEach((e, ei) => {
+    exprSources(e).forEach(src => {
+      const re = new RegExp(src, "gi");
+      let m;
+      while ((m = re.exec(text))) {
+        if (!m[0].length) { re.lastIndex++; continue; }
+        ranges.push({ s: m.index, e: m.index + m[0].length, ei });
+      }
+    });
+  });
+  ranges.sort((a, b) => a.s - b.s || (b.e - b.s) - (a.e - a.s));
+  let html = "", pos = 0;
+  ranges.forEach(r => {
+    if (r.s < pos) return;
+    html += esc(text.slice(pos, r.s)) +
+      '<span class="xp" data-c="' + ci + '" data-e="' + r.ei + '">' + esc(text.slice(r.s, r.e)) + '</span>';
+    pos = r.e;
+  });
+  return html + esc(text.slice(pos));
 }
 
 /* ---------- 렌더링 ---------- */
@@ -1626,7 +2177,7 @@ function renderCard(card, i) {
         '<div class="line">' +
           '<button class="spk" type="button" aria-label="내 대사 듣기"' + spkAttrs(line.en, "me") + '>' + ICON_SPEAKER + '</button>' +
           '<button class="blank" type="button" aria-pressed="false" aria-label="내 차례. 탭해서 정답 보기">' +
-            '<span class="ans">' + esc(line.en) + '</span>' +
+            '<span class="ans">' + markExpressions(line.en, card, i) + '</span>' +
             '<span class="lines" aria-hidden="true">' + bars + '</span>' +
           '</button>' +
         '</div>' + ko + hint +
@@ -1635,19 +2186,12 @@ function renderCard(card, i) {
     const label = firstThem ? '<span class="who">' + esc(WHO_LABEL[line.who] || "상대") + '</span>' : "";
     firstThem = false;
     return '<div class="row them' + later + '" data-stage="' + stage + '">' + label +
-      '<button class="bubble say" type="button"' + spkAttrs(line.en, "them") + '>' + esc(line.en) +
+      '<button class="bubble say" type="button"' + spkAttrs(line.en, "them") + '>' + markExpressions(line.en, card, i) +
         '<span class="ico">' + ICON_SPEAKER + '</span></button>' + ko +
     '</div>';
   }).join("");
 
-  const exprs = (card.expressions || []).map((ex, j) =>
-    '<div class="expr-item">' +
-      '<button class="chip" type="button" data-c="' + i + '" data-e="' + j + '">' + esc(ex.phrase) + ICON_ARROW + '</button>' +
-      '<p class="expr-ko">' + esc(ex.ko) + '</p>' +
-    '</div>'
-  ).join("");
-
-  const swipe = i === 0 ? '<div class="swipe-hint">위로 넘기면 다음 상황</div>' : "";
+  const swipe = i === 0 ? '<div class="swipe-hint">밑줄 친 표현을 누르면 예문·썰 · 위로 넘기면 다음 상황</div>' : "";
 
   return '<section class="card" style="--h:' + hueOf(card.category) + '" data-i="' + i + '" data-stage="0">' +
     '<header class="top"><span class="tag">' + esc(card.category) + '</span>' +
@@ -1657,16 +2201,12 @@ function renderCard(card, i) {
       '<h2 class="title">' + esc(card.title) + '</h2>' +
       '<p class="situation">' + esc(card.situation) + '</p>' +
       '<div class="chat">' + rows + '</div>' +
-      '<div class="expr-wrap" id="expr-' + i + '"><div class="expr-clip"><div class="expr">' +
-        '<div class="expr-label"><span>핵심 표현</span><small>탭하면 예문 · 썰</small></div>' +
-        exprs +
-      '</div></div></div>' +
     '</div></div>' +
     '<footer class="bottom">' +
       '<div class="actions">' +
         '<button class="btn ko-btn" type="button" aria-pressed="false">한글</button>' +
-        '<button class="btn play-all" type="button" aria-label="대화 전체 듣기">' + ICON_PLAY + '</button>' +
-        '<button class="btn more" type="button" aria-expanded="false" aria-controls="expr-' + i + '"><span>표현 보기</span>' + ICON_CHEVRON + '</button>' +
+        '<button class="btn pa-main" type="button">' + paLabel("idle") + '</button>' +
+        '<button class="btn pa-stop" type="button" aria-label="정지하고 처음으로" disabled>' + ICON_STOP + '</button>' +
       '</div>' +
       swipe +
     '</footer>' +
@@ -1683,8 +2223,15 @@ function renderEnd() {
       '<h2 class="end-title">여기까지!</h2>' +
       '<p class="end-sub">오늘 ' + CARDS.length + '개 상황을 다 봤어요.<br>입에 붙은 표현 하나만 들고 가요.</p>' +
     '</div></div>' +
-    '<footer class="bottom"><div class="actions"><button class="btn more restart" type="button">처음부터 다시 보기</button></div></footer>' +
+    '<footer class="bottom"><div class="actions"><button class="btn restart" type="button">처음부터 다시 보기</button></div></footer>' +
   '</section>';
+}
+
+/* 전체 듣기 버튼 모양: idle(전체 듣기) / playing(일시정지) / paused(이어 듣기) */
+function paLabel(state) {
+  if (state === "playing") return ICON_PAUSE + '<span>일시정지</span>';
+  if (state === "paused") return ICON_PLAY + '<span>이어 듣기</span>';
+  return ICON_PLAY + '<span>전체 듣기</span>';
 }
 
 feed.innerHTML = CARDS.map(renderCard).join("") + renderEnd();
@@ -1758,31 +2305,66 @@ const Player = (() => {
 
   function mark(btn, on) { if (btn) btn.classList.toggle("playing", on); }
 
+  /* 일시정지 상태: 재생 중이던 줄을 멈춰 두고, resume()에서 이어서(내장 음성은 그 줄 처음부터) 재생 */
+  let paused = false;
+  let resumeFn = null;
+  let audioCtl = null;    // 지금 재생 중인 mp3 { finish }
+  let speechCtl = null;   // 지금 읽는 중인 내장 음성 { halt, restart, finish }
+
   function stop() {
     token++;
+    paused = false;
+    resumeFn = null;
     try { audio.pause(); } catch (e) {}
-    try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {}
+    if (audioCtl) audioCtl.finish();
+    if (speechCtl) { speechCtl.halt(); speechCtl.finish(); }
     mark(currentBtn, false);
     currentBtn = null;
     queue = Promise.resolve();
+  }
+
+  function pause() {
+    if (paused) return;
+    paused = true;
+    if (audioCtl && !audio.paused) {
+      try { audio.pause(); } catch (e) {}
+      const ctl = audioCtl;
+      resumeFn = () => { const p = audio.play(); if (p && p.catch) p.catch(ctl.finish); };
+    } else if (speechCtl) {
+      speechCtl.halt();
+      resumeFn = speechCtl.restart;
+    }
+  }
+
+  function resume() {
+    if (!paused) return;
+    paused = false;
+    const f = resumeFn;
+    resumeFn = null;
+    if (f) f();
   }
 
   function playBlob(blob, rate) {
     return new Promise(res => {
       const url = URL.createObjectURL(blob);
       let finished = false;
-      const done = () => {
-        if (finished) return;
-        finished = true;
-        audio.onended = audio.onerror = audio.onpause = null;
-        URL.revokeObjectURL(url);
-        res();
+      const ctl = {
+        finish() {
+          if (finished) return;
+          finished = true;
+          audio.onended = audio.onerror = null;
+          if (audioCtl === ctl) audioCtl = null;
+          URL.revokeObjectURL(url);
+          res();
+        }
       };
-      audio.onended = done; audio.onerror = done; audio.onpause = done;
+      audioCtl = ctl;
+      audio.onended = ctl.finish; audio.onerror = ctl.finish;
       audio.src = url;
       try { audio.preservesPitch = true; audio.defaultPlaybackRate = rate; audio.playbackRate = rate; } catch (e) {}
-      const p = audio.play();
-      if (p && p.catch) p.catch(done);
+      const start = () => { const p = audio.play(); if (p && p.catch) p.catch(() => { if (!paused) ctl.finish(); }); };
+      if (paused) resumeFn = start;
+      else start();
     });
   }
 
@@ -1790,24 +2372,45 @@ const Player = (() => {
   function speakDevice(text, who, rate) {
     return new Promise(res => {
       if (!("speechSynthesis" in window)) { toast("이 브라우저는 음성 재생을 지원하지 않아요"); return res(); }
-      let finished = false;
-      const done = () => { if (!finished) { finished = true; res(); } };
-      try {
-        const chunks = text.length < 220 ? [text] : (text.match(/[^.!?\n]+(?:[.!?]+["”’)]*|$)/g) || [text]);
-        const parts = chunks.map(s => s.trim()).filter(Boolean);
-        if (!parts.length) return done();
-        if (!deviceVoice) pickVoice();
-        parts.forEach((p, idx) => {
-          const u = new SpeechSynthesisUtterance(p);
-          u.lang = "en-US";
-          if (deviceVoice) u.voice = deviceVoice;
-          u.rate = rate;
-          u.pitch = who === "me" ? 0.92 : 1.08;
-          if (idx === parts.length - 1) { u.onend = done; u.onerror = done; }
-          speechSynthesis.speak(u);
-        });
-        setTimeout(done, 4000 + text.length * 110 / rate);   // 일부 안드로이드에서 onend가 안 오는 경우 대비
-      } catch (e) { done(); }
+      let finished = false, gen = 0, timer = null;
+      const chunks = text.length < 220 ? [text] : (text.match(/[^.!?\n]+(?:[.!?]+["”’)]*|$)/g) || [text]);
+      const parts = chunks.map(s => s.trim()).filter(Boolean);
+      const ctl = {
+        finish() {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timer);
+          if (speechCtl === ctl) speechCtl = null;
+          res();
+        },
+        halt() {
+          gen++;
+          clearTimeout(timer);
+          try { speechSynthesis.cancel(); } catch (e) {}
+        },
+        restart() {
+          if (finished) return;
+          const my = ++gen;
+          clearTimeout(timer);
+          try {
+            if (!deviceVoice) pickVoice();
+            parts.forEach((p, idx) => {
+              const u = new SpeechSynthesisUtterance(p);
+              u.lang = "en-US";
+              if (deviceVoice) u.voice = deviceVoice;
+              u.rate = rate;
+              u.pitch = who === "me" ? 0.92 : 1.08;
+              if (idx === parts.length - 1) u.onend = u.onerror = () => { if (my === gen) ctl.finish(); };
+              speechSynthesis.speak(u);
+            });
+            timer = setTimeout(() => { if (my === gen) ctl.finish(); }, 4000 + text.length * 110 / rate);   // 일부 안드로이드에서 onend가 안 오는 경우 대비
+          } catch (e) { ctl.finish(); }
+        }
+      };
+      if (!parts.length) return ctl.finish();
+      speechCtl = ctl;
+      if (paused) resumeFn = ctl.restart;
+      else ctl.restart();
     });
   }
 
@@ -1886,8 +2489,9 @@ const Player = (() => {
   }
   function isPlaying(btn) { return btn && btn.classList.contains("playing"); }
   function getToken() { return token; }
+  function isPaused() { return paused; }
 
-  return { play, enqueue, stop, isPlaying, getToken };
+  return { play, enqueue, stop, pause, resume, isPaused, isPlaying, getToken };
 })();
 
 function sayFromButton(btn) {
@@ -1938,13 +2542,6 @@ function advance(card, stage) {
   }
 }
 
-function showAll(card) {
-  card._tok = (card._tok || 0) + 1;
-  card.querySelectorAll(".typing").forEach(x => x.remove());
-  card.querySelectorAll(".row.later").forEach(r => { r.classList.remove("later"); r.classList.add("pop"); });
-  card.dataset.stage = 999;
-}
-
 function setBlank(btn, show) {
   btn.classList.toggle("shown", show);
   btn.setAttribute("aria-pressed", show ? "true" : "false");
@@ -1969,52 +2566,70 @@ function onBlank(btn) {
   }
 }
 
-function toggleMore(cardEl) {
-  const open = !cardEl.classList.contains("open");
-  const btn = cardEl.querySelector(".more");
-  const body = cardEl.querySelector(".body");
-  const wrap = cardEl.querySelector(".expr-wrap");
-  cardEl.classList.toggle("open", open);
-  btn.setAttribute("aria-expanded", open ? "true" : "false");
-  btn.querySelector("span").textContent = open ? "표현 접기" : "표현 보기";
-  if (open) {
-    showAll(cardEl);
-    cardEl.querySelectorAll(".blank").forEach(b => setBlank(b, true));
-    hideHint();
-    const scrollToPanel = () => {
-      const top = wrap.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12;
-      if (top > body.scrollTop) body.scrollTo({ top, behavior: "smooth" });
-    };
-    let done = false;
-    const once = () => { if (!done) { done = true; scrollToPanel(); } };
-    wrap.addEventListener("transitionend", function te(e) {
-      if (e.target === wrap && e.propertyName === "grid-template-rows") { wrap.removeEventListener("transitionend", te); once(); }
-    });
-    setTimeout(once, 480);
-  } else {
-    body.scrollTo({ top: 0, behavior: "smooth" });
-  }
-}
-
-/* ---------- 대화 전체 듣기: 안 열린 줄은 차례대로 열면서 읽어줌 ---------- */
+/* ---------- 대화 전체 듣기 ----------
+   ▶ 전체 듣기: 안 열린 줄은 차례대로 열면서 처음부터 끝까지 읽음
+   ⏸ 일시정지 → ▶ 이어 듣기: 멈춘 곳부터 계속
+   ■ 정지: 소리를 끄고 카드를 처음 상태(대사 가림)로 되돌림 */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+function setPA(card, state) {
+  card.classList.toggle("pa-playing", state === "playing");
+  card.classList.toggle("pa-paused", state === "paused");
+  const main = card.querySelector(".pa-main");
+  if (main) {
+    main.innerHTML = paLabel(state);
+    main.setAttribute("aria-label", state === "playing" ? "일시정지" : state === "paused" ? "이어 듣기" : "대화 전체 듣기");
+  }
+  const stopBtn = card.querySelector(".pa-stop");
+  if (stopBtn) stopBtn.disabled = state === "idle";
+}
+
+/* 카드를 처음 상태로: 내 대사는 다시 빈칸, 첫 단계 이후 줄은 숨김 */
+function resetCard(card) {
+  card._tok = (card._tok || 0) + 1;
+  card.querySelectorAll(".typing").forEach(x => x.remove());
+  card.querySelectorAll(".blank").forEach(b => setBlank(b, false));
+  card.querySelectorAll(".chat > .row").forEach(r => {
+    r.classList.remove("pop");
+    if (+r.dataset.stage > 0) r.classList.add("later");
+  });
+  card.dataset.stage = 0;
+  card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function stopAll(card) {
+  const s = card._pa;
+  if (!s) return;
+  s.reset = true;
+  Player.stop();
+  setPA(card, "idle");
+  resetCard(card);
+  buzz();
+}
+
 async function playAll(card) {
-  if (card.classList.contains("playing-all")) { Player.stop(); return; }
+  const cur = card._pa;
+  if (cur && cur.alive()) {                         // 재생 중이면 일시정지, 일시정지면 이어 듣기
+    if (cur.paused) { cur.paused = false; Player.resume(); setPA(card, "playing"); }
+    else { cur.paused = true; Player.pause(); setPA(card, "paused"); }
+    buzz();
+    return;
+  }
   Player.stop();
   const t0 = Player.getToken();
-  const alive = () => Player.getToken() === t0;
+  const s = card._pa = { paused: false, reset: false, alive: () => Player.getToken() === t0 };
+  const gate = async () => { while (s.paused && s.alive()) await sleep(120); };
   card._tok = (card._tok || 0) + 1;                 // 진행 중이던 '입력 중' 표시 취소
   card.querySelectorAll(".typing").forEach(x => x.remove());
-  card.classList.add("playing-all");
-  card.querySelector(".play-all").setAttribute("aria-label", "전체 듣기 멈추기");
+  setPA(card, "playing");
   hideHint();
   buzz();
   const body = card.querySelector(".body");
   let lastMeStage = -1;
   try {
     for (const row of Array.from(card.querySelectorAll(".chat > .row"))) {
-      if (!alive()) break;
+      await gate();
+      if (!s.alive()) break;
       const st = +row.dataset.stage;
       if (row.classList.contains("later")) {
         if (row.classList.contains("them")) {
@@ -2024,8 +2639,9 @@ async function playAll(card) {
           row.parentNode.insertBefore(typing, row);
           ensureVisible(body, typing);
           await sleep(650);
+          await gate();
           typing.remove();
-          if (!alive()) break;
+          if (!s.alive()) break;
         }
         row.classList.remove("later");
         row.classList.add("pop");
@@ -2041,18 +2657,19 @@ async function playAll(card) {
       ensureVisible(body, row);
       const btn = row.querySelector(".say, .spk");
       await Player.enqueue(btn.dataset.say, btn.dataset.who, btn);
-      if (!alive()) break;
+      if (!s.alive()) break;
       await sleep(300);
     }
   } finally {
-    card.classList.remove("playing-all");
-    card.querySelector(".play-all").setAttribute("aria-label", "대화 전체 듣기");
-    /* 중간에 멈춰도 화면이 평소 흐름과 같은 상태가 되도록 정리 */
-    card.querySelectorAll(".row.later").forEach(r => {
-      if (+r.dataset.stage <= +card.dataset.stage) { r.classList.remove("later"); r.classList.add("pop"); }
-    });
-    /* 마지막으로 연 게 내 대사면, 평소처럼 다음 대사를 이어서 보여줌 */
-    if (lastMeStage >= 0 && +card.dataset.stage <= lastMeStage) advance(card, lastMeStage);
+    if (card._pa === s) card._pa = null;
+    if (!s.reset) {
+      setPA(card, "idle");
+      /* 다른 말풍선을 누르거나 카드를 넘겨서 끊겼을 때, 화면이 평소 흐름과 같은 상태가 되도록 정리 */
+      card.querySelectorAll(".row.later").forEach(r => {
+        if (+r.dataset.stage <= +card.dataset.stage) { r.classList.remove("later"); r.classList.add("pop"); }
+      });
+      if (lastMeStage >= 0 && +card.dataset.stage <= lastMeStage) advance(card, lastMeStage);
+    }
   }
 }
 
@@ -2071,15 +2688,21 @@ function hideHint() {
 feed.addEventListener("click", e => {
   const t = e.target;
   let el;
+  /* 밑줄 표현: 가려진 빈칸 안이면 빈칸 열기로 처리 */
+  const xp = t.closest(".xp");
+  if (xp && !(xp.closest(".blank") && !xp.closest(".blank.shown"))) {
+    buzz();
+    openExpression(+xp.dataset.c, +xp.dataset.e);
+    return;
+  }
   if ((el = t.closest(".blank"))) { onBlank(el); return; }
   if ((el = t.closest(".say, .spk"))) { sayFromButton(el); return; }
-  if ((el = t.closest(".chip"))) { buzz(); openExpression(+el.dataset.c, +el.dataset.e); return; }
   if ((el = t.closest(".gear"))) { openSettings(); return; }
   if ((el = t.closest(".jump"))) { openList(); return; }
   if ((el = t.closest(".ko-btn"))) { toggleKo(el.closest(".card")); return; }
-  if ((el = t.closest(".play-all"))) { playAll(el.closest(".card")); return; }
+  if ((el = t.closest(".pa-main"))) { playAll(el.closest(".card")); return; }
+  if ((el = t.closest(".pa-stop"))) { stopAll(el.closest(".card")); return; }
   if ((el = t.closest(".restart"))) { feed.scrollTo({ top: 0, behavior: "smooth" }); return; }
-  if ((el = t.closest(".more"))) toggleMore(el.closest(".card"));
 });
 
 /* ---------- 진도 저장: 마지막으로 본 카드 + 본 카드 목록 ---------- */
@@ -2164,17 +2787,46 @@ function saveDiary() {
   try { localStorage.setItem(DIARY_KEY, JSON.stringify(diary)); return true; } catch (e) { return false; }
 }
 
+/* 하루 기록 = { items: [ { q:{en,ko}, text, fix, updated } ] } (최대 3편). 예전 형식({q,text,fix})은 자동으로 바꿔 읽음 */
+const MAX_WRITES = 3;
+function normEntry(e) {
+  if (!e || typeof e !== "object") return null;
+  const raw = Array.isArray(e.items) ? e.items : [e];
+  const items = raw.filter(x => x && typeof x === "object")
+    .map(x => ({ q: x.q && x.q.en ? { en: x.q.en, ko: x.q.ko || "" } : null, text: x.text || "", fix: x.fix || "", updated: x.updated || 0 }));
+  return items.length ? { items: items.slice(0, MAX_WRITES) } : null;
+}
+Object.keys(diary.entries).forEach(k => {
+  const n = normEntry(diary.entries[k]);
+  if (n) diary.entries[k] = n; else delete diary.entries[k];
+});
+const hasContent = it => !!(it && ((it.text || "").trim() || (it.fix || "").trim()));
+
 const pad2 = n => String(n).padStart(2, "0");
 function dateKey(d) {
   d = d || new Date();
   return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 }
-/* 같은 날짜엔 항상 같은 질문 */
-function questionForDate(key) {
+function dayNumber(key) {
   const p = key.split("-").map(Number);
-  const n = Math.floor(Date.UTC(p[0], p[1] - 1, p[2]) / 86400000);
+  return Math.floor(Date.UTC(p[0], p[1] - 1, p[2]) / 86400000);
+}
+/* 오늘 고를 수 있는 질문 5개: 날짜마다 정해진 순서에서, 다른 날 이미 답한 질문은 건너뜀.
+   (같은 날엔 항상 같은 5개. 다 답하면 처음부터 다시 돌아옴) */
+function candidatesFor(key) {
   const L = QUESTIONS.length;
-  return L ? QUESTIONS[((n % L) + L) % L] : { en: "", ko: "" };
+  if (!L) return [];
+  const start = ((dayNumber(key) * 5) % L + L) % L;
+  const order = [];
+  for (let i = 0; i < L; i++) order.push(QUESTIONS[(start + i) % L]);
+  const used = new Set();
+  Object.keys(diary.entries).forEach(k => {
+    if (k === key) return;
+    diary.entries[k].items.forEach(it => { if (it.q && hasContent(it)) used.add(it.q.en); });
+  });
+  const fresh = order.filter(q => !used.has(q.en));
+  const pool = fresh.length >= 5 ? fresh : fresh.concat(order.filter(q => used.has(q.en)));
+  return pool.slice(0, 5);
 }
 function koDate(key, withDay) {
   const p = key.split("-").map(Number);
@@ -2196,7 +2848,10 @@ const W = {
   copy: document.getElementById("wCopy"),
   listen: document.getElementById("wListen"),
   rate: document.getElementById("wRate"),
-  history: document.getElementById("wHistory")
+  history: document.getElementById("wHistory"),
+  tabs: document.getElementById("wTabs"),
+  change: document.getElementById("qChange"),
+  pick: document.getElementById("qPick")
 };
 W.gear.innerHTML = ICON_SLIDERS;
 W.copy.innerHTML = '<span class="w-ico when-off">' + ICON_COPY + '</span><span class="w-ico when-on">' + ICON_CHECK + '</span>' +
@@ -2205,9 +2860,23 @@ W.listen.innerHTML = '<span class="w-ico when-off">' + ICON_SPEAKER + '</span><s
   '<span class="when-off">첨삭 듣기</span><span class="when-on">정지</span>';
 
 let todayKey = null;
-function currentQuestion() {
-  const e = diary.entries[todayKey];
-  return e && e.q && e.q.en ? e.q : questionForDate(todayKey);   // 오늘 이미 쓴 글이 있으면 그때 질문을 유지
+let activeIdx = 0;
+let todayCands = [];
+function todayEntry() {
+  if (!diary.entries[todayKey]) diary.entries[todayKey] = { items: [] };
+  return diary.entries[todayKey];
+}
+function newItem() {
+  const usedToday = new Set(todayEntry().items.map(it => it.q && it.q.en));
+  const q = todayCands.find(c => !usedToday.has(c.en)) || todayCands[0] || { en: "", ko: "" };
+  return { q: { en: q.en, ko: q.ko }, text: "", fix: "", updated: 0 };
+}
+function activeItem() {
+  const items = todayEntry().items;
+  if (!items.length) items.push(newItem());
+  if (activeIdx >= items.length) activeIdx = items.length - 1;
+  if (!items[activeIdx].q) items[activeIdx].q = newItem().q;
+  return items[activeIdx];
 }
 function autoGrow(ta) {
   ta.style.height = "auto";
@@ -2222,19 +2891,40 @@ function updateCount() {
 }
 
 function initWrite() {
-  todayKey = dateKey();
-  const q = currentQuestion();
+  const key = dateKey();
+  if (key !== todayKey) activeIdx = 0;
+  todayKey = key;
+  todayCands = candidatesFor(todayKey);
   W.date.textContent = koDate(todayKey, true);
-  W.qEn.textContent = q.en;
-  W.qKo.textContent = q.ko;
-  const e = diary.entries[todayKey] || {};
-  W.text.value = e.text || "";
-  W.fix.value = e.fix || "";
+  renderTabs();
+  loadItem();
+  renderHistory();
+}
+
+/* 지금 고른 글(글 1·2·3)을 화면에 */
+function loadItem() {
+  const it = activeItem();
+  W.qEn.textContent = it.q.en;
+  W.qKo.textContent = it.q.ko;
+  W.text.value = it.text;
+  W.fix.value = it.fix;
   W.saved.textContent = "";
+  closePicker();
   autoGrow(W.text);
   autoGrow(W.fix);
   updateCount();
-  renderHistory();
+}
+
+function renderTabs() {
+  const items = todayEntry().items.length ? todayEntry().items : [activeItem()];
+  let html = items.map((it, i) => {
+    const sel = i === activeIdx;
+    const del = sel && items.length > 1 && !hasContent(it) ?
+      '<span class="x" data-del="' + i + '" role="button" aria-label="빈 글 지우기">✕</span>' : "";
+    return '<button class="w-tab" type="button" role="tab" data-i="' + i + '" aria-selected="' + sel + '">글 ' + (i + 1) + del + '</button>';
+  }).join("");
+  if (items.length < MAX_WRITES) html += '<button class="w-tab add" type="button" data-add="1">+ 새 글</button>';
+  W.tabs.innerHTML = html;
 }
 
 let saveTimer = null;
@@ -2246,37 +2936,73 @@ function scheduleSave() {
 function saveToday() {
   clearTimeout(saveTimer);
   if (!todayKey) return;
-  const text = W.text.value, fix = W.fix.value;
-  if (!text.trim() && !fix.trim() && !diary.entries[todayKey]) { W.saved.textContent = ""; return; }
-  diary.entries[todayKey] = { q: currentQuestion(), text: text, fix: fix, updated: Date.now() };
-  W.saved.textContent = saveDiary() ? "저장됨" : "이 방식으로 연 파일에선 저장이 안 돼요";
+  const it = activeItem();
+  if (it.text !== W.text.value || it.fix !== W.fix.value) {
+    it.text = W.text.value;
+    it.fix = W.fix.value;
+    it.updated = Date.now();
+  }
+  const ok = saveDiary();
+  W.saved.textContent = !hasContent(it) ? "" : ok ? "저장됨" : "이 방식으로 연 파일에선 저장이 안 돼요";
+}
+
+/* ---- 질문 고르기 (오늘의 후보 5개 중 하나) ---- */
+let pickList = [];
+function closePicker() {
+  W.pick.hidden = true;
+  W.change.setAttribute("aria-expanded", "false");
+  W.change.textContent = "다른 질문 고르기";
+}
+function openPicker() {
+  const it = activeItem();
+  const others = new Set(todayEntry().items.filter((x, i) => i !== activeIdx && x.q).map(x => x.q.en));
+  pickList = todayCands.slice();
+  if (it.q && it.q.en && !pickList.some(q => q.en === it.q.en)) pickList.unshift(it.q);
+  W.pick.innerHTML = pickList.map((q, qi) => {
+    const cur = it.q && it.q.en === q.en;
+    const taken = others.has(q.en);
+    return '<button class="q-opt" type="button" data-qi="' + qi + '" aria-pressed="' + cur + '"' + (taken ? " disabled" : "") + '>' +
+      '<span class="o-en">' + esc(q.en) + '</span><span class="o-ko">' + esc(q.ko) + '</span>' +
+      (taken ? '<span class="o-note">다른 글에서 쓰는 질문이에요</span>' : "") + '</button>';
+  }).join("");
+  W.pick.hidden = false;
+  W.change.setAttribute("aria-expanded", "true");
+  W.change.textContent = "닫기";
 }
 
 function renderHistory() {
   const keys = Object.keys(diary.entries)
     .filter(k => k !== todayKey && /^\d{4}-\d{2}-\d{2}$/.test(k))
-    .filter(k => { const e = diary.entries[k]; return e && ((e.text || "").trim() || (e.fix || "").trim()); })
+    .filter(k => diary.entries[k].items.some(hasContent))
     .sort().reverse();
   if (!keys.length) {
     W.history.innerHTML = '<p class="w-empty">아직 지난 기록이 없어요. 오늘 쓴 글은 내일부터 여기에 쌓여요.</p>';
     return;
   }
   W.history.innerHTML = keys.map(k => {
-    const e = diary.entries[k];
-    const q = e.q || {};
-    return '<details><summary><span class="h-date">' + esc(koDate(k)) + '</span>' +
-        '<span class="h-q">' + esc(q.en || "") + '</span><span class="h-chev">' + ICON_CHEVRON + '</span></summary>' +
-      '<div class="h-body"><p class="h-qfull">' + esc(q.en || "") + '</p>' +
+    const list = diary.entries[k].items.map((it, idx) => ({ it, idx })).filter(x => hasContent(x.it));
+    const first = list[0].it.q || {};
+    const body = list.map((x, n) => {
+      const it = x.it, q = it.q || {};
+      return '<div class="h-item">' +
+        (list.length > 1 ? '<div class="h-num">글 ' + (n + 1) + '</div>' : "") +
+        '<p class="h-qfull">' + esc(q.en || "") + '</p>' +
         (q.ko ? '<p class="h-qko">' + esc(q.ko) + '</p>' : "") +
-        ((e.text || "").trim() ? '<div class="h-label">내 글</div><p class="h-text">' + esc(e.text.trim()) + '</p>' : "") +
-        ((e.fix || "").trim() ?
+        (it.text.trim() ? '<div class="h-label">내 글</div><p class="h-text">' + esc(it.text.trim()) + '</p>' : "") +
+        (it.fix.trim() ?
           '<div class="h-label-row"><div class="h-label">첨삭</div>' +
-            (englishOnly(e.fix) ?
-              '<button class="pill h-listen" type="button" data-key="' + esc(k) + '">' +
+            (englishOnly(it.fix) ?
+              '<button class="pill h-listen" type="button" data-key="' + esc(k) + '" data-i="' + x.idx + '">' +
                 '<span class="when-off">' + ICON_SPEAKER + '</span><span class="when-on">' + ICON_STOP + '</span>' +
                 '<span class="when-off">듣기</span><span class="when-on">정지</span></button>' : "") +
-          '</div><p class="h-text">' + esc(e.fix.trim()) + '</p>' : "") +
-      '</div></details>';
+          '</div><p class="h-text">' + esc(it.fix.trim()) + '</p>' : "") +
+      '</div>';
+    }).join("");
+    return '<details><summary><span class="h-date">' + esc(koDate(k)) + '</span>' +
+        '<span class="h-q">' + esc(first.en || "") + '</span>' +
+        (list.length > 1 ? '<span class="h-more">외 ' + (list.length - 1) + '편</span>' : "") +
+        '<span class="h-chev">' + ICON_CHEVRON + '</span></summary>' +
+      '<div class="h-body">' + body + '</div></details>';
   }).join("");
 }
 
@@ -2306,13 +3032,16 @@ function englishOnly(text) {
 }
 
 function backupText() {
-  const keys = Object.keys(diary.entries).sort().reverse();
-  return keys.map(k => {
-    const e = diary.entries[k] || {};
-    const q = e.q || {};
-    return "[" + k + "]\nQ: " + (q.en || "") + (q.ko ? "\n(" + q.ko + ")" : "") +
-      "\n\n내 글:\n" + (e.text || "").trim() + "\n\n첨삭:\n" + (e.fix || "").trim();
-  }).join("\n\n----------\n\n");
+  const out = [];
+  Object.keys(diary.entries).sort().reverse().forEach(k => {
+    const list = diary.entries[k].items.filter(hasContent);
+    list.forEach((it, n) => {
+      const q = it.q || {};
+      out.push("[" + k + (list.length > 1 ? " · 글 " + (n + 1) : "") + "]\nQ: " + (q.en || "") + (q.ko ? "\n(" + q.ko + ")" : "") +
+        "\n\n내 글:\n" + it.text.trim() + "\n\n첨삭:\n" + it.fix.trim());
+    });
+  });
+  return out.join("\n\n----------\n\n");
 }
 
 function openWriteSettings() {
@@ -2328,15 +3057,87 @@ function openWriteSettings() {
   showSheet("글쓰기", "설정", html);
 }
 
-W.text.addEventListener("input", () => { autoGrow(W.text); updateCount(); scheduleSave(); });
-W.fix.addEventListener("input", () => { autoGrow(W.fix); scheduleSave(); });
+/* 내용이 비었다/생겼다 바뀔 때만 탭(빈 글 지우기 ✕)을 다시 그림 */
+let lastFilled = null;
+function onWriteInput() {
+  scheduleSave();
+  const filled = !!(W.text.value.trim() || W.fix.value.trim());
+  if (filled !== lastFilled) {
+    lastFilled = filled;
+    const it = activeItem();
+    it.text = W.text.value;
+    it.fix = W.fix.value;
+    renderTabs();
+  }
+}
+W.text.addEventListener("input", () => { autoGrow(W.text); updateCount(); onWriteInput(); });
+W.fix.addEventListener("input", () => { autoGrow(W.fix); onWriteInput(); });
 W.gear.addEventListener("click", openWriteSettings);
+
+/* 글 1·2·3 탭: 바꾸기 / 새 글(하루 최대 3편) / 빈 글 지우기 */
+W.tabs.addEventListener("click", e => {
+  const del = e.target.closest("[data-del]");
+  if (del) {
+    const i = +del.dataset.del;
+    const items = todayEntry().items;
+    if (items.length > 1 && !hasContent(items[i])) {
+      items.splice(i, 1);
+      activeIdx = Math.max(0, i - 1);
+      saveDiary();
+      renderTabs();
+      loadItem();
+      buzz();
+    }
+    return;
+  }
+  if (e.target.closest("[data-add]")) {
+    saveToday();
+    const items = todayEntry().items;
+    if (items.length >= MAX_WRITES) return;
+    items.push(newItem());
+    activeIdx = items.length - 1;
+    saveDiary();
+    if (Player.isPlaying(W.listen)) Player.stop();
+    renderTabs();
+    loadItem();
+    lastFilled = false;
+    buzz();
+    return;
+  }
+  const tab = e.target.closest(".w-tab");
+  if (!tab || +tab.dataset.i === activeIdx) return;
+  saveToday();
+  if (Player.isPlaying(W.listen)) Player.stop();
+  activeIdx = +tab.dataset.i;
+  renderTabs();
+  loadItem();
+  lastFilled = null;
+  buzz();
+});
+
+W.change.addEventListener("click", () => {
+  if (W.pick.hidden) openPicker(); else closePicker();
+  buzz();
+});
+W.pick.addEventListener("click", e => {
+  const b = e.target.closest(".q-opt");
+  if (!b || b.disabled) return;
+  const q = pickList[+b.dataset.qi];
+  if (!q) return;
+  const it = activeItem();
+  it.q = { en: q.en, ko: q.ko };
+  saveDiary();
+  W.qEn.textContent = q.en;
+  W.qKo.textContent = q.ko;
+  closePicker();
+  buzz();
+});
 
 let copyTimer = null;
 W.copy.addEventListener("click", async () => {
   const text = W.text.value.trim();
   if (!text) { toast("먼저 내 글을 써 주세요"); return; }
-  const q = currentQuestion();
+  const q = activeItem().q;
   const prompt = "Please correct my English diary. Keep my meaning, make it sound natural like an American native speaker, and briefly explain the main corrections in Korean.\n" +
     "Question: " + q.en + "\n" +
     "My writing: " + text;
@@ -2364,7 +3165,8 @@ W.history.addEventListener("click", e => {
   const b = e.target.closest(".h-listen");
   if (!b) return;
   const entry = diary.entries[b.dataset.key];
-  if (entry) playCorrection(entry.fix || "", b);
+  const it = entry && entry.items[+b.dataset.i];
+  if (it) playCorrection(it.fix || "", b);
 });
 
 function syncRate() {
@@ -2424,15 +3226,16 @@ document.querySelector(".tabbar").addEventListener("click", e => {
   switchTab(saved || "cards", true);
 })();
 
+/* ================= 웹앱 설치 (GitHub Pages 같은 https 주소에서만) ================= */
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => { /* sw.js가 없으면 설치 기능만 빠지고 앱은 그대로 동작 */ });
+  });
+}
+
 /* ================= 자동 점검: 주소 끝에 #check 를 붙여 열면 결과가 뜸 (규칙은 CLAUDE.md) ================= */
 function sceneOf(card) {
   return card.scene || (card.category === "일상 대화" ? "free" : "task");   // task: 정해진 용건(10단어), free: 자유 대화(12단어)
-}
-function phraseRegex(phrase) {
-  const parts = String(phrase).split("~")
-    .map(s => s.trim().replace(/^[\s,.!?]+|[\s,.!?]+$/g, ""))
-    .filter(Boolean);
-  return new RegExp(parts.map(reEsc).join(".{1,40}?"), "i");
 }
 function runChecks() {
   const issues = [];
@@ -2461,17 +3264,19 @@ function runChecks() {
       if (w > limit) issues.push(tag + ": me " + w + "단어 (상한 " + limit + ") — " + x.en);
     });
     const ex = c.expressions || [];
-    if (ex.length < 2 || ex.length > 3) issues.push(tag + ": 표현 " + ex.length + "개 (2~3개)");
+    if (ex.length < 2 || ex.length > 5) issues.push(tag + ": 표현 " + ex.length + "개 (2~5개)");
+    const allLines = d.map(x => x.en || "").join("\n");
     ex.forEach(e => {
       stats.expressions++;
       const p = "\"" + e.phrase + "\"";
       if (!e.phrase || !e.ko) issues.push(tag + ": 표현 phrase/ko 누락");
+      if (!exprFound(e, allLines)) issues.push(tag + " " + p + ": 대화에 표현이 없어서 밑줄이 안 생김");
       const n = (e.examples || []).length;
       stats.examples += n;
       if (n !== 5) issues.push(tag + " " + p + ": 예문 " + n + "개 (정확히 5개)");
       (e.examples || []).forEach(x => { if (!x.en || !x.ko) issues.push(tag + " " + p + ": 예문 en/ko 누락"); });
       if (!e.story || !e.story.en || !e.story.ko) { issues.push(tag + " " + p + ": 썰 누락"); return; }
-      if (!phraseRegex(e.phrase).test(e.story.en)) issues.push(tag + " " + p + ": 썰에 표현이 없음");
+      if (!exprFound(e, e.story.en)) issues.push(tag + " " + p + ": 썰에 표현이 없음");
       if (/[가-힣]/.test(e.story.en)) issues.push(tag + " " + p + ": 썰 영어에 한글이 섞임");
       const sents = e.story.en.split(/(?<=[.!?]["”]?)\s+(?=[A-Z“"])/).length;
       if (sents < 3 || sents > 5) issues.push(tag + " " + p + ": 썰 " + sents + "문장 (3~4문장 권장)");
@@ -2522,15 +3327,17 @@ function openExpression(ci, ei) {
   const ex = card && card.expressions[ei];
   if (!ex) return;
   const items = (ex.examples || []).map(x =>
-    '<li><div class="ex-en">' + decorate(x.en, ex.phrase) + '</div><div class="ex-ko">' + esc(x.ko) + '</div>' +
+    '<li><div class="ex-en">' + decorate(x.en, ex) + '</div><div class="ex-ko">' + esc(x.ko) + '</div>' +
     '<button class="spk" type="button" aria-label="예문 듣기"' + spkAttrs(x.en, "them") + '>' + ICON_SPEAKER + '</button></li>'
   ).join("");
   const story = ex.story ?
     '<div class="sec-row"><h4 class="sec-h">이 표현으로 썰 풀기</h4>' +
       '<button class="pill spk-pill" type="button"' + spkAttrs(ex.story.en, "me") + '>' + ICON_SPEAKER + '듣기</button></div>' +
-    '<div class="story"><p class="story-en">' + decorate(ex.story.en, ex.phrase) + '</p>' +
+    '<div class="story"><p class="story-en">' + decorate(ex.story.en, ex) + '</p>' +
     '<p class="story-ko">' + esc(ex.story.ko) + '</p></div>' : "";
-  showSheet(card.title, ex.phrase, '<h4 class="sec-h">예문</h4><ol class="ex">' + items + '</ol>' + story);
+  showSheet(card.title, ex.phrase,
+    (ex.ko ? '<p class="xp-ko">' + esc(ex.ko) + '</p>' : "") +
+    '<h4 class="sec-h">예문</h4><ol class="ex">' + items + '</ol>' + story);
 }
 
 function openList() {
