@@ -1,0 +1,2769 @@
+<!-- 카드를 추가하려면 CARDS 배열 끝에 객체를 붙여넣으세요 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F5F3EE" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>한 장 영어</title>
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#121417;
+    --bg-2:#1A1D21;
+    --bg-3:#23272D;
+    --text:#ECE9E4;
+    --text-2:#C9CBCF;
+    --muted:#A1A7B0;
+    --faint:#6E747D;
+    --line:rgba(255,255,255,.08);
+    --bubble:#1F2328;
+    --bubble-text:#E9E7E3;
+    --accent:#86C2AC;
+    --accent-soft:rgba(134,194,172,.11);
+    --accent-line:rgba(134,194,172,.42);
+    --mark:rgba(134,194,172,.26);
+    --me:#2D5C4F;
+    --me-text:#F0F7F3;
+    --sheet:#1A1D21;
+    --scrim:rgba(0,0,0,.58);
+    --shadow:0 -12px 40px rgba(0,0,0,.45);
+    --toast:#2B3036;
+    --tag-l:74%;
+    --tag-a:.15;
+    --glow-a:.10;
+    --pad:20px;
+    --tabbar-h:58px;
+    --on-accent:#10201B;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      color-scheme: light;
+      --bg:#F5F3EE;
+      --bg-2:#ECE9E2;
+      --bg-3:#F0EDE6;
+      --text:#1F2226;
+      --text-2:#3B3F45;
+      --muted:#5E646C;
+      --faint:#979DA5;
+      --line:rgba(0,0,0,.08);
+      --bubble:#FFFFFF;
+      --bubble-text:#24272B;
+      --accent:#2C7A63;
+      --accent-soft:rgba(44,122,99,.07);
+      --accent-line:rgba(44,122,99,.36);
+      --mark:rgba(44,122,99,.16);
+      --me:#2C7A63;
+      --me-text:#FFFFFF;
+      --sheet:#FBFAF7;
+      --scrim:rgba(20,22,25,.34);
+      --shadow:0 -12px 40px rgba(0,0,0,.12);
+      --toast:#2B3036;
+      --tag-l:34%;
+      --tag-a:.12;
+      --glow-a:.09;
+      --on-accent:#FFFFFF;
+    }
+  }
+  @media (max-width:370px){ :root{ --pad:18px; } }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{
+    margin:0; height:100%;
+    background:var(--bg); color:var(--text);
+    overflow:hidden;
+    overscroll-behavior:none;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
+  body{
+    font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+    font-size:17px; line-height:1.55;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    word-break:keep-all; overflow-wrap:break-word;
+  }
+  button{
+    font:inherit; color:inherit; background:none; border:0; padding:0; margin:0;
+    cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+    -webkit-user-select:none; user-select:none;
+  }
+  button:focus{ outline:none; }
+  button:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  svg{ display:block; }
+
+  /* ---------- 앱 틀: 화면 + 하단 탭 바 ---------- */
+  .app{
+    height:100vh; height:100dvh;
+    display:flex; flex-direction:column;
+  }
+  .views{ position:relative; flex:1; min-height:0; }
+  .view{ position:absolute; inset:0; }
+  .view.off{ visibility:hidden; pointer-events:none; }   /* display:none이 아니라서 스크롤 위치·입력 내용이 그대로 남음 */
+  .tabbar{
+    position:relative; z-index:15;
+    flex:none; display:flex;
+    height:calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+    padding:0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    background:var(--bg);
+    border-top:1px solid var(--line);
+  }
+  .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    font-size:12.5px; font-weight:600; color:var(--faint);
+    transition:color .2s ease;
+  }
+  .tab svg{ width:23px; height:23px; }
+  .tab[aria-selected="true"]{ color:var(--accent); }
+  .tab:active svg{ transform:scale(.92); }
+  body.typing .tabbar{ display:none; }   /* 키보드가 올라와 있을 땐 입력칸을 넓게 */
+
+  /* ---------- 피드 ---------- */
+  .feed{
+    overflow-y:auto; overflow-x:hidden;
+    scroll-snap-type:y mandatory;
+    overscroll-behavior-y:none;
+    scrollbar-width:none;
+  }
+  .feed::-webkit-scrollbar{ display:none; }
+
+  .card{
+    --h:160;
+    position:relative;
+    height:100%;
+    scroll-snap-align:start; scroll-snap-stop:always;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  .card::before{
+    content:""; position:absolute; inset:0 0 auto 0; height:55%;
+    background:radial-gradient(120% 70% at 50% -15%, hsl(var(--h) 55% 50% / var(--glow-a)), transparent 62%);
+    pointer-events:none;
+  }
+
+  .top{
+    position:relative;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:calc(env(safe-area-inset-top, 0px) + 12px) max(var(--pad), env(safe-area-inset-right)) 8px max(var(--pad), env(safe-area-inset-left));
+  }
+  .tag{
+    font-size:13.5px; font-weight:600; letter-spacing:.01em;
+    padding:6px 12px; border-radius:999px;
+    color:hsl(var(--h) 52% var(--tag-l));
+    background:hsl(var(--h) 50% 55% / var(--tag-a));
+  }
+  .top-r{ display:flex; align-items:center; gap:2px; }
+  .jump{
+    display:flex; align-items:center; gap:6px;
+    height:36px; padding:0 10px; border-radius:999px;
+    font-size:14px; color:var(--faint); font-variant-numeric:tabular-nums; letter-spacing:.02em;
+  }
+  .jump:active{ background:var(--line); }
+  .jump svg{ width:17px; height:17px; }
+  .gear{
+    width:40px; height:40px; margin-right:-10px;
+    display:grid; place-items:center; border-radius:50%;
+    color:var(--faint);
+  }
+  .gear:active{ background:var(--line); }
+  .gear svg{ width:21px; height:21px; }
+
+  .body{
+    position:relative;
+    flex:1; min-height:0;
+    overflow-y:auto; overflow-x:hidden;
+    overscroll-behavior-y:auto;
+    padding:0 max(var(--pad), env(safe-area-inset-right)) 0 max(var(--pad), env(safe-area-inset-left));
+    scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 22px), transparent 100%);
+            mask-image:linear-gradient(to bottom, transparent 0, #000 14px, #000 calc(100% - 22px), transparent 100%);
+  }
+  .body::-webkit-scrollbar{ display:none; }
+  .inner{
+    min-height:100%;
+    display:flex; flex-direction:column; justify-content:flex-start;
+    padding:22px 0 30px;
+  }
+
+  .title{ margin:0; font-size:24px; line-height:1.3; font-weight:700; letter-spacing:-.015em; }
+  .situation{ margin:10px 0 0; font-size:17px; line-height:1.6; color:var(--text-2); }
+
+  /* ---------- 대화 ---------- */
+  .chat{ display:flex; flex-direction:column; gap:10px; margin-top:28px; }
+  .row{ display:flex; flex-direction:column; max-width:88%; }
+  .row.them{ align-self:flex-start; align-items:flex-start; }
+  .row.me{ align-self:flex-end; align-items:flex-end; }
+  .row.later{ display:none; }
+  .row.pop{ animation:popIn .38s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes popIn{ from{ opacity:0; transform:translateY(10px) scale(.98); } to{ opacity:1; transform:none; } }
+  .who{ font-size:13px; color:var(--faint); margin:0 0 5px 8px; }
+  .line{ display:flex; align-items:center; gap:8px; }
+
+  .bubble{
+    display:block;
+    font-size:17.5px; line-height:1.45; text-align:left;
+    padding:11px 15px; border-radius:20px;
+  }
+  .them .bubble{
+    background:var(--bubble); color:var(--bubble-text);
+    border-bottom-left-radius:6px;
+    transition:transform .12s ease;
+  }
+  .say:active{ transform:scale(.98); }
+  .say .ico{
+    display:inline-block; vertical-align:-2px; margin-left:6px;
+    width:16px; height:16px; color:var(--faint);
+  }
+  .say .ico svg{ width:16px; height:16px; }
+  .say.playing .ico{ color:var(--accent); }
+  .say.playing .ico svg{ animation:pulse 1s ease-in-out infinite; }
+  @media (prefers-color-scheme: light){
+    .them .bubble{ box-shadow:0 1px 2px rgba(0,0,0,.05), 0 0 0 1px rgba(0,0,0,.04); }
+  }
+
+  .blank{
+    position:relative; display:block;
+    font-size:17.5px; line-height:1.45; text-align:left;
+    padding:11px 15px; border-radius:20px; border-bottom-right-radius:6px;
+    border:1.5px dashed var(--accent-line);
+    background:var(--accent-soft);
+    color:var(--me-text);
+    transition:background-color .35s ease, border-color .35s ease, transform .12s ease;
+  }
+  .blank:active{ transform:scale(.97); }
+  .blank .ans{
+    display:block;
+    opacity:0; filter:blur(10px);
+    transition:opacity .35s ease, filter .45s ease;
+  }
+  .blank .lines{
+    position:absolute; inset:11px 15px;
+    display:flex; flex-direction:column; justify-content:center; gap:9px;
+    transition:opacity .25s ease;
+    pointer-events:none;
+  }
+  .blank .lines i{ display:block; height:2px; border-radius:2px; background:var(--accent); opacity:.4; }
+  .blank .lines i:last-child{ width:58%; }
+  .blank.shown{ background:var(--me); border-color:transparent; border-style:solid; }
+  .blank.shown .ans{ opacity:1; filter:blur(0); }
+  .blank.shown .lines{ opacity:0; }
+
+  .spk{
+    flex:none;
+    width:36px; height:36px; border-radius:50%;
+    display:grid; place-items:center;
+    color:var(--accent); background:var(--accent-soft);
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .spk svg{ width:18px; height:18px; }
+  .spk:active{ transform:scale(.92); }
+  .spk.playing svg{ animation:pulse 1s ease-in-out infinite; }
+  .row.me .spk{ opacity:0; transform:scale(.6); pointer-events:none; }
+  .row.me.revealed .spk{ opacity:1; transform:none; pointer-events:auto; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+
+  .ko{
+    display:none;
+    font-size:15.5px; line-height:1.5; color:var(--muted);
+    margin:6px 8px 0;
+  }
+  .row.me .ko{ text-align:right; }
+  .card.ko-on .ko{ display:block; animation:fadeIn .25s ease both; }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+  .typing .dots{ display:flex; gap:5px; padding:16px 17px; }
+  .typing .dots i{ width:7px; height:7px; border-radius:50%; background:var(--muted); animation:blink 1s infinite ease-in-out; }
+  .typing .dots i:nth-child(2){ animation-delay:.15s; }
+  .typing .dots i:nth-child(3){ animation-delay:.3s; }
+  @keyframes blink{ 0%,80%,100%{ opacity:.25; transform:translateY(0); } 40%{ opacity:.85; transform:translateY(-3px); } }
+
+  .hint{
+    font-size:12.5px; color:var(--faint);
+    margin:6px 6px 0 0; max-height:20px;
+    transition:opacity .3s ease, max-height .4s ease .2s, margin .4s ease .2s;
+  }
+  .hint.gone{ opacity:0; max-height:0; margin-top:0; }
+
+  /* ---------- 표현 패널 ---------- */
+  .expr-wrap{
+    display:grid; grid-template-rows:0fr;
+    opacity:0; visibility:hidden;
+    transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, visibility 0s linear .4s;
+  }
+  .expr-clip{ overflow:hidden; min-height:0; }
+  .card.open .expr-wrap{
+    grid-template-rows:1fr; opacity:1; visibility:visible;
+    transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1), opacity .35s ease .05s, visibility 0s;
+  }
+  .expr{ padding-top:30px; }
+  .expr-label{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint);
+    margin-bottom:6px;
+  }
+  .expr-label small{ font-size:12.5px; font-weight:400; letter-spacing:0; }
+  .expr-item{ padding:14px 0 16px; border-top:1px solid var(--line); }
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:8px 12px 8px 15px; border-radius:999px;
+    font-size:17px; font-weight:650; line-height:1.3;
+    color:var(--accent); background:var(--accent-soft);
+    border:1px solid var(--accent-line);
+    transition:transform .12s ease, background-color .2s ease;
+  }
+  .chip:active{ transform:scale(.96); }
+  .chip svg{ width:16px; height:16px; opacity:.8; flex:none; }
+  .expr-ko{ margin:10px 2px 0; font-size:17px; line-height:1.62; color:var(--text-2); }
+
+  /* ---------- 하단 버튼 ---------- */
+  .bottom{
+    position:relative;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    padding:10px max(var(--pad), env(safe-area-inset-right)) 14px max(var(--pad), env(safe-area-inset-left));   /* 아래 여백(제스처 바)은 탭 바가 맡음 */
+  }
+  .actions{ display:flex; gap:10px; width:100%; }
+  .btn{
+    height:54px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-size:17px; font-weight:600;
+    background:var(--bg-2); color:var(--text);
+    border:1px solid var(--line);
+    transition:transform .12s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn:active{ transform:scale(.98); }
+  .more{ flex:1; }
+  .more svg{ width:18px; height:18px; transition:transform .35s ease; }
+  .card.open .more svg{ transform:rotate(180deg); }
+  .ko-btn{ flex:none; width:78px; font-size:16px; color:var(--muted); }
+  .play-all{ flex:none; width:58px; color:var(--accent); }
+  .play-all svg{ width:22px; height:22px; }
+  .play-all .i-stop{ display:none; }
+  .card.playing-all .play-all{ background:var(--accent-soft); border-color:var(--accent-line); }
+  .card.playing-all .play-all .i-play{ display:none; }
+  .card.playing-all .play-all .i-stop{ display:block; }
+  .ko-btn[aria-pressed="true"]{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .swipe-hint{ font-size:12.5px; color:var(--faint); }
+
+  /* ---------- 마지막 카드 ---------- */
+  .end .inner{ align-items:center; justify-content:center; text-align:center; }
+  .end-emoji{ font-size:44px; line-height:1; margin-bottom:18px; }
+  .end-title{ margin:0; font-size:34px; font-weight:750; letter-spacing:-.02em; }
+  .end-sub{ margin:12px 0 0; font-size:17px; line-height:1.65; color:var(--text-2); }
+
+  /* ---------- 바텀시트 ---------- */
+  .scrim{
+    position:fixed; inset:0; z-index:20;
+    background:var(--scrim);
+    opacity:0; pointer-events:none;
+    transition:opacity .28s ease;
+    touch-action:none;
+  }
+  .scrim.on{ opacity:1; pointer-events:auto; }
+  .sheet{
+    position:fixed; left:0; right:0; bottom:0; z-index:21;
+    max-height:88vh; max-height:88dvh;
+    display:flex; flex-direction:column;
+    background:var(--sheet);
+    border-radius:24px 24px 0 0;
+    box-shadow:var(--shadow);
+    transform:translateY(105%);
+    visibility:hidden;
+    transition:transform .32s cubic-bezier(.2,.8,.2,1), visibility 0s linear .32s;
+  }
+  .sheet.on{
+    transform:translateY(0); visibility:visible;
+    transition:transform .36s cubic-bezier(.2,.8,.2,1), visibility 0s;
+  }
+  .sheet.dragging{ transition:none; }
+  .sheet-head{
+    flex:none; touch-action:none;
+    padding:10px max(var(--pad), env(safe-area-inset-right)) 14px max(var(--pad), env(safe-area-inset-left));
+    border-bottom:1px solid var(--line);
+  }
+  .handle{ width:40px; height:5px; border-radius:3px; background:var(--faint); opacity:.5; margin:0 auto 14px; }
+  .sheet-ctx{ font-size:13px; color:var(--faint); }
+  .sheet-title{ margin:4px 0 0; font-size:24px; line-height:1.3; font-weight:700; color:var(--accent); letter-spacing:-.01em; }
+  .sheet-body{
+    flex:1; min-height:0; overflow-y:auto;
+    overscroll-behavior:contain;
+    padding:6px max(var(--pad), env(safe-area-inset-right)) 8px max(var(--pad), env(safe-area-inset-left));
+  }
+  .sec-h{
+    margin:20px 0 6px;
+    font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint);
+  }
+  .sec-row{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 6px; }
+  .sec-row .sec-h{ margin:0; }
+  .pill{
+    display:inline-flex; align-items:center; gap:6px;
+    height:36px; padding:0 14px 0 11px; border-radius:999px;
+    font-size:14.5px; font-weight:600;
+    color:var(--accent); background:var(--accent-soft);
+  }
+  .pill svg{ width:17px; height:17px; }
+  .pill.playing svg{ animation:pulse 1s ease-in-out infinite; }
+  .pill:active{ transform:scale(.96); }
+  .ex{ list-style:none; margin:0; padding:0; counter-reset:ex; }
+  .ex li{
+    counter-increment:ex;
+    position:relative; padding:12px 44px 12px 30px;
+    border-bottom:1px solid var(--line);
+  }
+  .ex li:last-child{ border-bottom:0; }
+  .ex li::before{
+    content:counter(ex);
+    position:absolute; left:0; top:14px;
+    width:20px; height:20px; border-radius:50%;
+    font-size:12px; font-weight:600; line-height:20px; text-align:center;
+    color:var(--accent); background:var(--accent-soft);
+  }
+  .ex .spk{ position:absolute; right:0; top:10px; width:34px; height:34px; }
+  .ex-en{ font-size:17px; line-height:1.5; }
+  .ex-ko{ margin-top:3px; font-size:16px; line-height:1.55; color:var(--muted); }
+  mark{
+    color:inherit; font-weight:650;
+    background:linear-gradient(transparent 58%, var(--mark) 58%);
+    border-radius:2px; padding:0 1px;
+  }
+  .story{
+    margin-top:6px; padding:16px 16px 14px;
+    border-radius:18px; background:var(--bg-3);
+  }
+  .story-en{ margin:0; font-size:17.5px; line-height:1.7; }
+  .story-ko{ margin:12px 0 0; padding-top:12px; border-top:1px solid var(--line); font-size:16px; line-height:1.65; color:var(--muted); }
+  .sheet-foot{
+    flex:none;
+    padding:10px max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 14px) max(var(--pad), env(safe-area-inset-left));
+    border-top:1px solid var(--line);
+  }
+  .sheet-close{ width:100%; }
+
+  /* ---------- 설정 ---------- */
+  .set-group{ padding:16px 0; border-bottom:1px solid var(--line); }
+  .set-group:last-child{ border-bottom:0; }
+  .set-label{ display:block; font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint); margin-bottom:9px; }
+  .seg{ display:flex; gap:3px; padding:3px; border-radius:13px; background:var(--bg-2); border:1px solid var(--line); }
+  .seg button{ flex:1; height:42px; border-radius:10px; font-size:15.5px; color:var(--muted); }
+  .seg button[aria-pressed="true"]{ background:var(--bubble); color:var(--text); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.18); }
+  .field{
+    display:block; width:100%; height:48px; padding:0 14px;
+    border-radius:12px; border:1px solid var(--line);
+    background:var(--bg-2); color:var(--text);
+    font:inherit; font-size:16px;
+  }
+  .field:focus{ outline:2px solid var(--accent-line); outline-offset:0; }
+  .field + .field{ margin-top:8px; }
+  .note{ margin:9px 2px 0; font-size:14px; line-height:1.6; color:var(--muted); }
+  .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .switch-row .set-label{ margin:0; font-size:16px; letter-spacing:0; color:var(--text); font-weight:500; }
+  .switch{ flex:none; width:52px; height:32px; border-radius:999px; background:var(--bg-3); border:1px solid var(--line); position:relative; transition:background-color .2s ease; }
+  .switch::after{ content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:transform .2s ease; }
+  .switch[aria-checked="true"]{ background:var(--accent); border-color:transparent; }
+  .switch[aria-checked="true"]::after{ transform:translateX(20px); }
+  .el-only[hidden]{ display:none; }
+  .btn-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btn-row .btn{ flex:1; height:46px; font-size:15.5px; min-width:140px; }
+
+  /* ---------- 목록 ---------- */
+  .prog{ padding:14px 0 16px; }
+  .prog-text{ font-size:15.5px; color:var(--text-2); margin-bottom:9px; }
+  .prog-text b{ color:var(--accent); }
+  .bar{ height:6px; border-radius:3px; background:var(--bg-3); overflow:hidden; }
+  .bar i{ display:block; height:100%; border-radius:3px; background:var(--accent); }
+  .toc-group{ margin-top:34px; }
+  .toc-group:first-of-type{ margin-top:26px; }
+  .toc-head{ display:flex; align-items:center; gap:11px; margin-bottom:10px; }
+  .toc-emoji{
+    flex:none; width:36px; height:36px; border-radius:11px;
+    display:grid; place-items:center; font-size:19px; line-height:1;
+    background:hsl(var(--h) 50% 55% / var(--tag-a));
+  }
+  .toc-cat{
+    margin:0; flex:1;
+    font-size:20px; font-weight:750; letter-spacing:-.015em;
+    color:hsl(var(--h) 52% var(--tag-l));
+  }
+  .toc-cnt{ font-size:13.5px; color:var(--faint); font-variant-numeric:tabular-nums; }
+  .toc{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+  .toc-item{
+    position:relative;
+    width:100%; display:flex; align-items:center; gap:12px;
+    padding:12px 12px 12px 14px; border-radius:12px;
+    text-align:left; font-size:16.5px; line-height:1.4;
+  }
+  .toc-item:active{ background:var(--line); }
+  .toc-n{
+    flex:none; width:28px; height:28px; border-radius:50%;
+    display:grid; place-items:center;
+    font-size:13px; font-weight:600; color:var(--muted); background:var(--bg-2);
+  }
+  .toc-t{ flex:1; min-width:0; }
+  .toc-check{
+    flex:none; width:24px; height:24px; border-radius:50%;
+    display:grid; place-items:center;
+    border:1.5px solid var(--line);
+  }
+  .toc-check svg{ width:14px; height:14px; }
+  .toc-item.seen .toc-check{ background:var(--accent); border-color:transparent; color:var(--on-accent); }
+  .toc-item.current{ background:var(--accent-soft); }
+  .toc-item.current::before{
+    content:""; position:absolute; left:0; top:9px; bottom:9px;
+    width:3.5px; border-radius:2px; background:var(--accent);
+  }
+  .toc-item.current .toc-t{ font-weight:650; }
+  .toc-item.current .toc-n{ color:var(--accent); background:var(--bg-2); }
+
+  /* ---------- 글쓰기 ---------- */
+  .write{
+    overflow-y:auto; overflow-x:hidden;
+    overscroll-behavior-y:contain;
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) 40px max(var(--pad), env(safe-area-inset-left));
+  }
+  .w-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  .w-date{ font-size:13.5px; color:var(--faint); font-weight:600; letter-spacing:.02em; }
+  .w-title{ margin:4px 0 0; font-size:24px; line-height:1.3; font-weight:700; letter-spacing:-.015em; }
+  .w-top .gear{ margin-top:2px; }
+  .q-card{
+    margin-top:20px; padding:18px 18px 16px;
+    border-radius:20px;
+    background:radial-gradient(120% 120% at 0% 0%, var(--accent-soft), transparent 70%), var(--bg-2);
+    border:1px solid var(--line);
+  }
+  .q-label{ font-size:12.5px; font-weight:700; letter-spacing:.06em; color:var(--accent); }
+  .q-en{ margin:8px 0 0; font-size:21px; line-height:1.4; font-weight:650; letter-spacing:-.01em; }
+  .q-ko{ margin:8px 0 0; font-size:15px; line-height:1.55; color:var(--muted); }
+  .w-label{ display:block; margin:26px 2px 8px; font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint); }
+  .w-area{
+    display:block; width:100%; resize:none; overflow:hidden;
+    padding:14px 16px; border-radius:16px;
+    border:1px solid var(--line); background:var(--bg-2); color:var(--text);
+    font:inherit; font-size:17px; line-height:1.65;
+    -webkit-user-select:text; user-select:text;
+  }
+  .w-area:focus{ outline:2px solid var(--accent-line); outline-offset:0; }
+  .w-area::placeholder{ color:var(--faint); }
+  .w-main{ font-size:18.5px; line-height:1.7; min-height:190px; }
+  #wFix{ min-height:140px; }
+  .w-meta{ display:flex; justify-content:space-between; margin:8px 4px 0; font-size:13px; color:var(--faint); font-variant-numeric:tabular-nums; }
+  .w-ico{ display:inline-grid; place-items:center; width:20px; height:20px; }
+  .w-ico svg{ width:20px; height:20px; }
+  .when-on{ display:none !important; }
+  .playing > .when-off, .done > .when-off{ display:none !important; }
+  .playing > .when-on, .done > .when-on{ display:inline-grid !important; }
+  .h-chev svg{ width:100%; height:100%; }
+  .w-copy{ width:100%; margin-top:14px; color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .w-copy.done{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .listen-row{ display:flex; gap:10px; margin-top:12px; }
+  .w-listen{ flex:1; }
+  .w-listen.playing{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .w-rate{ flex:none; width:136px; align-self:center; }
+  .w-h{ margin:40px 0 4px; font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint); }
+  .w-empty{ margin:10px 2px 0; font-size:15px; color:var(--faint); }
+  .w-history details{ border-bottom:1px solid var(--line); }
+  .w-history summary{
+    list-style:none; cursor:pointer;
+    display:flex; align-items:center; gap:12px;
+    padding:14px 2px;
+  }
+  .w-history summary::-webkit-details-marker{ display:none; }
+  .h-date{ flex:none; font-size:13px; font-weight:600; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .h-q{ flex:1; min-width:0; font-size:15.5px; color:var(--text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .h-chev{ flex:none; width:18px; height:18px; color:var(--faint); transition:transform .25s ease; }
+  .w-history details[open] .h-chev{ transform:rotate(180deg); }
+  .h-body{ padding:0 2px 18px; }
+  .h-qfull{ margin:0; font-size:16.5px; font-weight:600; line-height:1.5; }
+  .h-qko{ margin:4px 0 0; font-size:14px; color:var(--muted); }
+  .h-label-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 0 6px; }
+  .h-label-row .h-label{ margin:0; }
+  .h-listen{ height:34px; }
+  .h-listen .when-on svg, .h-listen .when-off svg{ width:16px; height:16px; }
+  .h-label{ margin:14px 0 6px; font-size:12.5px; font-weight:600; letter-spacing:.04em; color:var(--faint); }
+  .h-text{
+    margin:0; padding:12px 14px; border-radius:14px; background:var(--bg-2);
+    font-size:16px; line-height:1.65; white-space:pre-wrap; word-break:break-word;
+    -webkit-user-select:text; user-select:text;
+  }
+
+  /* ---------- 토스트 ---------- */
+  .toast{
+    position:fixed; left:50%; z-index:40;
+    bottom:calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-h) + 84px);
+    max-width:calc(100% - 40px);
+    padding:11px 18px; border-radius:16px;
+    background:var(--toast); color:#F1EFEB;
+    font-size:14.5px; line-height:1.45; text-align:center;
+    box-shadow:0 6px 24px rgba(0,0,0,.3);
+    opacity:0; transform:translate(-50%, 10px);
+    transition:opacity .25s ease, transform .25s ease;
+    pointer-events:none;
+  }
+  .toast.on{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="views">
+    <main class="view feed" id="feed" aria-label="영어 회화 카드"></main>
+
+    <section class="view write off" id="viewWrite" aria-label="글쓰기" inert>
+      <header class="w-top">
+        <div>
+          <div class="w-date" id="wDate"></div>
+          <h2 class="w-title">오늘의 영어 일기</h2>
+        </div>
+        <button class="gear" id="wGear" type="button" aria-label="글쓰기 설정"></button>
+      </header>
+
+      <div class="q-card">
+        <div class="q-label">오늘의 질문</div>
+        <p class="q-en" id="qEn"></p>
+        <p class="q-ko" id="qKo"></p>
+      </div>
+
+      <label class="w-label" for="wText">내 글</label>
+      <textarea class="w-area w-main" id="wText" rows="6" placeholder="Write in English…" autocapitalize="sentences"></textarea>
+      <div class="w-meta"><span id="wSaved"></span><span id="wCount">0 words</span></div>
+
+      <button class="btn w-copy" id="wCopy" type="button"><span class="w-ico" id="wCopyIco"></span><span id="wCopyLabel">AI 첨삭용으로 복사</span></button>
+
+      <label class="w-label" for="wFix">첨삭 붙여넣기</label>
+      <textarea class="w-area" id="wFix" rows="5" placeholder="AI가 고쳐 준 글을 여기에 붙여넣으세요"></textarea>
+
+      <div class="listen-row">
+        <button class="btn w-listen" id="wListen" type="button"><span class="w-ico" id="wListenIco"></span><span id="wListenLabel">듣기</span></button>
+        <div class="seg w-rate" id="wRate">
+          <button type="button" data-v="0.8">0.8x</button>
+          <button type="button" data-v="1">1.0x</button>
+        </div>
+      </div>
+
+      <h3 class="w-h">지난 기록</h3>
+      <div class="w-history" id="wHistory"></div>
+    </section>
+  </div>
+
+  <nav class="tabbar" role="tablist" aria-label="화면 전환">
+    <button class="tab" id="tabCards" type="button" role="tab" data-tab="cards" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M8 21h8"/></svg>
+      <span>표현</span>
+    </button>
+    <button class="tab" id="tabWrite" type="button" role="tab" data-tab="write" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>
+      <span>글쓰기</span>
+    </button>
+  </nav>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true">
+  <div class="sheet-head" id="sheetHead">
+    <div class="handle"></div>
+    <div class="sheet-ctx" id="sheetCtx"></div>
+    <h3 class="sheet-title" id="sheetTitle"></h3>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+  <div class="sheet-foot">
+    <button class="btn sheet-close" id="sheetClose" type="button">닫기</button>
+  </div>
+</section>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* 카드를 추가하려면 CARDS 배열 끝에 객체를 붙여넣으세요 */
+/* dialogue의 ko(한국어 뜻)는 '한글' 버튼을 눌렀을 때만 보여요. */
+const CARDS = [
+  {
+    id: 1,
+    category: "카페·식당",
+    title: "카페에서 주문하기",
+    situation: "동네 카페에서 따뜻한 아메리카노를 주문하려고 해요. 가져갈 거고, 직원이 이름도 물어볼 거예요.",
+    dialogue: [
+      { who: "staff", en: "Hi there! What can I get started for you?", ko: "안녕하세요! 뭐 준비해 드릴까요?" },
+      { who: "me", en: "Can I get a medium hot americano, please?", ko: "따뜻한 아메리카노 미디엄으로 주시겠어요?" },
+      { who: "staff", en: "Sure thing. For here or to go?", ko: "그럼요. 드시고 가세요, 가져가세요?" },
+      { who: "me", en: "To go, please.", ko: "가져갈게요." },
+      { who: "staff", en: "Perfect. And can I get a name for the order?", ko: "좋아요. 주문하신 분 성함이 어떻게 되세요?" },
+      { who: "me", en: "It's Minji.", ko: "민지예요." },
+      { who: "staff", en: "Sorry, how do you spell that?", ko: "죄송한데, 철자가 어떻게 되세요?" },
+      { who: "me", en: "M-I-N-J-I.", ko: "M-I-N-J-I요." }
+    ],
+    expressions: [
+      {
+        phrase: "Can I get ~?",
+        ko: "주문할 때 제일 많이 쓰는 말로, '~ 주세요'를 부드럽게 말하는 느낌이에요. 뒤에 please를 붙이면 더 공손해요. 주문뿐 아니라 뭔가 부탁할 때도 두루 써요. 비슷한 표현: I'll have ~. / Could I get ~?",
+        examples: [
+          { en: "Can I get the check when you get a chance?", ko: "시간 되실 때 계산서 좀 주시겠어요?" },
+          { en: "Can I get a window seat, please?", ko: "창가 자리로 주실 수 있나요?" },
+          { en: "Can I get a quick update on the project before lunch?", ko: "점심 전에 프로젝트 진행 상황 좀 간단히 들을 수 있을까요?" },
+          { en: "Can I get a bite of your sandwich?", ko: "네 샌드위치 한 입만 먹어봐도 돼?" },
+          { en: "Can I get a late checkout tomorrow?", ko: "내일 레이트 체크아웃 가능할까요?" }
+        ],
+        story: {
+          en: "So yesterday I walked into this tiny café, and I got super nervous because the line was so long. When it was finally my turn, I just blurted out, “Can I get an iced latte?” and the barista goes, “Sure, what size?” I totally hadn't thought about sizes, so I just pointed at a random cup and laughed it off.",
+          ko: "어제 진짜 작은 카페에 들어갔는데, 줄이 너무 길어서 엄청 긴장했거든. 드디어 내 차례가 돼서 그냥 “아이스 라떼 주세요” 하고 불쑥 말했는데, 바리스타가 “네, 사이즈는요?” 하는 거야. 사이즈는 생각도 못 해서, 그냥 아무 컵이나 가리키고 웃어넘겼지."
+        }
+      },
+      {
+        phrase: "~ to go",
+        ko: "'포장해서 가져갈게요'라는 뜻이에요. 음식·음료 이름 뒤에 붙이면 끝. 점원이 For here or to go?(드시고 가세요, 가져가세요?)라고 물으면 To go 한마디로 답하면 돼요. 먹다 남은 음식을 싸 달라고 할 때도 써요. 비슷한 표현: takeout(포장 음식)",
+        examples: [
+          { en: "Can I get the rest of this to go?", ko: "남은 거 포장해 갈 수 있을까요?" },
+          { en: "I'll just grab a salad to go and eat at my desk.", ko: "그냥 샐러드 포장해서 자리에서 먹을게요." },
+          { en: "Let's get tacos to go and eat by the river.", ko: "타코 포장해서 강가에서 먹자." },
+          { en: "We grabbed two coffees to go before our train left.", ko: "기차 떠나기 전에 커피 두 잔 포장해 왔어." },
+          { en: "Is that for here or to go?", ko: "드시고 가세요, 가져가세요?" }
+        ],
+        story: {
+          en: "Okay, so this morning I was running super late, right? I ran into the café and said, “One latte to go, please!” like I was in some movie. Then I realized I'd left my wallet at home, so I had to pay with my phone while the whole line watched me. So embarrassing.",
+          ko: "오늘 아침에 나 완전 늦었거든? 카페에 뛰어 들어가서 무슨 영화 주인공처럼 “라떼 한 잔 포장이요!” 했지. 근데 지갑을 집에 두고 온 걸 알아채서, 줄 선 사람들이 다 보는 앞에서 폰으로 결제해야 했어. 진짜 창피했어."
+        }
+      },
+      {
+        phrase: "Sure thing.",
+        ko: "'물론이죠', '그럼요'라는 밝은 대답이에요. 그냥 Sure보다 친근하고 기분 좋은 느낌. 점원이 손님 부탁에 대답할 때 정말 자주 들려요. 비슷한 표현: You got it. / No problem.",
+        examples: [
+          { en: "Sure thing, I'll send you the file in a minute.", ko: "그럼요, 금방 파일 보내드릴게요." },
+          { en: "Sure thing, I'll save you a seat.", ko: "그럼, 네 자리 맡아둘게." },
+          { en: "Sure thing, your table will be ready in five minutes.", ko: "물론이죠, 5분 뒤에 테이블 준비돼요." },
+          { en: "Sure thing, I'll bring up some extra towels right away.", ko: "물론이죠, 수건 바로 더 가져다드릴게요." },
+          { en: "Sure thing, I can pick you up at the airport.", ko: "그럼, 공항으로 데리러 갈게." }
+        ],
+        story: {
+          en: "Last night my roommate texted me asking if I could feed her cat this weekend. I just replied, “Sure thing!” without even checking my calendar. Then I remembered I'd already booked a trip to Busan for that exact weekend. So now I'm frantically looking for a cat sitter, which is so me.",
+          ko: "어젯밤에 룸메이트가 이번 주말에 고양이 밥 좀 줄 수 있냐고 문자를 보냈어. 나는 일정도 안 보고 “당연하지!” 하고 답장했지. 그러고 나서야 바로 그 주말에 부산 여행을 이미 예약해 둔 게 생각난 거야. 그래서 지금 정신없이 고양이 돌봐줄 사람 찾는 중이야. 완전 나답지."
+        }
+      }
+    ]
+  },
+  {
+    id: 2,
+    category: "카페·식당",
+    title: "음료가 잘못 나왔을 때",
+    situation: "분명 아이스 라떼를 시켰는데, 직원이 내 이름을 부르며 따뜻한 라떼를 내밀어요. 기분 상하지 않게 말하고 싶어요.",
+    dialogue: [
+      { who: "staff", en: "Medium hot latte for Jin?", ko: "따뜻한 라떼 미디엄, 진 님?" },
+      { who: "me", en: "Sorry, I think I ordered an iced latte.", ko: "죄송한데, 저 아이스 라떼 시킨 것 같아요." },
+      { who: "staff", en: "Oh shoot, my bad! Lemme remake that real quick.", ko: "아 이런, 제 실수예요! 금방 다시 만들어 드릴게요." },
+      { who: "me", en: "No worries, take your time.", ko: "괜찮아요, 천천히 하세요." },
+      { who: "staff", en: "Alright, one iced latte for Jin. Sorry about the mix-up!", ko: "자, 진 님 아이스 라떼 나왔어요. 헷갈려서 죄송해요!" },
+      { who: "me", en: "All good. Thanks!", ko: "괜찮아요. 감사합니다!" }
+    ],
+    expressions: [
+      {
+        phrase: "I think I ordered ~.",
+        ko: "'제가 ~ 시킨 것 같은데요'라는 뜻이에요. 앞에 I think를 붙이면 따지는 느낌 없이 부드럽게 실수를 짚을 수 있어요. 맨 앞에 Sorry나 Excuse me를 붙이면 더 자연스러워요. 비슷한 표현: I actually ordered ~. / This isn't what I ordered.(조금 더 직접적)",
+        examples: [
+          { en: "Excuse me, I think I ordered the salad, not the soup.", ko: "저기요, 수프 말고 샐러드 시킨 것 같은데요." },
+          { en: "Hi, this is room 512, and I think I ordered breakfast for two.", ko: "안녕하세요, 512호인데요, 아침 2인분 시킨 것 같아서요." },
+          { en: "Oops, I think I ordered the wrong size online.", ko: "헐, 온라인에서 사이즈 잘못 주문한 것 같아." },
+          { en: "I think I ordered too much food for just the two of us.", ko: "우리 둘이 먹기엔 음식을 너무 많이 시킨 것 같아." },
+          { en: "I think I ordered the wrong toner for the office printer.", ko: "사무실 프린터 토너를 잘못 주문한 것 같아요." }
+        ],
+        story: {
+          en: "So yesterday I went to this burger place downtown, and the guy handed me a fish burger. I was like, “Um, sorry, I think I ordered a cheeseburger?” He checked the receipt, and it turned out I was right, so he let me keep the fish burger too. Best mistake ever, honestly.",
+          ko: "어제 시내에 있는 버거집에 갔는데, 직원이 피시 버거를 주는 거야. 그래서 “어, 죄송한데 저 치즈버거 시킨 것 같은데요?” 했지. 직원이 영수증을 확인해 보니 내 말이 맞았고, 그래서 피시 버거도 그냥 가져가라고 하더라. 솔직히 인생 최고의 실수였어."
+        }
+      },
+      {
+        phrase: "My bad.",
+        ko: "'아, 내 실수! 미안' 하는 가벼운 사과예요. 큰 잘못보다는 사소한 실수에 써요. 점원이나 친구한테서 자주 들려서 알아듣기만 해도 좋아요. 비슷한 표현: Sorry about that. / That's on me.(그건 내 탓이야)",
+        examples: [
+          { en: "My bad, I sent you the wrong file.", ko: "죄송해요, 파일을 잘못 보냈네요." },
+          { en: "Oh, my bad, is this your seat?", ko: "어, 죄송해요, 여기 그쪽 자리예요?" },
+          { en: "My bad, I totally forgot to text you back.", ko: "미안, 답장하는 걸 완전 까먹었어." },
+          { en: "My bad, I gave you the wrong change.", ko: "죄송해요, 거스름돈을 잘못 드렸네요." },
+          { en: "My bad, I thought this was the line for checkout.", ko: "아 죄송해요, 여기가 계산 줄인 줄 알았어요." }
+        ],
+        story: {
+          en: "Last week I accidentally took my coworker's umbrella home from the office. The next morning she saw me holding it and was like, “Hey, is that mine?” I just laughed and said, “Oh, my bad!” Now she only buys neon pink umbrellas so nobody can grab them by mistake.",
+          ko: "지난주에 실수로 회사에서 동료 우산을 집에 들고 갔어. 다음 날 아침에 동료가 내가 그 우산 들고 있는 걸 보더니 “어, 그거 내 거 아니야?” 하는 거야. 나는 그냥 웃으면서 “아, 미안!” 했지. 이제 그 동료는 아무도 헷갈려서 못 가져가게 형광 핑크 우산만 사."
+        }
+      },
+      {
+        phrase: "No worries.",
+        ko: "'괜찮아요, 신경 쓰지 마세요'라는 뜻이에요. 상대가 사과할 때도, 고마워할 때도 둘 다 쓸 수 있어서 정말 편해요. 캐주얼하고 아주 흔해요. 비슷한 표현: No problem. / All good.",
+        examples: [
+          { en: "No worries, we can push the meeting to tomorrow.", ko: "괜찮아요, 회의는 내일로 미루면 돼요." },
+          { en: "No worries, I'll just catch the next bus.", ko: "괜찮아요, 다음 버스 타면 돼요." },
+          { en: "No worries, you can pay me back later.", ko: "괜찮아, 나중에 갚아." },
+          { en: "No worries, the food was still really good.", ko: "괜찮아요, 음식은 그래도 정말 맛있었어요." },
+          { en: "No worries, I found my room key in my bag.", ko: "괜찮아요, 방 키 가방에서 찾았어요." }
+        ],
+        story: {
+          en: "Yesterday my friend showed up forty minutes late to dinner, and she looked super stressed. I just told her, “No worries, I already ordered appetizers!” We ended up talking for, like, three hours, so the late start didn't even matter.",
+          ko: "어제 친구가 저녁 약속에 40분이나 늦게 왔는데, 엄청 스트레스받은 얼굴이더라. 그래서 그냥 “괜찮아, 애피타이저 벌써 시켜놨어!” 했지. 결국 한 세 시간은 수다 떨었으니까, 늦게 시작한 건 아무 상관도 없었어."
+        }
+      }
+    ]
+  },
+  {
+    id: 3,
+    category: "카페·식당",
+    title: "식당에서 계산서 요청하기",
+    situation: "친구와 식당에서 밥을 다 먹었어요. 직원에게 계산서를 달라고 하고, 각자 카드로 따로 계산하고 싶어요.",
+    dialogue: [
+      { who: "server", en: "How's everything tasting? Can I get you guys anything else?", ko: "음식은 괜찮으세요? 더 필요한 거 있으세요?" },
+      { who: "me", en: "We're good, thanks. Could we get the check?", ko: "괜찮아요, 감사해요. 계산서 좀 주시겠어요?" },
+      { who: "server", en: "Absolutely. Is this gonna be all together or separate?", ko: "물론이죠. 한 번에 계산하실 건가요, 따로 하실 건가요?" },
+      { who: "me", en: "Separate, please. We'll each pay by card.", ko: "따로요. 각자 카드로 낼게요." },
+      { who: "server", en: "No problem. I'll be right back with those.", ko: "알겠습니다. 금방 가져다 드릴게요." },
+      { who: "me", en: "Thanks. Everything was delicious!", ko: "감사해요. 다 정말 맛있었어요!" }
+    ],
+    expressions: [
+      {
+        phrase: "the check",
+        ko: "식당의 '계산서'는 미국에서 보통 the check라고 해요. bill도 통하지만 미국에선 check가 훨씬 흔해요. 멀리 있는 직원에게 허공에 사인하는 손짓만 해도 알아들어요. 비슷한 표현: Check, please. / Can we get the bill?",
+        examples: [
+          { en: "Excuse me, could we get the check, please?", ko: "저기요, 계산서 좀 주시겠어요?" },
+          { en: "Let's grab the check and head to the movie.", ko: "계산하고 영화 보러 가자." },
+          { en: "My boss always picks up the check at team dinners.", ko: "우리 팀장님은 회식 때 항상 계산하셔." },
+          { en: "The check came, and it was way more than we expected.", ko: "계산서가 나왔는데 생각보다 훨씬 많이 나왔어." },
+          { en: "Can you split the check three ways?", ko: "계산서를 세 명으로 나눠 주실 수 있어요?" }
+        ],
+        story: {
+          en: "So last Friday I took my parents to this fancy steak place for their anniversary. When the check came, my dad grabbed it super fast and refused to let me pay. We literally fought over it at the table like we were in a comedy show. In the end, I snuck up to the counter and paid while he was in the bathroom.",
+          ko: "지난 금요일에 부모님 결혼기념일이라 고급 스테이크집에 모시고 갔거든. 계산서가 나오자마자 아빠가 엄청 빨리 낚아채더니 나보고 절대 못 내게 하시는 거야. 진짜 무슨 코미디 쇼처럼 테이블에서 계산서 가지고 싸웠어. 결국 아빠 화장실 가신 사이에 몰래 카운터 가서 계산했지."
+        }
+      },
+      {
+        phrase: "separate",
+        ko: "'따로따로'라는 뜻이에요. 식당에서 Together or separate?(같이 계산하세요, 따로 하세요?)라고 물으면 Separate, please.는 각자 계산, Together, please.는 한 번에 계산이에요. 비슷한 표현: separate checks(계산서 따로)",
+        examples: [
+          { en: "Can we get separate checks, please?", ko: "계산서 따로 주실 수 있어요?" },
+          { en: "Let's take separate cars so you can leave early.", ko: "너 일찍 갈 수 있게 차 따로 타고 가자." },
+          { en: "I try to keep my work and personal emails separate.", ko: "업무 메일이랑 개인 메일은 따로 관리하려고 해요." },
+          { en: "Do you want separate bags for these?", ko: "이거 봉투 따로 담아 드릴까요?" },
+          { en: "We booked separate rooms for the trip.", ko: "여행 때 방을 따로 잡았어." }
+        ],
+        story: {
+          en: "Okay, so I went out for dinner with, like, eight coworkers last week. When the server asked if we wanted separate checks, everyone said yes at the same time. The poor guy spent twenty minutes figuring out who ordered what. Next time, I'm just gonna suggest we split it evenly.",
+          ko: "지난주에 동료 한 여덟 명이랑 저녁 먹으러 갔거든. 직원이 계산서 따로 드릴까요 하니까 다들 동시에 네! 한 거야. 그 불쌍한 직원은 누가 뭘 시켰는지 알아내느라 20분을 썼어. 다음엔 그냥 똑같이 나눠 내자고 해야겠어."
+        }
+      },
+      {
+        phrase: "be right back",
+        ko: "'금방 올게요'라는 뜻이에요. 직원이 뭔가 가지러 갈 때 거의 매번 하는 말이에요. 문자에선 brb로 줄여 쓰기도 해요. 비슷한 표현: Give me a sec. / Back in a minute.",
+        examples: [
+          { en: "I'll be right back with your drinks.", ko: "음료 금방 가져다 드릴게요." },
+          { en: "Hold on, I'll be right back. I left my phone in the car.", ko: "잠깐만, 금방 올게. 폰을 차에 두고 왔어." },
+          { en: "I'm grabbing a coffee, be right back!", ko: "커피 좀 가지러 가요, 금방 올게요!" },
+          { en: "The manager will be right back to help you.", ko: "매니저가 곧 돌아와서 도와드릴 거예요." },
+          { en: "Could you watch my bag? I'll be right back.", ko: "제 가방 좀 봐 주실래요? 금방 올게요." }
+        ],
+        story: {
+          en: "So yesterday I was working on my laptop at a café, and I asked the guy next to me, “Can you watch my stuff? I'll be right back.” Then I ran into an old friend outside and ended up chatting for, like, thirty minutes. When I finally came back, he was still sitting there guarding my laptop like a bodyguard. I felt so bad that I bought him a coffee.",
+          ko: "어제 카페에서 노트북으로 일하다가 옆에 있던 남자한테 “제 물건 좀 봐 주실래요? 금방 올게요.” 했거든. 그러고 밖에서 옛날 친구를 만나서 한 30분을 수다 떨어 버린 거야. 겨우 돌아왔더니 그 사람이 경호원처럼 내 노트북을 아직도 지키고 있더라. 너무 미안해서 커피 한 잔 사 드렸어."
+        }
+      }
+    ]
+  },
+  {
+    id: 4,
+    category: "공항·숙소",
+    title: "입국심사 통과하기",
+    situation: "미국 공항 입국심사대 앞이에요. 심사관이 방문 목적, 머무는 기간, 지낼 곳을 물어봐요.",
+    dialogue: [
+      { who: "officer", en: "Hi. Passport, please. What brings you to the States?", ko: "안녕하세요. 여권 주세요. 미국엔 무슨 일로 오셨어요?" },
+      { who: "me", en: "I'm here on vacation.", ko: "휴가 왔어요." },
+      { who: "officer", en: "How long are you planning on staying?", ko: "얼마나 머무실 계획이에요?" },
+      { who: "me", en: "About ten days.", ko: "열흘 정도요." },
+      { who: "me", en: "I'm flying back on the 20th.", ko: "20일에 돌아가요." },
+      { who: "officer", en: "And where will you be staying?", ko: "어디서 지내실 거예요?" },
+      { who: "me", en: "At a hotel in downtown Seattle.", ko: "시애틀 시내에 있는 호텔이요." }
+    ],
+    expressions: [
+      {
+        phrase: "I'm here on ~.",
+        ko: "'~ 때문에 왔어요'라는 뜻으로, 방문 목적을 말할 때 딱이에요. on vacation(휴가), on business(출장) 두 개만 기억해도 입국심사는 끝. 비슷한 표현: I'm here for ~. / I'm visiting ~.",
+        examples: [
+          { en: "I'm here on business for a conference.", ko: "학회 때문에 출장 왔어요." },
+          { en: "I'm here on vacation with my family.", ko: "가족이랑 휴가 왔어요." },
+          { en: "I'm here on a work visa, so I have to renew it next year.", ko: "취업 비자로 와 있어서 내년에 갱신해야 해요." },
+          { en: "I'm here on my lunch break, so I've got to be quick.", ko: "점심시간에 온 거라 빨리 가야 해요." },
+          { en: "I'm here on a first date, so wish me luck.", ko: "나 첫 데이트 하러 왔어, 행운을 빌어 줘." }
+        ],
+        story: {
+          en: "So my first time going through immigration in LA, I was so nervous that my mind went totally blank. The officer asked why I was there, and I just said, “Uh… America?” He laughed and asked again, so I finally pulled myself together and said, “I'm here on vacation.” He stamped my passport and said, “Enjoy your trip,” and honestly, that made my whole day.",
+          ko: "LA에서 처음 입국심사 받을 때 너무 긴장해서 머리가 하얘졌거든. 심사관이 왜 왔냐고 묻는데 그냥 “어… 미국?” 이랬어. 심사관이 웃으면서 다시 물어봐서 겨우 정신 차리고 “휴가 왔어요.” 했지. 여권에 도장 찍어 주면서 “즐거운 여행 되세요” 하는데, 솔직히 그 한마디에 하루가 행복했어."
+        }
+      },
+      {
+        phrase: "planning on ~",
+        ko: "'~할 계획이에요/생각이에요'라는 뜻이에요. plan to ~와 같은 뜻인데, 대화에선 planning on ~ing가 정말 자주 들려요. 심사관이 How long are you planning on staying?처럼 빠르게 물어보니 귀에 익혀 두세요.",
+        examples: [
+          { en: "Are you planning on coming to the party tonight?", ko: "오늘 밤 파티에 올 생각이야?" },
+          { en: "We're planning on launching the app next month.", ko: "저희는 다음 달에 앱을 출시할 계획이에요." },
+          { en: "How long are you planning on staying in Paris?", ko: "파리에는 얼마나 있을 계획이야?" },
+          { en: "I'm planning on ordering the steak tonight.", ko: "오늘 저녁엔 스테이크 시킬 생각이야." },
+          { en: "I'm planning on moving out next spring.", ko: "내년 봄에 독립할 생각이야." }
+        ],
+        story: {
+          en: "My cousin came to visit me last month, and I asked how long she was planning on staying. She said, “Like, a week?” She ended up staying for almost a month and totally took over my couch. Honestly, it was kind of fun, though, so I'm not even mad.",
+          ko: "지난달에 사촌이 우리 집에 놀러 와서, 얼마나 있을 거냐고 물어봤거든. “음, 일주일?” 이러더라. 결국 거의 한 달을 있었고 우리 집 소파를 완전히 점령했어. 근데 솔직히 꽤 재밌어서 화도 안 나."
+        }
+      },
+      {
+        phrase: "About ~",
+        ko: "'~쯤, 대략 ~'이라는 뜻이에요. 숫자나 시간 앞에 붙이면 딱 맞아떨어지지 않아도 돼서 대답하기 훨씬 편해져요. 비슷한 표현: around ~ / ~ or so",
+        examples: [
+          { en: "It's about a ten-minute walk from here.", ko: "여기서 걸어서 10분쯤 걸려요." },
+          { en: "The wait is about twenty minutes right now.", ko: "지금 대기 시간이 20분 정도예요." },
+          { en: "I've been at this company for about three years.", ko: "이 회사 다닌 지 3년쯤 됐어요." },
+          { en: "We talked on the phone for about two hours last night.", ko: "어젯밤에 전화로 두 시간 정도 얘기했어." },
+          { en: "These shoes were about fifty bucks on sale.", ko: "이 신발 세일해서 50달러 정도였어." }
+        ],
+        story: {
+          en: "Yesterday I tried this new ramen place that everyone's obsessed with. The line was about an hour long, and I almost gave up. But I stayed, and the broth was so good that I'd honestly wait two hours next time. Don't tell my diet.",
+          ko: "어제 요즘 다들 난리 난 라멘집에 가 봤거든. 줄이 한 시간쯤 돼서 거의 포기할 뻔했어. 근데 버텼더니 국물이 너무 맛있어서, 솔직히 다음엔 두 시간도 기다릴 수 있을 것 같아. 내 다이어트한텐 비밀이야."
+        }
+      }
+    ]
+  },
+  {
+    id: 5,
+    category: "공항·숙소",
+    title: "호텔 체크인하기",
+    situation: "호텔 프런트에 도착했어요. 예약한 이름을 말하고 체크인한 다음, 조식이 몇 시인지도 물어보려고 해요.",
+    dialogue: [
+      { who: "staff", en: "Hi, welcome in! Checking in?", ko: "안녕하세요, 어서 오세요! 체크인하시나요?" },
+      { who: "me", en: "Yes, I have a reservation under Kim.", ko: "네, 김으로 예약했어요." },
+      { who: "staff", en: "Perfect. Can I see an ID and the card you booked with?", ko: "좋아요. 신분증이랑 예약하신 카드 좀 보여주시겠어요?" },
+      { who: "me", en: "Sure, here you go.", ko: "네, 여기요." },
+      { who: "staff", en: "You're all set. You're in room 1204, and here are your keys.", ko: "다 됐습니다. 1204호시고, 여기 키 드릴게요." },
+      { who: "me", en: "Thanks! What time is breakfast?", ko: "감사해요! 조식은 몇 시예요?" }
+    ],
+    expressions: [
+      {
+        phrase: "I have a reservation under ~.",
+        ko: "'~ 이름으로 예약했어요'라는 뜻이에요. 호텔·식당·렌터카 어디서든 그대로 써요. 뒤에 성(last name)만 붙이면 돼요. 비슷한 표현: I booked under ~. / The reservation's under ~.",
+        examples: [
+          { en: "Hi, I have a reservation under Park for two at seven.", ko: "안녕하세요, 7시에 두 명 박으로 예약했어요." },
+          { en: "I have a reservation under Lee for a rental car.", ko: "이 이름으로 렌터카 예약했는데요." },
+          { en: "I have a reservation under Choi for the 3 p.m. tour.", ko: "오후 3시 투어 최 이름으로 예약했어요." },
+          { en: "I have a reservation under my company's name, Hanbit Tech.", ko: "회사 이름인 한빛테크로 예약했어요." },
+          { en: "I have a reservation under Jung for a haircut at two.", ko: "2시에 정 이름으로 커트 예약했어요." }
+        ],
+        story: {
+          en: "So last weekend I showed up at this super popular brunch spot and confidently said, “Hi, I have a reservation under Kim.” The host checked the list and said there were, like, five Kims, but none of them were me. Turns out I'd booked it for the next weekend, not that day. We ended up eating hot dogs from a stand across the street, and it was weirdly perfect.",
+          ko: "지난 주말에 엄청 유명한 브런치집에 가서 자신 있게 “김으로 예약했어요.” 했거든. 직원이 명단을 보더니 김 씨가 한 다섯 명인데 다 내가 아니래. 알고 보니 그날이 아니라 다음 주말로 예약했더라고. 결국 길 건너 노점에서 핫도그 먹었는데, 이상하게 그게 완벽했어."
+        }
+      },
+      {
+        phrase: "Here you go.",
+        ko: "'여기요/여기 있어요'라는 뜻이에요. 물건을 건넬 때 하는 말로 점원도, 손님도 둘 다 써요. 비슷한 표현: Here it is. / There you go.",
+        examples: [
+          { en: "Here you go, one large pepperoni.", ko: "여기 있습니다, 페퍼로니 라지 하나요." },
+          { en: "Here you go, that's the report you asked for.", ko: "여기요, 말씀하신 보고서예요." },
+          { en: "Here you go, I saved you the last slice.", ko: "자, 마지막 조각 남겨 놨어." },
+          { en: "Here you go, my passport and boarding pass.", ko: "여기요, 여권이랑 탑승권이에요." },
+          { en: "Here you go, keep the change.", ko: "여기요, 잔돈은 괜찮아요." }
+        ],
+        story: {
+          en: "Yesterday the little kid in front of me at the grocery store was, like, fifty cents short for his candy. I handed him two quarters and said, “Here you go, buddy.” He looked at me like I was a superhero and ran off with the biggest smile. Best fifty cents I've ever spent.",
+          ko: "어제 마트에서 내 앞에 있던 꼬마가 사탕값이 50센트쯤 모자랐거든. 내가 25센트 동전 두 개를 주면서 “여기 있어, 꼬마야.” 했지. 걔가 나를 슈퍼히어로 보듯이 보더니 활짝 웃으면서 뛰어가더라. 내 인생 최고의 50센트였어."
+        }
+      },
+      {
+        phrase: "You're all set.",
+        ko: "'다 됐어요, 이제 끝났어요'라는 뜻이에요. 체크인·결제·접수가 끝났을 때 직원이 꼭 하는 말이에요. 이 말이 들리면 이제 가도 된다는 뜻! 비슷한 표현: You're good to go.",
+        examples: [
+          { en: "You're all set, your new phone is ready to go.", ko: "다 됐어요, 새 폰 바로 쓰시면 돼요." },
+          { en: "You're all set for tomorrow's presentation.", ko: "내일 발표 준비 다 됐어요." },
+          { en: "You're all set, your flight leaves from gate 12.", ko: "다 됐습니다, 비행기는 12번 게이트에서 출발해요." },
+          { en: "You're all set, enjoy your meal!", ko: "다 됐어요, 맛있게 드세요!" },
+          { en: "Okay, you're all set, see you next week!", ko: "자, 다 됐어요, 다음 주에 봬요!" }
+        ],
+        story: {
+          en: "So I finally went to renew my driver's license, and I was ready for a whole day of pain. But the lady at the counter typed for, like, two minutes and said, “You're all set!” I literally asked her, “Wait, that's it?” I was so happy that I treated myself to a milkshake on the way home.",
+          ko: "드디어 운전면허 갱신하러 갔는데, 하루 종일 고생할 각오를 하고 갔거든. 근데 창구 직원이 한 2분 타자 치더니 “다 됐어요!” 하는 거야. 진짜로 “잠깐, 이게 끝이에요?” 하고 물어봤어. 너무 기분 좋아서 집에 오는 길에 나한테 밀크셰이크 하나 사 줬지."
+        }
+      }
+    ]
+  },
+  {
+    id: 6,
+    category: "공항·숙소",
+    title: "방에 문제가 있을 때",
+    situation: "호텔 방에 들어왔더니 에어컨이 안 되고, 와이파이도 안 잡히고, 수건도 부족해요. 프런트에 전화했어요.",
+    dialogue: [
+      { who: "staff", en: "Front desk, this is Mike. How can I help?", ko: "프런트 데스크 마이크입니다. 무엇을 도와드릴까요?" },
+      { who: "me", en: "Hi, the AC in my room isn't working.", ko: "안녕하세요, 제 방 에어컨이 안 돼요." },
+      { who: "staff", en: "Oh, sorry about that. I'll send someone up right away.", ko: "아, 죄송합니다. 바로 사람 올려 보낼게요." },
+      { who: "me", en: "Also, I can't connect to the Wi-Fi.", ko: "그리고 와이파이 연결이 안 돼요." },
+      { who: "staff", en: "The password's on the back of your key card. Anything else?", ko: "비밀번호는 키 카드 뒷면에 있어요. 다른 건 없으세요?" },
+      { who: "me", en: "Could I get some extra towels, too?", ko: "수건도 좀 더 받을 수 있을까요?" }
+    ],
+    expressions: [
+      {
+        phrase: "~ isn't working.",
+        ko: "'~가 안 돼요/고장 났어요'라는 뜻이에요. 기계나 물건이 제대로 안 될 때 제일 쉽게 쓰는 말이에요. broken(망가진)보다 부드러워요. 비슷한 표현: ~ is broken. / ~ doesn't work.",
+        examples: [
+          { en: "The microwave in the break room isn't working again.", ko: "탕비실 전자레인지 또 안 돼요." },
+          { en: "Sorry, my card isn't working. Can I try another one?", ko: "죄송해요, 제 카드가 안 되네요. 다른 걸로 해 볼게요." },
+          { en: "The ticket machine isn't working, so we have to buy them inside.", ko: "발권기가 안 돼서 안에서 사야 해." },
+          { en: "My charger isn't working. Can I borrow yours?", ko: "내 충전기가 안 되는데, 네 거 좀 빌려도 돼?" },
+          { en: "Excuse me, the sink in the restroom isn't working.", ko: "저기요, 화장실 세면대 물이 안 나와요." }
+        ],
+        story: {
+          en: "So I checked into this cute Airbnb last night, and it was absolutely freezing. I texted the host, “Hi, the heater isn't working,” and she said she'd fix it in the morning. I ended up sleeping in my hoodie, jeans, and two pairs of socks. Honestly, I looked like a burrito.",
+          ko: "어젯밤에 아기자기한 에어비앤비에 들어갔는데, 진짜 꽁꽁 얼 정도로 추운 거야. 호스트한테 “안녕하세요, 히터가 안 돼요.” 하고 문자 보냈더니 아침에 고쳐 주겠대. 결국 후드티에 청바지에 양말 두 켤레 신고 잤어. 솔직히 내 모습이 부리토 같았어."
+        }
+      },
+      {
+        phrase: "I can't connect to ~.",
+        ko: "'~에 연결이 안 돼요'라는 뜻이에요. 와이파이, 블루투스, 프린터처럼 '연결'하는 건 다 이걸로 해결돼요. 비슷한 표현: I can't get on the Wi-Fi. / The Wi-Fi isn't working.",
+        examples: [
+          { en: "I can't connect to the printer from my laptop.", ko: "제 노트북에서 프린터 연결이 안 돼요." },
+          { en: "I can't connect to the airport Wi-Fi at all.", ko: "공항 와이파이가 아예 안 잡혀." },
+          { en: "I can't connect to your Bluetooth speaker.", ko: "네 블루투스 스피커에 연결이 안 돼." },
+          { en: "Excuse me, I can't connect to the café's Wi-Fi.", ko: "저기요, 카페 와이파이 연결이 안 돼요." },
+          { en: "I can't connect to the video call, so I'll just call you.", ko: "영상 통화 연결이 안 돼서 그냥 전화할게." }
+        ],
+        story: {
+          en: "Last week I had a job interview on Zoom, and right before it started, nothing worked. I was panicking and emailed the recruiter, “I'm so sorry, I can't connect to the meeting!” Then I realized my laptop was still in airplane mode from my trip. I joined two minutes late and still got the job, so it all worked out.",
+          ko: "지난주에 줌으로 면접이 있었는데, 시작 직전에 아무것도 안 되는 거야. 완전 패닉 와서 채용 담당자한테 “정말 죄송해요, 회의 연결이 안 돼요!” 하고 메일 보냈지. 그러고 보니 여행 갔다 와서 노트북이 아직 비행기 모드였더라고. 2분 늦게 들어갔는데 그래도 합격했으니, 결과적으로 다 잘 풀렸어."
+        }
+      },
+      {
+        phrase: "right away",
+        ko: "'바로, 즉시'라는 뜻이에요. 직원이 '바로 해 드릴게요' 할 때 거의 항상 들려요. now보다 부드럽고 친절한 느낌이에요. 비슷한 표현: right now / in a sec(금방)",
+        examples: [
+          { en: "I'll get that fixed right away.", ko: "그거 바로 고쳐 드릴게요." },
+          { en: "Call me right away if your flight gets delayed.", ko: "비행기 지연되면 바로 전화해." },
+          { en: "The waiter brought us new forks right away.", ko: "웨이터가 바로 새 포크를 가져다줬어." },
+          { en: "I knew right away that we'd be good friends.", ko: "우리가 친해질 거라는 걸 바로 알았어." },
+          { en: "They gave me a refund right away, no questions asked.", ko: "아무것도 안 묻고 바로 환불해 주더라." }
+        ],
+        story: {
+          en: "So last night my upstairs neighbor's bathtub overflowed, and water started dripping from my ceiling. I called the building manager, and he said, “I'll be there right away.” He showed up five minutes later in pajamas and slippers, holding a giant bucket. I've never respected a man more.",
+          ko: "어젯밤에 윗집 욕조가 넘쳐서 우리 집 천장에서 물이 뚝뚝 떨어지기 시작했어. 관리인한테 전화했더니 “바로 갈게요.” 하더라. 5분 뒤에 잠옷에 슬리퍼 차림으로 커다란 양동이를 들고 나타났어. 그렇게 존경스러운 사람은 처음 봤어."
+        }
+      }
+    ]
+  },
+  {
+    id: 7,
+    category: "이동·쇼핑",
+    title: "길 물어보기",
+    situation: "처음 와 본 동네에서 지하철역을 찾고 있어요. 지나가던 사람에게 길을 물었는데, 말이 빨라서 한 번 더 들어야 해요.",
+    dialogue: [
+      { who: "me", en: "Excuse me, sorry!", ko: "실례합니다, 죄송해요!" },
+      { who: "local", en: "Yeah? What's up?", ko: "네? 무슨 일이세요?" },
+      { who: "me", en: "Do you know where the subway station is?", ko: "지하철역이 어디 있는지 아세요?" },
+      { who: "local", en: "Oh yeah, it's not far. Go straight two blocks, then hang a left.", ko: "아 네, 멀지 않아요. 두 블록 직진하다가 왼쪽으로 꺾으세요." },
+      { who: "me", en: "Sorry, could you say that again?", ko: "죄송한데, 다시 한번 말해 주시겠어요?" },
+      { who: "local", en: "Sure. Two blocks straight, then left. You can't miss it.", ko: "그럼요. 두 블록 직진하고 왼쪽이요. 바로 보일 거예요." },
+      { who: "me", en: "Got it. Thanks so much!", ko: "알겠어요. 정말 감사해요!" }
+    ],
+    expressions: [
+      {
+        phrase: "Do you know where ~ is?",
+        ko: "'~이 어디 있는지 아세요?'라는 뜻이에요. 그냥 Where is ~?보다 훨씬 공손하게 들려요. 모르는 사람에게 물을 땐 앞에 Excuse me를 꼭 붙이세요. 비슷한 표현: Where can I find ~?",
+        examples: [
+          { en: "Excuse me, do you know where the nearest restroom is?", ko: "실례지만, 제일 가까운 화장실이 어디 있는지 아세요?" },
+          { en: "Do you know where my charger is? I can't find it anywhere.", ko: "내 충전기 어디 있는지 알아? 아무리 찾아도 없어." },
+          { en: "Do you know where the conference room is?", ko: "회의실이 어디 있는지 아세요?" },
+          { en: "Do you know where the fitting room is?", ko: "탈의실이 어디 있는지 아세요?" },
+          { en: "Do you know where the ketchup is? It's not on our table.", ko: "케첩 어디 있는지 아세요? 저희 테이블엔 없어서요." }
+        ],
+        story: {
+          en: "So I was in New York last summer, totally lost, and I asked this guy, “Do you know where Times Square is?” He didn't say a word and just pointed behind me. I turned around, and there it was, giant screens and all, literally right behind me. I wanted to disappear.",
+          ko: "작년 여름에 뉴욕에서 완전 길을 잃어서 어떤 남자한테 “타임스스퀘어가 어디 있는지 아세요?” 하고 물어봤거든. 그 사람이 아무 말 없이 내 뒤를 가리키는 거야. 뒤돌아보니까 거대한 전광판까지 다 있는 타임스스퀘어가 진짜 바로 내 뒤에 있었어. 땅으로 꺼지고 싶었어."
+        }
+      },
+      {
+        phrase: "say that again",
+        ko: "'다시 한번 말해 주시겠어요?'라는 뜻이에요. 못 알아들었을 때 당황하지 말고 Sorry, could you say that again?으로 다시 들으면 돼요. a little slower(조금 천천히)를 붙이면 더 좋아요. 친구 사이에선 놀랐을 때 '뭐라고?' 느낌으로도 써요. 비슷한 표현: Sorry? / Come again?",
+        examples: [
+          { en: "Sorry, could you say that again? It's really loud in here.", ko: "죄송한데 다시 말해 주실래요? 여기 너무 시끄러워서요." },
+          { en: "Can you say that again? You cut out for a second.", ko: "다시 말해 줄래? 잠깐 끊겼어." },
+          { en: "Wait, say that again? You're moving to Canada?", ko: "잠깐, 뭐라고? 너 캐나다로 이사 간다고?" },
+          { en: "Could you say that again a little slower?", ko: "조금만 천천히 다시 말해 주시겠어요?" },
+          { en: "Sorry, can you say that again? I missed the last part.", ko: "죄송한데 다시 말씀해 주실래요? 마지막 부분을 놓쳤어요." }
+        ],
+        story: {
+          en: "My coworker told me yesterday, totally casually, that she's quitting to travel the world for a year. I almost choked on my coffee and said, “Wait, say that again?” She just smiled and showed me her one-way ticket to Lisbon. Now I'm sitting at my desk wondering what I'm doing with my life.",
+          ko: "어제 동료가 아무렇지 않게 1년 동안 세계 여행 가려고 회사를 그만둔다고 하는 거야. 커피 마시다 사레들릴 뻔해서 “잠깐, 다시 말해 봐?” 했지. 걔는 그냥 웃으면서 리스본행 편도 티켓을 보여 주더라. 그래서 지금 나는 책상에 앉아서 내 인생 뭐 하고 있나 생각 중이야."
+        }
+      },
+      {
+        phrase: "You can't miss it.",
+        ko: "'바로 보일 거예요, 못 찾을 수가 없어요'라는 뜻이에요. 길을 알려 준 사람이 마지막에 자주 덧붙여요. 이 말이 나오면 거의 다 왔다는 뜻이에요.",
+        examples: [
+          { en: "It's the big red building on the corner. You can't miss it.", ko: "모퉁이에 있는 큰 빨간 건물이에요. 바로 보일 거예요." },
+          { en: "The restaurant has a huge neon sign. You can't miss it.", ko: "그 식당 엄청 큰 네온사인이 있어. 못 찾을 수가 없어." },
+          { en: "My desk is the one covered in plants. You can't miss it.", ko: "제 자리는 화분으로 뒤덮인 데예요. 바로 보일 거예요." },
+          { en: "Our house is the only yellow one on the street. You can't miss it.", ko: "우리 집이 그 길에서 유일한 노란 집이야. 못 찾을 수가 없어." },
+          { en: "Your gate is right next to the duty-free shop. You can't miss it.", ko: "게이트는 면세점 바로 옆이에요. 바로 보이실 거예요." }
+        ],
+        story: {
+          en: "My friend gave me directions to her new place and said, “It's the blue house with the big dog. You can't miss it.” Well, there were three blue houses with big dogs on that street. I knocked on the wrong door, and a very confused grandpa invited me in for tea. I actually stayed, and he was awesome.",
+          ko: "친구가 새 집 가는 길을 알려 주면서 “큰 개 있는 파란 집이야. 못 찾을 수가 없어.” 했거든. 근데 그 길에 큰 개 있는 파란 집이 세 채나 있더라. 엉뚱한 집 문을 두드렸는데, 엄청 당황한 할아버지가 차 한잔하고 가라고 하셨어. 진짜로 들어가서 마셨는데, 할아버지 완전 멋있으셨어."
+        }
+      }
+    ]
+  },
+  {
+    id: 8,
+    category: "이동·쇼핑",
+    title: "택시·우버에서 목적지 말하기",
+    situation: "우버를 탔어요. 기사님이 목적지를 확인하면, 시간이 얼마나 걸리는지 묻고 호텔 정문 앞에 내려 달라고 하고 싶어요.",
+    dialogue: [
+      { who: "driver", en: "Hey, Minji? Heading to the Hilton downtown?", ko: "안녕하세요, 민지 님? 시내 힐튼 호텔 가시는 거죠?" },
+      { who: "me", en: "Yep, that's me. How long will it take?", ko: "네, 맞아요. 얼마나 걸릴까요?" },
+      { who: "driver", en: "Traffic's not too bad, so twenty minutes or so.", ko: "차가 많이 안 막혀서 한 20분쯤이요." },
+      { who: "me", en: "Cool. Could you drop me off at the main entrance?", ko: "좋아요. 정문 앞에 내려 주실 수 있어요?" },
+      { who: "driver", en: "You got it. … Alright, here we are!", ko: "알겠습니다. … 자, 도착했습니다!" },
+      { who: "me", en: "Thanks, have a good one!", ko: "감사해요, 좋은 하루 보내세요!" }
+    ],
+    expressions: [
+      {
+        phrase: "How long will it take?",
+        ko: "'얼마나 걸릴까요?'라는 뜻이에요. 이동 시간, 대기 시간, 수리 시간 모두 이걸로 물어요. 뒤에 to + 동작을 붙이면 '~하는 데 얼마나 걸려요?'가 돼요. 비슷한 표현: How long does it take ~?(평소에 얼마나 걸리는지)",
+        examples: [
+          { en: "How long will it take to get to the airport?", ko: "공항까지 얼마나 걸릴까요?" },
+          { en: "How long will it take to fix my phone?", ko: "제 폰 고치는 데 얼마나 걸릴까요?" },
+          { en: "How long will it take for the food to come out?", ko: "음식 나오는 데 얼마나 걸릴까요?" },
+          { en: "How long will it take you to finish the slides?", ko: "슬라이드 끝내는 데 얼마나 걸릴 것 같아요?" },
+          { en: "How long will it take to drive to your place?", ko: "너희 집까지 차로 얼마나 걸려?" }
+        ],
+        story: {
+          en: "So I dropped my laptop off at the repair shop and asked, “How long will it take?” The guy said, “Maybe an hour,” so I went to grab lunch nearby. Two hours later he called and said it was actually gonna take three days. I've been living on my phone ever since, and my thumbs hate me.",
+          ko: "노트북을 수리점에 맡기면서 “얼마나 걸릴까요?” 하고 물어봤거든. 아저씨가 “한 시간쯤이요.” 해서 근처에서 점심 먹고 있었지. 두 시간 뒤에 전화가 와서는 사실 3일 걸린대. 그 뒤로 계속 폰으로만 버티는 중이라 엄지손가락이 날 미워해."
+        }
+      },
+      {
+        phrase: "drop ~ off",
+        ko: "'(차로) ~를 내려 주다', '(물건을) 맡기다/갖다 놓다'라는 뜻이에요. 택시에서 Could you drop me off at ~?는 '~에 내려 주세요'예요. 반대로 '태우러 오다'는 pick ~ up. 비슷한 표현: Can you let me out here?(여기서 내려 주세요)",
+        examples: [
+          { en: "Can you drop me off at the corner?", ko: "저 모퉁이에 내려 주실 수 있어요?" },
+          { en: "I'll drop the kids off at school on my way to work.", ko: "출근하는 길에 애들 학교에 내려 줄게." },
+          { en: "Could you drop these files off at the front desk?", ko: "이 서류 좀 안내 데스크에 갖다 놓아 줄래요?" },
+          { en: "Thanks for offering to drop me off at the airport!", ko: "공항까지 태워 준다고 해서 고마워!" },
+          { en: "Just drop the bike off at the shop when you're done.", ko: "다 타면 자전거는 가게에 그냥 반납하시면 돼요." }
+        ],
+        story: {
+          en: "Last night my friend offered to drop me off at home after dinner. She's the worst driver I know, but I said yes because it was pouring. She missed my street twice and then parked halfway on the sidewalk. Next time, I'm walking, rain or not.",
+          ko: "어젯밤에 친구가 저녁 먹고 집까지 태워 준다고 했거든. 내가 아는 사람 중에 운전을 제일 못하는 애인데, 비가 쏟아져서 그냥 타겠다고 했지. 우리 집 골목을 두 번이나 지나치더니 인도에 반쯤 걸쳐서 차를 세우더라. 다음엔 비가 오든 말든 걸어갈 거야."
+        }
+      },
+      {
+        phrase: "You got it.",
+        ko: "'알겠어요, 그렇게 할게요'라는 뜻이에요. 부탁을 받았을 때 시원하게 '접수!' 하는 느낌이에요. 직원, 기사님, 친구가 자주 써요. 비슷한 표현: Sure thing. / Will do.",
+        examples: [
+          { en: "You got it, boss. I'll handle it.", ko: "알겠습니다, 팀장님. 제가 처리할게요." },
+          { en: "You got it, I'll text you when I land.", ko: "알았어, 도착하면 문자할게." },
+          { en: "One more order of fries? You got it.", ko: "감자튀김 하나 더요? 알겠습니다." },
+          { en: "You got it, your bags will be in your room in ten minutes.", ko: "알겠습니다, 짐은 10분 안에 객실로 올려 드릴게요." },
+          { en: "You got it, I'll have your size ready at the counter.", ko: "알겠습니다, 고객님 사이즈로 카운터에 준비해 둘게요." }
+        ],
+        story: {
+          en: "So my little brother asked if I could help him move this weekend, and I said, “You got it!” without thinking. Turns out he lives on the fifth floor with no elevator, and he owns, like, two hundred books. My legs are still shaking. He owes me pizza for life.",
+          ko: "남동생이 이번 주말에 이사 좀 도와줄 수 있냐길래 생각도 안 하고 “당연하지!” 했거든. 알고 보니 엘리베이터 없는 5층에 살고, 책이 한 200권은 있더라. 아직도 다리가 후들거려. 걔는 평생 나한테 피자 사야 돼."
+        }
+      }
+    ]
+  },
+  {
+    id: 9,
+    category: "이동·쇼핑",
+    title: "옷 가게에서 사이즈 묻기",
+    situation: "옷 가게에서 마음에 드는 셔츠를 찾았는데 내 사이즈가 안 보여요. 직원에게 물어보고 입어 보고 싶어요.",
+    dialogue: [
+      { who: "clerk", en: "Hey there! Let me know if you need any help.", ko: "안녕하세요! 도움 필요하시면 말씀하세요." },
+      { who: "me", en: "Do you have this in a medium?", ko: "이거 미디엄 사이즈 있어요?" },
+      { who: "clerk", en: "Let me check in the back. … Yep, here's a medium!", ko: "창고에 확인해 볼게요. … 네, 미디엄 여기 있어요!" },
+      { who: "me", en: "Awesome. Where are the fitting rooms?", ko: "좋아요. 탈의실은 어디예요?" },
+      { who: "clerk", en: "Right over there. Let me know how it fits!", ko: "바로 저쪽이에요. 잘 맞는지 알려 주세요!" },
+      { who: "me", en: "Hmm, it's a little tight around the shoulders.", ko: "음, 어깨 쪽이 좀 끼네요." },
+      { who: "clerk", en: "Ah, gotcha. Wanna try a size up?", ko: "아, 그렇군요. 한 사이즈 큰 걸로 입어 보실래요?" },
+      { who: "me", en: "Yeah, do you have a large?", ko: "네, 라지 있어요?" }
+    ],
+    expressions: [
+      {
+        phrase: "Do you have this in ~?",
+        ko: "'이거 ~로도 있어요?'라는 뜻이에요. 사이즈·색깔·종류를 물을 때 만능 문장이에요. in 뒤에 a medium, black, size 8처럼 붙이면 돼요. 비슷한 표현: Does this come in ~?",
+        examples: [
+          { en: "Do you have this in a size eight?", ko: "이거 8 사이즈 있어요?" },
+          { en: "Do you have this in a smaller size? It's for my niece.", ko: "이거 더 작은 사이즈 있어요? 조카 주려고요." },
+          { en: "Do you have this in a PDF? I want to read it on my phone.", ko: "이거 PDF로도 있어요? 폰으로 읽고 싶어서요." },
+          { en: "Do you have this in decaf?", ko: "이거 디카페인으로도 돼요?" },
+          { en: "Do you have this in a lunch portion?", ko: "이거 점심 메뉴 양으로도 나와요?" }
+        ],
+        story: {
+          en: "So I found the perfect jacket at this vintage store yesterday, but it was way too big. I asked the guy, “Do you have this in a small?” and he laughed and said, “It's vintage, man, there's only one.” I bought it anyway, and now I'm basically wearing a tent. But it's a really cool tent.",
+          ko: "어제 빈티지 가게에서 완벽한 재킷을 찾았는데, 너무 큰 거야. 직원한테 “이거 스몰 있어요?” 했더니 웃으면서 “빈티지라서 하나밖에 없어요.” 하더라. 그래도 그냥 샀고, 지금 거의 텐트를 입고 다니는 중이야. 그래도 엄청 멋진 텐트야."
+        }
+      },
+      {
+        phrase: "Let me check ~.",
+        ko: "'확인해 볼게요'라는 뜻이에요. 직원이 재고나 예약을 확인하러 갈 때 꼭 하는 말이에요. 나도 바로 대답하기 곤란할 때 쓰기 좋아요. 비슷한 표현: Let me see. / I'll double-check.",
+        examples: [
+          { en: "Let me check my calendar and get back to you.", ko: "일정 확인해 보고 다시 연락드릴게요." },
+          { en: "Let me check if we have a table for four.", ko: "4인 테이블 있는지 확인해 볼게요." },
+          { en: "Let me check the bus schedule real quick.", ko: "버스 시간표 잠깐 확인해 볼게." },
+          { en: "Let me check with my roommate first.", ko: "룸메이트한테 먼저 물어볼게." },
+          { en: "Let me check in the back for your size.", ko: "창고에 손님 사이즈 있는지 확인해 볼게요." }
+        ],
+        story: {
+          en: "My friend asked if I wanted to go to Jeju with her next month, and I said, “Let me check my schedule.” Honestly, I had nothing going on, I just didn't want to sound too excited. Five minutes later, I texted her, “Okay, I'm free!” She knew exactly what I was doing.",
+          ko: "친구가 다음 달에 제주도 같이 가겠냐고 물어서 “일정 좀 확인해 볼게.” 했거든. 솔직히 아무 일정도 없었는데, 너무 신난 티 내기 싫었어. 5분 뒤에 “오케이, 나 시간 돼!” 하고 문자 보냈지. 친구는 내 속셈을 다 알고 있었어."
+        }
+      },
+      {
+        phrase: "It's a little ~.",
+        ko: "'좀 ~하네요'라는 뜻이에요. 불만을 부드럽게 말할 때 좋아요. tight(끼는), loose(헐렁한), long(긴) 같은 단어만 바꿔 끼우면 끝. 비슷한 표현: It's kind of ~. / It's a bit ~.",
+        examples: [
+          { en: "It's a little tight around the shoulders.", ko: "어깨가 좀 끼네요." },
+          { en: "It's a little loud in here. Can we sit outside?", ko: "여기 좀 시끄럽네요. 밖에 앉아도 될까요?" },
+          { en: "It's a little early for me. How about ten?", ko: "저한테는 좀 이르네요. 10시 어때요?" },
+          { en: "It's a little far, but the view is totally worth it.", ko: "좀 멀긴 한데, 경치가 완전 그럴 만해." },
+          { en: "It's a little spicy, but you'll love it.", ko: "좀 맵긴 한데, 너 완전 좋아할 거야." }
+        ],
+        story: {
+          en: "So I made kimchi stew for my American coworkers at a potluck yesterday. I warned them, “It's a little spicy,” and they all said they could handle it. Ten minutes later, everyone was sweating and chugging milk like crazy. Next time, I'm bringing the mild version.",
+          ko: "어제 회사 포트럭 파티에 미국인 동료들 먹으라고 김치찌개를 만들어 갔거든. “좀 매워요.” 하고 미리 말했더니 다들 괜찮다는 거야. 10분 뒤에 다들 땀 뻘뻘 흘리면서 우유를 미친 듯이 들이켜더라. 다음엔 순한 맛으로 가져가야겠어."
+        }
+      }
+    ]
+  },
+  {
+    id: 10,
+    category: "일상 대화",
+    title: "날씨로 스몰토크하기",
+    situation: "아침에 엘리베이터에서 같은 층 이웃을 만났어요. 어색하지 않게 날씨 얘기로 가볍게 대화해요.",
+    dialogue: [
+      { who: "neighbor", en: "Morning! Crazy weather we're having, huh?", ko: "좋은 아침이에요! 날씨 진짜 이상하죠?" },
+      { who: "me", en: "I know, right? It was freezing yesterday.", ko: "그러니까요! 어제는 엄청 추웠잖아요." },
+      { who: "neighbor", en: "And now it's like seventy degrees. I don't even know what to wear.", ko: "근데 지금은 70도(섭씨 약 21도)쯤이에요. 뭘 입어야 할지도 모르겠어요." },
+      { who: "me", en: "Same. Is it supposed to rain later?", ko: "저도요. 이따 비 온대요?" },
+      { who: "neighbor", en: "I heard it's gonna pour this afternoon. Grab an umbrella!", ko: "오후에 비가 쏟아진대요. 우산 챙기세요!" },
+      { who: "me", en: "Good call. Have a good one!", ko: "좋은 생각이에요. 좋은 하루 보내세요!" }
+    ],
+    expressions: [
+      {
+        phrase: "I know, right?",
+        ko: "'그러니까요!', '내 말이!'라는 뜻이에요. 상대 말에 크게 공감할 때 써요. 스몰토크에서 대화를 자연스럽게 이어 주는 최고의 맞장구예요. 비슷한 표현: Totally. / Tell me about it.",
+        examples: [
+          { en: "I know, right? This place has the best pizza in town.", ko: "그러니까! 여기가 동네에서 피자 제일 맛있어." },
+          { en: "I know, right? Mondays should be illegal.", ko: "내 말이! 월요일은 법으로 금지해야 돼." },
+          { en: "I know, right? I can't believe they broke up.", ko: "그러니까! 걔네 헤어진 거 진짜 믿기지가 않아." },
+          { en: "I know, right? The view from up here is unreal.", ko: "그러니까요! 여기서 보는 경치 말도 안 되죠." },
+          { en: "I know, right? Everything's on sale today.", ko: "내 말이! 오늘 전부 세일이야." }
+        ],
+        story: {
+          en: "My roommate came home yesterday and said, “Why is rent so expensive?” I just yelled, “I know, right?” from the kitchen. Then we spent two hours looking at apartments in other cities that we'll never actually move to. It was weirdly fun, though.",
+          ko: "어제 룸메이트가 집에 오자마자 “월세가 왜 이렇게 비싸?” 하는 거야. 나는 부엌에서 “내 말이!” 하고 소리쳤지. 그러고는 절대 이사 갈 일 없는 다른 도시 집들을 두 시간 동안 구경했어. 근데 이상하게 재밌더라."
+        }
+      },
+      {
+        phrase: "supposed to ~",
+        ko: "'~하기로 되어 있다', '~라던데'라는 뜻이에요. 날씨 예보나 소문처럼 '그렇다더라'를 말할 때 딱이에요. 약속이나 규칙을 말할 때도 써요. 빨리 말하면 '서포즈투'처럼 붙어서 들려요.",
+        examples: [
+          { en: "It's supposed to snow this weekend.", ko: "이번 주말에 눈 온대." },
+          { en: "We're supposed to submit the report by Friday.", ko: "보고서는 금요일까지 내야 해요." },
+          { en: "This place is supposed to have the best tacos in LA.", ko: "여기가 LA에서 타코 제일 맛있는 집이래." },
+          { en: "You were supposed to call me last night!", ko: "너 어젯밤에 나한테 전화하기로 했잖아!" },
+          { en: "The train was supposed to leave ten minutes ago.", ko: "기차가 10분 전에 출발했어야 하는데." }
+        ],
+        story: {
+          en: "So the weather app said it was supposed to be sunny all day, so I wore my brand-new white sneakers. Guess what happened? Ten minutes after I left the house, it started pouring. My sneakers are now a lovely shade of gray.",
+          ko: "날씨 앱에서 하루 종일 맑을 거라길래 새로 산 흰 운동화를 신고 나갔거든. 어떻게 됐게? 집 나서고 10분 만에 비가 쏟아지기 시작했어. 내 운동화는 이제 아주 예쁜 회색이 됐어."
+        }
+      },
+      {
+        phrase: "Good call.",
+        ko: "'좋은 생각이야, 잘 판단했어'라는 뜻이에요. 상대의 제안이나 선택이 괜찮을 때 칭찬처럼 해요. 짧고 자연스러워서 원어민이 정말 자주 써요. 비슷한 표현: Good idea. / Smart move.",
+        examples: [
+          { en: "Bringing a jacket was a good call. It's freezing up here.", ko: "재킷 가져온 거 잘했다. 여기 엄청 춥네." },
+          { en: "Good call on the restaurant, the food was amazing.", ko: "식당 잘 골랐다, 음식 진짜 맛있었어." },
+          { en: "Good call, let's push the launch to next week.", ko: "좋은 생각이에요, 출시는 다음 주로 미루죠." },
+          { en: "Leaving early was a good call. Traffic was terrible.", ko: "일찍 나온 게 신의 한 수였어. 길이 엄청 막혔거든." },
+          { en: "Getting the bigger size was a good call.", ko: "큰 사이즈로 산 거 잘한 선택이었어." }
+        ],
+        story: {
+          en: "Last weekend my friend suggested we leave for the beach at 6 a.m., and I almost killed her. But when we got there, the parking lot was empty and the sunrise was beautiful. By ten, there was literally a two-hour wait just to park. Okay, fine, that was a good call.",
+          ko: "지난 주말에 친구가 새벽 6시에 바다로 출발하자고 해서 진짜 한 대 칠 뻔했거든. 근데 도착하니까 주차장은 텅 비어 있고 일출은 너무 예쁜 거야. 10시쯤엔 주차만 하는 데 진짜 두 시간을 기다려야 했어. 그래, 인정. 그건 잘한 판단이었어."
+        }
+      }
+    ]
+  },
+  {
+    id: 11,
+    category: "일상 대화",
+    title: "주말에 뭐 했는지 말하기",
+    situation: "월요일 아침, 회사 동료가 주말 잘 보냈냐고 물어봐요. 주말에 한 일을 가볍게 이야기해요.",
+    dialogue: [
+      { who: "coworker", en: "Hey! How was your weekend? Do anything fun?", ko: "안녕! 주말 어땠어? 재밌는 거 했어?" },
+      { who: "me", en: "It was great! I went hiking with some friends.", ko: "좋았어! 친구들이랑 등산 갔어." },
+      { who: "coworker", en: "Oh, nice! Where'd you go?", ko: "오, 좋다! 어디로 갔어?" },
+      { who: "me", en: "Bukhansan, near Seoul.", ko: "서울 근처 북한산." },
+      { who: "me", en: "The view from the top was amazing.", ko: "정상에서 본 경치가 끝내줬어." },
+      { who: "coworker", en: "So jealous! I just stayed in and binge-watched a show.", ko: "완전 부럽다! 난 그냥 집에서 드라마 몰아 봤어." },
+      { who: "me", en: "Honestly, that sounds pretty nice too.", ko: "솔직히 그것도 꽤 좋은데." }
+    ],
+    expressions: [
+      {
+        phrase: "How was your ~?",
+        ko: "'~ 어땠어?'라는 뜻이에요. 주말, 여행, 휴가, 면접 등 뭐든 뒤에 붙여서 물어봐요. 대답은 It was great! / It was okay. / It was kind of boring.처럼 짧게 시작하면 돼요. 비슷한 표현: How did ~ go?",
+        examples: [
+          { en: "How was your trip to Japan?", ko: "일본 여행 어땠어?" },
+          { en: "How was your first day at the new job?", ko: "새 회사 첫날 어땠어?" },
+          { en: "How was your steak? Was it cooked okay?", ko: "스테이크 어떠셨어요? 잘 익었나요?" },
+          { en: "How was your date last night? Tell me everything!", ko: "어젯밤 데이트 어땠어? 다 말해 봐!" },
+          { en: "How was your flight? You must be exhausted.", ko: "비행은 어땠어? 엄청 피곤하겠다." }
+        ],
+        story: {
+          en: "My mom called me last night and asked, “How was your week?” I said it was fine, and then she talked for an hour about her new neighbor's dog. I didn't say a single word after that. Honestly, I love those calls, though.",
+          ko: "어젯밤에 엄마가 전화해서 “이번 주 어땠어?” 하고 물어보셨거든. 나는 괜찮았다고 했는데, 그 뒤로 엄마가 새 이웃집 강아지 얘기를 한 시간 동안 하셨어. 그 뒤로 나는 한마디도 못 했어. 근데 솔직히 그런 통화가 너무 좋아."
+        }
+      },
+      {
+        phrase: "I went ~ing.",
+        ko: "'~하러 갔어'라는 뜻이에요. go hiking(등산), go shopping(쇼핑), go camping(캠핑)처럼 활동을 말할 때 go 뒤에 -ing를 붙여요. 지난 일이니까 went. went to hiking처럼 to를 넣지 않도록 조심!",
+        examples: [
+          { en: "I went shopping for a new coat on Saturday.", ko: "토요일에 새 코트 사러 쇼핑 갔어." },
+          { en: "I went camping with my coworkers last weekend.", ko: "지난 주말에 회사 동료들이랑 캠핑 갔어." },
+          { en: "I went swimming at the hotel pool this morning.", ko: "오늘 아침에 호텔 수영장에서 수영했어." },
+          { en: "I went bowling with my friends and totally lost.", ko: "친구들이랑 볼링 치러 갔다가 완전 졌어." },
+          { en: "I went running along the river before breakfast.", ko: "아침 먹기 전에 강변 따라 달리기했어." }
+        ],
+        story: {
+          en: "So last Saturday I went skiing for the first time in my life. I spent most of the day on my butt while a five-year-old zoomed past me like a pro. By the end of the day, I could finally make it down the bunny hill without falling. I'm calling that a win.",
+          ko: "지난 토요일에 태어나서 처음으로 스키 타러 갔거든. 하루 대부분을 엉덩방아 찧으면서 보냈는데, 다섯 살짜리 꼬마가 프로처럼 내 옆을 쌩 지나가더라. 하루가 끝날 즈음엔 드디어 초보 슬로프를 안 넘어지고 내려왔어. 이 정도면 승리라고 칠게."
+        }
+      },
+      {
+        phrase: "stay in",
+        ko: "'집에 있다, 안 나가다'라는 뜻이에요. 외출하지 않고 집에서 쉴 때 써요. 반대는 go out(놀러 나가다). 동료가 I just stayed in.이라고 하면 '그냥 집에 있었어'예요.",
+        examples: [
+          { en: "Let's just stay in and order pizza tonight.", ko: "오늘 밤엔 그냥 집에서 피자 시켜 먹자." },
+          { en: "It's raining, so I'm gonna stay in today.", ko: "비 와서 오늘은 집에 있을래." },
+          { en: "I'd rather stay in than go to the office party.", ko: "회사 파티 가느니 집에 있는 게 나아." },
+          { en: "We decided to stay in on our last night in Paris and pack.", ko: "파리에서 마지막 밤엔 숙소에서 짐 싸기로 했어." },
+          { en: "Do you want to go out or stay in for dinner?", ko: "저녁 밖에서 먹을래, 집에서 먹을래?" }
+        ],
+        story: {
+          en: "My friends begged me to go clubbing on Friday, but I told them I wanted to stay in. I put on a face mask, ordered fried chicken, and watched three movies in a row. Then I saw their photos on Instagram and felt zero regret. Best Friday ever.",
+          ko: "금요일에 친구들이 클럽 가자고 엄청 졸랐는데, 난 그냥 집에 있고 싶다고 했어. 마스크팩 붙이고 치킨 시켜서 영화 세 편을 연달아 봤지. 그러고 나서 걔네 인스타 사진을 봤는데 후회가 하나도 안 되더라. 최고의 금요일이었어."
+        }
+      }
+    ]
+  },
+  {
+    id: 12,
+    category: "일상 대화",
+    title: "처음 만난 사람과 인사하기",
+    situation: "친구 에밀리의 생일 파티에서 처음 보는 사람이 말을 걸어왔어요. 자연스럽게 인사하고 나를 소개해요.",
+    dialogue: [
+      { who: "stranger", en: "Hey, I don't think we've met. I'm Jake.", ko: "안녕하세요, 처음 뵙는 것 같네요. 저는 제이크예요." },
+      { who: "me", en: "Hi, I'm Minji. Nice to meet you.", ko: "안녕하세요, 민지예요. 만나서 반가워요." },
+      { who: "stranger", en: "Nice to meet you too! So, how do you know Emily?", ko: "저도 반가워요! 에밀리랑은 어떻게 아는 사이예요?" },
+      { who: "me", en: "We used to work together.", ko: "예전에 같이 일했어요." },
+      { who: "stranger", en: "No way! I went to college with her. Small world!", ko: "말도 안 돼! 전 에밀리랑 대학 같이 다녔어요. 세상 좁네요!" },
+      { who: "me", en: "Right? Totally random.", ko: "그러니까요! 완전 우연이네요." },
+      { who: "me", en: "So, what do you do?", ko: "그럼 무슨 일 하세요?" }
+    ],
+    expressions: [
+      {
+        phrase: "How do you know ~?",
+        ko: "'~를 어떻게 아세요?'라는 뜻이에요. 파티에서 처음 만난 사람과 대화를 여는 단골 질문이에요. 대답은 We work together. / We met in college.처럼 하면 돼요. '어떻게 그렇게 잘 알아?'라는 뜻으로도 써요.",
+        examples: [
+          { en: "How do you know the bride?", ko: "신부랑은 어떻게 아세요?" },
+          { en: "How do you know so much about wine?", ko: "와인에 대해 어떻게 그렇게 잘 알아?" },
+          { en: "How do you know our manager? Did you two work together before?", ko: "저희 매니저님은 어떻게 아세요? 전에 같이 일하셨어요?" },
+          { en: "How do you know about this place? It's not even on Google Maps.", ko: "여기는 어떻게 알았어? 구글 지도에도 안 나오는데." },
+          { en: "How do you know my sister?", ko: "우리 언니는 어떻게 알아요?" }
+        ],
+        story: {
+          en: "At my cousin's wedding, this guy sat next to me and asked, “So, how do you know the groom?” I said I was the bride's cousin, and he said, “Oh, I'm the groom's old roommate.” We ended up talking all night and judging everyone's dance moves together. Now we're actually good friends.",
+          ko: "사촌 결혼식에서 어떤 남자가 내 옆에 앉더니 “신랑이랑은 어떻게 아세요?” 하고 묻더라. 나는 신부 사촌이라고 했고, 그 사람은 “아, 저는 신랑 예전 룸메이트예요.” 했지. 결국 밤새 수다 떨면서 같이 사람들 춤 실력을 평가했어. 지금은 진짜 친한 친구가 됐어."
+        }
+      },
+      {
+        phrase: "used to ~",
+        ko: "'예전엔 ~했었어(지금은 아니야)'라는 뜻이에요. 과거의 습관이나 상태를 말할 때 써요. We used to work together.는 '예전에 같이 일했어요'. 빨리 말하면 '유스터'처럼 들려요.",
+        examples: [
+          { en: "I used to live in Boston for work.", ko: "일 때문에 보스턴에 살았었어요." },
+          { en: "We used to come to this diner every Sunday.", ko: "우리 예전에 일요일마다 이 식당에 왔었잖아." },
+          { en: "She used to be my best friend in middle school.", ko: "걔는 중학교 때 내 단짝이었어." },
+          { en: "I used to hate flying, but now I love it.", ko: "예전엔 비행기 타는 게 싫었는데, 지금은 너무 좋아." },
+          { en: "This coffee shop used to be a bookstore.", ko: "이 카페 예전엔 서점이었어." }
+        ],
+        story: {
+          en: "So I ran into my old piano teacher at the grocery store yesterday. I used to cry every single lesson because I hated practicing. She remembered me right away and asked, “Are you still playing?” I lied and said yes, and now I feel like I have to buy a piano.",
+          ko: "어제 마트에서 옛날 피아노 선생님을 딱 마주쳤어. 나 연습하기 싫어서 레슨 때마다 울었었거든. 선생님이 나를 바로 알아보시고 “아직도 피아노 치니?” 하고 물어보셨어. 그래서 거짓말로 그렇다고 했는데, 이제 진짜 피아노를 사야 할 것 같아."
+        }
+      },
+      {
+        phrase: "Small world!",
+        ko: "'세상 참 좁네요!'라는 뜻이에요. 우연히 아는 사람이 겹치거나 뜻밖의 인연을 알게 됐을 때 써요. 비슷한 표현: What a coincidence!(이런 우연이!)",
+        examples: [
+          { en: "You went to my high school too? Small world!", ko: "너도 우리 고등학교 나왔어? 세상 좁다!" },
+          { en: "My new boss is my neighbor's sister. Small world.", ko: "새로 온 팀장님이 우리 옆집 사람 동생이야. 세상 좁아." },
+          { en: "We met a couple from Busan in Iceland. Small world!", ko: "아이슬란드에서 부산에서 온 커플을 만났어. 세상 좁다!" },
+          { en: "Our waiter turned out to be my old classmate. Talk about a small world.", ko: "우리 테이블 웨이터가 알고 보니 옛날 반 친구였어. 세상 진짜 좁다니까." },
+          { en: "The guy who sold me my car knows my dad. It's a small world.", ko: "나한테 차 판 사람이 우리 아빠를 알더라. 세상 참 좁아." }
+        ],
+        story: {
+          en: "So I was on a flight to New York last month, and the woman next to me was from my tiny hometown. Turns out she went to the same elementary school and even had the same teacher. We kept saying, “Small world!” like twenty times. By the end of the flight, she'd invited me to her daughter's wedding.",
+          ko: "지난달에 뉴욕 가는 비행기를 탔는데, 옆자리 아주머니가 우리 작은 고향 출신이었어. 알고 보니 같은 초등학교를 나왔고 담임 선생님까지 같았어. 우리 둘이 “세상 좁다!”를 한 스무 번은 했어. 비행 끝날 때쯤엔 아주머니가 딸 결혼식에 나를 초대하셨어."
+        }
+      }
+    ]
+  }
+];
+
+/* 글쓰기 탭 '오늘의 질문'. 날짜마다 하나씩 돌아가며 나와요. 질문을 추가하려면 이 배열 끝에 붙여넣으세요. */
+const QUESTIONS = [
+  { en: "What made you smile today?", ko: "오늘 당신을 웃게 한 건 뭐였나요?" },
+  { en: "If you could travel anywhere next weekend, where would you go and why?", ko: "다음 주말에 어디든 여행할 수 있다면, 어디로 가고 싶고 왜 그런가요?" },
+  { en: "What's something you're looking forward to this week?", ko: "이번 주에 기대되는 일이 있나요?" },
+  { en: "What did you eat today, and how was it?", ko: "오늘 뭘 먹었고, 어땠나요?" },
+  { en: "How are you feeling right now, honestly?", ko: "솔직히 지금 기분이 어때요?" },
+  { en: "What's the best thing that happened to you this week?", ko: "이번 주에 있었던 일 중 제일 좋았던 건 뭐예요?" },
+  { en: "What's one thing that stressed you out recently? How did you handle it?", ko: "최근에 스트레스받은 일 하나는 뭐였나요? 어떻게 대처했어요?" },
+  { en: "Describe your perfect lazy Sunday.", ko: "나만의 완벽한 게으른 일요일을 묘사해 보세요." },
+  { en: "What's a place you visited that you still think about?", ko: "가 봤던 곳 중에 아직도 생각나는 곳이 있나요?" },
+  { en: "If you could live in another country for a year, which one would you choose?", ko: "1년 동안 다른 나라에서 살 수 있다면 어디를 고를래요?" },
+  { en: "What's the most memorable trip you've ever taken?", ko: "지금까지 가 본 여행 중 가장 기억에 남는 건 뭐예요?" },
+  { en: "What do you always pack when you travel?", ko: "여행 갈 때 항상 챙기는 물건은 뭐예요?" },
+  { en: "What's a city you'd love to visit someday, and what would you do there?", ko: "언젠가 꼭 가 보고 싶은 도시는 어디고, 거기서 뭘 하고 싶어요?" },
+  { en: "What does a typical workday look like for you?", ko: "평소 일하는 날(또는 공부하는 날)은 어떻게 흘러가요?" },
+  { en: "What's something you learned at work or school recently?", ko: "최근에 회사나 학교에서 새로 배운 게 있나요?" },
+  { en: "Who is someone you work with that you really appreciate? Why?", ko: "같이 일하는 사람 중에 정말 고마운 사람은 누구예요? 왜요?" },
+  { en: "What would your dream job be if money didn't matter?", ko: "돈이 상관없다면 꿈의 직업은 뭐예요?" },
+  { en: "How do you usually get through a really busy day?", ko: "정말 바쁜 날은 보통 어떻게 버텨요?" },
+  { en: "What's your favorite food, and when did you first try it?", ko: "가장 좋아하는 음식은 뭐고, 언제 처음 먹어 봤어요?" },
+  { en: "What's a movie or show you'd recommend to a friend right now?", ko: "지금 친구에게 추천하고 싶은 영화나 드라마는 뭐예요?" },
+  { en: "What kind of music do you listen to when you're in a bad mood?", ko: "기분이 안 좋을 때는 어떤 음악을 들어요?" },
+  { en: "Are you a morning person or a night owl? Why?", ko: "아침형 인간이에요, 올빼미형이에요? 왜 그런 것 같아요?" },
+  { en: "What's a hobby you've always wanted to try?", ko: "늘 해 보고 싶었던 취미가 있나요?" },
+  { en: "Coffee or tea? Tell me about your go-to drink.", ko: "커피예요, 차예요? 늘 마시는 음료 이야기를 해 주세요." },
+  { en: "What's your favorite season, and what do you love about it?", ko: "가장 좋아하는 계절은 뭐고, 뭐가 좋아요?" },
+  { en: "What's a childhood memory that always makes you happy?", ko: "떠올리면 항상 기분 좋아지는 어린 시절 기억이 있나요?" },
+  { en: "Who was your best friend in elementary school? What did you do together?", ko: "초등학교 때 단짝은 누구였어요? 같이 뭘 했어요?" },
+  { en: "What's the best gift you've ever received?", ko: "지금까지 받은 선물 중 최고는 뭐였어요?" },
+  { en: "Tell me about a time you laughed so hard you couldn't stop.", ko: "웃음이 멈추지 않을 만큼 크게 웃었던 때 이야기를 해 주세요." },
+  { en: "What's something you loved as a kid but don't care about anymore?", ko: "어릴 땐 정말 좋아했는데 지금은 관심 없어진 게 있나요?" },
+  { en: "What's a small habit that makes your day better?", ko: "하루를 더 좋게 만들어 주는 작은 습관이 있나요?" },
+  { en: "What's something you want to get better at this year?", ko: "올해 더 잘하고 싶은 게 있나요?" },
+  { en: "If you had a totally free day tomorrow, what would you do?", ko: "내일 하루가 완전히 비어 있다면 뭘 할 거예요?" },
+  { en: "What's the last thing you bought that you really love?", ko: "최근에 산 것 중에 정말 마음에 드는 건 뭐예요?" },
+  { en: "What's a mistake you made recently, and what did you learn from it?", ko: "최근에 한 실수는 뭐고, 거기서 뭘 배웠어요?" },
+  { en: "Who did you talk to today, and what did you talk about?", ko: "오늘 누구와 이야기했고, 무슨 얘기를 했어요?" },
+  { en: "What's the weather like today, and how does it affect your mood?", ko: "오늘 날씨는 어떻고, 그게 기분에 어떤 영향을 줬어요?" },
+  { en: "What's something you're proud of, big or small?", ko: "크든 작든, 스스로 뿌듯한 일이 있나요?" },
+  { en: "What would your friends say is your best quality?", ko: "친구들은 당신의 가장 좋은 점이 뭐라고 말할까요?" },
+  { en: "What's a dish you can cook well? How do you make it?", ko: "잘 만드는 요리가 있나요? 어떻게 만들어요?" },
+  { en: "Describe your neighborhood to someone who's never been there.", ko: "한 번도 와 본 적 없는 사람에게 우리 동네를 소개해 보세요." },
+  { en: "What's your favorite way to spend time with your family?", ko: "가족과 시간을 보내는 방법 중 제일 좋아하는 건 뭐예요?" },
+  { en: "If you could have dinner with anyone, living or dead, who would it be?", ko: "살아 있든 아니든 누구와든 저녁을 먹을 수 있다면 누구와 먹고 싶어요?" },
+  { en: "What's a book, video, or podcast that changed the way you think?", ko: "생각하는 방식을 바꿔 준 책, 영상, 팟캐스트가 있나요?" },
+  { en: "What's one thing you'd tell your younger self?", ko: "어린 시절의 나에게 해 주고 싶은 말 한 가지는 뭐예요?" },
+  { en: "What's something that's been on your mind lately?", ko: "요즘 머릿속을 떠나지 않는 생각이 있나요?" },
+  { en: "What did you do last weekend?", ko: "지난 주말에 뭐 했어요?" },
+  { en: "What are your plans for this weekend?", ko: "이번 주말 계획은 뭐예요?" },
+  { en: "What's a food you hated as a kid but love now?", ko: "어릴 땐 싫어했는데 지금은 좋아하는 음식이 있나요?" },
+  { en: "What's the most beautiful view you've ever seen?", ko: "지금까지 본 풍경 중 가장 아름다웠던 건 뭐예요?" },
+  { en: "What's something you'd like to do before the end of this year?", ko: "올해가 가기 전에 꼭 해 보고 싶은 게 있나요?" },
+  { en: "How do you usually relax after a long day?", ko: "긴 하루를 보낸 뒤엔 보통 어떻게 쉬어요?" },
+  { en: "What's an app you use every day, and why?", ko: "매일 쓰는 앱이 있다면 뭐고, 왜 써요?" },
+  { en: "Tell me about a time a stranger was kind to you.", ko: "모르는 사람이 친절하게 대해 줬던 때 이야기를 해 주세요." },
+  { en: "What's a tradition you love, from your family or your country?", ko: "가족이나 우리나라의 전통 중에 좋아하는 게 있나요?" },
+  { en: "If you could instantly master one skill, what would it be?", ko: "기술 하나를 순식간에 마스터할 수 있다면 뭘 고를래요?" },
+  { en: "What's the best advice anyone has ever given you?", ko: "누군가에게 들은 조언 중 최고는 뭐였어요?" },
+  { en: "What annoyed you today? It's okay to vent.", ko: "오늘 짜증 났던 일은 뭐예요? 마음껏 털어놔도 돼요." },
+  { en: "Describe your room or your favorite spot at home.", ko: "내 방이나 집에서 제일 좋아하는 공간을 묘사해 보세요." },
+  { en: "What's a goal you're working on right now? How's it going?", ko: "지금 이루려고 노력 중인 목표가 있나요? 잘 되고 있어요?" },
+  { en: "What's a trip you'd like to take with your friends?", ko: "친구들과 함께 가 보고 싶은 여행이 있나요?" },
+  { en: "What's something new you tried recently?", ko: "최근에 새로 시도해 본 게 있나요?" },
+  { en: "What do you usually do on your way to work or school?", ko: "출근길이나 등굣길에 보통 뭘 해요?" },
+  { en: "Write about three things you're grateful for today.", ko: "오늘 감사한 일 세 가지를 써 보세요." },
+  { en: "What's your favorite holiday, and how do you usually spend it?", ko: "가장 좋아하는 명절이나 휴일은 뭐고, 보통 어떻게 보내요?" },
+  { en: "What's a song that brings back memories? What does it remind you of?", ko: "추억이 떠오르는 노래가 있나요? 어떤 기억이 떠올라요?" }
+];
+
+/* ================= 이 아래는 화면 동작 코드 ================= */
+
+const WHO_LABEL = {
+  staff: "직원", server: "직원", officer: "심사관", clerk: "직원", driver: "기사님",
+  friend: "친구", coworker: "동료", local: "현지인", neighbor: "이웃", stranger: "처음 본 사람"
+};
+const CATEGORY_HUE = { "카페·식당": 32, "공항·숙소": 208, "이동·쇼핑": 275, "일상 대화": 150 };
+const CATEGORY_EMOJI = { "카페·식당": "☕", "공항·숙소": "✈️", "이동·쇼핑": "🛍️", "일상 대화": "💬" };
+
+/* ElevenLabs 기본 제공 목소리 (미국 영어) */
+const EL_VOICES = [
+  { id: "cgSgspJ2msm6clMCkdW9", name: "Jessica · 여 · 밝고 친근" },
+  { id: "EXAVITQu4vr4xnJGJ8DF", name: "Sarah · 여 · 차분" },
+  { id: "FGY2WhTYpPnrIDTdsKH5", name: "Laura · 여 · 경쾌" },
+  { id: "iP95p4xoKVk53GoZ742B", name: "Chris · 남 · 편안" },
+  { id: "nPczCjzI2devNBz1zQrb", name: "Brian · 남 · 차분" },
+  { id: "cjVigY5qzO86Huf0OWal", name: "Eric · 남 · 부드러움" },
+  { id: "TX3LPaxmHKxFdv7VOQHJ", name: "Liam · 남 · 젊음" }
+];
+const EL_MODELS = [
+  { id: "eleven_v4", name: "Eleven v4 · 가장 자연스러움 (추천)" },
+  { id: "eleven_flash_v2_5", name: "Flash v2.5 · 빠르고 크레딧 절약" }
+];
+
+const SETTINGS_KEY = "engcards.settings.v1";
+const DEFAULTS = {
+  engine: "device",
+  apiKey: "",
+  model: "eleven_v4",
+  voiceThem: "cgSgspJ2msm6clMCkdW9",
+  voiceMe: "iP95p4xoKVk53GoZ742B",
+  speed: 1,
+  autoplay: false,
+  voiceWrite: "iP95p4xoKVk53GoZ742B",   // 글쓰기 탭에서 첨삭을 읽어 줄 목소리
+  writeRate: 1                           // 글쓰기 탭 재생 속도 (0.8 / 1)
+};
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "null");
+    const merged = Object.assign({}, DEFAULTS, s && typeof s === "object" ? s : {});
+    if (!EL_MODELS.some(m => m.id === merged.model)) merged.model = DEFAULTS.model;
+    return merged;
+  } catch (e) { return Object.assign({}, DEFAULTS); }
+}
+function saveSettings() {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) { /* 저장 못 해도 동작은 함 */ }
+}
+const settings = loadSettings();
+
+const feed = document.getElementById("feed");
+const scrim = document.getElementById("scrim");
+const sheet = document.getElementById("sheet");
+const sheetHead = document.getElementById("sheetHead");
+const sheetCtx = document.getElementById("sheetCtx");
+const sheetTitle = document.getElementById("sheetTitle");
+const sheetBody = document.getElementById("sheetBody");
+const sheetClose = document.getElementById("sheetClose");
+const toastEl = document.getElementById("toast");
+
+const ICON_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const ICON_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+const ICON_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+const ICON_PLAY = '<svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.8-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg>' +
+  '<svg class="i-stop" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>';
+const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>';
+const ICON_LIST ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>';
+const ICON_SLIDERS ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>';
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+function hueOf(category) {
+  if (category in CATEGORY_HUE) return CATEGORY_HUE[category];
+  let h = 0;
+  for (const ch of String(category)) h = (h * 31 + ch.charCodeAt(0)) % 360;
+  return h;
+}
+
+/* "Can I get ~?" → ["Can I get"] 처럼 고정된 부분만 뽑아 강조에 사용 */
+function phraseParts(phrase) {
+  return String(phrase)
+    .split(/~|\/|…|\.\.\./)
+    .map(s => s.trim().replace(/^[\s,.!?]+|[\s,.!?]+$/g, ""))
+    .filter(s => s.length > 2);
+}
+function decorate(text, phrase) {
+  let html = esc(text);
+  const parts = phraseParts(phrase).map(p => reEsc(esc(p))).sort((a, b) => b.length - a.length);
+  if (parts.length) {
+    html = html.replace(new RegExp("\\b(" + parts.join("|") + ")\\b", "gi"), "<mark>$1</mark>");
+  }
+  return html;
+}
+
+function buzz() {
+  try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) { /* 지원 안 하면 무시 */ }
+}
+
+let toastTimer = null;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("on"), 2800);
+}
+
+function spkAttrs(text, who) {
+  return ' data-say="' + esc(text) + '" data-who="' + who + '"';
+}
+
+/* ---------- 렌더링 ---------- */
+function renderCard(card, i) {
+  let firstThem = true;
+  let hintPlaced = false;
+  let meCount = 0;
+  const rows = (card.dialogue || []).map(line => {
+    const stage = meCount;                      // 앞에 나온 "me" 대사 수 = 이 줄이 보이는 단계
+    const later = stage > 0 ? " later" : "";
+    const ko = line.ko ? '<div class="ko">' + esc(line.ko) + '</div>' : "";
+    if (line.who === "me") {
+      meCount++;
+      const bars = "<i></i>".repeat(line.en.length > 30 ? 3 : 2);
+      let hint = "";
+      if (i === 0 && !hintPlaced) { hint = '<div class="hint">탭해서 확인</div>'; hintPlaced = true; }
+      return '<div class="row me' + later + '" data-stage="' + stage + '">' +
+        '<div class="line">' +
+          '<button class="spk" type="button" aria-label="내 대사 듣기"' + spkAttrs(line.en, "me") + '>' + ICON_SPEAKER + '</button>' +
+          '<button class="blank" type="button" aria-pressed="false" aria-label="내 차례. 탭해서 정답 보기">' +
+            '<span class="ans">' + esc(line.en) + '</span>' +
+            '<span class="lines" aria-hidden="true">' + bars + '</span>' +
+          '</button>' +
+        '</div>' + ko + hint +
+      '</div>';
+    }
+    const label = firstThem ? '<span class="who">' + esc(WHO_LABEL[line.who] || "상대") + '</span>' : "";
+    firstThem = false;
+    return '<div class="row them' + later + '" data-stage="' + stage + '">' + label +
+      '<button class="bubble say" type="button"' + spkAttrs(line.en, "them") + '>' + esc(line.en) +
+        '<span class="ico">' + ICON_SPEAKER + '</span></button>' + ko +
+    '</div>';
+  }).join("");
+
+  const exprs = (card.expressions || []).map((ex, j) =>
+    '<div class="expr-item">' +
+      '<button class="chip" type="button" data-c="' + i + '" data-e="' + j + '">' + esc(ex.phrase) + ICON_ARROW + '</button>' +
+      '<p class="expr-ko">' + esc(ex.ko) + '</p>' +
+    '</div>'
+  ).join("");
+
+  const swipe = i === 0 ? '<div class="swipe-hint">위로 넘기면 다음 상황</div>' : "";
+
+  return '<section class="card" style="--h:' + hueOf(card.category) + '" data-i="' + i + '" data-stage="0">' +
+    '<header class="top"><span class="tag">' + esc(card.category) + '</span>' +
+      '<span class="top-r"><button class="jump" type="button" aria-label="카드 목록">' + (i + 1) + ' / ' + CARDS.length + ICON_LIST + '</button>' +
+      '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
+    '<div class="body"><div class="inner">' +
+      '<h2 class="title">' + esc(card.title) + '</h2>' +
+      '<p class="situation">' + esc(card.situation) + '</p>' +
+      '<div class="chat">' + rows + '</div>' +
+      '<div class="expr-wrap" id="expr-' + i + '"><div class="expr-clip"><div class="expr">' +
+        '<div class="expr-label"><span>핵심 표현</span><small>탭하면 예문 · 썰</small></div>' +
+        exprs +
+      '</div></div></div>' +
+    '</div></div>' +
+    '<footer class="bottom">' +
+      '<div class="actions">' +
+        '<button class="btn ko-btn" type="button" aria-pressed="false">한글</button>' +
+        '<button class="btn play-all" type="button" aria-label="대화 전체 듣기">' + ICON_PLAY + '</button>' +
+        '<button class="btn more" type="button" aria-expanded="false" aria-controls="expr-' + i + '"><span>표현 보기</span>' + ICON_CHEVRON + '</button>' +
+      '</div>' +
+      swipe +
+    '</footer>' +
+  '</section>';
+}
+
+function renderEnd() {
+  return '<section class="card end" style="--h:150">' +
+    '<header class="top"><span class="tag">끝</span>' +
+      '<span class="top-r"><button class="jump" type="button" aria-label="카드 목록">목록' + ICON_LIST + '</button>' +
+      '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
+    '<div class="body"><div class="inner">' +
+      '<div class="end-emoji" aria-hidden="true">🎉</div>' +
+      '<h2 class="end-title">여기까지!</h2>' +
+      '<p class="end-sub">오늘 ' + CARDS.length + '개 상황을 다 봤어요.<br>입에 붙은 표현 하나만 들고 가요.</p>' +
+    '</div></div>' +
+    '<footer class="bottom"><div class="actions"><button class="btn more restart" type="button">처음부터 다시 보기</button></div></footer>' +
+  '</section>';
+}
+
+feed.innerHTML = CARDS.map(renderCard).join("") + renderEnd();
+
+/* ---------- 음성 캐시 (한 번 만든 ElevenLabs 음성은 폰에 저장해서 재사용) ---------- */
+const AudioCache = (() => {
+  const mem = new Map();
+  let dbp = null;
+  function db() {
+    if (!dbp) {
+      dbp = new Promise(res => {
+        try {
+          const r = indexedDB.open("engcards-tts", 1);
+          r.onupgradeneeded = () => r.result.createObjectStore("audio");
+          r.onsuccess = () => res(r.result);
+          r.onerror = () => res(null);
+        } catch (e) { res(null); }
+      });
+    }
+    return dbp;
+  }
+  async function get(k) {
+    if (mem.has(k)) return mem.get(k);
+    const d = await db();
+    if (!d) return null;
+    return new Promise(res => {
+      try {
+        const q = d.transaction("audio").objectStore("audio").get(k);
+        q.onsuccess = () => { const b = q.result || null; if (b) mem.set(k, b); res(b); };
+        q.onerror = () => res(null);
+      } catch (e) { res(null); }
+    });
+  }
+  async function put(k, blob) {
+    mem.set(k, blob);
+    const d = await db();
+    if (!d) return;
+    try { d.transaction("audio", "readwrite").objectStore("audio").put(blob, k); } catch (e) {}
+  }
+  async function clear() {
+    mem.clear();
+    const d = await db();
+    if (!d) return;
+    try { d.transaction("audio", "readwrite").objectStore("audio").clear(); } catch (e) {}
+  }
+  return { get, put, clear };
+})();
+
+/* ---------- 음성 재생 ---------- */
+const Player = (() => {
+  const audio = new Audio();
+  let token = 0;
+  let currentBtn = null;
+  let queue = Promise.resolve();
+  let deviceVoice = null;
+  let warnedNoKey = false;
+
+  function pickVoice() {
+    try {
+      const vs = speechSynthesis.getVoices();
+      const us = vs.filter(v => /en[-_]US/i.test(v.lang));
+      deviceVoice = us.find(v => /google|samsung/i.test(v.name)) || us[0] || vs.find(v => /^en/i.test(v.lang)) || null;
+    } catch (e) { deviceVoice = null; }
+  }
+  try {
+    if ("speechSynthesis" in window) {
+      pickVoice();
+      speechSynthesis.addEventListener("voiceschanged", pickVoice);
+    }
+  } catch (e) {}
+
+  function mark(btn, on) { if (btn) btn.classList.toggle("playing", on); }
+
+  function stop() {
+    token++;
+    try { audio.pause(); } catch (e) {}
+    try { if ("speechSynthesis" in window) speechSynthesis.cancel(); } catch (e) {}
+    mark(currentBtn, false);
+    currentBtn = null;
+    queue = Promise.resolve();
+  }
+
+  function playBlob(blob, rate) {
+    return new Promise(res => {
+      const url = URL.createObjectURL(blob);
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        audio.onended = audio.onerror = audio.onpause = null;
+        URL.revokeObjectURL(url);
+        res();
+      };
+      audio.onended = done; audio.onerror = done; audio.onpause = done;
+      audio.src = url;
+      try { audio.preservesPitch = true; audio.defaultPlaybackRate = rate; audio.playbackRate = rate; } catch (e) {}
+      const p = audio.play();
+      if (p && p.catch) p.catch(done);
+    });
+  }
+
+  /* 긴 글은 안드로이드 내장 음성이 중간에 끊길 수 있어서 문장 단위로 나눠 읽음 */
+  function speakDevice(text, who, rate) {
+    return new Promise(res => {
+      if (!("speechSynthesis" in window)) { toast("이 브라우저는 음성 재생을 지원하지 않아요"); return res(); }
+      let finished = false;
+      const done = () => { if (!finished) { finished = true; res(); } };
+      try {
+        const chunks = text.length < 220 ? [text] : (text.match(/[^.!?\n]+(?:[.!?]+["”’)]*|$)/g) || [text]);
+        const parts = chunks.map(s => s.trim()).filter(Boolean);
+        if (!parts.length) return done();
+        if (!deviceVoice) pickVoice();
+        parts.forEach((p, idx) => {
+          const u = new SpeechSynthesisUtterance(p);
+          u.lang = "en-US";
+          if (deviceVoice) u.voice = deviceVoice;
+          u.rate = rate;
+          u.pitch = who === "me" ? 0.92 : 1.08;
+          if (idx === parts.length - 1) { u.onend = done; u.onerror = done; }
+          speechSynthesis.speak(u);
+        });
+        setTimeout(done, 4000 + text.length * 110 / rate);   // 일부 안드로이드에서 onend가 안 오는 경우 대비
+      } catch (e) { done(); }
+    });
+  }
+
+  async function getEleven(text, voice) {
+    const key = [settings.model, voice, text].join("|");
+    const cached = await AudioCache.get(key);
+    if (cached) return cached;
+    /* 속도는 재생할 때 조절함 (v4는 API 속도 설정을 지원하지 않음) */
+    const vs = { stability: 0.5, similarity_boost: 0.75 };
+    let res;
+    try {
+      res = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + encodeURIComponent(voice) + "?output_format=mp3_44100_128", {
+        method: "POST",
+        headers: { "xi-api-key": settings.apiKey, "Content-Type": "application/json", "Accept": "audio/mpeg" },
+        body: JSON.stringify({ text: text, model_id: settings.model, voice_settings: vs })
+      });
+    } catch (e) {
+      throw new Error("ElevenLabs에 연결하지 못했어요");
+    }
+    if (!res.ok) {
+      let code = "", msg = "";
+      try { const j = await res.json(); code = (j.detail && (j.detail.status || j.detail.code)) || ""; msg = (j.detail && j.detail.message) || ""; } catch (e) {}
+      if (res.status === 401 && /quota/i.test(code + msg)) throw new Error("ElevenLabs 크레딧이 부족해요");
+      if (res.status === 401) throw new Error("API 키를 확인해 주세요");
+      if (/voice/i.test(code + msg)) throw new Error("목소리 ID를 확인해 주세요");
+      throw new Error("ElevenLabs 오류 (" + res.status + ")");
+    }
+    const blob = await res.blob();
+    AudioCache.put(key, blob);
+    return blob;
+  }
+
+  /* opts: { engine: "eleven" | "device", voice: voice ID, rate: 재생 속도 } — 없으면 표현 탭 설정을 따름 */
+  async function run(text, who, btn, t, opts) {
+    opts = opts || {};
+    const engine = opts.engine || settings.engine;
+    const voice = opts.voice || (who === "me" ? settings.voiceMe : settings.voiceThem);
+    const rate = opts.rate || settings.speed;
+    currentBtn = btn;
+    mark(btn, true);
+    try {
+      if (engine === "eleven") {
+        if (!settings.apiKey) {
+          if (!warnedNoKey) { toast("API 키가 없어서 폰 기본 음성으로 읽어요"); warnedNoKey = true; }
+        } else {
+          try {
+            const blob = await getEleven(text, voice);
+            if (t !== token) return;
+            await playBlob(blob, rate);
+            return;
+          } catch (err) {
+            if (t !== token) return;
+            toast(err.message + " · 폰 기본 음성으로 읽어요");
+          }
+        }
+      }
+      if (t !== token) return;
+      await speakDevice(text, who, rate);
+    } finally {
+      if (t === token) { mark(btn, false); currentBtn = null; }
+    }
+  }
+
+  /* 지금 재생 중인 걸 끊고 바로 재생 */
+  function play(text, who, btn, opts) {
+    stop();
+    const t = token;
+    queue = run(text, who, btn, t, opts);
+    return queue;
+  }
+  /* 지금 재생이 끝나면 이어서 재생 */
+  function enqueue(text, who, btn, opts) {
+    const t = token;
+    queue = queue.then(() => (t === token ? run(text, who, btn, t, opts) : undefined));
+    return queue;
+  }
+  function isPlaying(btn) { return btn && btn.classList.contains("playing"); }
+  function getToken() { return token; }
+
+  return { play, enqueue, stop, isPlaying, getToken };
+})();
+
+function sayFromButton(btn) {
+  if (Player.isPlaying(btn)) { Player.stop(); return; }
+  Player.play(btn.dataset.say, btn.dataset.who, btn);
+}
+
+/* ---------- 대화 진행: 내 대답을 열어야 다음 대사가 나옴 ---------- */
+function ensureVisible(body, el) {
+  const r = el.getBoundingClientRect();
+  const b = body.getBoundingClientRect();
+  const over = r.bottom - (b.bottom - 24);
+  if (over > 0) body.scrollBy({ top: over, behavior: "smooth" });
+}
+
+function showRows(card, rows) {
+  const body = card.querySelector(".body");
+  rows.forEach(r => { r.classList.remove("later"); r.classList.add("pop"); });
+  if (rows.length) ensureVisible(body, rows[rows.length - 1]);
+  if (settings.autoplay) {
+    rows.forEach(r => {
+      const say = r.querySelector(".say");
+      if (say) Player.enqueue(say.dataset.say, "them", say);
+    });
+  }
+}
+
+function advance(card, stage) {
+  if (+card.dataset.stage > stage) return;
+  const next = stage + 1;
+  card.dataset.stage = next;
+  const rows = Array.from(card.querySelectorAll(".row.later")).filter(r => +r.dataset.stage === next);
+  if (!rows.length) return;
+  const tok = card._tok = (card._tok || 0) + 1;
+  if (rows[0].classList.contains("them")) {
+    const typing = document.createElement("div");
+    typing.className = "row them typing pop";
+    typing.innerHTML = '<div class="bubble dots" aria-label="입력 중"><i></i><i></i><i></i></div>';
+    rows[0].parentNode.insertBefore(typing, rows[0]);
+    ensureVisible(card.querySelector(".body"), typing);
+    setTimeout(() => {
+      if (card._tok !== tok) return;
+      typing.remove();
+      showRows(card, rows);
+    }, 850);
+  } else {
+    showRows(card, rows);
+  }
+}
+
+function showAll(card) {
+  card._tok = (card._tok || 0) + 1;
+  card.querySelectorAll(".typing").forEach(x => x.remove());
+  card.querySelectorAll(".row.later").forEach(r => { r.classList.remove("later"); r.classList.add("pop"); });
+  card.dataset.stage = 999;
+}
+
+function setBlank(btn, show) {
+  btn.classList.toggle("shown", show);
+  btn.setAttribute("aria-pressed", show ? "true" : "false");
+  btn.closest(".row").classList.toggle("revealed", show);
+  if (show) btn.removeAttribute("aria-label");
+  else btn.setAttribute("aria-label", "내 차례. 탭해서 정답 보기");
+}
+
+function onBlank(btn) {
+  const row = btn.closest(".row");
+  const card = btn.closest(".card");
+  const show = !btn.classList.contains("shown");
+  setBlank(btn, show);
+  hideHint();
+  buzz();
+  if (show) {
+    const spk = row.querySelector(".spk");
+    if (settings.autoplay) Player.play(spk.dataset.say, "me", spk);
+    advance(card, +row.dataset.stage);
+  } else if (Player.isPlaying(row.querySelector(".spk"))) {
+    Player.stop();
+  }
+}
+
+function toggleMore(cardEl) {
+  const open = !cardEl.classList.contains("open");
+  const btn = cardEl.querySelector(".more");
+  const body = cardEl.querySelector(".body");
+  const wrap = cardEl.querySelector(".expr-wrap");
+  cardEl.classList.toggle("open", open);
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  btn.querySelector("span").textContent = open ? "표현 접기" : "표현 보기";
+  if (open) {
+    showAll(cardEl);
+    cardEl.querySelectorAll(".blank").forEach(b => setBlank(b, true));
+    hideHint();
+    const scrollToPanel = () => {
+      const top = wrap.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12;
+      if (top > body.scrollTop) body.scrollTo({ top, behavior: "smooth" });
+    };
+    let done = false;
+    const once = () => { if (!done) { done = true; scrollToPanel(); } };
+    wrap.addEventListener("transitionend", function te(e) {
+      if (e.target === wrap && e.propertyName === "grid-template-rows") { wrap.removeEventListener("transitionend", te); once(); }
+    });
+    setTimeout(once, 480);
+  } else {
+    body.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+/* ---------- 대화 전체 듣기: 안 열린 줄은 차례대로 열면서 읽어줌 ---------- */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function playAll(card) {
+  if (card.classList.contains("playing-all")) { Player.stop(); return; }
+  Player.stop();
+  const t0 = Player.getToken();
+  const alive = () => Player.getToken() === t0;
+  card._tok = (card._tok || 0) + 1;                 // 진행 중이던 '입력 중' 표시 취소
+  card.querySelectorAll(".typing").forEach(x => x.remove());
+  card.classList.add("playing-all");
+  card.querySelector(".play-all").setAttribute("aria-label", "전체 듣기 멈추기");
+  hideHint();
+  buzz();
+  const body = card.querySelector(".body");
+  let lastMeStage = -1;
+  try {
+    for (const row of Array.from(card.querySelectorAll(".chat > .row"))) {
+      if (!alive()) break;
+      const st = +row.dataset.stage;
+      if (row.classList.contains("later")) {
+        if (row.classList.contains("them")) {
+          const typing = document.createElement("div");
+          typing.className = "row them typing pop";
+          typing.innerHTML = '<div class="bubble dots" aria-label="입력 중"><i></i><i></i><i></i></div>';
+          row.parentNode.insertBefore(typing, row);
+          ensureVisible(body, typing);
+          await sleep(650);
+          typing.remove();
+          if (!alive()) break;
+        }
+        row.classList.remove("later");
+        row.classList.add("pop");
+      }
+      if (+card.dataset.stage < st) card.dataset.stage = st;
+      const blank = row.querySelector(".blank");
+      if (blank) {
+        lastMeStage = st;
+        if (!blank.classList.contains("shown")) setBlank(blank, true);
+      } else {
+        lastMeStage = -1;
+      }
+      ensureVisible(body, row);
+      const btn = row.querySelector(".say, .spk");
+      await Player.enqueue(btn.dataset.say, btn.dataset.who, btn);
+      if (!alive()) break;
+      await sleep(300);
+    }
+  } finally {
+    card.classList.remove("playing-all");
+    card.querySelector(".play-all").setAttribute("aria-label", "대화 전체 듣기");
+    /* 중간에 멈춰도 화면이 평소 흐름과 같은 상태가 되도록 정리 */
+    card.querySelectorAll(".row.later").forEach(r => {
+      if (+r.dataset.stage <= +card.dataset.stage) { r.classList.remove("later"); r.classList.add("pop"); }
+    });
+    /* 마지막으로 연 게 내 대사면, 평소처럼 다음 대사를 이어서 보여줌 */
+    if (lastMeStage >= 0 && +card.dataset.stage <= lastMeStage) advance(card, lastMeStage);
+  }
+}
+
+function toggleKo(cardEl) {
+  const on = !cardEl.classList.contains("ko-on");
+  cardEl.classList.toggle("ko-on", on);
+  cardEl.querySelector(".ko-btn").setAttribute("aria-pressed", on ? "true" : "false");
+  buzz();
+}
+
+function hideHint() {
+  const h = document.querySelector(".hint");
+  if (h) h.classList.add("gone");
+}
+
+feed.addEventListener("click", e => {
+  const t = e.target;
+  let el;
+  if ((el = t.closest(".blank"))) { onBlank(el); return; }
+  if ((el = t.closest(".say, .spk"))) { sayFromButton(el); return; }
+  if ((el = t.closest(".chip"))) { buzz(); openExpression(+el.dataset.c, +el.dataset.e); return; }
+  if ((el = t.closest(".gear"))) { openSettings(); return; }
+  if ((el = t.closest(".jump"))) { openList(); return; }
+  if ((el = t.closest(".ko-btn"))) { toggleKo(el.closest(".card")); return; }
+  if ((el = t.closest(".play-all"))) { playAll(el.closest(".card")); return; }
+  if ((el = t.closest(".restart"))) { feed.scrollTo({ top: 0, behavior: "smooth" }); return; }
+  if ((el = t.closest(".more"))) toggleMore(el.closest(".card"));
+});
+
+/* ---------- 진도 저장: 마지막으로 본 카드 + 본 카드 목록 ---------- */
+const PROGRESS_KEY = "engcards.progress.v1";
+const storageOK = (() => {
+  try {
+    localStorage.setItem("__engcards_test", "1");
+    const ok = localStorage.getItem("__engcards_test") === "1";
+    localStorage.removeItem("__engcards_test");
+    return ok;
+  } catch (e) { return false; }
+})();
+function cardKey(i) {
+  const c = CARDS[i];
+  return c && c.id != null ? String(c.id) : "i" + i;   // id 기준이라 카드를 추가해도 기록이 안 꼬임
+}
+function loadProgress() {
+  try {
+    const p = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "null");
+    if (p && typeof p === "object") return { last: p.last == null ? null : String(p.last), seen: Array.isArray(p.seen) ? p.seen.map(String) : [] };
+  } catch (e) {}
+  return { last: null, seen: [] };
+}
+const progress = loadProgress();
+const seenSet = new Set(progress.seen);
+function saveProgress() {
+  progress.seen = Array.from(seenSet);
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); } catch (e) {}
+}
+function indexOfKey(key) {
+  for (let i = 0; i < CARDS.length; i++) if (cardKey(i) === key) return i;
+  return -1;
+}
+function jumpTo(idx) {
+  const el = feed.children[idx];
+  if (el) feed.scrollTo({ top: el.offsetTop, behavior: "auto" });
+}
+
+/* 지난번 보던 카드로 바로 이동 */
+(function restore() {
+  const idx = progress.last == null ? -1 : indexOfKey(progress.last);
+  if (idx > 0) {
+    jumpTo(idx);
+    setTimeout(() => { if (currentTab === "cards") toast("지난번 보던 " + (idx + 1) + "번 카드부터 이어볼게요"); }, 300);
+  }
+})();
+
+/* 카드를 넘기면 재생 중인 소리를 멈추고, 자동 재생이 켜져 있으면 첫 대사를 읽어줌 */
+let activeCard = null;
+try {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting || en.intersectionRatio < 0.6 || activeCard === en.target) return;
+      activeCard = en.target;
+      Player.stop();
+      if (activeCard.dataset.i != null) {
+        const key = cardKey(+activeCard.dataset.i);
+        progress.last = key;
+        seenSet.add(key);
+        saveProgress();
+      }
+      if (settings.autoplay && !activeCard.dataset.greeted) {
+        activeCard.dataset.greeted = "1";
+        activeCard.querySelectorAll(".row.them:not(.later) .say").forEach(s => Player.enqueue(s.dataset.say, "them", s));
+      }
+    });
+  }, { root: feed, threshold: [0.6] });
+  document.querySelectorAll(".card").forEach(c => io.observe(c));
+} catch (e) {}
+
+/* ================= 글쓰기 탭 ================= */
+const DIARY_KEY = "engcards.diary.v1";
+function loadDiary() {
+  try {
+    const d = JSON.parse(localStorage.getItem(DIARY_KEY) || "null");
+    if (d && typeof d === "object" && d.entries && typeof d.entries === "object") return d;
+  } catch (e) {}
+  return { entries: {} };
+}
+const diary = loadDiary();
+function saveDiary() {
+  try { localStorage.setItem(DIARY_KEY, JSON.stringify(diary)); return true; } catch (e) { return false; }
+}
+
+const pad2 = n => String(n).padStart(2, "0");
+function dateKey(d) {
+  d = d || new Date();
+  return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+}
+/* 같은 날짜엔 항상 같은 질문 */
+function questionForDate(key) {
+  const p = key.split("-").map(Number);
+  const n = Math.floor(Date.UTC(p[0], p[1] - 1, p[2]) / 86400000);
+  const L = QUESTIONS.length;
+  return L ? QUESTIONS[((n % L) + L) % L] : { en: "", ko: "" };
+}
+function koDate(key, withDay) {
+  const p = key.split("-").map(Number);
+  const d = new Date(p[0], p[1] - 1, p[2]);
+  const year = p[0] !== new Date().getFullYear() ? p[0] + "년 " : "";
+  return year + p[1] + "월 " + p[2] + "일" + (withDay ? " " + "일월화수목금토"[d.getDay()] + "요일" : "");
+}
+
+const W = {
+  view: document.getElementById("viewWrite"),
+  date: document.getElementById("wDate"),
+  gear: document.getElementById("wGear"),
+  qEn: document.getElementById("qEn"),
+  qKo: document.getElementById("qKo"),
+  text: document.getElementById("wText"),
+  fix: document.getElementById("wFix"),
+  saved: document.getElementById("wSaved"),
+  count: document.getElementById("wCount"),
+  copy: document.getElementById("wCopy"),
+  listen: document.getElementById("wListen"),
+  rate: document.getElementById("wRate"),
+  history: document.getElementById("wHistory")
+};
+W.gear.innerHTML = ICON_SLIDERS;
+W.copy.innerHTML = '<span class="w-ico when-off">' + ICON_COPY + '</span><span class="w-ico when-on">' + ICON_CHECK + '</span>' +
+  '<span class="when-off">AI 첨삭용으로 복사</span><span class="when-on">복사됨</span>';
+W.listen.innerHTML = '<span class="w-ico when-off">' + ICON_SPEAKER + '</span><span class="w-ico when-on">' + ICON_STOP + '</span>' +
+  '<span class="when-off">첨삭 듣기</span><span class="when-on">정지</span>';
+
+let todayKey = null;
+function currentQuestion() {
+  const e = diary.entries[todayKey];
+  return e && e.q && e.q.en ? e.q : questionForDate(todayKey);   // 오늘 이미 쓴 글이 있으면 그때 질문을 유지
+}
+function autoGrow(ta) {
+  ta.style.height = "auto";
+  ta.style.height = ta.scrollHeight + 2 + "px";
+}
+function countWords(s) {
+  return (s.match(/[A-Za-z0-9]+(?:['’-][A-Za-z0-9]+)*/g) || []).length;
+}
+function updateCount() {
+  const n = countWords(W.text.value);
+  W.count.textContent = n + (n === 1 ? " word" : " words");
+}
+
+function initWrite() {
+  todayKey = dateKey();
+  const q = currentQuestion();
+  W.date.textContent = koDate(todayKey, true);
+  W.qEn.textContent = q.en;
+  W.qKo.textContent = q.ko;
+  const e = diary.entries[todayKey] || {};
+  W.text.value = e.text || "";
+  W.fix.value = e.fix || "";
+  W.saved.textContent = "";
+  autoGrow(W.text);
+  autoGrow(W.fix);
+  updateCount();
+  renderHistory();
+}
+
+let saveTimer = null;
+function scheduleSave() {
+  W.saved.textContent = "저장 중…";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveToday, 400);
+}
+function saveToday() {
+  clearTimeout(saveTimer);
+  if (!todayKey) return;
+  const text = W.text.value, fix = W.fix.value;
+  if (!text.trim() && !fix.trim() && !diary.entries[todayKey]) { W.saved.textContent = ""; return; }
+  diary.entries[todayKey] = { q: currentQuestion(), text: text, fix: fix, updated: Date.now() };
+  W.saved.textContent = saveDiary() ? "저장됨" : "이 방식으로 연 파일에선 저장이 안 돼요";
+}
+
+function renderHistory() {
+  const keys = Object.keys(diary.entries)
+    .filter(k => k !== todayKey && /^\d{4}-\d{2}-\d{2}$/.test(k))
+    .filter(k => { const e = diary.entries[k]; return e && ((e.text || "").trim() || (e.fix || "").trim()); })
+    .sort().reverse();
+  if (!keys.length) {
+    W.history.innerHTML = '<p class="w-empty">아직 지난 기록이 없어요. 오늘 쓴 글은 내일부터 여기에 쌓여요.</p>';
+    return;
+  }
+  W.history.innerHTML = keys.map(k => {
+    const e = diary.entries[k];
+    const q = e.q || {};
+    return '<details><summary><span class="h-date">' + esc(koDate(k)) + '</span>' +
+        '<span class="h-q">' + esc(q.en || "") + '</span><span class="h-chev">' + ICON_CHEVRON + '</span></summary>' +
+      '<div class="h-body"><p class="h-qfull">' + esc(q.en || "") + '</p>' +
+        (q.ko ? '<p class="h-qko">' + esc(q.ko) + '</p>' : "") +
+        ((e.text || "").trim() ? '<div class="h-label">내 글</div><p class="h-text">' + esc(e.text.trim()) + '</p>' : "") +
+        ((e.fix || "").trim() ?
+          '<div class="h-label-row"><div class="h-label">첨삭</div>' +
+            (englishOnly(e.fix) ?
+              '<button class="pill h-listen" type="button" data-key="' + esc(k) + '">' +
+                '<span class="when-off">' + ICON_SPEAKER + '</span><span class="when-on">' + ICON_STOP + '</span>' +
+                '<span class="when-off">듣기</span><span class="when-on">정지</span></button>' : "") +
+          '</div><p class="h-text">' + esc(e.fix.trim()) + '</p>' : "") +
+      '</div></details>';
+  }).join("");
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+  } catch (e) {}
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed;top:-1000px;left:0;opacity:0;";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand("copy");
+    ta.remove();
+    return ok;
+  } catch (e) { return false; }
+}
+
+/* 첨삭 칸에서 한글이 들어간 줄(한국어 설명)은 빼고 영어만 읽음 */
+function englishOnly(text) {
+  return text.split(/\r?\n/)
+    .filter(l => l.trim() && !/[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(l))
+    .join("\n").trim();
+}
+
+function backupText() {
+  const keys = Object.keys(diary.entries).sort().reverse();
+  return keys.map(k => {
+    const e = diary.entries[k] || {};
+    const q = e.q || {};
+    return "[" + k + "]\nQ: " + (q.en || "") + (q.ko ? "\n(" + q.ko + ")" : "") +
+      "\n\n내 글:\n" + (e.text || "").trim() + "\n\n첨삭:\n" + (e.fix || "").trim();
+  }).join("\n\n----------\n\n");
+}
+
+function openWriteSettings() {
+  const model = EL_MODELS.find(m => m.id === settings.model);
+  const html =
+    keyField("표현 탭과 같은 키를 써요. 키는 이 폰의 이 브라우저 안에만 저장돼요.") +
+    voiceField("voiceWrite", "첨삭을 읽어 줄 목소리") +
+    '<p class="note">모델은 표현 탭 설정을 따라요. 지금: ' + esc(model ? model.name : settings.model) + '</p>' +
+    '<div class="set-group"><span class="set-label">백업</span>' +
+      '<div class="btn-row"><button class="btn" type="button" id="backupAll">전체 기록 복사</button></div>' +
+      '<p class="note">지금까지 쓴 모든 글과 첨삭을 텍스트로 복사해요. 메모 앱 등에 붙여넣어 보관하세요.</p>' +
+    '</div>';
+  showSheet("글쓰기", "설정", html);
+}
+
+W.text.addEventListener("input", () => { autoGrow(W.text); updateCount(); scheduleSave(); });
+W.fix.addEventListener("input", () => { autoGrow(W.fix); scheduleSave(); });
+W.gear.addEventListener("click", openWriteSettings);
+
+let copyTimer = null;
+W.copy.addEventListener("click", async () => {
+  const text = W.text.value.trim();
+  if (!text) { toast("먼저 내 글을 써 주세요"); return; }
+  const q = currentQuestion();
+  const prompt = "Please correct my English diary. Keep my meaning, make it sound natural like an American native speaker, and briefly explain the main corrections in Korean.\n" +
+    "Question: " + q.en + "\n" +
+    "My writing: " + text;
+  const ok = await copyText(prompt);
+  if (!ok) { toast("복사하지 못했어요"); return; }
+  buzz();
+  W.copy.classList.add("done");
+  clearTimeout(copyTimer);
+  copyTimer = setTimeout(() => W.copy.classList.remove("done"), 1600);
+});
+
+/* 표현 탭과 같은 키·모델(v4)을 쓰고, 목소리만 글쓰기용으로 따로.
+   같은 글은 저장된 음성을 재사용하고, 키가 없거나 오류가 나면 폰 기본 음성(en-US)으로 읽음 */
+function playCorrection(fixText, btn) {
+  if (Player.isPlaying(btn)) { Player.stop(); return; }
+  const text = englishOnly(fixText);
+  if (!text) { toast(fixText.trim() ? "읽을 영어 문장이 없어요" : "첨삭 내용을 먼저 붙여넣어 주세요"); return; }
+  buzz();
+  Player.play(text, "me", btn, { engine: "eleven", voice: settings.voiceWrite, rate: settings.writeRate });
+}
+W.listen.addEventListener("click", () => playCorrection(W.fix.value, W.listen));
+
+/* 지난 기록의 첨삭 듣기 */
+W.history.addEventListener("click", e => {
+  const b = e.target.closest(".h-listen");
+  if (!b) return;
+  const entry = diary.entries[b.dataset.key];
+  if (entry) playCorrection(entry.fix || "", b);
+});
+
+function syncRate() {
+  W.rate.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(parseFloat(b.dataset.v) === settings.writeRate)));
+}
+W.rate.addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  settings.writeRate = parseFloat(b.dataset.v);
+  saveSettings();
+  syncRate();
+  buzz();
+});
+syncRate();
+
+/* 키보드가 올라오면 탭 바를 숨겨 입력칸을 넓게 */
+W.view.addEventListener("focusin", e => { if (e.target.matches("textarea")) document.body.classList.add("typing"); });
+W.view.addEventListener("focusout", e => { if (e.target.matches("textarea")) document.body.classList.remove("typing"); });
+
+/* 앱을 닫거나 다른 앱으로 갈 때 저장, 날짜가 바뀌었으면 새 질문으로 */
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") saveToday();
+  else if (todayKey !== dateKey()) { saveToday(); initWrite(); }
+});
+window.addEventListener("pagehide", saveToday);
+
+initWrite();
+
+/* ================= 하단 탭 ================= */
+const TAB_KEY = "engcards.tab.v1";
+const VIEWS = { cards: feed, write: W.view };
+let currentTab = "cards";
+function switchTab(name, quiet) {
+  if (!VIEWS[name]) name = "cards";
+  if (name !== currentTab) Player.stop();
+  currentTab = name;
+  Object.keys(VIEWS).forEach(k => {
+    const on = k === name;
+    VIEWS[k].classList.toggle("off", !on);
+    VIEWS[k].inert = !on;
+  });
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === name ? "true" : "false"));
+  if (name === "write") {
+    if (todayKey !== dateKey()) { saveToday(); initWrite(); }
+    else { autoGrow(W.text); autoGrow(W.fix); }
+  }
+  try { localStorage.setItem(TAB_KEY, name); } catch (e) {}
+  if (!quiet) buzz();
+}
+document.querySelector(".tabbar").addEventListener("click", e => {
+  const t = e.target.closest(".tab");
+  if (t) switchTab(t.dataset.tab);
+});
+(function () {
+  let saved = null;
+  try { saved = localStorage.getItem(TAB_KEY); } catch (e) {}
+  switchTab(saved || "cards", true);
+})();
+
+/* ================= 자동 점검: 주소 끝에 #check 를 붙여 열면 결과가 뜸 (규칙은 CLAUDE.md) ================= */
+function sceneOf(card) {
+  return card.scene || (card.category === "일상 대화" ? "free" : "task");   // task: 정해진 용건(10단어), free: 자유 대화(12단어)
+}
+function phraseRegex(phrase) {
+  const parts = String(phrase).split("~")
+    .map(s => s.trim().replace(/^[\s,.!?]+|[\s,.!?]+$/g, ""))
+    .filter(Boolean);
+  return new RegExp(parts.map(reEsc).join(".{1,40}?"), "i");
+}
+function runChecks() {
+  const issues = [];
+  const stats = { cards: CARDS.length, expressions: 0, examples: 0, meTurns: 0, questions: QUESTIONS.length };
+  const ids = new Set();
+  let prevId = -Infinity;
+  CARDS.forEach((c, i) => {
+    const tag = "카드 " + (i + 1) + (c.id != null ? " (id " + c.id + ")" : "");
+    if (c.id == null) issues.push(tag + ": id 없음");
+    else {
+      if (ids.has(c.id)) issues.push(tag + ": id 중복");
+      if (typeof c.id === "number" && c.id <= prevId) issues.push(tag + ": id가 앞 카드보다 작음");
+      ids.add(c.id);
+      if (typeof c.id === "number") prevId = c.id;
+    }
+    ["category", "title", "situation"].forEach(k => { if (!c[k]) issues.push(tag + ": " + k + " 없음"); });
+    const d = c.dialogue || [];
+    if (d.length < 4 || d.length > 10) issues.push(tag + ": 대화 " + d.length + "줄 (4~10줄)");
+    const me = d.filter(x => x.who === "me");
+    if (me.length < 2) issues.push(tag + ": me 턴 " + me.length + "개 (2턴 이상)");
+    const limit = sceneOf(c) === "free" ? 12 : 10;
+    d.forEach(x => { if (!x.en || !x.ko) issues.push(tag + ": 대사 en/ko 누락 — " + (x.en || x.ko || "")); });
+    me.forEach(x => {
+      stats.meTurns++;
+      const w = String(x.en || "").split(/\s+/).filter(Boolean).length;
+      if (w > limit) issues.push(tag + ": me " + w + "단어 (상한 " + limit + ") — " + x.en);
+    });
+    const ex = c.expressions || [];
+    if (ex.length < 2 || ex.length > 3) issues.push(tag + ": 표현 " + ex.length + "개 (2~3개)");
+    ex.forEach(e => {
+      stats.expressions++;
+      const p = "\"" + e.phrase + "\"";
+      if (!e.phrase || !e.ko) issues.push(tag + ": 표현 phrase/ko 누락");
+      const n = (e.examples || []).length;
+      stats.examples += n;
+      if (n !== 5) issues.push(tag + " " + p + ": 예문 " + n + "개 (정확히 5개)");
+      (e.examples || []).forEach(x => { if (!x.en || !x.ko) issues.push(tag + " " + p + ": 예문 en/ko 누락"); });
+      if (!e.story || !e.story.en || !e.story.ko) { issues.push(tag + " " + p + ": 썰 누락"); return; }
+      if (!phraseRegex(e.phrase).test(e.story.en)) issues.push(tag + " " + p + ": 썰에 표현이 없음");
+      if (/[가-힣]/.test(e.story.en)) issues.push(tag + " " + p + ": 썰 영어에 한글이 섞임");
+      const sents = e.story.en.split(/(?<=[.!?]["”]?)\s+(?=[A-Z“"])/).length;
+      if (sents < 3 || sents > 5) issues.push(tag + " " + p + ": 썰 " + sents + "문장 (3~4문장 권장)");
+    });
+  });
+  const qSeen = new Set();
+  QUESTIONS.forEach((q, i) => {
+    if (!q.en || !q.ko) issues.push("질문 " + (i + 1) + ": en/ko 누락");
+    const k = String(q.en || "").toLowerCase();
+    if (qSeen.has(k)) issues.push("질문 " + (i + 1) + ": 중복 — " + q.en);
+    qSeen.add(k);
+  });
+  if (QUESTIONS.length < 60) issues.push("질문 " + QUESTIONS.length + "개 (60개 이상 권장)");
+  return { stats, issues };
+}
+window.runChecks = runChecks;
+if (location.hash === "#check") {
+  setTimeout(() => {
+    const r = runChecks();
+    const s = r.stats;
+    showSheet("자동 점검", r.issues.length ? "문제 " + r.issues.length + "개" : "이상 없음",
+      '<p class="note">카드 ' + s.cards + '장 · 표현 ' + s.expressions + '개 · 예문 ' + s.examples + '개 · me 턴 ' + s.meTurns + '개 · 질문 ' + s.questions + '개</p>' +
+      (r.issues.length ? '<ul class="note">' + r.issues.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : ""));
+  }, 300);
+}
+
+/* ---------- 바텀시트 ---------- */
+let sheetOpen = false;
+
+function showSheet(ctx, title, html) {
+  Player.stop();
+  sheetCtx.textContent = ctx;
+  sheetTitle.textContent = title;
+  sheetBody.innerHTML = html;
+  sheetBody.scrollTop = 0;
+  sheet.style.transform = "";
+  sheet.classList.add("on");
+  scrim.classList.add("on");
+  sheet.setAttribute("aria-hidden", "false");
+  if (!sheetOpen) {
+    sheetOpen = true;
+    try { history.pushState({ sheet: true }, ""); } catch (e) {}
+  }
+}
+
+function openExpression(ci, ei) {
+  const card = CARDS[ci];
+  const ex = card && card.expressions[ei];
+  if (!ex) return;
+  const items = (ex.examples || []).map(x =>
+    '<li><div class="ex-en">' + decorate(x.en, ex.phrase) + '</div><div class="ex-ko">' + esc(x.ko) + '</div>' +
+    '<button class="spk" type="button" aria-label="예문 듣기"' + spkAttrs(x.en, "them") + '>' + ICON_SPEAKER + '</button></li>'
+  ).join("");
+  const story = ex.story ?
+    '<div class="sec-row"><h4 class="sec-h">이 표현으로 썰 풀기</h4>' +
+      '<button class="pill spk-pill" type="button"' + spkAttrs(ex.story.en, "me") + '>' + ICON_SPEAKER + '듣기</button></div>' +
+    '<div class="story"><p class="story-en">' + decorate(ex.story.en, ex.phrase) + '</p>' +
+    '<p class="story-ko">' + esc(ex.story.ko) + '</p></div>' : "";
+  showSheet(card.title, ex.phrase, '<h4 class="sec-h">예문</h4><ol class="ex">' + items + '</ol>' + story);
+}
+
+function openList() {
+  const cur = activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : -1;
+  const seenCount = CARDS.filter((c, i) => seenSet.has(cardKey(i))).length;
+  const pct = CARDS.length ? Math.round(seenCount / CARDS.length * 100) : 0;
+  const groups = [];
+  CARDS.forEach((c, i) => {
+    let g = groups.find(x => x.name === c.category);
+    if (!g) { g = { name: c.category, items: [] }; groups.push(g); }
+    g.items.push(i);
+  });
+  const listHtml = groups.map(g => {
+    const seenInGroup = g.items.filter(i => seenSet.has(cardKey(i))).length;
+    return '<section class="toc-group" style="--h:' + hueOf(g.name) + '">' +
+      '<div class="toc-head"><span class="toc-emoji" aria-hidden="true">' + (CATEGORY_EMOJI[g.name] || "📌") + '</span>' +
+        '<h4 class="toc-cat">' + esc(g.name) + '</h4>' +
+        '<span class="toc-cnt">' + seenInGroup + ' / ' + g.items.length + '</span></div>' +
+      '<ul class="toc">' +
+      g.items.map(i => {
+        const seen = seenSet.has(cardKey(i));
+        const cls = "toc-item" + (seen ? " seen" : "") + (i === cur ? " current" : "");
+        return '<li><button class="' + cls + '" type="button" data-go="' + i + '"' + (i === cur ? ' aria-current="true"' : "") + '>' +
+          '<span class="toc-n">' + (i + 1) + '</span><span class="toc-t">' + esc(CARDS[i].title) + '</span>' +
+          '<span class="toc-check"' + (seen ? ' aria-label="봤음"' : "") + '>' + (seen ? ICON_CHECK : "") + '</span></button></li>';
+      }).join("") + '</ul></section>';
+  }).join("");
+  const warn = storageOK ? "" :
+    '<p class="note">지금 연 방식에서는 기록이 저장되지 않아서, 앱을 다시 열면 처음부터 시작해요.</p>';
+  const html =
+    '<div class="prog"><div class="prog-text">본 카드 <b>' + seenCount + '</b> / ' + CARDS.length + '</div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div>' + warn + '</div>' +
+    '<div class="btn-row"><button class="btn" type="button" id="goUnseen">안 본 카드로</button>' +
+      '<button class="btn" type="button" id="goFirst">처음부터</button></div>' +
+    listHtml +
+    '<div class="set-group"><div class="btn-row"><button class="btn" type="button" id="resetProgress">본 기록 지우기</button></div></div>';
+  showSheet("카드 " + CARDS.length + "장", "목록", html);
+  const curEl = sheetBody.querySelector(".toc-item.current");
+  if (curEl) sheetBody.scrollTop = Math.max(0, curEl.offsetTop - sheetBody.clientHeight / 2);
+}
+
+function goFromList(idx) {
+  closeSheet();
+  setTimeout(() => jumpTo(idx), 0);
+}
+
+function voiceOptions(selected) {
+  const known = EL_VOICES.some(v => v.id === selected);
+  return EL_VOICES.map(v => '<option value="' + v.id + '"' + (v.id === selected ? " selected" : "") + '>' + esc(v.name) + '</option>').join("") +
+    '<option value="custom"' + (known ? "" : " selected") + '>직접 입력 (voice ID)</option>';
+}
+
+function voiceField(name, label) {
+  const known = EL_VOICES.some(v => v.id === settings[name]);
+  return '<div class="set-group"><label class="set-label" for="sel-' + name + '">' + label + '</label>' +
+    '<select class="field" id="sel-' + name + '" data-voice="' + name + '">' + voiceOptions(settings[name]) + '</select>' +
+    '<input class="field" type="text" id="cus-' + name + '" data-voice-custom="' + name + '" placeholder="voice ID 붙여넣기" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + (known ? "" : esc(settings[name])) + '"' + (known ? " hidden" : "") + '>' +
+  '</div>';
+}
+
+function keyField(note) {
+  return '<div class="set-group"><label class="set-label" for="setKey">ElevenLabs API 키</label>' +
+    '<input class="field" id="setKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk_로 시작하는 키" value="' + esc(settings.apiKey) + '">' +
+    '<p class="note">' + note + '</p>' +
+  '</div>';
+}
+
+function openSettings() {
+  const seg = (name, opts) => '<div class="seg" data-set="' + name + '">' +
+    opts.map(o => '<button type="button" data-v="' + o[0] + '" aria-pressed="' + (String(settings[name]) === String(o[0])) + '">' + o[1] + '</button>').join("") +
+  '</div>';
+  const html =
+    '<div class="set-group"><span class="set-label">음성 엔진</span>' +
+      seg("engine", [["device", "폰 기본 음성"], ["eleven", "ElevenLabs"]]) +
+      '<p class="note">폰 기본 음성은 무료이고 바로 쓸 수 있어요. ElevenLabs는 훨씬 자연스럽지만 API 키가 필요하고 크레딧이 들어요.</p>' +
+    '</div>' +
+    '<div class="el-only"' + (settings.engine === "eleven" ? "" : " hidden") + '>' +
+      keyField("키는 이 폰의 이 브라우저 안에만 저장돼요. 글쓰기 탭과 같은 키를 써요. ElevenLabs에서 Text to Speech 권한만 켜고 크레딧 한도를 정해 둔 키를 쓰는 걸 추천해요. 한 번 들은 문장은 폰에 저장돼서 다시 들을 땐 크레딧이 들지 않아요.") +
+      '<div class="set-group"><label class="set-label" for="setModel">모델</label>' +
+        '<select class="field" id="setModel">' + EL_MODELS.map(m => '<option value="' + m.id + '"' + (m.id === settings.model ? " selected" : "") + '>' + esc(m.name) + '</option>').join("") + '</select>' +
+      '</div>' +
+      voiceField("voiceThem", "상대 목소리 (직원·친구 등, 예문)") +
+      voiceField("voiceMe", "내 목소리 (내 대사, 썰)") +
+    '</div>' +
+    '<div class="set-group"><span class="set-label">속도</span>' +
+      seg("speed", [["0.85", "천천히"], ["1", "보통"]]) +
+    '</div>' +
+    '<div class="set-group"><div class="switch-row"><span class="set-label" id="lblAuto">자동 재생</span>' +
+      '<button class="switch" type="button" role="switch" data-switch="autoplay" aria-labelledby="lblAuto" aria-checked="' + settings.autoplay + '"></button></div>' +
+      '<p class="note">카드를 넘기거나, 다음 대사가 나오거나, 내 정답을 열 때 바로 읽어줘요.</p>' +
+    '</div>' +
+    '<div class="set-group"><div class="btn-row">' +
+      '<button class="btn" type="button" id="testVoice">목소리 들어보기</button>' +
+      '<button class="btn" type="button" id="clearCache">저장된 음성 지우기</button>' +
+    '</div></div>';
+  showSheet("설정", "음성", html);
+}
+
+/* 시트 안 클릭: 듣기 버튼 + 설정 컨트롤 */
+sheetBody.addEventListener("click", e => {
+  const t = e.target;
+  let el;
+  if ((el = t.closest(".spk, .spk-pill"))) { sayFromButton(el); return; }
+  if ((el = t.closest("[data-go]"))) { goFromList(+el.dataset.go); return; }
+  if ((el = t.closest("#goFirst"))) { goFromList(0); return; }
+  if ((el = t.closest("#backupAll"))) {
+    saveToday();
+    const text = backupText();
+    if (!text) { toast("아직 저장된 기록이 없어요"); return; }
+    copyText(text).then(ok => toast(ok ? "전체 기록을 복사했어요" : "복사하지 못했어요"));
+    return;
+  }
+  if ((el = t.closest("#goUnseen"))) {
+    const cur = activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : -1;
+    let idx = -1;
+    for (let k = 1; k <= CARDS.length && idx < 0; k++) {
+      const i = (cur + k + CARDS.length) % CARDS.length;
+      if (!seenSet.has(cardKey(i))) idx = i;
+    }
+    if (idx < 0) { toast("모든 카드를 다 봤어요!"); return; }
+    goFromList(idx);
+    return;
+  }
+  if ((el = t.closest("#resetProgress"))) {
+    seenSet.clear();
+    if (activeCard && activeCard.dataset.i != null) seenSet.add(cardKey(+activeCard.dataset.i));
+    saveProgress();
+    openList();
+    toast("본 기록을 지웠어요");
+    return;
+  }
+  if ((el = t.closest(".seg button"))) {
+    const name = el.parentNode.dataset.set;
+    const v = el.dataset.v;
+    settings[name] = name === "speed" ? parseFloat(v) : v;
+    saveSettings();
+    el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
+    if (name === "engine") {
+      const box = sheetBody.querySelector(".el-only");
+      if (box) box.hidden = v !== "eleven";
+    }
+    buzz();
+    return;
+  }
+  if ((el = t.closest("[data-switch]"))) {
+    const name = el.dataset.switch;
+    settings[name] = !settings[name];
+    saveSettings();
+    el.setAttribute("aria-checked", settings[name] ? "true" : "false");
+    buzz();
+    return;
+  }
+  if ((el = t.closest("#testVoice"))) {
+    if (Player.isPlaying(el)) { Player.stop(); return; }
+    Player.play("Hi there! What can I get started for you?", "them", el);
+    Player.enqueue("Can I get a medium hot americano, please?", "me", el);
+    return;
+  }
+  if ((el = t.closest("#clearCache"))) {
+    AudioCache.clear().then(() => toast("저장된 음성을 지웠어요"));
+  }
+});
+
+sheetBody.addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "setKey") { settings.apiKey = t.value.trim(); saveSettings(); }
+  else if (t.dataset.voiceCustom) {
+    const v = t.value.trim();
+    settings[t.dataset.voiceCustom] = v || DEFAULTS[t.dataset.voiceCustom];
+    saveSettings();
+  }
+});
+sheetBody.addEventListener("change", e => {
+  const t = e.target;
+  if (t.id === "setModel") { settings.model = t.value; saveSettings(); }
+  else if (t.dataset.voice) {
+    const name = t.dataset.voice;
+    const custom = sheetBody.querySelector('[data-voice-custom="' + name + '"]');
+    if (t.value === "custom") {
+      custom.hidden = false;
+      custom.focus();
+      if (custom.value.trim()) { settings[name] = custom.value.trim(); saveSettings(); }
+    } else {
+      custom.hidden = true;
+      settings[name] = t.value;
+      saveSettings();
+    }
+  }
+});
+
+function hideSheet() {
+  if (!sheetOpen) return;
+  sheetOpen = false;
+  Player.stop();
+  if (document.activeElement && sheet.contains(document.activeElement)) document.activeElement.blur();
+  sheet.classList.remove("on", "dragging");
+  sheet.style.transform = "";
+  scrim.classList.remove("on");
+  sheet.setAttribute("aria-hidden", "true");
+}
+
+/* 닫기 버튼·바깥 탭: 히스토리를 되돌려서 안드로이드 뒤로 가기와 같은 흐름으로 닫음 */
+function closeSheet() {
+  if (!sheetOpen) return;
+  let viaHistory = false;
+  try { viaHistory = !!(history.state && history.state.sheet); } catch (e) {}
+  if (viaHistory) history.back();
+  else hideSheet();
+}
+
+window.addEventListener("popstate", hideSheet);
+scrim.addEventListener("click", closeSheet);
+sheetClose.addEventListener("click", closeSheet);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+/* 손잡이 부분을 아래로 끌어서 닫기 */
+let dragY0 = null, dragDy = 0;
+sheetHead.addEventListener("touchstart", e => {
+  dragY0 = e.touches[0].clientY; dragDy = 0;
+  sheet.classList.add("dragging");
+}, { passive: true });
+sheetHead.addEventListener("touchmove", e => {
+  if (dragY0 === null) return;
+  dragDy = Math.max(0, e.touches[0].clientY - dragY0);
+  sheet.style.transform = "translateY(" + dragDy + "px)";
+}, { passive: true });
+sheetHead.addEventListener("touchend", () => {
+  if (dragY0 === null) return;
+  dragY0 = null;
+  sheet.classList.remove("dragging");
+  if (dragDy > 90) closeSheet();
+  else sheet.style.transform = "";
+});
+</script>
+</body>
+</html>
