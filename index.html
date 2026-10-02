@@ -203,7 +203,7 @@
   .mnote{ margin:18px 0 0; font-size:14.5px; line-height:1.6; color:var(--faint); }
   .mnote:empty{ display:none; }
   .chat{ display:flex; flex-direction:column; gap:10px; margin-top:28px; -webkit-user-select:none; user-select:none; }
-  .mnote:not(:empty) + .chat{ margin-top:18px; }
+  .mnote:not(:empty) ~ .chat{ margin-top:18px; }
   .row{ display:flex; flex-direction:column; max-width:88%; }
   .row.them{ align-self:flex-start; align-items:flex-start; }
   .row.me{ align-self:flex-end; align-items:flex-end; }
@@ -228,7 +228,7 @@
     .row.them .bubble{ box-shadow:0 1px 2px rgba(0,0,0,.05), 0 0 0 1px rgba(0,0,0,.04); }
   }
   .bubble .en{ display:block; }
-  .bubble .kq, .bubble .ph{ display:none; }
+  .bubble .kq{ display:none; }
   .m-read .row.me .bubble, .m-listen:not(.masked) .bubble{ cursor:pointer; }
   .m-read .row.me .bubble:active, .m-listen:not(.masked) .bubble:active{ transform:scale(.98); }
 
@@ -250,16 +250,34 @@
   .row > *{ transition:opacity .3s ease; }
   .row.past > *{ opacity:.42; }   /* 줄 자체는 popIn 애니메이션이 opacity를 잡고 있어서 안쪽을 흐리게 */
 
-  /* 듣기: 정답 확인 전에는 글자 없이 자리만 (지금 말하는 줄의 자리와 화자만 표시) */
-  .masked .bubble .en, .masked .bubble .kq, .masked .ko, .masked .hint{ display:none; }
-  .masked .bubble .ph{ display:flex; flex-direction:column; justify-content:center; gap:9px; width:var(--w, 160px); max-width:100%; min-height:25px; }
-  .ph i{ display:block; height:2px; border-radius:2px; background:currentColor; opacity:.5; }
-  .ph i:last-child{ width:58%; }
-  .masked .row .bubble{ background:transparent; color:var(--faint); border-style:dashed; border-color:var(--faint); box-shadow:none; opacity:.6; }
-  .masked .row.cur .bubble{ opacity:1; color:var(--accent); background:var(--accent-soft); border-style:solid; border-color:var(--accent); }
-  .masked .row.cur .ph i{ animation:pulse 1s ease-in-out infinite; }
-  .masked .row .who{ display:none; }
-  .masked .row.cur .who{ display:block; color:var(--accent); font-weight:600; }
+  /* 듣기: 정답 확인 전에는 대화 대신 두 사람 아이콘(왼쪽 상대, 오른쪽 나). 말하는 쪽은 진한 테두리 + 은은하게 퍼짐, 안 말하는 쪽은 흐리게
+     카드 클래스: masked(정답 확인 전) · talk-them / talk-me(지금 말하는 쪽) · lpaused(일시정지) */
+  .duo{ display:none; flex:1; flex-direction:column; align-items:center; justify-content:center; gap:22px; min-height:250px; padding:20px 0 6px; }
+  .masked .chat{ display:none; }
+  .masked .duo{ display:flex; }
+  .duo-people{ display:flex; gap:48px; }
+  .person{
+    display:flex; flex-direction:column; align-items:center; gap:11px;
+    --c:hsl(var(--h) 52% var(--tag-l)); --g:hsl(var(--h) 50% 55% / .3);
+    transition:opacity .35s ease;
+  }
+  .person.me{ --c:var(--accent); --g:var(--accent-line); }
+  .avatar{
+    position:relative; width:88px; height:88px; border-radius:50%;
+    display:grid; place-items:center;
+    color:var(--c); background:var(--bg-2); border:2px solid var(--line);
+    transition:border-color .3s ease, box-shadow .4s ease, transform .3s ease;
+  }
+  .avatar svg{ width:52px; height:52px; }
+  .avatar::after{ content:""; position:absolute; inset:-3px; border-radius:50%; border:2px solid var(--c); opacity:0; pointer-events:none; }
+  .pname{ font-size:15px; font-weight:600; color:var(--text-2); transition:color .3s ease; }
+  .duo-n{ font-size:13.5px; color:var(--faint); font-variant-numeric:tabular-nums; letter-spacing:.02em; }
+  .talk-them .person.me, .talk-me .person.them{ opacity:.35; }
+  .talk-them .person.them .avatar, .talk-me .person.me .avatar{ border:3px solid var(--c); box-shadow:0 0 26px 6px var(--g); transform:scale(1.04); }
+  .talk-them .person.them .avatar::after, .talk-me .person.me .avatar::after{ animation:ripple 1.6s ease-out infinite; }
+  .talk-them .person.them .pname, .talk-me .person.me .pname{ color:var(--c); }
+  .lpaused .avatar::after{ animation:none !important; opacity:0; }
+  @keyframes ripple{ from{ opacity:.55; transform:scale(1); } to{ opacity:0; transform:scale(1.42); } }
 
   .spk{
     flex:none;
@@ -1075,18 +1093,19 @@ function markExpressions(text, card, ci, used, usedX) {
 }
 
 /* ---------- 대사 한 줄 그리기 (세 모드 공통. 나중에 드라이브 모드·인터랙티브 스크립트도 이걸 씀) ----------
-   말풍선 안: .en(영어 + 밑줄) / .kq(읽기 모드에서 아직 확인 안 한 내 대사의 한글) / .ph(듣기 모드의 자리 표시)
+   말풍선 안: .en(영어 + 밑줄) / .kq(읽기 모드에서 아직 확인 안 한 내 대사의 한글)
    말풍선 아래: .ko(작은 한글 해석). 무엇을 보일지는 CSS 클래스가 정하므로, 모드가 바뀌어도 이 HTML은 그대로 */
+function whoLabel(who) {
+  return who === "me" ? "나" : (WHO_LABEL[who] || "상대");
+}
 function renderLine(line, li, enHtml, flags) {
   const me = line.who === "me";
-  const w = Math.round(Math.min(250, 70 + String(line.en || "").length * 4));   // 듣기 모드 자리 표시 폭(대사 길이에 비례)
-  return '<div class="row ' + (me ? "me" : "them") + (flags.firstThem ? " first-them" : "") + '" data-l="' + li + '" style="--w:' + w + 'px">' +
-    '<span class="who">' + (me ? "나" : esc(WHO_LABEL[line.who] || "상대")) + '</span>' +
+  return '<div class="row ' + (me ? "me" : "them") + (flags.firstThem ? " first-them" : "") + '" data-l="' + li + '">' +
+    '<span class="who">' + esc(whoLabel(line.who)) + '</span>' +
     '<div class="line">' +
       '<div class="bubble">' +
         '<span class="en" lang="en">' + enHtml + '</span>' +
         (me ? '<span class="kq">' + esc(line.ko || "") + '</span>' : "") +
-        '<span class="ph" aria-hidden="true"><i></i>' + (String(line.en || "").length > 30 ? "<i></i>" : "") + '<i></i></span>' +
       '</div>' +
       '<button class="spk" type="button" aria-label="이 줄 듣기"' + spkAttrs(line.en, me ? "me" : "them") + '>' + ICON_SPEAKER + '</button>' +
     '</div>' +
@@ -1108,6 +1127,21 @@ function chatHtml(card, ci) {
 }
 const CHAT_HTML = CARDS.map(chatHtml);
 
+/* 카드의 상대 화자(카드마다 한 명) 이름표: WHO_LABEL에서. 없으면 "상대" */
+function counterpartLabel(card) {
+  const line = (card.dialogue || []).find(l => l.who !== "me");
+  return whoLabel(line ? line.who : "");
+}
+
+/* ---------- 듣기 모드의 두 사람 아이콘 (정답 확인 전에만 보임) ---------- */
+const ICON_PERSON = '<svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true"><circle cx="24" cy="17" r="8.5"/><path d="M8.5 40.5c1.4-8.6 7.6-13.5 15.5-13.5s14.1 4.9 15.5 13.5z"/></svg>';
+function duoHtml(card) {
+  const person = (cls, name) =>
+    '<div class="person ' + cls + '"><span class="avatar">' + ICON_PERSON + '</span><span class="pname">' + esc(name) + '</span></div>';
+  return '<div class="duo"><div class="duo-people">' + person("them", counterpartLabel(card)) + person("me", "나") + '</div>' +
+    '<div class="duo-n" aria-live="polite"></div></div>';
+}
+
 /* ---------- 카드 틀: 대화(.chat)와 버튼(.actions)은 모드에 맞춰 resetCard()가 채움 ---------- */
 function renderCard(card, i) {
   const swipe = i === 0 ? '<div class="swipe-hint">밑줄 친 표현을 누르면 예문·썰 · 위로 넘기면 다음 상황</div>' : "";
@@ -1119,6 +1153,7 @@ function renderCard(card, i) {
       '<h2 class="title">' + esc(card.title) + '</h2>' +
       '<p class="situation">' + esc(card.situation) + '</p>' +
       '<p class="mnote"></p>' +
+      duoHtml(card) +
       '<div class="chat"></div>' +
     '</div></div>' +
     '<footer class="bottom"><div class="actions"></div>' + swipe + '</footer>' +
@@ -1481,9 +1516,10 @@ function resetCard(card) {
   if (old && old.timer) clearTimeout(old.timer);
   /* read: shown(보이는 줄 수)·full(전체 보기) / listen: revealed(정답 확인)·seq(이어 재생) / shadow: idx(지금 줄) */
   const st = card._st = { mode, shown: 0, full: false, revealed: false, seq: null, idx: -1, timer: null };
-  card.classList.remove("m-read", "m-listen", "m-shadow", "masked");
+  card.classList.remove("m-read", "m-listen", "m-shadow", "masked", "lpaused");
   card.classList.add("m-" + mode);
   card.querySelector(".chat").innerHTML = CHAT_HTML[+card.dataset.i];
+  setCur(card, -1);
   const rows = rowsOf(card);
   if (mode === "read") {
     rows.forEach((r, i) => {
@@ -1529,6 +1565,7 @@ function renderActions(card) {
       actBtn("next", end ? AGAIN_HTML : NEXT_HTML, "main");
   } else if (st.mode === "listen") {
     const live = st.seq && st.seq.alive();
+    card.classList.toggle("lpaused", !!live && Player.isPaused());   // 일시정지 중엔 아이콘 퍼짐 효과 멈춤
     const main = !live ? ICON_PLAY + "<span>재생</span>" :
       Player.isPaused() ? ICON_PLAY + "<span>이어 듣기</span>" : ICON_PAUSE + "<span>일시정지</span>";
     html = actBtn("replay", ICON_RESTART, "ico-btn", "처음부터 다시 듣기") + rateBtn() +
@@ -1640,8 +1677,14 @@ function readAll(card) {
 }
 
 /* ---------- 듣기: 글자 없이 듣기 ---------- */
+/* 지금 줄(i, 없으면 -1): 대화의 줄 강조 + 두 사람 아이콘 중 말하는 쪽 + "3 / 6" */
 function setCur(card, i) {
-  rowsOf(card).forEach((r, j) => r.classList.toggle("cur", j === i));
+  const rows = rowsOf(card);
+  rows.forEach((r, j) => r.classList.toggle("cur", j === i));
+  const line = i >= 0 ? lineOf(card, i) : null;
+  card.classList.toggle("talk-them", !!line && line.who !== "me");
+  card.classList.toggle("talk-me", !!line && line.who === "me");
+  card.querySelector(".duo-n").textContent = line ? (i + 1) + " / " + rows.length : "대사 " + rows.length + "줄";
 }
 function listenStart(card) {
   const st = card._st;
@@ -1650,7 +1693,11 @@ function listenStart(card) {
   card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });   // 처음부터: 제목·상황이 보이는 위치에서 시작
   const seq = playSequence(items, {
     rate: () => settings.drillRate,
-    onLine: i => { if (card._st !== st) return; setCur(card, i); if (i > 0) follow(card, rows[i]); },
+    onLine: i => {
+      if (card._st !== st) return;
+      setCur(card, i);
+      if (i > 0 && !card.classList.contains("masked")) follow(card, rows[i]);   // 아이콘 화면에서는 스크롤할 줄이 없음
+    },
     onEnd: () => {
       if (card._st !== st || st.seq !== seq) return;
       st.seq = null;
@@ -2765,6 +2812,10 @@ function runChecks() {
     if (d.length < 4 || d.length > 10) issues.push(tag + ": 대화 " + d.length + "줄 (4~10줄)");
     const me = d.filter(x => x.who === "me");
     if (me.length < 2) issues.push(tag + ": me 턴 " + me.length + "개 (2턴 이상)");
+    /* 상대 화자: 카드마다 한 명, WHO_LABEL에 있는 이름(듣기 모드 이름표·대화 화자 표시에 쓰임) */
+    const them = Array.from(new Set(d.filter(x => x.who !== "me").map(x => x.who)));
+    if (them.length !== 1) issues.push(tag + ": 상대 화자 " + them.length + "명 — " + them.join(", ") + " (카드마다 한 명)");
+    them.filter(w => !WHO_LABEL[w]).forEach(w => issues.push(tag + ": 화자 \"" + w + "\"가 WHO_LABEL에 없음 (이름표가 '상대'로 나옴)"));
     const limit = sceneOf(c) === "free" ? 12 : 10;
     d.forEach(x => { if (!x.en || !x.ko) issues.push(tag + ": 대사 en/ko 누락 — " + (x.en || x.ko || "")); });
     me.forEach(x => {
