@@ -251,8 +251,8 @@
   .row.past > *{ opacity:.42; }   /* 줄 자체는 popIn 애니메이션이 opacity를 잡고 있어서 안쪽을 흐리게 */
 
   /* 쉐도잉 쉬움 / 어려움 선택 (쉐도잉 모드에서만, 카드 위쪽) */
-  .sh-seg{ display:none; width:200px; margin-top:16px; }
-  .m-shadow .sh-seg{ display:flex; }
+  .sh-seg{ width:200px; margin-top:16px; }
+  .card:not(.m-shadow) .sh-seg{ display:none; }   /* 읽기·듣기에서는 숨김 (아래 .seg{display:flex}보다 우선하도록 선택자를 구체적으로) */
   .sh-seg button{ height:34px; font-size:14.5px; }
   /* 어려움: 지금 줄을 크게, 아직 안 나온 줄은 조금 흐리게 */
   .sh-hard .row .bubble{ transition:font-size .2s ease, background-color .3s ease, border-color .3s ease, box-shadow .3s ease, transform .12s ease; }
