@@ -337,6 +337,9 @@
   .actions .ico-btn{ width:46px; padding:0; color:var(--muted); }
   .actions .rate{ width:54px; padding:0; color:var(--accent); font-variant-numeric:tabular-nums; }
   .actions .on{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .actions .btn:disabled{ opacity:.38; cursor:default; transform:none; }
+  .actions .prev{ width:52px; padding:0; }
+  .actions .again{ width:76px; padding:0 6px; font-size:14.5px; line-height:1.25; white-space:normal; text-align:center; }   /* 두 줄로 접어 '다음' 자리를 넓게 */
   .actions .restart{ flex:1; }
   .swipe-hint{ font-size:12.5px; color:var(--faint); }
 
@@ -1543,9 +1546,9 @@ function restartCard(card) {
 }
 
 /* ---------- 하단 버튼: 주요 버튼(.main)은 세 모드 모두 오른쪽 넓은 자리 ---------- */
-function actBtn(act, html, cls, label) {
+function actBtn(act, html, cls, label, disabled) {
   return '<button class="btn' + (cls ? " " + cls : "") + '" type="button" data-act="' + act + '"' +
-    (label ? ' aria-label="' + label + '"' : "") + '>' + html + '</button>';
+    (label ? ' aria-label="' + label + '"' : "") + (disabled ? " disabled" : "") + '>' + html + '</button>';
 }
 function rateBtn() {
   const r = settings.drillRate === 1 ? "1.0" : String(settings.drillRate);
@@ -1576,8 +1579,9 @@ function renderActions(card) {
     html = actBtn("start", ICON_PLAY + "<span>시작</span>", "main");
     note = "한 줄씩 들려줘요. 듣고 나서 소리 내어 따라 말해 보세요.";
   } else {
-    html = rateBtn() + actBtn("again", ICON_SPEAKER + "<span>한 번 더 듣기</span>") +
-      actBtn("next", st.idx >= n - 1 ? AGAIN_HTML : NEXT_HTML, "main");
+    /* [이전] [한 번 더 듣기] [속도] [다음] — 다음이 가장 크게 오른쪽(엄지 자리). 첫 줄에선 이전 비활성 */
+    html = actBtn("prev", "이전", "prev", "", st.idx <= 0) + actBtn("again", "한 번 더 듣기", "again") + rateBtn() +
+      actBtn("next", st.idx >= n - 1 ? "<span>처음부터</span>" : NEXT_HTML, "main");
   }
   card.querySelector(".actions").innerHTML = html;
   card.querySelector(".mnote").textContent = note;
@@ -1599,6 +1603,7 @@ function onAct(card, act) {
     if (act === "start") shadowGo(card, 0);
     else if (act === "next") shadowGo(card, st.idx >= rowsOf(card).length - 1 ? 0 : st.idx + 1);
     else if (act === "again") shadowSay(card);
+    else if (act === "prev" && st.idx > 0) shadowGo(card, st.idx - 1);   // 앞 줄로: 뒤의 줄은 다시 숨기고 그 줄 재생(지금 소리는 끊김)
   }
 }
 
@@ -1610,6 +1615,9 @@ function onBubble(card, row) {
     row.classList.toggle("kq-on");
     document.body.classList.add("hinted");
     buzz();
+    /* 말풍선 크기가 바뀌었으니, 바뀐 글자가 나타나는 애니메이션(.25초)이 끝난 뒤 그 줄 전체가 보이게 맞춤(이미 보이면 그대로) */
+    clearTimeout(row._fit);
+    row._fit = setTimeout(() => { if (card._st === st && row.isConnected) follow(card, row); }, 260);
   } else if (st.mode === "listen" && st.revealed) {
     const line = lineOf(card, +row.dataset.l);
     Player.play(line.en, whoOf(line), row, { rate: settings.drillRate });
