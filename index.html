@@ -749,6 +749,133 @@
     -webkit-user-select:text; user-select:text;
   }
 
+  /* ---------- 드라이브 모드: 상황 카드 위쪽 버튼 → 전체 화면(시작 화면 → 재생 화면) ---------- */
+  .drive-btn{
+    display:flex; align-items:center; gap:5px;
+    height:34px; padding:0 11px 0 9px; margin-right:2px; border-radius:999px;
+    font-size:13.5px; font-weight:600; color:var(--accent); background:var(--accent-soft);
+  }
+  .drive-btn svg{ width:18px; height:18px; }
+  .drive-btn:active{ transform:scale(.96); }
+  @media (max-width:370px){ .drive-btn{ padding:0 9px 0 8px; } .jump{ padding:0 8px; } }
+
+  .drive{ position:fixed; inset:0; z-index:30; display:flex; flex-direction:column; background:var(--bg); color:var(--text); }
+  .drive[hidden], .dv-screen[hidden]{ display:none; }
+  body.driving .toast{ bottom:calc(env(safe-area-inset-bottom, 0px) + 200px); }
+  .dv-screen{ flex:1; min-height:0; display:flex; flex-direction:column; }
+  .dv-x{
+    flex:none; width:40px; height:40px; border-radius:50%;
+    display:grid; place-items:center; color:var(--muted);
+  }
+  .dv-x svg{ width:22px; height:22px; }
+  .dv-x:active{ background:var(--line); }
+
+  /* 시작 화면 */
+  .dv-head{
+    display:flex; align-items:center; gap:4px;
+    padding:calc(env(safe-area-inset-top, 0px) + 10px) max(var(--pad), env(safe-area-inset-right)) 4px calc(max(var(--pad), env(safe-area-inset-left)) - 10px);
+  }
+  .dv-title{ margin:0; font-size:22px; font-weight:700; letter-spacing:-.015em; }
+  .dv-sbody{
+    flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+    padding:0 max(var(--pad), env(safe-area-inset-right)) 24px max(var(--pad), env(safe-area-inset-left));
+  }
+  .dv-lead{ margin:2px 0 4px; font-size:15px; line-height:1.6; color:var(--muted); }
+  .dv-sbody .set-group:last-child{ border-bottom:0; }
+  .dv-scope{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .dv-opt{
+    min-height:64px; padding:10px 13px; border-radius:14px; text-align:left;
+    background:var(--bg-2); border:1.5px solid var(--line);
+  }
+  .dv-opt b{ display:block; font-size:15.5px; font-weight:650; line-height:1.35; }
+  .dv-opt small{ display:block; margin-top:2px; font-size:13px; color:var(--faint); }
+  .dv-opt[aria-pressed="true"]{ border-color:var(--accent); background:var(--accent-soft); }
+  .dv-opt[aria-pressed="true"] b{ color:var(--accent); }
+  .dv-cats{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .dv-cat{
+    height:40px; padding:0 14px; border-radius:999px;
+    font-size:14.5px; font-weight:600; color:var(--muted);
+    background:var(--bg-2); border:1.5px solid var(--line);
+  }
+  .dv-cat[aria-pressed="true"]{ color:var(--accent); border-color:var(--accent); background:var(--accent-soft); }
+  .dv-sbody .seg button{ font-size:15px; }
+  .dv-dis{ opacity:.4; pointer-events:none; }
+  .dv-pre-row{ display:flex; gap:8px; margin-top:10px; }
+  .dv-pre-row .btn{ flex:1; height:48px; font-size:15.5px; }
+  .dv-pre-row .ok{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .dv-pre-msg{ margin:10px 2px 0; font-size:15px; line-height:1.55; color:var(--text-2); }
+  .dv-pre-msg b{ color:var(--accent); }
+  .dv-bar{ height:8px; margin-top:12px; border-radius:4px; background:var(--bg-3); overflow:hidden; }
+  .dv-bar i{ display:block; height:100%; width:0; border-radius:4px; background:var(--accent); transition:width .3s ease; }
+  .dv-sfoot{
+    flex:none; display:flex; flex-direction:column; gap:8px;
+    padding:10px max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 14px) max(var(--pad), env(safe-area-inset-left));
+    border-top:1px solid var(--line);
+  }
+  .dv-sum{ font-size:13.5px; color:var(--faint); text-align:center; font-variant-numeric:tabular-nums; }
+  .dv-go{ display:flex; gap:8px; }
+  .dv-go .btn{ flex:1; height:60px; min-width:0; }
+  .dv-go .main{ flex:1.7; flex-direction:column; gap:1px; line-height:1.25; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .dv-go .main small{ max-width:100%; padding:0 8px; font-size:12.5px; font-weight:500; opacity:.85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dv-go .btn:disabled{ opacity:.4; }
+
+  /* 재생 화면: 위 = 지금 위치, 가운데 = 지금 문장(크게, 노래방 채우기) + 앞뒤 문장(흐리게), 아래 = 큰 버튼 4개 */
+  .dv-ptop{
+    flex:none; display:flex; align-items:flex-start; gap:2px;
+    padding:calc(env(safe-area-inset-top, 0px) + 8px) max(var(--pad), env(safe-area-inset-right)) 0 calc(max(var(--pad), env(safe-area-inset-left)) - 12px);
+  }
+  .dv-ptop .dv-x{ width:38px; height:38px; }
+  .dv-loc{ flex:1; min-width:0; padding-top:2px; }
+  .dv-loc1, .dv-loc2{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .dv-loc1{ font-size:13.5px; color:var(--muted); }
+  .dv-loc2{ margin-top:1px; font-size:15.5px; font-weight:650; color:var(--accent); }
+  .dv-stage{
+    flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:20px;
+    padding:14px max(var(--pad), env(safe-area-inset-right)) 10px max(var(--pad), env(safe-area-inset-left));
+  }
+  .dv-prev, .dv-next{ flex:none; font-size:17px; line-height:1.45; color:var(--faint); }
+  .dv-prev .dv-en, .dv-next .dv-en{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .dv-prev .dv-ko, .dv-next .dv-ko, .dv-prev .dv-who, .dv-next .dv-who{ display:none; }
+  .dv-prev .sc.reading .w{ opacity:1; }   /* 방금 끝난 문장의 채우기 표시가 흐린 줄에서는 보이지 않게 */
+  .dv-scroll{
+    flex:0 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none;
+    padding:8px 0 20px; margin:-8px 0 -20px;   /* 위아래 흐려지는 자리만큼 여백 (짧은 문장은 흐려지지 않게) */
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 8px, #000 calc(100% - 20px), transparent 100%);
+            mask-image:linear-gradient(to bottom, transparent 0, #000 8px, #000 calc(100% - 20px), transparent 100%);
+  }
+  .dv-scroll::-webkit-scrollbar{ display:none; }
+  .dv-cur .dv-line{ animation:dvIn .35s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes dvIn{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }
+  .dv-who{ margin-bottom:8px; font-size:13.5px; font-weight:700; letter-spacing:.02em; color:var(--faint); }
+  .dv-line.me .dv-who{ color:var(--accent); }
+  .dv-cur .dv-en{ font-size:29px; line-height:1.38; font-weight:600; letter-spacing:-.01em; }
+  .dv-cur .dv-line.long .dv-en{ font-size:21px; line-height:1.6; font-weight:500; }
+  .dv-cur .dv-line.k-phrase .dv-en{ font-size:32px; color:var(--accent); }
+  .dv-cur .dv-ko{ margin-top:12px; font-size:16px; line-height:1.6; color:var(--muted); }
+  .dv-en mark{ font-weight:inherit; }
+  .dv-note{ flex:none; min-height:22px; text-align:center; font-size:14px; color:var(--faint); }
+  .dv-echo{ display:flex; flex-direction:column; align-items:center; gap:7px; color:var(--accent); font-weight:600; }
+  .dv-echo i{ display:block; width:140px; height:5px; border-radius:3px; background:var(--accent-soft); overflow:hidden; }
+  .dv-echo b{ display:block; height:100%; width:100%; border-radius:3px; background:var(--accent); transform-origin:left; animation:dvEcho linear both; }
+  @keyframes dvEcho{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+  .dv-ctl{
+    flex:none; display:grid; grid-template-columns:1fr 1.45fr 1fr; gap:10px;
+    padding:6px max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 16px) max(var(--pad), env(safe-area-inset-left));
+  }
+  .dv-b{
+    height:86px; border-radius:22px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+    font-size:13.5px; font-weight:600; color:var(--text);
+    background:var(--bg-2); border:1px solid var(--line);
+    transition:transform .12s ease;
+  }
+  .dv-b svg{ width:30px; height:30px; }
+  .dv-b:active{ transform:scale(.97); }
+  .dv-b.main{ color:var(--on-accent); background:var(--accent); border-color:transparent; font-size:15px; }
+  .dv-b.main svg{ width:38px; height:38px; }
+  .dv-b.wide{ grid-column:1 / -1; height:62px; flex-direction:row; gap:9px; font-size:16.5px; }
+  .dv-b.wide svg{ width:24px; height:24px; }
+
   /* ---------- 토스트 ---------- */
   .toast{
     position:fixed; left:50%; z-index:40;
@@ -878,6 +1005,11 @@
   <div class="sheet-body" id="sheetBody"></div>
   <div class="sheet-foot" id="sheetFoot"></div>
 </section>
+<!-- 드라이브 모드: 시작 화면(옵션) → 재생 화면. 내용은 스크립트(드라이브 모드 부분)가 채움 -->
+<div class="drive" id="drive" role="dialog" aria-modal="true" aria-label="드라이브 모드" hidden>
+  <section class="dv-screen" id="dvSetup"></section>
+  <section class="dv-screen" id="dvPlay" hidden></section>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- 데이터: 카드는 카테고리별 파일, 질문은 questions.js (CLAUDE.md 참고) -->
@@ -968,6 +1100,12 @@ const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg>';
 const ICON_LIST ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>';
 const ICON_SLIDERS ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>';
+const ICON_CAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v-4.5L6.2 7a2 2 0 0 1 1.9-1.4h7.8A2 2 0 0 1 17.8 7l2.2 5.5V17"/><path d="M3.5 17h17M4 12.5h16M6 17v2M18 17v2"/><circle cx="7.6" cy="14.8" r=".6" fill="currentColor"/><circle cx="16.4" cy="14.8" r=".6" fill="currentColor"/></svg>';
+const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const ICON_PREV = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="5.5" width="2.6" height="13" rx="1"/><path d="M19 6.6v10.8a1 1 0 0 1-1.55.83L10 13.2a1.4 1.4 0 0 1 0-2.4l7.45-5.03A1 1 0 0 1 19 6.6z"/></svg>';
+const ICON_NEXT = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="16.4" y="5.5" width="2.6" height="13" rx="1"/><path d="M5 6.6v10.8a1 1 0 0 0 1.55.83L14 13.2a1.4 1.4 0 0 0 0-2.4L6.55 5.77A1 1 0 0 0 5 6.6z"/></svg>';
+const ICON_SKIP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 7v10a1 1 0 0 0 1.6.8L11 13a1.2 1.2 0 0 0 0-2L4.6 6.2A1 1 0 0 0 3 7zM12 7v10a1 1 0 0 0 1.6.8L20 13a1.2 1.2 0 0 0 0-2l-6.4-4.8A1 1 0 0 0 12 7z"/></svg>';
+const DRIVE_BTN = '<button class="drive-btn" type="button" aria-label="드라이브 모드">' + ICON_CAR + '<span>드라이브</span></button>';
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -1256,7 +1394,7 @@ function renderCard(card, i) {
   const swipe = i === 0 ? '<div class="swipe-hint">밑줄 친 표현을 누르면 예문·썰 · 위로 넘기면 다음 상황</div>' : "";
   return '<section class="card" style="--h:' + hueOf(card.category) + '" data-i="' + i + '">' +
     '<header class="top"><span class="tag">' + esc(card.category) + '</span>' +
-      '<span class="top-r"><button class="jump" type="button" aria-label="카드 목록">' + (i + 1) + ' / ' + CARDS.length + ICON_LIST + '</button>' +
+      '<span class="top-r">' + DRIVE_BTN + '<button class="jump" type="button" aria-label="카드 목록">' + (i + 1) + ' / ' + CARDS.length + ICON_LIST + '</button>' +
       '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
     '<div class="body"><div class="inner">' +
       '<h2 class="title">' + esc(card.title) + '</h2>' +
@@ -1272,7 +1410,7 @@ function renderCard(card, i) {
 function renderEnd() {
   return '<section class="card end" style="--h:150">' +
     '<header class="top"><span class="tag">끝</span>' +
-      '<span class="top-r"><button class="jump" type="button" aria-label="카드 목록">목록' + ICON_LIST + '</button>' +
+      '<span class="top-r">' + DRIVE_BTN + '<button class="jump" type="button" aria-label="카드 목록">목록' + ICON_LIST + '</button>' +
       '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
     '<div class="body"><div class="inner">' +
       '<div class="end-emoji" aria-hidden="true">🎉</div>' +
@@ -1326,7 +1464,21 @@ const AudioCache = (() => {
     if (!d) return;
     try { d.transaction("audio", "readwrite").objectStore("audio").clear(); } catch (e) {}
   }
-  return { get, put, clear };
+  /* 타임스탬프까지 있는 새 형식으로 저장돼 있는지만 확인 (메모리에 올려 두지 않음 — 드라이브 모드 '미리 받아두기' 개수 세기용) */
+  async function has(k) {
+    const m = mem.get(k);
+    if (m) return m.audio instanceof Blob;
+    const d = await db();
+    if (!d) return false;
+    return new Promise(res => {
+      try {
+        const q = d.transaction("audio").objectStore("audio").get(k);
+        q.onsuccess = () => res(!!(q.result && q.result.audio instanceof Blob));
+        q.onerror = () => res(false);
+      } catch (e) { res(false); }
+    });
+  }
+  return { get, put, clear, has };
 })();
 
 /* ---------- 음성 재생 ---------- */
@@ -1364,12 +1516,37 @@ const Player = (() => {
   let resumeFn = null;
   let audioCtl = null;    // 지금 재생 중인 mp3 { finish }
   let speechCtl = null;   // 지금 읽는 중인 내장 음성 { halt, restart, finish }
+  let lastLen = 0;        // 바로 앞 문장을 끝까지 읽는 데 걸린 시간(초, 재생 속도 반영) — 드라이브 모드 '따라 말할 시간'
+  let selfPause = false;  // 앱이 직접 audio.pause()를 부른 것(아래 'pause' 이벤트에서 끊김과 구분)
+
+  function quietPause() {
+    try { if (!audio.paused) { selfPause = true; audio.pause(); } } catch (e) {}
+  }
+
+  /* 앱이 멈춘 게 아닌데 소리가 끊김(전화·다른 앱 소리·백그라운드에서 재생 거부): 일시정지 상태로 바꾸고 알림.
+     이어 듣기를 누르면 그 자리부터. 드라이브 모드는 onInterrupt를 받아 '그 문장 처음에서 일시정지'로 바꿈 */
+  const intSubs = [];
+  function onInterrupt(fn) { intSubs.push(fn); }
+  function interrupted() {
+    if (!paused) {
+      paused = true;
+      const ctl = audioCtl;
+      resumeFn = ctl ? () => { const p = audio.play(); if (p && p.catch) p.catch(ctl.finish); } : (speechCtl ? speechCtl.restart : null);
+      if (speechCtl) speechCtl.halt();
+    }
+    intSubs.forEach(fn => { try { fn(); } catch (e) {} });
+    emit();
+  }
+  audio.addEventListener("pause", () => {
+    if (selfPause) { selfPause = false; return; }
+    if (audioCtl && !paused && !audio.ended) interrupted();
+  });
 
   function stop() {
     token++;
     paused = false;
     resumeFn = null;
-    try { audio.pause(); } catch (e) {}
+    quietPause();
     if (audioCtl) audioCtl.finish();
     if (speechCtl) { speechCtl.halt(); speechCtl.finish(); }
     mark(currentBtn, false);
@@ -1382,7 +1559,7 @@ const Player = (() => {
     if (paused) return;
     paused = true;
     if (audioCtl && !audio.paused) {
-      try { audio.pause(); } catch (e) {}
+      quietPause();
       const ctl = audioCtl;
       resumeFn = () => { const p = audio.play(); if (p && p.catch) p.catch(ctl.finish); };
     } else if (speechCtl) {
@@ -1445,7 +1622,11 @@ const Player = (() => {
         }
       };
       audioCtl = ctl;
-      audio.onended = ctl.finish; audio.onerror = ctl.finish;
+      audio.onended = () => {
+        if (isFinite(audio.duration)) lastLen = Math.max(0, audio.duration - (o.startAt || 0)) / (audio.playbackRate || rate);
+        ctl.finish();
+      };
+      audio.onerror = ctl.finish;
       if (o.startAt || o.startFrac) {
         audio.onloadedmetadata = () => {
           audio.onloadedmetadata = null;
@@ -1453,10 +1634,19 @@ const Player = (() => {
           if (at > 0) try { audio.currentTime = at; } catch (e) {}
         };
       }
+      selfPause = false;                    // 새 글을 불러오면 앞에서 미뤄 둔 'pause' 이벤트는 브라우저가 버림
       audio.src = url;
       try { audio.preservesPitch = true; audio.defaultPlaybackRate = rate; audio.playbackRate = rate; } catch (e) {}
       if (o.track) o.track.start(o.times ? "word" : "line");
-      const start = () => { const p = audio.play(); if (p && p.catch) p.catch(() => { if (!paused) ctl.finish(); }); };
+      /* 브라우저가 재생을 거부하면(백그라운드 등) 건너뛰지 않고 끊김으로 처리 → 일시정지 상태에서 기다림 */
+      const start = () => {
+        const p = audio.play();
+        if (p && p.catch) p.catch(err => {
+          if (paused) return;
+          if (audioCtl === ctl && err && err.name === "NotAllowedError") interrupted();
+          else ctl.finish();
+        });
+      };
       if (paused) resumeFn = start;
       else start();
       raf = requestAnimationFrame(tick);
@@ -1469,7 +1659,7 @@ const Player = (() => {
     o = o || {};
     return new Promise(res => {
       if (!("speechSynthesis" in window)) { toast("이 브라우저는 음성 재생을 지원하지 않아요"); return res(); }
-      let finished = false, gen = 0, timer = null;
+      let finished = false, gen = 0, timer = null, t0 = 0;
       const parts = [];
       if (text.length < 220) { if (text.trim()) parts.push({ t: text, at: 0 }); }
       else {
@@ -1497,6 +1687,7 @@ const Player = (() => {
           if (finished) return;
           const my = ++gen;
           clearTimeout(timer);
+          t0 = Date.now();
           try {
             if (!deviceVoice) pickVoice();
             parts.forEach((p, idx) => {
@@ -1511,7 +1702,10 @@ const Player = (() => {
                   o.track.word(o.sc.wordAt((o.offset || 0) + p.at + e.charIndex));
                 };
               }
-              if (idx === parts.length - 1) u.onend = u.onerror = () => { if (my === gen) ctl.finish(); };
+              if (idx === parts.length - 1) {
+                u.onend = () => { if (my === gen) { lastLen = (Date.now() - t0) / 1000; ctl.finish(); } };
+                u.onerror = () => { if (my === gen) ctl.finish(); };
+              }
               speechSynthesis.speak(u);
             });
             timer = setTimeout(() => { if (my === gen) ctl.finish(); }, 4000 + text.length * 110 / rate);   // 일부 안드로이드에서 onend가 안 오는 경우 대비
@@ -1528,10 +1722,19 @@ const Player = (() => {
 
   /* ElevenLabs: 오디오 + 문자별 타임스탬프(/with-timestamps)를 함께 받아 AudioCache에 { audio, align }로 저장.
      예전 캐시(타임스탬프 없는 Blob)는 그 문장을 다음에 재생할 때 한 번만 새로 받아 교체(미리 한꺼번에 다시 받지 않음) */
+  const clipKey = (text, voice) => [settings.model, voice, text].join("|");
+  const inflight = new Map();          // 같은 문장을 동시에 두 번 요청하지 않게(재생 + 드라이브 모드 미리 만들기)
   async function getEleven(text, voice) {
-    const key = [settings.model, voice, text].join("|");
+    const key = clipKey(text, voice);
     const cached = await AudioCache.get(key);
     if (cached && cached.audio instanceof Blob) return cached;
+    if (inflight.has(key)) return inflight.get(key);
+    const p = requestEleven(text, voice, key);
+    inflight.set(key, p);
+    p.then(() => inflight.delete(key), () => inflight.delete(key));
+    return p;
+  }
+  async function requestEleven(text, voice, key) {
     /* 속도는 재생할 때 조절함 (v4는 API 속도 설정을 지원하지 않음) */
     const vs = { stability: 0.5, similarity_boost: 0.75 };
     let res;
@@ -1575,6 +1778,7 @@ const Player = (() => {
     const from = sc ? Math.max(0, Math.min(opts.from || 0, sc.words.length - 1)) : 0;
     const track = opts.track || null;
     let complete = false;                              // 끊기지 않고 끝까지 읽었는지 (강조를 다 채운 채로 잠시 둘지)
+    lastLen = 0;
     currentBtn = btn;
     mark(btn, true);
     try {
@@ -1633,8 +1837,14 @@ const Player = (() => {
   function isPlaying(btn) { return btn && btn.classList.contains("playing"); }
   function getToken() { return token; }
   function isPaused() { return paused; }
+  /* 지금 소리를 내는 쪽: "audio"(ElevenLabs mp3) / "speech"(내장 음성) / null(문장 사이) */
+  function current() { return audioCtl ? "audio" : speechCtl ? "speech" : null; }
+  /* 드라이브 모드 미리 받아두기: 저장돼 있는지 / 만들어서 저장(같은 캐시·같은 키) */
+  function isCached(text, voice) { return AudioCache.has(clipKey(text, voice)); }
+  function fetchClip(text, voice) { return getEleven(text, voice); }
 
-  return { play, enqueue, stop, pause, resume, setRate, seekWord, isPaused, isPlaying, getToken, onChange };
+  return { play, enqueue, stop, pause, resume, setRate, seekWord, isPaused, isPlaying, getToken, onChange,
+    onInterrupt, current, lastLength: () => lastLen, isCached, fetchClip };
 })();
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -1713,7 +1923,7 @@ function paintWord(el, k) {
 }
 /* 강조된 단어가 화면(시트 본문·카드 본문) 밖으로 나가려 하면 부드럽게 따라 스크롤 */
 function keepInView(w) {
-  const box = w.closest(".sheet-body, .body");
+  const box = w.closest(".sheet-body, .body, .dv-scroll");
   if (!box || !w.getClientRects().length) return;
   const r = w.getBoundingClientRect(), b = box.getBoundingClientRect();
   if (r.top < b.top + 12 || r.bottom > b.bottom - 48) {
@@ -1721,8 +1931,9 @@ function keepInView(w) {
   }
 }
 
-/* ---------- 문장 목록 재생기 (예문 5개·썰·카드 대화 공통, 다음 단계 드라이브 모드도 이걸 그대로 씀) ----------
-   createReader({ items: () => [{ el: .sc 요소, who: "me"|"them", btn?, voice? }], rate: () => 속도, gap: 문장 사이(ms),
+/* ---------- 문장 목록 재생기 (예문 5개·썰·카드 대화·드라이브 모드 공통) ----------
+   createReader({ items: () => [{ el: .sc 요소, who: "me"|"them", btn?, voice? }], rate: () => 속도,
+                  gap: 문장 사이(ms) 또는 (방금 끝난 문장 번호) => ms, before(k, first): 문장 앞에 기다릴 일(async, 효과음),
                   onItem(i), onWord(i, k), onEnd(끝까지 들었는지), onChange(state) })
    play(i, w, single): i번째 문장의 w번째 단어부터 재생(single이면 그 문장만, 아니면 끝까지 이어서)
    seek(i, w): 단어 탭. 같은 문장을 재생 중이면 그 자리로 바로 이동, 이어 듣기 중이면 거기서부터 계속,
@@ -1752,6 +1963,7 @@ function createReader(o) {
           idx = k; word = from;
           if (o.onItem) o.onItem(k);
           changed();
+          if (o.before) { await o.before(k, k === i); if (!alive()) return; }   // 문장 앞에 할 일(드라이브 모드 효과음)
           const it = items[k];
           const sc = SCRIPTS[+it.el.dataset.sc];
           await Player.enqueue(sc.speech, it.who, it.btn || null, {
@@ -1759,7 +1971,7 @@ function createReader(o) {
             track: makeTrack(it.el, wk => { if (alive()) { word = wk; if (o.onWord) o.onWord(k, wk); } })
           });
           if (!alive() || single) break;
-          if (k < items.length - 1) await sleep(o.gap == null ? 400 : o.gap);
+          if (k < items.length - 1) await sleep(typeof o.gap === "function" ? o.gap(k) : o.gap == null ? 400 : o.gap);
         }
         complete = alive();
       } finally {
@@ -2078,6 +2290,7 @@ feed.addEventListener("click", e => {
   if ((el = t.closest("[data-act]"))) { onAct(el.closest(".card"), el.dataset.act); return; }
   if ((el = t.closest(".bubble"))) { onBubble(el.closest(".card"), el.closest(".row"), t); return; }
   if ((el = t.closest(".gear"))) { openSettings(); return; }
+  if ((el = t.closest(".drive-btn"))) { openDrive(); return; }
   if ((el = t.closest(".jump"))) { openList(); return; }
   if ((el = t.closest(".restart"))) { feed.scrollTo({ top: 0, behavior: "smooth" }); return; }
 });
@@ -3103,6 +3316,690 @@ document.querySelector(".tabbar").addEventListener("click", e => {
   try { saved = localStorage.getItem(TAB_KEY); } catch (e) {}
   switchTab(saved || "cards", true);
 })();
+
+/* ================= 드라이브 모드: 여러 카드를 이어서 듣기 (운전·이동 중) =================
+   상황 카드 위쪽 [드라이브] → 시작 화면(옵션) → 재생 화면. 새 재생 로직은 없고 인터랙티브 스크립트의 createReader 하나로 재생:
+   재생 목록(D.pl.items)의 문장마다 .sc 요소를 필요할 때 만들어(dvEl) items로 넘기고,
+   효과음은 before(), 따라 말할 시간은 gap(), 지금 위치(화면·저장·잠금화면)는 onItem()에서 처리.
+   소리는 모두 Player → AudioCache(다른 화면에서 들은 문장은 그대로 재사용). 한국어는 읽지 않음.
+   재생 순서
+   - 카드 범위: 카드마다 [새 카드 효과음] 대화 전체 → 핵심 표현마다 [표현 효과음] 표현 읽기 → 예문 5개 → 썰
+     (내용: 대화문만 = 대화 + 표현 읽기 / 예문까지 = + 예문 / 썰까지 = + 예문 + 썰)
+   - 표현 범위(학습 중 / 오늘 복습): 표현마다 [표현 효과음] 표현 읽기 → 예문 5개 → 썰 */
+const DRIVE_KEY = "engcards.drive.v1";
+const DRIVE_SCOPES = { all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현", due: "오늘 복습할 표현" };
+const DRIVE_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지" };
+const DV_DEFAULT = { scope: "all", cats: [], content: "story", shadow: false, rate: 1 };
+
+/* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, key(문장), block(카드·표현), cid, bi, label } } */
+function loadDrive() {
+  try {
+    const s = JSON.parse(localStorage.getItem(DRIVE_KEY) || "null");
+    if (s && typeof s === "object") {
+      const o = Object.assign({}, DV_DEFAULT, s.opts && typeof s.opts === "object" ? s.opts : {});
+      if (!DRIVE_SCOPES[o.scope]) o.scope = "all";
+      if (!DRIVE_CONTENT[o.content]) o.content = "story";
+      o.cats = Array.isArray(o.cats) ? o.cats.filter(c => typeof c === "string") : [];
+      o.shadow = !!o.shadow;
+      o.rate = o.rate === 0.8 ? 0.8 : 1;
+      return { opts: o, pos: s.pos && typeof s.pos === "object" && s.pos.key ? s.pos : null };
+    }
+  } catch (e) {}
+  return { opts: Object.assign({}, DV_DEFAULT), pos: null };
+}
+const D = Object.assign(loadDrive(), {
+  open: false, screen: "setup",
+  pl: null, idx: 0, els: [],                 // 재생 목록 · 지금 문장 번호 · 문장 요소(필요할 때 만듦)
+  done: false, interrupted: false, echo: false, lastAct: "",
+  ui: null, lock: null, lockReq: false, ka: null, kaWant: false, ac: null,
+  pre: { state: "idle" }                     // 미리 받아두기: idle | counting | confirm | running | done
+});
+function saveDrive() {
+  try { localStorage.setItem(DRIVE_KEY, JSON.stringify({ opts: D.opts, pos: D.pos })); } catch (e) {}
+}
+const driveEl = document.getElementById("drive");
+const dvSetupEl = document.getElementById("dvSetup");
+const dvPlayEl = document.getElementById("dvPlay");
+
+/* 표현을 소리 내어 읽을 글: ~ 자리 표시는 빼고 자연스럽게 ("Can I get ~?" → "Can I get...?", "~ to go" → "to go") */
+function sayPhrase(p) {
+  return String(p).replace(/~\w*/g, "~").replace(/^\s*~\s*/, "").replace(/\s*~/g, "...")
+    .replace(/\.{4,}/g, "...").replace(/\s{2,}/g, " ").trim();
+}
+const catsKey = cats => cats.slice().sort().join(",");
+const dvVoice = it => (it.who === "me" ? settings.voiceMe : settings.voiceThem);
+function dvElevenOK() { return settings.engine === "eleven" && !!settings.apiKey && navigator.onLine !== false; }
+
+/* ---- 재생 목록 만들기 → { items: [문장], blocks: [카드 또는 표현], exprScope }
+   문장 { kind: dlg|phrase|ex|story, text, ko, who, fx: card|expr|null(앞에 효과음), block, ci, xid, ex, n, total, key } */
+function driveExprs(o) {
+  if (o.scope === "due") return dueList().map(id => EXPR_BY_ID[id]).filter(Boolean);
+  return EXPR_LIST.filter(it => statusOf(it.id) === "learning");
+}
+function buildDrive(o) {
+  const items = [], blocks = [];
+  const exprScope = o.scope === "learning" || o.scope === "due";
+  const push = x => { if (String(x.text || "").trim()) items.push(x); };
+  const exprItems = (b, it, withEx, withStory) => {
+    const ex = it.ex, base = { block: b, ci: it.ci, xid: it.id, ex };
+    push(Object.assign({ kind: "phrase", text: sayPhrase(ex.phrase), ko: shortMeaning(ex), who: "me", fx: "expr", n: 1, total: 1 }, base));
+    if (withEx) (ex.examples || []).forEach((x, n, arr) => push(Object.assign({ kind: "ex", text: x.en, ko: x.ko, who: "them", n: n + 1, total: arr.length }, base)));
+    if (withStory && ex.story) push(Object.assign({ kind: "story", text: ex.story.en, ko: ex.story.ko, who: "me", n: 1, total: 1 }, base));
+  };
+  if (exprScope) {
+    driveExprs(o).forEach(it => {
+      blocks.push({ kind: "expr", ci: it.ci, xid: it.id, key: "x" + it.id, start: items.length });
+      exprItems(blocks.length - 1, it, true, true);
+    });
+  } else {
+    CARDS.forEach((card, ci) => {
+      if (o.scope === "cat" && !o.cats.includes(card.category)) return;
+      const b = blocks.length, d = card.dialogue || [];
+      blocks.push({ kind: "card", ci, cid: card.id, key: "c" + card.id, start: items.length });
+      d.forEach((line, n) => push({ kind: "dlg", text: line.en, ko: line.ko || "", who: whoOf(line), name: whoLabel(line.who), fx: n === 0 ? "card" : null, block: b, ci, n: n + 1, total: d.length }));
+      EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(b, it, o.content !== "dialogue", o.content === "story"));
+    });
+  }
+  items.forEach(it => { it.key = blocks[it.block].key + "/" + it.kind + "/" + (it.xid || "") + "/" + it.n; });
+  if (items.length && !items[0].fx) items[0].fx = exprScope ? "expr" : "card";
+  return { items, blocks: blocks.filter(bl => items.some(it => it.block === blocks.indexOf(bl))), exprScope };
+}
+
+/* 지금 위치 표시: [위 줄, 아래 줄] 예) "카페에서 주문하기 · 3/18" / "대화 4/6", "Can I get ~? · 예문 2/5", "Can I get ~? · 썰" */
+function driveLabels(k) {
+  const pl = D.pl, it = pl.items[k];
+  const card = CARDS[it.ci];
+  const bi = pl.blocks.findIndex(bl => pl.items[bl.start] && pl.items[bl.start].block === it.block);
+  const pos = (bi + 1) + "/" + pl.blocks.length;
+  const ph = it.ex ? it.ex.phrase : "";
+  return [
+    pl.exprScope ? "표현 " + pos + " · " + card.title : card.title + " · " + pos,
+    it.kind === "dlg" ? "대화 " + it.n + "/" + it.total :
+      it.kind === "phrase" ? ph + " · 핵심 표현" :
+      it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total : ph + " · 썰"
+  ];
+}
+function dvBlockIndex(k) {
+  const b = D.pl.items[k].block;
+  return D.pl.blocks.findIndex(bl => D.pl.items[bl.start].block === b);
+}
+
+/* 문장 하나의 화면 요소(지금 문장·앞뒤 문장 자리를 옮겨 다님). 영어는 인터랙티브 스크립트(scriptHtml)라 노래방식 채우기가 그대로 됨 */
+function dvEl(k) {
+  if (D.els[k]) return D.els[k];
+  const it = D.pl.items[k];
+  const el = document.createElement("div");
+  el.className = "dv-line k-" + it.kind + (it.who === "me" ? " me" : "") + (it.kind === "story" || it.text.length > 120 ? " long" : "");
+  const who = it.kind === "dlg" ? it.name : it.kind === "phrase" ? "핵심 표현" : it.kind === "ex" ? "예문 " + it.n : "썰";
+  el.innerHTML = '<div class="dv-who">' + esc(who) + '</div>' +
+    '<div class="dv-en" lang="en">' + scriptHtml(it.text, it.ex && it.kind !== "phrase" ? markRanges(it.text, it.ex) : []) + '</div>' +
+    (it.ko ? '<div class="dv-ko">' + esc(it.ko) + '</div>' : "");
+  return (D.els[k] = el);
+}
+
+/* ---- 재생기: 인터랙티브 스크립트 공통 재생기를 그대로 씀 ---- */
+D.rd = createReader({
+  items: () => (D.pl ? D.pl.items.map((it, k) => ({ get el() { return dvEl(k).querySelector(".sc"); }, who: it.who })) : []),
+  rate: () => D.opts.rate,
+  before: (k, first) => dvBefore(k, first),
+  gap: k => dvGap(k),
+  onItem: k => dvOnItem(k),
+  onEnd: complete => dvOnEnd(complete),
+  onChange: () => dvPaintCtl()
+});
+
+/* 문장 앞: 새 카드·표현의 첫 문장이면 효과음(이전 문장 버튼으로 돌아온 경우는 생략).
+   백그라운드에서 내장 음성으로 읽어야 하면(키 없음·인터넷 끊김) 소리가 안 나고 넘어가 버리므로 그 문장에서 멈춰 기다림 */
+async function dvBefore(k, first) {
+  if (document.visibilityState === "hidden" && !dvElevenOK()) { dvInterrupt(); return; }
+  const it = D.pl.items[k];
+  if (!it.fx || (first && D.lastAct === "prev")) return;
+  const ms = dvChime(it.fx);
+  if (ms) await sleep(ms);
+}
+/* 문장 사이: 카드·표현이 바뀌면 조금 더 쉬고, '따라 말할 시간'이면 방금 문장 길이만큼 쉼(썰은 여러 문장이라 쉬지 않음) */
+function dvGap(k) {
+  const it = D.pl.items[k], nx = D.pl.items[k + 1];
+  let ms = nx && nx.block !== it.block ? 900 : nx && nx.fx ? 650 : 450;
+  if (D.opts.shadow && it.kind !== "story") {
+    let len = Player.lastLength();
+    if (!len) len = getScript(it.text).words.length * 0.38 / D.opts.rate;   // 길이를 못 쟀으면 단어 수로 어림
+    const echo = Math.round(Math.min(12, Math.max(1.2, len)) * 1000);
+    dvEcho(echo);
+    ms = Math.max(ms, echo + 250);
+  }
+  return ms;
+}
+function dvOnItem(k) {
+  D.idx = k;
+  D.done = false;
+  D.interrupted = false;
+  D.echo = false;
+  dvShow(k);
+  dvSavePos();
+  dvMedia();
+  dvPrefetch(k);
+}
+function dvOnEnd(complete) {
+  D.echo = false;
+  if (complete) {                               // 끝까지 다 들음 → 다음엔 처음부터
+    D.done = true;
+    D.pos = null;
+    saveDrive();
+  }
+  dvPaintCtl();
+}
+
+/* ---- 재생 화면 그리기 ---- */
+function dvPlayHtml() {
+  return '<header class="dv-ptop">' +
+      '<button class="dv-x" type="button" data-dv="close" aria-label="드라이브 모드 나가기">' + ICON_X + '</button>' +
+      '<div class="dv-loc"><div class="dv-loc1"></div><div class="dv-loc2"></div></div>' +
+    '</header>' +
+    '<div class="dv-stage">' +
+      '<div class="dv-prev" aria-hidden="true"></div>' +
+      '<div class="dv-scroll"><div class="dv-cur"></div></div>' +
+      '<div class="dv-next" aria-hidden="true"></div>' +
+    '</div>' +
+    '<div class="dv-note" aria-live="polite"></div>' +
+    '<div class="dv-ctl">' +
+      '<button class="dv-b" type="button" data-dv="prev">' + ICON_PREV + '<span>이전 문장</span></button>' +
+      '<button class="dv-b main" type="button" data-dv="toggle"></button>' +
+      '<button class="dv-b" type="button" data-dv="next">' + ICON_NEXT + '<span>다음 문장</span></button>' +
+      '<button class="dv-b wide" type="button" data-dv="block">' + ICON_SKIP + '<span class="dv-block-label"></span></button>' +
+    '</div>';
+}
+function dvShow(k) {
+  const U = D.ui, pl = D.pl;
+  if (!U || !pl || !pl.items[k]) return;
+  U.prev.replaceChildren(...(k > 0 ? [dvEl(k - 1)] : []));
+  U.cur.replaceChildren(dvEl(k));
+  U.next.replaceChildren(...(k + 1 < pl.items.length ? [dvEl(k + 1)] : []));
+  U.scroll.scrollTop = 0;
+  const L = driveLabels(k);
+  U.loc1.textContent = L[0];
+  U.loc2.textContent = L[1];
+}
+function dvPaintCtl() {
+  const U = D.ui;
+  if (!D.open || D.screen !== "play" || !U) return;
+  const s = D.rd.state();
+  const playing = s.active && !s.paused;
+  U.toggle.innerHTML = (playing ? ICON_PAUSE : ICON_PLAY) + '<span>' + (playing ? "일시정지" : D.done ? "처음부터" : "재생") + '</span>';
+  U.toggle.setAttribute("aria-label", playing ? "일시정지" : "재생");
+  if (!(D.echo && playing)) {                    // '따라 말해 보세요' 중이 아니면 상태 글
+    D.echo = false;
+    U.note.textContent = D.done ? "끝까지 다 들었어요" :
+      playing ? "" : D.interrupted ? "소리가 끊겨서 멈췄어요 · 재생을 누르면 이 문장부터" : "일시정지";
+  }
+  dvKeepAlive(playing);
+  try { if (navigator.mediaSession) navigator.mediaSession.playbackState = playing ? "playing" : "paused"; } catch (e) {}
+}
+function dvEcho(ms) {
+  if (!D.ui) return;
+  D.echo = true;
+  D.ui.note.innerHTML = '<div class="dv-echo"><span>따라 말해 보세요</span><i><b style="animation-duration:' + ms + 'ms"></b></i></div>';
+}
+
+/* ---- 조작: 버튼 4개 · 잠금화면 · 블루투스 ---- */
+function dvGo(k, act) {
+  if (!D.pl || !D.pl.items.length) return;
+  D.lastAct = act || "";
+  D.done = false;
+  D.interrupted = false;
+  dvAudioUnlock();
+  D.rd.play(Math.max(0, Math.min(k, D.pl.items.length - 1)), 0, false);
+}
+function dvToggle() {
+  const s = D.rd.state();
+  if (s.active) { D.rd.toggle(); return; }
+  dvGo(D.done ? 0 : D.idx, "play");
+}
+function dvStep(d) {
+  const k = D.idx + d;
+  if (k < 0) { dvGo(0, "prev"); return; }
+  if (k >= D.pl.items.length) { toast("마지막 문장이에요"); return; }
+  dvGo(k, d < 0 ? "prev" : "next");
+}
+function dvNextBlock() {
+  const b = dvBlockIndex(D.idx) + 1;
+  if (b >= D.pl.blocks.length) { toast(D.pl.exprScope ? "마지막 표현이에요" : "마지막 카드예요"); return; }
+  dvGo(D.pl.blocks[b].start, "block");
+}
+/* 소리가 끊김(전화·다른 앱 소리·화면 꺼짐으로 재생이 멈춤) → 그 문장 처음에서 일시정지 상태로 기다림 */
+function dvInterrupt() {
+  if (!D.open || D.screen !== "play" || !D.rd.state().active) return;
+  const k = D.idx;
+  D.interrupted = true;
+  D.rd.stop();
+  D.idx = k;
+  dvSavePos();
+  dvPaintCtl();
+}
+Player.onInterrupt(dvInterrupt);
+Player.onChange(() => { if (D.open) dvPaintCtl(); });
+
+function dvMedia() {
+  const ms = navigator.mediaSession;
+  if (!ms || !D.pl) return;
+  try {
+    const it = D.pl.items[D.idx];
+    ms.metadata = new MediaMetadata({
+      title: getScript(it.text).speech,
+      artist: CARDS[it.ci].title + " · " + driveLabels(D.idx)[1],
+      album: "한 장 영어 · 드라이브 모드",
+      artwork: [{ src: "icon-192.png", sizes: "192x192", type: "image/png" }, { src: "icon-512.png", sizes: "512x512", type: "image/png" }]
+    });
+  } catch (e) {}
+}
+/* 잠금화면·블루투스 버튼: 재생/일시정지, 다음 = 다음 문장, 이전 = 이전 문장 */
+function dvMediaHandlers(on) {
+  const ms = navigator.mediaSession;
+  if (!ms) return;
+  const set = (a, f) => { try { ms.setActionHandler(a, on ? f : null); } catch (e) {} };
+  set("play", () => { const s = D.rd.state(); if (s.active) D.rd.resume(); else dvToggle(); });
+  set("pause", () => { if (D.rd.state().active) D.rd.pause(); });
+  set("nexttrack", () => dvStep(1));
+  set("previoustrack", () => dvStep(-1));
+  if (!on) try { ms.metadata = null; ms.playbackState = "none"; } catch (e) {}
+}
+/* 짧은 문장 소리만으로는 휴대폰이 잠금화면·블루투스 조작을 붙여 주지 않아서, 재생하는 동안 조용한 소리를 계속 틀어 둠.
+   이 소리를 시스템이 멈추면(전화 등) 끊김으로 봄 */
+function silentWav(sec) {
+  const rate = 8000, n = rate * sec, buf = new ArrayBuffer(44 + n), v = new DataView(buf);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, "RIFF"); v.setUint32(4, 36 + n, true); w(8, "WAVE"); w(12, "fmt ");
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true);
+  w(36, "data"); v.setUint32(40, n, true);
+  new Uint8Array(buf, 44).fill(128);
+  return new Blob([buf], { type: "audio/wav" });
+}
+/* 문장을 옮길 때(이전·다음)는 잠깐 멈췄다 다시 재생되므로, 끄는 건 조금 늦춰서 깜빡이지 않게 */
+let dvKaTimer = null;
+function dvKeepAlive(on) {
+  if (on && !D.ka) {
+    try {
+      D.ka = new Audio(URL.createObjectURL(silentWav(10)));
+      D.ka.loop = true;
+      D.ka.addEventListener("pause", () => {
+        if (D.kaSelf) { D.kaSelf = false; return; }   // 앱이 직접 멈춘 것
+        if (D.kaWant) dvInterrupt();                 // 시스템이 멈춤(전화 등)
+      });
+    } catch (e) { return; }
+  }
+  if (!D.ka) return;
+  clearTimeout(dvKaTimer);
+  if (on) {
+    D.kaWant = true;
+    try { if (D.ka.paused) { const p = D.ka.play(); if (p && p.catch) p.catch(() => {}); } } catch (e) {}
+    return;
+  }
+  const off = () => {
+    D.kaWant = false;
+    try { if (!D.ka.paused) { D.kaSelf = true; D.ka.pause(); } } catch (e) {}
+  };
+  if (D.open && D.screen === "play") dvKaTimer = setTimeout(off, 400); else off();
+}
+
+/* 효과음(Web Audio, 외부 파일 없음): 새 카드 = 부드럽게 올라가는 두 음, 표현 = 짧은 한 음. 작고 짧게 */
+function dvAudioUnlock() {
+  try {
+    if (!D.ac) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) D.ac = new AC(); }
+    if (D.ac && D.ac.state === "suspended") D.ac.resume();
+  } catch (e) {}
+}
+function dvChime(kind) {
+  try {
+    const ac = D.ac;
+    if (!ac) return 0;
+    if (ac.state === "suspended") ac.resume();
+    const card = kind === "card";
+    const t = ac.currentTime + 0.03;
+    const vol = card ? 0.12 : 0.085, len = card ? 0.55 : 0.3;
+    (card ? [[587.33, 0], [880, 0.15]] : [[783.99, 0]]).forEach(nd => {
+      const osc = ac.createOscillator(), g = ac.createGain();
+      osc.type = card ? "sine" : "triangle";
+      osc.frequency.value = nd[0];
+      g.gain.setValueAtTime(0.0001, t + nd[1]);
+      g.gain.exponentialRampToValueAtTime(vol, t + nd[1] + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + nd[1] + len);
+      osc.connect(g);
+      g.connect(ac.destination);
+      osc.start(t + nd[1]);
+      osc.stop(t + nd[1] + len + 0.05);
+    });
+    return card ? 850 : 450;
+  } catch (e) { return 0; }
+}
+
+/* 화면 꺼짐 방지(Wake Lock): 재생 화면에 있는 동안만. 지원하지 않으면 조용히 무시 */
+async function dvLock(on) {
+  try {
+    if (!on) {
+      const l = D.lock;
+      D.lock = null;
+      if (l) await l.release();
+      return;
+    }
+    if (D.lock || D.lockReq || !("wakeLock" in navigator) || document.visibilityState !== "visible") return;
+    D.lockReq = true;
+    const l = await navigator.wakeLock.request("screen");
+    D.lockReq = false;
+    if (!D.open || D.screen !== "play") { l.release(); return; }
+    D.lock = l;
+    l.addEventListener("release", () => { if (D.lock === l) D.lock = null; });
+  } catch (e) { D.lockReq = false; }
+}
+
+/* 재생 중 저장 안 된 문장을 만나면 Player가 그 자리에서 만들고, 다음 3문장은 미리 만들어 둠(끊김 줄이기) */
+let dvPreQ = Promise.resolve();
+const dvPreSeen = new Set();
+function dvPrefetch(k) {
+  if (!dvElevenOK()) return;
+  for (let j = k + 1; j <= k + 3 && j < D.pl.items.length; j++) {
+    const it = D.pl.items[j], sp = getScript(it.text).speech, v = dvVoice(it);
+    const key = settings.model + "|" + v + "|" + sp;
+    if (dvPreSeen.has(key)) continue;
+    dvPreSeen.add(key);
+    dvPreQ = dvPreQ.then(() => (D.open ? Player.fetchClip(sp, v).catch(() => { dvPreSeen.delete(key); }) : dvPreSeen.delete(key)));
+  }
+}
+
+/* ---- 위치 기억 ---- */
+function dvSavePos() {
+  if (!D.pl || !D.pl.items[D.idx] || D.done) return;
+  const it = D.pl.items[D.idx], bl = D.pl.items[D.idx] && D.pl.blocks[dvBlockIndex(D.idx)];
+  D.pos = {
+    scope: D.opts.scope, cats: catsKey(D.opts.cats), key: it.key, block: bl ? bl.key : "",
+    cid: CARDS[it.ci].id, bi: dvBlockIndex(D.idx), label: CARDS[it.ci].title + " · " + driveLabels(D.idx)[1]
+  };
+  saveDrive();
+}
+/* 저장된 위치 → 이 재생 목록의 문장 번호. 같은 문장이 없으면 그 카드(표현)의 처음, 카드가 없어졌으면 가장 가까운 카드의 처음. 이어 들을 수 없으면 -1 */
+function dvResumeIdx(pl) {
+  const p = D.pos;
+  if (!p || !pl.items.length || p.scope !== D.opts.scope || (p.scope === "cat" && p.cats !== catsKey(D.opts.cats))) return -1;
+  const k = pl.items.findIndex(it => it.key === p.key);
+  if (k >= 0) return k;
+  const b = pl.blocks.find(bl => bl.key === p.block);
+  if (b) return b.start;
+  if (!pl.exprScope && p.cid != null) {
+    const near = pl.blocks.find(bl => bl.cid > p.cid) || pl.blocks[pl.blocks.length - 1];
+    return near.start;
+  }
+  return pl.blocks[Math.max(0, Math.min(p.bi || 0, pl.blocks.length - 1))].start;
+}
+
+/* ---- 시작 화면 ---- */
+function dvSetupHtml() {
+  const o = D.opts;
+  const pl = buildDrive(o);
+  const nLearn = EXPR_LIST.filter(it => statusOf(it.id) === "learning").length;
+  const nDue = dueList().length;
+  const exprScope = pl.exprScope;
+  const cats = (window.CATEGORY_DATA || []).map(c => c.name).filter(n => CARDS.some(c => c.category === n));
+  const opt = (v, sub) => '<button class="dv-opt" type="button" data-dv-scope="' + v + '" aria-pressed="' + (o.scope === v) + '"><b>' + DRIVE_SCOPES[v] + '</b><small>' + sub + '</small></button>';
+  const seg = (name, list) => '<div class="seg" data-dv-set="' + name + '">' +
+    list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
+  const contentNote = { dialogue: "대화 + 핵심 표현 읽기", examples: "대화 + 핵심 표현 + 표현마다 예문 5개", story: "대화 + 핵심 표현 + 예문 5개 + 썰" };
+  const resumeK = dvResumeIdx(pl);
+  let words = 0;
+  pl.items.forEach(it => { words += getScript(it.text).words.length * (o.shadow && it.kind !== "story" ? 2 : 1); });
+  const mins = Math.max(1, Math.round((words * 0.4 / o.rate + pl.items.length * 0.6) / 60));
+  const empty = o.scope === "cat" && !o.cats.length ? "카테고리를 하나 이상 골라 주세요" :
+    o.scope === "learning" ? "학습 중인 표현이 없어요 · 표현 탭에서 '학습하기'를 시작해 보세요" :
+    o.scope === "due" ? "오늘 복습할 표현이 없어요" : "들을 문장이 없어요";
+  const unit = exprScope ? "표현 " + pl.blocks.length + "개" : "카드 " + pl.blocks.length + "장";
+  return '<header class="dv-head">' +
+      '<button class="dv-x" type="button" data-dv="close" aria-label="닫기">' + ICON_X + '</button>' +
+      '<h2 class="dv-title">드라이브 모드</h2>' +
+    '</header>' +
+    '<div class="dv-sbody">' +
+      '<p class="dv-lead">여러 카드를 이어서 영어로만 들려줘요. 화면을 보지 않아도 되고, 잠금화면·블루투스 버튼으로도 조작할 수 있어요.</p>' +
+      '<div class="set-group"><span class="set-label">범위</span><div class="dv-scope">' +
+        opt("all", "카드 " + CARDS.length + "장") +
+        opt("cat", o.scope === "cat" && o.cats.length ? o.cats.length + "개 고름" : "골라서 듣기") +
+        opt("learning", nLearn + "개") +
+        opt("due", nDue + "개") +
+      '</div>' +
+      (o.scope === "cat" ? '<div class="dv-cats">' + cats.map(n =>
+        '<button class="dv-cat" type="button" data-dv-cat="' + esc(n) + '" aria-pressed="' + o.cats.includes(n) + '">' +
+          (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
+      '</div>' +
+      '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
+        seg("content", [["dialogue", "대화문만"], ["examples", "예문까지"], ["story", "썰까지"]]) +
+        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 표현 → 예문 5개 → 썰 순서로 들어요." : contentNote[o.content]) + '</p>' +
+      '</div>' +
+      '<div class="set-group"><span class="set-label">따라 말할 시간</span>' +
+        seg("shadow", [["false", "없음"], ["true", "문장 길이만큼 쉬기"]]) +
+        '<p class="note">' + (o.shadow ? "한 문장이 끝나면 그 문장 길이만큼 조용히 기다려요. 그동안 소리 내어 따라 말해 보세요. (썰은 길어서 쉬지 않고 넘어가요)" : "쉬지 않고 이어서 들려줘요.") + '</p>' +
+      '</div>' +
+      '<div class="set-group"><span class="set-label">속도</span>' + seg("rate", [["0.8", "0.8x"], ["1", "1.0x"]]) + '</div>' +
+      '<div class="set-group"><span class="set-label">미리 받아두기</span><div id="dvPre"></div></div>' +
+    '</div>' +
+    '<footer class="dv-sfoot">' +
+      '<div class="dv-sum">' + (pl.items.length ? unit + " · 문장 " + pl.items.length + "개 · 약 " + mins + "분" : esc(empty)) + '</div>' +
+      '<div class="dv-go">' + (resumeK >= 0 ?
+        '<button class="btn" type="button" data-dv="restart">처음부터</button>' +
+        '<button class="btn main" type="button" data-dv="resume"><span>이어 듣기</span><small>' + esc(D.pos.label || "") + '</small></button>' :
+        '<button class="btn main" type="button" data-dv="start"' + (pl.items.length ? "" : " disabled") + '><span>시작</span></button>') +
+      '</div>' +
+    '</footer>';
+}
+function dvRenderSetup() {
+  const body = dvSetupEl.querySelector(".dv-sbody");
+  const y = body ? body.scrollTop : 0;
+  dvSetupEl.innerHTML = dvSetupHtml();
+  dvSetupEl.querySelector(".dv-sbody").scrollTop = y;
+  dvPaintPre();
+}
+
+/* ---- 미리 받아두기: 지금 고른 범위·내용에서 아직 저장 안 된 문장만 ElevenLabs로 만들어 AudioCache에 저장 ---- */
+function dvPaintPre() {
+  const box = document.getElementById("dvPre");
+  if (!box) return;
+  const P = D.pre;
+  const row = btns => '<div class="dv-pre-row">' + btns + '</div>';
+  const b = (act, label, cls, dis) => '<button class="btn' + (cls ? " " + cls : "") + '" type="button" data-dv="' + act + '"' + (dis ? " disabled" : "") + '>' + label + '</button>';
+  let html;
+  if (P.state === "counting") html = '<p class="dv-pre-msg">저장된 문장을 확인하는 중…</p>';
+  else if (P.state === "confirm") {
+    html = P.need.length ?
+      '<p class="dv-pre-msg">새로 만들 문장 <b>' + P.need.length + '개</b> · 약 <b>' + P.chars.toLocaleString() + '자</b></p>' +
+        '<p class="note">이미 저장된 ' + P.have + '개는 다시 만들지 않아요. 글자 수만큼 ElevenLabs 크레딧이 들어요.</p>' +
+        row(b("pre-cancel", "취소") + b("pre-run", "만들기", "ok")) :
+      '<p class="dv-pre-msg">이 범위의 문장 ' + P.have + '개가 모두 저장돼 있어요.</p>' + row(b("pre-cancel", "확인"));
+  } else if (P.state === "running") {
+    html = '<div class="dv-bar"><i style="width:' + (P.total ? Math.round(P.done / P.total * 100) : 0) + '%"></i></div>' +
+      '<p class="dv-pre-msg">' + P.done + ' / ' + P.total + ' 만드는 중…' + (P.fail ? ' (실패 ' + P.fail + '개)' : "") + '</p>' +
+      row(b("pre-stop", P.cancel ? "멈추는 중…" : "취소", "", P.cancel));
+  } else if (P.state === "done") {
+    html = '<p class="dv-pre-msg">' + esc(P.msg) + '</p>' + row(b("pre-cancel", "확인"));
+  } else {
+    const ok = dvElevenOK();
+    html = '<p class="note" style="margin-top:0">' + (ok ?
+        "지금 고른 범위의 음성을 미리 만들어 폰에 저장해요. 저장된 문장은 인터넷 없이도 바로 재생돼요." :
+        settings.engine !== "eleven" || !settings.apiKey ? "음성 설정(상황 카드 오른쪽 위 조절 아이콘)에서 ElevenLabs와 API 키를 넣으면 쓸 수 있어요." :
+        "인터넷에 연결되어 있을 때 쓸 수 있어요.") + '</p>' +
+      row(b("pre-count", "미리 받아두기", "", !ok));
+  }
+  box.innerHTML = html;
+}
+async function dvPreCount() {
+  const P = D.pre = { state: "counting" };
+  dvPaintPre();
+  const pl = buildDrive(D.opts);
+  const seen = new Set(), todo = [];
+  pl.items.forEach(it => {
+    const sp = getScript(it.text).speech, v = dvVoice(it), k = v + "|" + sp;
+    if (!sp.trim() || seen.has(k)) return;
+    seen.add(k);
+    todo.push({ sp, v });
+  });
+  const have = await Promise.all(todo.map(x => Player.isCached(x.sp, x.v)));
+  if (D.pre !== P) return;
+  P.need = todo.filter((x, i) => !have[i]);
+  P.have = todo.length - P.need.length;
+  P.chars = P.need.reduce((s, x) => s + x.sp.length, 0);
+  P.state = "confirm";
+  dvPaintPre();
+}
+async function dvPreRun() {
+  const P = D.pre;
+  if (P.state !== "confirm" || !P.need.length) return;
+  const list = P.need;
+  Object.assign(P, { state: "running", done: 0, fail: 0, total: list.length, cancel: false });
+  dvPaintPre();
+  let next = 0, stopMsg = "";
+  const worker = async () => {
+    while (!P.cancel && next < list.length) {
+      const x = list[next++];
+      try { await Player.fetchClip(x.sp, x.v); }
+      catch (e) {
+        P.fail++;
+        if (/키를 확인|크레딧|연결하지 못/.test(e.message)) { stopMsg = e.message; P.cancel = true; }   // 계속해도 실패할 오류면 멈춤
+      }
+      P.done++;
+      if (D.pre === P) dvPaintPre();
+    }
+  };
+  await Promise.all([worker(), worker()]);          // 두 문장씩 동시에
+  const saved = P.done - P.fail;
+  P.state = "done";
+  P.msg = (stopMsg ? stopMsg + " · 멈췄어요. " : P.done < P.total ? "취소했어요. " : "다 받았어요. ") +
+    saved + "개 저장" + (P.fail ? " · 실패 " + P.fail + "개는 건너뜀" : "") + (P.done < P.total ? " · 남은 " + (P.total - P.done) + "개" : "");
+  if (D.pre === P) dvPaintPre();
+}
+
+/* ---- 열기 · 화면 바꾸기 · 닫기 ---- */
+function openDrive() {
+  if (D.open) return;
+  Player.stop();
+  buzz();
+  D.open = true;
+  if (D.pre.state !== "running") D.pre = { state: "idle" };
+  dvScreen("setup");
+  driveEl.hidden = false;
+  document.querySelector(".app").inert = true;
+  document.body.classList.add("driving");
+  D.openId = Date.now();                       // 새로고침 전에 남은 기록과 구분
+  try { history.pushState({ drive: D.openId }, ""); } catch (e) {}
+}
+function dvScreen(name) {
+  D.screen = name;
+  dvSetupEl.hidden = name !== "setup";
+  dvPlayEl.hidden = name !== "play";
+  if (name === "setup") {
+    D.rd.stop();
+    dvKeepAlive(false);
+    dvLock(false);
+    dvMediaHandlers(false);
+    D.ui = null;
+    dvRenderSetup();
+  } else {
+    dvPlayEl.innerHTML = dvPlayHtml();
+    const q = s => dvPlayEl.querySelector(s);
+    D.ui = { prev: q(".dv-prev"), cur: q(".dv-cur"), next: q(".dv-next"), scroll: q(".dv-scroll"),
+      loc1: q(".dv-loc1"), loc2: q(".dv-loc2"), note: q(".dv-note"), toggle: q('[data-dv="toggle"]') };
+    q(".dv-block-label").textContent = D.pl.exprScope ? "다음 표현" : "다음 카드";
+    dvMediaHandlers(true);
+    dvLock(true);
+  }
+}
+function dvStart(resume) {
+  D.pl = buildDrive(D.opts);
+  D.els = [];
+  if (!D.pl.items.length) return;
+  const k = resume ? Math.max(0, dvResumeIdx(D.pl)) : 0;
+  D.idx = k;
+  D.done = false;
+  dvScreen("play");
+  dvShow(k);
+  dvGo(k, "start");
+}
+function dvHide() {
+  if (!D.open) return;
+  dvSavePos();
+  D.rd.stop();
+  Player.stop();
+  dvKeepAlive(false);
+  dvLock(false);
+  dvMediaHandlers(false);
+  if (D.pre.state === "running") D.pre.cancel = true;
+  D.open = false;
+  D.screen = "setup";
+  D.ui = null;
+  D.els = [];
+  dvPlayEl.innerHTML = "";
+  driveEl.hidden = true;
+  document.querySelector(".app").inert = false;
+  document.body.classList.remove("driving");
+}
+function closeDrive() {
+  let viaHistory = false;
+  try { viaHistory = !!(history.state && history.state.drive === D.openId); } catch (e) {}
+  if (viaHistory) history.back(); else dvHide();
+}
+/* 안드로이드 뒤로 가기 = 드라이브 모드 닫기 */
+window.addEventListener("popstate", () => {
+  let st = null;
+  try { st = history.state; } catch (e) {}
+  if (D.open && !(st && st.drive === D.openId)) dvHide();
+});
+
+driveEl.addEventListener("click", e => {
+  const t = e.target;
+  let el;
+  if ((el = t.closest("[data-dv]"))) {
+    if (el.disabled) return;
+    const a = el.dataset.dv;
+    buzz();
+    if (a === "close") closeDrive();
+    else if (a === "start" || a === "restart") dvStart(false);
+    else if (a === "resume") dvStart(true);
+    else if (a === "toggle") dvToggle();
+    else if (a === "prev") dvStep(-1);
+    else if (a === "next") dvStep(1);
+    else if (a === "block") dvNextBlock();
+    else if (a === "pre-count") dvPreCount();
+    else if (a === "pre-run") dvPreRun();
+    else if (a === "pre-stop") { D.pre.cancel = true; dvPaintPre(); }
+    else if (a === "pre-cancel") { D.pre = { state: "idle" }; dvPaintPre(); }
+    return;
+  }
+  /* 시작 화면 옵션: 바꿀 때마다 저장(다음에 그대로 보여 줌) */
+  const o = D.opts;
+  if ((el = t.closest("[data-dv-scope]"))) {
+    o.scope = el.dataset.dvScope;
+    if (o.scope === "cat" && !o.cats.length && activeCard && activeCard.dataset.i != null) o.cats = [CARDS[+activeCard.dataset.i].category];
+  } else if ((el = t.closest("[data-dv-cat]"))) {
+    const n = el.dataset.dvCat;
+    o.cats = o.cats.includes(n) ? o.cats.filter(x => x !== n) : o.cats.concat([n]);
+  } else if ((el = t.closest("[data-dv-set] button"))) {
+    const name = el.parentNode.dataset.dvSet, v = el.dataset.v;
+    o[name] = name === "rate" ? parseFloat(v) : name === "shadow" ? v === "true" : v;
+  } else return;
+  buzz();
+  saveDrive();
+  if (D.pre.state !== "running") D.pre = { state: "idle" };
+  dvRenderSetup();
+});
+
+/* 화면이 꺼지거나 다른 앱으로 가면: ElevenLabs 음성은 계속 재생(잠금화면에서도 들을 수 있게),
+   내장 음성은 백그라운드에서 끊기므로 그 문장에서 멈춰 기다림. 돌아오면 화면 꺼짐 방지를 다시 켬 */
+document.addEventListener("visibilitychange", () => {
+  if (!D.open || D.screen !== "play") return;
+  if (document.visibilityState === "hidden") {
+    const s = D.rd.state();
+    if (s.active && !s.paused && (Player.current() === "speech" || !dvElevenOK())) dvInterrupt();
+    dvSavePos();
+  } else {
+    dvLock(true);
+    dvPaintCtl();
+  }
+});
+window.addEventListener("pagehide", () => { if (D.open) dvSavePos(); });
 
 /* ================= 웹앱 설치 (GitHub Pages 같은 https 주소에서만) ================= */
 if ("serviceWorker" in navigator && location.protocol === "https:") {
