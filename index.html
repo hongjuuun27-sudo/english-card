@@ -43,7 +43,7 @@
     --glow-a:.10;
     --pad:20px;
     --tabbar-h:58px;
-    --quickbar-h:46px;
+    --modebar-h:46px;
     --on-accent:#10201B;
   }
   @media (prefers-color-scheme: light){
@@ -198,88 +198,81 @@
   .title{ margin:0; font-size:24px; line-height:1.3; font-weight:700; letter-spacing:-.015em; }
   .situation{ margin:10px 0 0; font-size:17px; line-height:1.6; color:var(--text-2); }
 
-  /* ---------- 대화 ---------- */
-  .chat{ display:flex; flex-direction:column; gap:10px; margin-top:28px; }
+  /* ---------- 대화: 한 줄 = renderLine() (세 모드 공통) ----------
+     줄에서 무엇을 보일지는 클래스로 정함: 카드 m-read/m-listen/m-shadow·masked, 줄 off/kq-on/cur/past/playing */
+  .mnote{ margin:18px 0 0; font-size:14.5px; line-height:1.6; color:var(--faint); }
+  .mnote:empty{ display:none; }
+  .chat{ display:flex; flex-direction:column; gap:10px; margin-top:28px; -webkit-user-select:none; user-select:none; }
+  .mnote:not(:empty) + .chat{ margin-top:18px; }
   .row{ display:flex; flex-direction:column; max-width:88%; }
   .row.them{ align-self:flex-start; align-items:flex-start; }
   .row.me{ align-self:flex-end; align-items:flex-end; }
-  .row.later{ display:none; }
+  .row.off{ display:none; }
   .row.pop{ animation:popIn .38s cubic-bezier(.2,.8,.2,1) both; }
   @keyframes popIn{ from{ opacity:0; transform:translateY(10px) scale(.98); } to{ opacity:1; transform:none; } }
-  .who{ font-size:13px; color:var(--faint); margin:0 0 5px 8px; }
+  .who{ display:none; font-size:13px; color:var(--faint); margin:0 8px 5px; }
+  .row.first-them .who{ display:block; }
   .line{ display:flex; align-items:center; gap:8px; }
+  .row.me .line{ flex-direction:row-reverse; }
 
   .bubble{
-    display:block;
-    font-size:17.5px; line-height:1.45; text-align:left;
+    display:block; text-align:left;
+    font-size:17.5px; line-height:1.45;
     padding:11px 15px; border-radius:20px;
+    border:1.5px solid transparent;
+    transition:background-color .3s ease, border-color .3s ease, box-shadow .3s ease, opacity .3s ease, transform .12s ease;
   }
-  .them .bubble{
-    background:var(--bubble); color:var(--bubble-text);
-    border-bottom-left-radius:6px;
-    transition:transform .12s ease;
-  }
-  .say:active{ transform:scale(.98); }
-  .say .ico{
-    display:inline-block; vertical-align:-2px; margin-left:6px;
-    width:16px; height:16px; color:var(--faint);
-  }
-  .say .ico svg{ width:16px; height:16px; }
-  .say.playing .ico{ color:var(--accent); }
-  .say.playing .ico svg{ animation:pulse 1s ease-in-out infinite; }
+  .row.them .bubble{ background:var(--bubble); color:var(--bubble-text); border-bottom-left-radius:6px; }
+  .row.me .bubble{ background:var(--me); color:var(--me-text); border-bottom-right-radius:6px; }
   @media (prefers-color-scheme: light){
-    .them .bubble{ box-shadow:0 1px 2px rgba(0,0,0,.05), 0 0 0 1px rgba(0,0,0,.04); }
+    .row.them .bubble{ box-shadow:0 1px 2px rgba(0,0,0,.05), 0 0 0 1px rgba(0,0,0,.04); }
   }
+  .bubble .en{ display:block; }
+  .bubble .kq, .bubble .ph{ display:none; }
+  .m-read .row.me .bubble, .m-listen:not(.masked) .bubble{ cursor:pointer; }
+  .m-read .row.me .bubble:active, .m-listen:not(.masked) .bubble:active{ transform:scale(.98); }
 
-  .blank{
-    position:relative; display:block;
-    font-size:17.5px; line-height:1.45; text-align:left;
-    padding:11px 15px; border-radius:20px; border-bottom-right-radius:6px;
-    border:1.5px dashed var(--accent-line);
-    background:var(--accent-soft);
-    color:var(--me-text);
-    transition:background-color .35s ease, border-color .35s ease, transform .12s ease;
-  }
-  .blank:active{ transform:scale(.97); }
-  .blank .ans{
-    display:block;
-    opacity:0; filter:blur(10px);
-    transition:opacity .35s ease, filter .45s ease;
-  }
-  .blank .lines{
-    position:absolute; inset:11px 15px;
-    display:flex; flex-direction:column; justify-content:center; gap:9px;
-    transition:opacity .25s ease;
-    pointer-events:none;
-  }
-  .blank .lines i{ display:block; height:2px; border-radius:2px; background:var(--accent); opacity:.4; }
-  .blank .lines i:last-child{ width:58%; }
-  .blank.shown{ background:var(--me); border-color:transparent; border-style:solid; }
-  .blank.shown .ans{ opacity:1; filter:blur(0); }
-  .blank.shown .lines{ opacity:0; }
+  .ko{ font-size:15px; line-height:1.5; color:var(--muted); margin:5px 8px 0; }
+  .row.me .ko{ text-align:right; }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+  /* 읽기: 아직 확인 안 한 내 대사는 한글만, 탭할 때마다 영어 ↔ 한글 */
+  .row.me.kq-on .bubble{ background:var(--accent-soft); border-color:var(--accent-line); border-style:dashed; color:var(--text); }
+  .row.me.kq-on .en, .row.me.kq-on .ko{ display:none; }
+  .row.me.kq-on .kq{ display:block; font-size:16.5px; line-height:1.5; animation:fadeIn .25s ease both; }
+  .m-read .row.me:not(.kq-on) .en{ animation:fadeIn .25s ease both; }
+  .hint{ display:none; font-size:12.5px; color:var(--faint); margin:6px 8px 0; }
+  .m-read .row.me.kq-on .hint{ display:block; }
+  body.hinted .m-read .row.me .hint{ display:none; }
+
+  /* 쉐도잉·듣기: 지금 줄 강조, 지나간 줄은 흐리게 */
+  .row.cur .bubble, .row.playing .bubble{ box-shadow:0 0 0 2.5px var(--accent); }
+  .row > *{ transition:opacity .3s ease; }
+  .row.past > *{ opacity:.42; }   /* 줄 자체는 popIn 애니메이션이 opacity를 잡고 있어서 안쪽을 흐리게 */
+
+  /* 듣기: 정답 확인 전에는 글자 없이 자리만 (지금 말하는 줄의 자리와 화자만 표시) */
+  .masked .bubble .en, .masked .bubble .kq, .masked .ko, .masked .hint{ display:none; }
+  .masked .bubble .ph{ display:flex; flex-direction:column; justify-content:center; gap:9px; width:var(--w, 160px); max-width:100%; min-height:25px; }
+  .ph i{ display:block; height:2px; border-radius:2px; background:currentColor; opacity:.5; }
+  .ph i:last-child{ width:58%; }
+  .masked .row .bubble{ background:transparent; color:var(--faint); border-style:dashed; border-color:var(--faint); box-shadow:none; opacity:.6; }
+  .masked .row.cur .bubble{ opacity:1; color:var(--accent); background:var(--accent-soft); border-style:solid; border-color:var(--accent); }
+  .masked .row.cur .ph i{ animation:pulse 1s ease-in-out infinite; }
+  .masked .row .who{ display:none; }
+  .masked .row.cur .who{ display:block; color:var(--accent); font-weight:600; }
 
   .spk{
     flex:none;
     width:36px; height:36px; border-radius:50%;
     display:grid; place-items:center;
     color:var(--accent); background:var(--accent-soft);
-    transition:opacity .3s ease, transform .3s ease;
+    transition:transform .2s ease;
   }
   .spk svg{ width:18px; height:18px; }
   .spk:active{ transform:scale(.92); }
   .spk.playing svg{ animation:pulse 1s ease-in-out infinite; }
-  .row.me .spk{ opacity:0; transform:scale(.6); pointer-events:none; }
-  .row.me.revealed .spk{ opacity:1; transform:none; pointer-events:auto; }
+  .card:not(.m-read) .row .spk{ display:none; }   /* 줄마다 스피커는 읽기 모드에만 */
   @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
-
-  .ko{
-    display:none;
-    font-size:15.5px; line-height:1.5; color:var(--muted);
-    margin:6px 8px 0;
-  }
-  .row.me .ko{ text-align:right; }
-  .card.ko-on .ko{ display:block; animation:fadeIn .25s ease both; }
-  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
 
   .typing .dots{ display:flex; gap:5px; padding:16px 17px; }
   .typing .dots i{ width:7px; height:7px; border-radius:50%; background:var(--muted); animation:blink 1s infinite ease-in-out; }
@@ -287,48 +280,7 @@
   .typing .dots i:nth-child(3){ animation-delay:.3s; }
   @keyframes blink{ 0%,80%,100%{ opacity:.25; transform:translateY(0); } 40%{ opacity:.85; transform:translateY(-3px); } }
 
-  .hint{
-    font-size:12.5px; color:var(--faint);
-    margin:6px 6px 0 0; max-height:20px;
-    transition:opacity .3s ease, max-height .4s ease .2s, margin .4s ease .2s;
-  }
-  .hint.gone{ opacity:0; max-height:0; margin-top:0; }
-
-  /* ---------- 빠른 토글 (탭 바 바로 위) ---------- */
-  .quickbar{
-    position:absolute; left:0; right:0; bottom:0; z-index:5;
-    height:var(--quickbar-h);
-    display:none; align-items:center; justify-content:center; gap:8px;
-    padding:0 var(--pad) 4px;
-    background:linear-gradient(to top, var(--bg) 72%, transparent);
-    pointer-events:none;
-  }
-  body.tab-cards .quickbar{ display:flex; }
-  .qt{
-    pointer-events:auto;
-    display:inline-flex; align-items:center; gap:7px;
-    height:32px; padding:0 13px 0 10px; border-radius:999px;
-    font-size:13px; font-weight:600; white-space:nowrap;
-    color:var(--muted); background:var(--bg-2); border:1px solid var(--line);
-    transition:background-color .2s ease, color .2s ease, border-color .2s ease;
-  }
-  .qt:active{ transform:scale(.96); }
-  .qt-dot{ width:14px; height:14px; border-radius:50%; border:1.5px solid var(--faint); flex:none; transition:all .2s ease; }
-  .qt[aria-pressed="true"]{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
-  .qt[aria-pressed="true"] .qt-dot{ background:var(--accent); border-color:var(--accent); box-shadow:inset 0 0 0 2.5px var(--bg-2); }
-
-  /* 상대 영어 가리기: 흐리게, 탭하면 그 줄만 보임(.peek) */
-  .say-t{ transition:filter .35s ease, opacity .35s ease; }
-  body.hide-them .row.them:not(.peek) .say-t{ filter:blur(7px); opacity:.55; -webkit-user-select:none; user-select:none; }
-
-  /* 내 대사 한글로: 빈 말풍선 대신 한국어 뜻, 탭하면 영어 정답 */
-  .blank .ans-ko{ display:none; }
-  body.me-ko .blank:not(.shown) .ans,
-  body.me-ko .blank:not(.shown) .lines{ display:none; }
-  body.me-ko .blank:not(.shown) .ans-ko{ display:block; color:var(--text); font-size:16.5px; line-height:1.5; }
-  body.me-ko .blank.shown .ans{ animation:fadeIn .35s ease both; }
-
-  /* ---------- 대사 속 핵심 표현 (밑줄, 누르면 예문·썰) ---------- */
+  /* ---------- 대사 속 표현: 핵심(밑줄) · 추가(연한 점선). 누르면 설명 바텀시트 ---------- */
   .xp{
     text-decoration:underline;
     text-decoration-color:var(--accent);
@@ -339,17 +291,19 @@
     transition:background-color .15s ease;
   }
   .xp:active{ background:var(--accent-soft); }
-  .blank.shown .xp{ text-decoration-color:rgba(255,255,255,.75); }
-  .blank.shown .xp:active{ background:rgba(255,255,255,.14); }
+  .xp-x{ text-decoration-style:dotted; text-decoration-color:var(--muted); text-decoration-thickness:1.5px; }
+  .row.me .xp{ text-decoration-color:rgba(255,255,255,.75); }
+  .row.me .xp-x{ text-decoration-color:rgba(255,255,255,.55); }
+  .row.me .xp:active{ background:rgba(255,255,255,.14); }
   .xp-ko{ margin:12px 0 4px; font-size:16.5px; line-height:1.65; color:var(--text-2); }
 
-  /* ---------- 하단 버튼 ---------- */
+  /* ---------- 하단 버튼: 모드마다 다르지만 주요 버튼은 항상 오른쪽 넓은 자리 ---------- */
   .bottom{
     position:relative;
     display:flex; flex-direction:column; align-items:center; gap:8px;
-    padding:10px max(var(--pad), env(safe-area-inset-right)) calc(10px + var(--quickbar-h)) max(var(--pad), env(safe-area-inset-left));   /* 아래 여백: 빠른 토글 줄만큼 (제스처 바는 탭 바가 맡음) */
+    padding:10px max(var(--pad), env(safe-area-inset-right)) calc(8px + var(--modebar-h)) max(var(--pad), env(safe-area-inset-left));   /* 아래 여백: 모드 선택 줄만큼 (제스처 바는 탭 바가 맡음) */
   }
-  .actions{ display:flex; gap:10px; width:100%; }
+  .actions{ display:flex; gap:8px; width:100%; }
   .btn{
     height:54px; border-radius:16px;
     display:flex; align-items:center; justify-content:center; gap:8px;
@@ -359,56 +313,26 @@
     transition:transform .12s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
   }
   .btn:active{ transform:scale(.98); }
-  .restart{ flex:1; }
-  .ko-btn{ flex:none; color:var(--muted); }
-  .pa-main{ flex:1; color:var(--accent); }
-  .pa-main svg{ width:20px; height:20px; }
-  .card.pa-playing .pa-main, .card.pa-paused .pa-main{ background:var(--accent-soft); border-color:var(--accent-line); }
-  .actions .btn{ font-size:16px; }
-  .ko-btn{ width:58px; }
-  .more{ flex:none; width:70px; gap:3px; }
-  .more svg{ width:17px; height:17px; transition:transform .35s ease; }
-  .card.open .more{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
-  .card.open .more svg{ transform:rotate(180deg); }
-  .pa-main{ min-width:0; gap:6px; white-space:nowrap; }
-  .rehide{ flex:none; width:54px; flex-direction:column; gap:1px; color:var(--muted); }
-  .rehide svg{ width:19px; height:19px; }
-  .rehide span{ font-size:10.5px; font-weight:600; line-height:1; }
-
-  /* ---------- 표현 보기 패널 ---------- */
-  .expr-wrap{
-    display:grid; grid-template-rows:0fr;
-    opacity:0; visibility:hidden;
-    transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease, visibility 0s linear .4s;
-  }
-  .expr-clip{ overflow:hidden; min-height:0; }
-  .card.open .expr-wrap{
-    grid-template-rows:1fr; opacity:1; visibility:visible;
-    transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1), opacity .35s ease .05s, visibility 0s;
-  }
-  .expr{ padding-top:30px; }
-  .expr-label{
-    display:flex; justify-content:space-between; align-items:baseline;
-    font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint);
-    margin-bottom:6px;
-  }
-  .expr-label small{ font-size:12.5px; font-weight:400; letter-spacing:0; }
-  .extra-label{ margin-top:22px; }
-  .expr-item{ padding:13px 0 15px; border-top:1px solid var(--line); }
-  .chip{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:8px 12px 8px 15px; border-radius:999px;
-    font-size:17px; font-weight:650; line-height:1.3;
-    color:var(--accent); background:var(--accent-soft);
-    border:1px solid var(--accent-line);
-    transition:transform .12s ease;
-  }
-  .chip:active{ transform:scale(.96); }
-  .chip svg{ width:16px; height:16px; opacity:.8; flex:none; }
-  .expr-item.extra .chip{ color:var(--text-2); background:var(--bg-2); border-style:dashed; border-color:var(--line); }
-  .expr-ko{ margin:9px 2px 0; font-size:16px; line-height:1.62; color:var(--text-2); }
-  .ko-btn[aria-pressed="true"]{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .actions .btn{ flex:none; min-width:0; gap:6px; padding:0 13px; font-size:15.5px; white-space:nowrap; }
+  .actions .btn svg{ width:19px; height:19px; flex:none; }
+  .actions .main{ flex:1; padding:0 10px; font-size:16.5px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .actions .ico-btn{ width:46px; padding:0; color:var(--muted); }
+  .actions .rate{ width:54px; padding:0; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .actions .on{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .actions .restart{ flex:1; }
   .swipe-hint{ font-size:12.5px; color:var(--faint); }
+
+  /* ---------- 모드 선택: 탭 바 바로 위, 상황 탭에서만 ---------- */
+  .modebar{
+    position:absolute; left:0; right:0; bottom:0; z-index:5;
+    height:var(--modebar-h);
+    display:none; align-items:center; justify-content:center;
+    padding:0 max(var(--pad), env(safe-area-inset-right)) 6px max(var(--pad), env(safe-area-inset-left));
+    background:var(--bg);
+  }
+  body.tab-cards .modebar{ display:flex; }
+  .mode-seg{ width:100%; max-width:360px; }
+  .modebar .mode-seg button{ height:32px; font-size:14.5px; }
 
   /* ---------- 마지막 카드 ---------- */
   .end .inner{ align-items:center; justify-content:center; text-align:center; }
@@ -520,12 +444,6 @@
   .field:focus{ outline:2px solid var(--accent-line); outline-offset:0; }
   .field + .field{ margin-top:8px; }
   .note{ margin:9px 2px 0; font-size:14px; line-height:1.6; color:var(--muted); }
-  .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-  .switch-row .set-label{ margin:0; font-size:16px; letter-spacing:0; color:var(--text); font-weight:500; }
-  .switch{ flex:none; width:52px; height:32px; border-radius:999px; background:var(--bg-3); border:1px solid var(--line); position:relative; transition:background-color .2s ease; }
-  .switch::after{ content:""; position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:transform .2s ease; }
-  .switch[aria-checked="true"]{ background:var(--accent); border-color:transparent; }
-  .switch[aria-checked="true"]::after{ transform:translateX(20px); }
   .el-only[hidden]{ display:none; }
   .btn-row{ display:flex; gap:8px; flex-wrap:wrap; }
   .btn-row .btn{ flex:1; height:46px; font-size:15.5px; min-width:140px; }
@@ -797,7 +715,7 @@
   /* ---------- 토스트 ---------- */
   .toast{
     position:fixed; left:50%; z-index:40;
-    bottom:calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-h) + var(--quickbar-h) + 80px);
+    bottom:calc(env(safe-area-inset-bottom, 0px) + var(--tabbar-h) + var(--modebar-h) + 80px);
     max-width:calc(100% - 40px);
     padding:11px 18px; border-radius:16px;
     background:var(--toast); color:#F1EFEB;
@@ -820,10 +738,13 @@
   <div class="views">
     <main class="view feed" id="feed" aria-label="영어 회화 카드"></main>
 
-    <!-- 상황 탭 빠른 토글: 탭 바 바로 위, 모든 카드에 공통 적용 -->
-    <div class="quickbar" role="group" aria-label="빠른 설정">
-      <button class="qt" type="button" data-qt="hideThem" aria-pressed="false"><span class="qt-dot" aria-hidden="true"></span>상대 영어 가리기</button>
-      <button class="qt" type="button" data-qt="meKo" aria-pressed="false"><span class="qt-dot" aria-hidden="true"></span>내 대사 한글로</button>
+    <!-- 상황 탭 모드 선택: 탭 바 바로 위, 모든 카드에 공통 적용 -->
+    <div class="modebar">
+      <div class="seg mode-seg" id="modeSeg" role="group" aria-label="학습 모드">
+        <button type="button" data-mode="read" aria-pressed="false">읽기</button>
+        <button type="button" data-mode="listen" aria-pressed="false">듣기</button>
+        <button type="button" data-mode="shadow" aria-pressed="false">쉐도잉</button>
+      </div>
     </div>
 
     <section class="view xview off" id="viewExpr" aria-label="표현" inert>
@@ -970,7 +891,7 @@ const DEFAULTS = {
   voiceThem: "cgSgspJ2msm6clMCkdW9",
   voiceMe: "iP95p4xoKVk53GoZ742B",
   speed: 1,
-  autoplay: false,
+  drillRate: 1,                          // 듣기·쉐도잉 모드 재생 속도 (0.8 / 1), 두 모드가 같이 씀
   voiceWrite: "iP95p4xoKVk53GoZ742B",   // 글쓰기 탭에서 첨삭을 읽어 줄 목소리
   writeRate: 1                           // 글쓰기 탭 재생 속도 (0.8 / 1)
 };
@@ -979,6 +900,8 @@ function loadSettings() {
     const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "null");
     const merged = Object.assign({}, DEFAULTS, s && typeof s === "object" ? s : {});
     if (!EL_MODELS.some(m => m.id === merged.model)) merged.model = DEFAULTS.model;
+    if (merged.drillRate !== 0.8) merged.drillRate = 1;
+    delete merged.autoplay;                // 예전 '자동 재생' 설정 (모드 개편으로 없어짐)
     return merged;
   } catch (e) { return Object.assign({}, DEFAULTS); }
 }
@@ -1001,7 +924,7 @@ const ICON_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
 const ICON_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 const ICON_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.8-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg>';
-const ICON_REHIDE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>';
+const ICON_RESTART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>';
 const ICON_PAUSE ='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.4"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.4"/></svg>';
 const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
@@ -1113,85 +1036,92 @@ function findRanges(text, card, ci, used) {
   return out;
 }
 
-function markExpressions(text, card, ci, used) {
-  const ranges = findRanges(text, card, ci, used);
+/* 추가 표현(extraExpressions): 핵심 밑줄과 겹치지 않는 자리에, 카드 안에서 처음 나온 곳에만 연한 점선 밑줄 */
+function extraRanges(text, card, taken, usedX) {
+  const out = [];
+  (card.extraExpressions || []).forEach((e, ei) => {
+    if (usedX.has(ei)) return;
+    for (const src of exprSources(e)) {
+      const m = new RegExp(src, "i").exec(text);
+      if (!m || !m[0].length) continue;
+      const r = { s: m.index, e: m.index + m[0].length, ei, kind: "extra" };
+      if (taken.concat(out).some(x => r.s < x.e && x.s < r.e)) continue;
+      out.push(r);
+      usedX.add(ei);
+      break;
+    }
+  });
+  return out;
+}
+
+/* 글자 + 밑줄 범위 → HTML.
+   다음 단계(인터랙티브 스크립트: 읽는 단어 강조, 단어를 누르면 그 위치부터 재생)에서 단어 단위 span을 여기서 붙일 예정 */
+function richText(text, ranges, ci) {
   let html = "", pos = 0;
-  ranges.forEach(r => {
-    if (used) used.add(r.ei);
+  ranges.slice().sort((a, b) => a.s - b.s).forEach(r => {
     html += esc(text.slice(pos, r.s)) +
-      '<span class="xp" data-c="' + ci + '" data-e="' + r.ei + '">' + esc(text.slice(r.s, r.e)) + '</span>';
+      '<span class="xp' + (r.kind === "extra" ? " xp-x" : "") + '" data-c="' + ci + '" data-e="' + r.ei + '" data-k="' + (r.kind || "core") + '">' +
+      esc(text.slice(r.s, r.e)) + '</span>';
     pos = r.e;
   });
   return html + esc(text.slice(pos));
 }
 
-/* ---------- 렌더링 ---------- */
-function renderCard(card, i) {
-  let firstThem = true;
-  let hintPlaced = false;
-  let meCount = 0;
-  const used = new Set();                       // 이 카드에서 이미 밑줄 그은 표현
-  const rows = (card.dialogue || []).map(line => {
-    const stage = meCount;                      // 앞에 나온 "me" 대사 수 = 이 줄이 보이는 단계
-    const later = stage > 0 ? " later" : "";
-    const ko = line.ko ? '<div class="ko">' + esc(line.ko) + '</div>' : "";
-    if (line.who === "me") {
-      meCount++;
-      const bars = "<i></i>".repeat(line.en.length > 30 ? 3 : 2);
-      let hint = "";
-      if (i === 0 && !hintPlaced) { hint = '<div class="hint">탭해서 확인</div>'; hintPlaced = true; }
-      return '<div class="row me' + later + '" data-stage="' + stage + '">' +
-        '<div class="line">' +
-          '<button class="spk" type="button" aria-label="내 대사 듣기"' + spkAttrs(line.en, "me") + '>' + ICON_SPEAKER + '</button>' +
-          '<button class="blank" type="button" aria-pressed="false" aria-label="내 차례. 탭해서 정답 보기">' +
-            '<span class="ans">' + markExpressions(line.en, card, i, used) + '</span>' +
-            '<span class="ans-ko">' + esc(line.ko || "") + '</span>' +
-            '<span class="lines" aria-hidden="true">' + bars + '</span>' +
-          '</button>' +
-        '</div>' + ko + hint +
-      '</div>';
-    }
-    const label = firstThem ? '<span class="who">' + esc(WHO_LABEL[line.who] || "상대") + '</span>' : "";
-    firstThem = false;
-    return '<div class="row them' + later + '" data-stage="' + stage + '">' + label +
-      '<button class="bubble say" type="button"' + spkAttrs(line.en, "them") + '><span class="say-t">' + markExpressions(line.en, card, i, used) + '</span>' +
-        '<span class="ico">' + ICON_SPEAKER + '</span></button>' + ko +
-    '</div>';
+/* used / usedX: 이 카드에서 이미 밑줄 그은 핵심 / 추가 표현 번호 */
+function markExpressions(text, card, ci, used, usedX) {
+  const core = findRanges(text, card, ci, used);
+  core.forEach(r => used.add(r.ei));
+  return richText(text, core.concat(extraRanges(text, card, core, usedX)), ci);
+}
+
+/* ---------- 대사 한 줄 그리기 (세 모드 공통. 나중에 드라이브 모드·인터랙티브 스크립트도 이걸 씀) ----------
+   말풍선 안: .en(영어 + 밑줄) / .kq(읽기 모드에서 아직 확인 안 한 내 대사의 한글) / .ph(듣기 모드의 자리 표시)
+   말풍선 아래: .ko(작은 한글 해석). 무엇을 보일지는 CSS 클래스가 정하므로, 모드가 바뀌어도 이 HTML은 그대로 */
+function renderLine(line, li, enHtml, flags) {
+  const me = line.who === "me";
+  const w = Math.round(Math.min(250, 70 + String(line.en || "").length * 4));   // 듣기 모드 자리 표시 폭(대사 길이에 비례)
+  return '<div class="row ' + (me ? "me" : "them") + (flags.firstThem ? " first-them" : "") + '" data-l="' + li + '" style="--w:' + w + 'px">' +
+    '<span class="who">' + (me ? "나" : esc(WHO_LABEL[line.who] || "상대")) + '</span>' +
+    '<div class="line">' +
+      '<div class="bubble">' +
+        '<span class="en" lang="en">' + enHtml + '</span>' +
+        (me ? '<span class="kq">' + esc(line.ko || "") + '</span>' : "") +
+        '<span class="ph" aria-hidden="true"><i></i>' + (String(line.en || "").length > 30 ? "<i></i>" : "") + '<i></i></span>' +
+      '</div>' +
+      '<button class="spk" type="button" aria-label="이 줄 듣기"' + spkAttrs(line.en, me ? "me" : "them") + '>' + ICON_SPEAKER + '</button>' +
+    '</div>' +
+    (line.ko ? '<div class="ko">' + esc(line.ko) + '</div>' : "") +
+    (flags.hint ? '<div class="hint">탭하면 영어로 바뀌어요</div>' : "") +
+  '</div>';
+}
+
+/* 카드 하나의 대화 전체 (밑줄 규칙 때문에 위에서부터 차례로 그림). 모드와 상관없이 같은 HTML */
+function chatHtml(card, ci) {
+  const used = new Set(), usedX = new Set();
+  let firstThem = true, firstMe = true;
+  return (card.dialogue || []).map((line, li) => {
+    const me = line.who === "me";
+    const flags = { firstThem: !me && firstThem, hint: me && firstMe };
+    if (me) firstMe = false; else firstThem = false;
+    return renderLine(line, li, markExpressions(line.en || "", card, ci, used, usedX), flags);
   }).join("");
+}
+const CHAT_HTML = CARDS.map(chatHtml);
 
+/* ---------- 카드 틀: 대화(.chat)와 버튼(.actions)은 모드에 맞춰 resetCard()가 채움 ---------- */
+function renderCard(card, i) {
   const swipe = i === 0 ? '<div class="swipe-hint">밑줄 친 표현을 누르면 예문·썰 · 위로 넘기면 다음 상황</div>' : "";
-
-  /* 표현 보기 패널: 핵심 표현(밑줄) + 더 알아두면 좋은 표현(extraExpressions, 비어 있으면 칸을 숨김) */
-  const exprItem = (ex, j, kind) =>
-    '<div class="expr-item' + (kind === "extra" ? " extra" : "") + '">' +
-      '<button class="chip" type="button" data-c="' + i + '" data-e="' + j + '" data-k="' + kind + '">' + esc(ex.phrase) + ICON_ARROW + '</button>' +
-      '<p class="expr-ko">' + esc(ex.ko) + '</p>' +
-    '</div>';
-  const core = (card.expressions || []).map((ex, j) => exprItem(ex, j, "core")).join("");
-  const extras = (card.extraExpressions || []).map((ex, j) => exprItem(ex, j, "extra")).join("");
-
-  return '<section class="card" style="--h:' + hueOf(card.category) + '" data-i="' + i + '" data-stage="0">' +
+  return '<section class="card" style="--h:' + hueOf(card.category) + '" data-i="' + i + '">' +
     '<header class="top"><span class="tag">' + esc(card.category) + '</span>' +
       '<span class="top-r"><button class="jump" type="button" aria-label="카드 목록">' + (i + 1) + ' / ' + CARDS.length + ICON_LIST + '</button>' +
       '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
     '<div class="body"><div class="inner">' +
       '<h2 class="title">' + esc(card.title) + '</h2>' +
       '<p class="situation">' + esc(card.situation) + '</p>' +
-      '<div class="chat">' + rows + '</div>' +
-      '<div class="expr-wrap" id="expr-' + i + '"><div class="expr-clip"><div class="expr">' +
-        '<div class="expr-label"><span>핵심 표현</span><small>누르면 예문 · 썰</small></div>' + core +
-        (extras ? '<div class="expr-label extra-label"><span>더 알아두면 좋은 표현</span></div>' + extras : "") +
-      '</div></div></div>' +
+      '<p class="mnote"></p>' +
+      '<div class="chat"></div>' +
     '</div></div>' +
-    '<footer class="bottom">' +
-      '<div class="actions">' +
-        '<button class="btn ko-btn" type="button" aria-pressed="false">한글</button>' +
-        '<button class="btn more" type="button" aria-expanded="false" aria-controls="expr-' + i + '"><span>표현</span>' + ICON_CHEVRON + '</button>' +
-        '<button class="btn pa-main" type="button">' + paLabel("idle") + '</button>' +
-        '<button class="btn rehide" type="button" aria-label="다시 가리기">' + ICON_REHIDE + '<span>가리기</span></button>' +
-      '</div>' +
-      swipe +
-    '</footer>' +
+    '<footer class="bottom"><div class="actions"></div>' + swipe + '</footer>' +
   '</section>';
 }
 
@@ -1207,13 +1137,6 @@ function renderEnd() {
     '</div></div>' +
     '<footer class="bottom"><div class="actions"><button class="btn restart" type="button">처음부터 다시 보기</button></div></footer>' +
   '</section>';
-}
-
-/* 전체 듣기 버튼 모양: idle(전체 듣기) / playing(일시정지) / paused(이어 듣기) */
-function paLabel(state) {
-  if (state === "playing") return ICON_PAUSE + '<span>일시정지</span>';
-  if (state === "paused") return ICON_PLAY + '<span>이어 듣기</span>';
-  return ICON_PLAY + '<span>전체 듣기</span>';
 }
 
 feed.innerHTML = CARDS.map(renderCard).join("") + renderEnd();
@@ -1287,6 +1210,11 @@ const Player = (() => {
 
   function mark(btn, on) { if (btn) btn.classList.toggle("playing", on); }
 
+  /* 재생 / 일시정지 / 정지가 바뀔 때 알림 (듣기 모드 버튼 모양 등) */
+  const subs = [];
+  function onChange(fn) { subs.push(fn); }
+  function emit() { subs.forEach(fn => { try { fn(); } catch (e) {} }); }
+
   /* 일시정지 상태: 재생 중이던 줄을 멈춰 두고, resume()에서 이어서(내장 음성은 그 줄 처음부터) 재생 */
   let paused = false;
   let resumeFn = null;
@@ -1303,6 +1231,7 @@ const Player = (() => {
     mark(currentBtn, false);
     currentBtn = null;
     queue = Promise.resolve();
+    emit();
   }
 
   function pause() {
@@ -1316,6 +1245,7 @@ const Player = (() => {
       speechCtl.halt();
       resumeFn = speechCtl.restart;
     }
+    emit();
   }
 
   function resume() {
@@ -1324,6 +1254,13 @@ const Player = (() => {
     const f = resumeFn;
     resumeFn = null;
     if (f) f();
+    emit();
+  }
+
+  /* 재생 중인 mp3 속도를 바로 바꿈 (내장 음성은 다음 줄부터) */
+  function setRate(rate) {
+    if (!audioCtl) return;
+    try { audio.defaultPlaybackRate = rate; audio.playbackRate = rate; } catch (e) {}
   }
 
   function playBlob(blob, rate) {
@@ -1473,7 +1410,7 @@ const Player = (() => {
   function getToken() { return token; }
   function isPaused() { return paused; }
 
-  return { play, enqueue, stop, pause, resume, isPaused, isPlaying, getToken };
+  return { play, enqueue, stop, pause, resume, setRate, isPaused, isPlaying, getToken, onChange };
 })();
 
 function sayFromButton(btn) {
@@ -1481,243 +1418,297 @@ function sayFromButton(btn) {
   Player.play(btn.dataset.say, btn.dataset.who, btn);
 }
 
-/* ---------- 대화 진행: 내 대답을 열어야 다음 대사가 나옴 ---------- */
-function ensureVisible(body, el) {
-  const r = el.getBoundingClientRect();
-  const b = body.getBoundingClientRect();
-  const over = r.bottom - (b.bottom - 24);
-  if (over > 0) body.scrollBy({ top: over, behavior: "smooth" });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- 여러 줄 이어 재생 (듣기 모드 전체 재생. 나중에 드라이브 모드도 이걸로 카드를 이어 붙일 예정) ----------
+   items: [{ text, who, el }] · hooks: { from, gap(ms), rate(), onLine(i), onEnd(끝까지 들었는지) }
+   일시정지·이어 듣기는 Player.pause()/resume()을 그대로 씀 → 바텀시트를 열 때 멈추는 것과도 맞물림.
+   Player.stop()(카드 넘김·모드 바꿈·다른 소리 재생)이 오면 바로 끝남 */
+function playSequence(items, hooks) {
+  hooks = hooks || {};
+  Player.stop();
+  const t0 = Player.getToken();
+  const seq = { alive: () => Player.getToken() === t0 };
+  (async () => {
+    let complete = false;
+    try {
+      for (let i = hooks.from || 0; i < items.length; i++) {
+        while (Player.isPaused() && seq.alive()) await sleep(120);
+        if (!seq.alive()) return;
+        if (hooks.onLine) hooks.onLine(i);
+        const it = items[i];
+        await Player.enqueue(it.text, it.who, it.el, { rate: hooks.rate ? hooks.rate() : undefined });
+        if (!seq.alive()) return;
+        if (i < items.length - 1) await sleep(hooks.gap == null ? 350 : hooks.gap);
+      }
+      complete = seq.alive();
+    } finally {
+      if (hooks.onEnd) hooks.onEnd(complete);
+    }
+  })();
+  return seq;
 }
 
-function showRows(card, rows) {
+/* 그 줄이 화면 안에 보이게 스크롤. center면 지금 줄을 화면 위쪽 1/3쯤으로 (쉐도잉에서 따라 내려감) */
+function follow(card, el, center) {
   const body = card.querySelector(".body");
-  rows.forEach(r => { r.classList.remove("later"); r.classList.add("pop"); });
-  if (rows.length) ensureVisible(body, rows[rows.length - 1]);
-  /* '입력 중…' 뒤에 늦게 나타난 줄이라도, 그 사이 다른 카드로 넘어갔으면 읽지 않음 */
-  if (settings.autoplay && card === activeCard && currentTab === "cards") {
-    rows.forEach(r => {
-      const say = r.querySelector(".say");
-      if (say) Player.enqueue(say.dataset.say, "them", say);
+  const r = el.getBoundingClientRect();
+  const b = body.getBoundingClientRect();
+  let top = null;
+  if (center) top = body.scrollTop + (r.top - b.top) - b.height * 0.3;
+  else if (r.bottom > b.bottom - 24) top = body.scrollTop + r.bottom - (b.bottom - 24);
+  else if (r.top < b.top + 14) top = body.scrollTop + r.top - b.top - 14;
+  if (top !== null) body.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+}
+
+/* ================= 상황 카드: 모드 3개 (읽기 / 듣기 / 쉐도잉) =================
+   모드는 모든 카드 공통. 탭 바 위에서 고르고, 다시 열어도 유지(engcards.mode.v1).
+   카드 하나의 진행 상태는 card._st에 모아 둠. 카드를 넘기거나 모드를 바꾸면 resetCard()로 처음 상태가 됨
+   (예약된 '입력 중…' 취소 → 대화 다시 그리기 → 버튼 다시 그리기). 소리는 부르는 쪽에서 Player.stop() */
+const MODE_KEY = "engcards.mode.v1";
+const MODES = { read: "읽기", listen: "듣기", shadow: "쉐도잉" };
+let mode = (() => {
+  try { const m = localStorage.getItem(MODE_KEY); return m && MODES[m] ? m : "read"; } catch (e) { return "read"; }
+})();
+
+const rowsOf = card => Array.from(card.querySelectorAll(".chat > .row:not(.typing)"));
+const lineOf = (card, li) => CARDS[+card.dataset.i].dialogue[li];
+const whoOf = line => (line.who === "me" ? "me" : "them");
+
+function resetCard(card) {
+  if (card.dataset.i == null) return;
+  const old = card._st;
+  if (old && old.timer) clearTimeout(old.timer);
+  /* read: shown(보이는 줄 수)·full(전체 보기) / listen: revealed(정답 확인)·seq(이어 재생) / shadow: idx(지금 줄) */
+  const st = card._st = { mode, shown: 0, full: false, revealed: false, seq: null, idx: -1, timer: null };
+  card.classList.remove("m-read", "m-listen", "m-shadow", "masked");
+  card.classList.add("m-" + mode);
+  card.querySelector(".chat").innerHTML = CHAT_HTML[+card.dataset.i];
+  const rows = rowsOf(card);
+  if (mode === "read") {
+    rows.forEach((r, i) => {
+      r.classList.toggle("off", i > 0);
+      if (r.classList.contains("me")) r.classList.add("kq-on");
     });
+    st.shown = 1;
+  } else if (mode === "listen") {
+    card.classList.add("masked");
+  } else {
+    rows.forEach(r => r.classList.add("off"));
+  }
+  card.querySelector(".body").scrollTop = 0;
+  renderActions(card);
+}
+
+/* 지금 카드를 처음부터 (소리도 멈춤) */
+function restartCard(card) {
+  Player.stop();
+  resetCard(card);
+}
+
+/* ---------- 하단 버튼: 주요 버튼(.main)은 세 모드 모두 오른쪽 넓은 자리 ---------- */
+function actBtn(act, html, cls, label) {
+  return '<button class="btn' + (cls ? " " + cls : "") + '" type="button" data-act="' + act + '"' +
+    (label ? ' aria-label="' + label + '"' : "") + '>' + html + '</button>';
+}
+function rateBtn() {
+  const r = settings.drillRate === 1 ? "1.0" : String(settings.drillRate);
+  return actBtn("rate", r + "x", "rate", "재생 속도 " + r + "배, 누르면 바뀜");
+}
+const NEXT_HTML = "<span>다음</span>" + ICON_ARROW;
+const AGAIN_HTML = ICON_RESTART + "<span>처음부터</span>";
+
+function renderActions(card) {
+  const st = card._st;
+  if (!st) return;
+  const n = rowsOf(card).length;
+  let html = "", note = "";
+  if (st.mode === "read") {
+    const end = st.shown >= n && !st.timer;
+    html = actBtn("all", st.full ? "접기" : "전체 보기", st.full ? "on" : "") +
+      actBtn("next", end ? AGAIN_HTML : NEXT_HTML, "main");
+  } else if (st.mode === "listen") {
+    const live = st.seq && st.seq.alive();
+    const main = !live ? ICON_PLAY + "<span>재생</span>" :
+      Player.isPaused() ? ICON_PLAY + "<span>이어 듣기</span>" : ICON_PAUSE + "<span>일시정지</span>";
+    html = actBtn("replay", ICON_RESTART, "ico-btn", "처음부터 다시 듣기") + rateBtn() +
+      actBtn("answer", st.revealed ? "가리기" : "정답 확인", st.revealed ? "on" : "") +
+      actBtn("play", main, "main");
+    if (!st.revealed) note = "▶ 재생을 누르면 대화 전체를 글자 없이 들려줘요. 다 듣고 '정답 확인'.";
+  } else if (st.idx < 0) {
+    html = actBtn("start", ICON_PLAY + "<span>시작</span>", "main");
+    note = "한 줄씩 들려줘요. 듣고 나서 소리 내어 따라 말해 보세요.";
+  } else {
+    html = rateBtn() + actBtn("again", ICON_SPEAKER + "<span>한 번 더 듣기</span>") +
+      actBtn("next", st.idx >= n - 1 ? AGAIN_HTML : NEXT_HTML, "main");
+  }
+  card.querySelector(".actions").innerHTML = html;
+  card.querySelector(".mnote").textContent = note;
+}
+
+function onAct(card, act) {
+  const st = card && card._st;
+  if (!st) return;
+  buzz();
+  if (act === "rate") { toggleRate(card); return; }
+  if (st.mode === "read") {
+    if (act === "next") readNext(card);
+    else if (act === "all") { if (st.full) restartCard(card); else readAll(card); }
+  } else if (st.mode === "listen") {
+    if (act === "play") listenPlay(card);
+    else if (act === "replay") listenStart(card);
+    else if (act === "answer") listenReveal(card, !st.revealed);
+  } else {
+    if (act === "start") shadowGo(card, 0);
+    else if (act === "next") shadowGo(card, st.idx >= rowsOf(card).length - 1 ? 0 : st.idx + 1);
+    else if (act === "again") shadowSay(card);
   }
 }
 
-function advance(card, stage) {
-  if (+card.dataset.stage > stage) return;
-  const next = stage + 1;
-  card.dataset.stage = next;
-  const rows = Array.from(card.querySelectorAll(".row.later")).filter(r => +r.dataset.stage === next);
-  if (!rows.length) return;
-  const tok = card._tok = (card._tok || 0) + 1;
-  if (rows[0].classList.contains("them")) {
+/* 말풍선 탭: 읽기 모드의 내 대사는 한글 ↔ 영어, 듣기 모드(정답 확인 후)는 그 줄만 듣기 */
+function onBubble(card, row) {
+  const st = card && card._st;
+  if (!st || !row || row.classList.contains("typing")) return;
+  if (st.mode === "read" && row.classList.contains("me")) {
+    row.classList.toggle("kq-on");
+    document.body.classList.add("hinted");
+    buzz();
+  } else if (st.mode === "listen" && st.revealed) {
+    const line = lineOf(card, +row.dataset.l);
+    Player.play(line.en, whoOf(line), row, { rate: settings.drillRate });
+  }
+}
+
+/* 듣기·쉐도잉 공통 속도(0.8x / 1.0x). 재생 중인 소리에도 바로 적용 */
+function toggleRate(card) {
+  settings.drillRate = settings.drillRate === 1 ? 0.8 : 1;
+  saveSettings();
+  Player.setRate(settings.drillRate);
+  renderActions(card);
+}
+
+/* ---------- 읽기: 떠올리고 확인하기 ---------- */
+function showRow(card, row) {
+  row.classList.remove("off");
+  row.classList.add("pop");
+  follow(card, row);
+}
+function readNext(card) {
+  const st = card._st;
+  const rows = rowsOf(card);
+  if (st.timer) {                                   // '입력 중…'이면 기다리지 않고 바로 보여 줌
+    clearTimeout(st.timer);
+    st.timer = null;
+    card.querySelectorAll(".typing").forEach(x => x.remove());
+    showRow(card, rows[st.shown++]);
+    renderActions(card);
+    return;
+  }
+  if (st.shown >= rows.length) { restartCard(card); return; }
+  const row = rows[st.shown];
+  if (row.classList.contains("them")) {
     const typing = document.createElement("div");
     typing.className = "row them typing pop";
     typing.innerHTML = '<div class="bubble dots" aria-label="입력 중"><i></i><i></i><i></i></div>';
-    rows[0].parentNode.insertBefore(typing, rows[0]);
-    ensureVisible(card.querySelector(".body"), typing);
-    setTimeout(() => {
-      if (card._tok !== tok) return;
+    row.parentNode.insertBefore(typing, row);
+    follow(card, typing);
+    st.timer = setTimeout(() => {
+      if (card._st !== st) return;
+      st.timer = null;
       typing.remove();
-      showRows(card, rows);
+      showRow(card, rows[st.shown++]);
+      renderActions(card);
     }, 850);
   } else {
-    showRows(card, rows);
+    showRow(card, rows[st.shown++]);
   }
+  renderActions(card);
 }
-
-function setBlank(btn, show) {
-  btn.classList.toggle("shown", show);
-  btn.setAttribute("aria-pressed", show ? "true" : "false");
-  btn.closest(".row").classList.toggle("revealed", show);
-  if (show) btn.removeAttribute("aria-label");
-  else btn.setAttribute("aria-label", "내 차례. 탭해서 정답 보기");
-}
-
-function onBlank(btn) {
-  const row = btn.closest(".row");
-  const card = btn.closest(".card");
-  const show = !btn.classList.contains("shown");
-  setBlank(btn, show);
-  hideHint();
-  buzz();
-  if (show) {
-    const spk = row.querySelector(".spk");
-    if (settings.autoplay) Player.play(spk.dataset.say, "me", spk);
-    advance(card, +row.dataset.stage);
-  } else if (Player.isPlaying(row.querySelector(".spk"))) {
-    Player.stop();
-  }
-}
-
-/* ---------- 대화 전체 듣기 ----------
-   ▶ 전체 듣기: 안 열린 줄은 차례대로 열면서 처음부터 끝까지 읽음
-   ⏸ 일시정지 → ▶ 이어 듣기: 멈춘 곳부터 계속
-   ↺ 다시 가리기: 재생을 멈추고, 열어 둔 말풍선과 표현 펼침을 모두 처음 상태로 되돌림 */
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-function setPA(card, state) {
-  card.classList.toggle("pa-playing", state === "playing");
-  card.classList.toggle("pa-paused", state === "paused");
-  const main = card.querySelector(".pa-main");
-  if (main) {
-    main.innerHTML = paLabel(state);
-    main.setAttribute("aria-label", state === "playing" ? "일시정지" : state === "paused" ? "이어 듣기" : "대화 전체 듣기");
-  }
-}
-
-/* 표현 보기: 펼치기/접기 (펼치면 가려진 내 대사도 모두 열림) */
-function setExprOpen(card, open) {
-  card.classList.toggle("open", open);
-  const btn = card.querySelector(".more");
-  if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
-}
-function toggleMore(card) {
-  const open = !card.classList.contains("open");
-  setExprOpen(card, open);
-  buzz();
-  if (!open) return;
-  card._tok = (card._tok || 0) + 1;
+function readAll(card) {
+  const st = card._st;
+  clearTimeout(st.timer);
+  st.timer = null;
   card.querySelectorAll(".typing").forEach(x => x.remove());
-  card.querySelectorAll(".row.later").forEach(r => { r.classList.remove("later"); r.classList.add("pop"); });
-  card.querySelectorAll(".blank").forEach(b => setBlank(b, true));
-  card.dataset.stage = 999;
-  hideHint();
-  const body = card.querySelector(".body");
-  const wrap = card.querySelector(".expr-wrap");
-  setTimeout(() => {
-    const top = wrap.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12;
-    if (top > body.scrollTop) body.scrollTo({ top, behavior: "smooth" });
-  }, 420);
-}
-
-/* 카드를 처음 상태로: 내 대사는 다시 빈칸, 첫 단계 이후 줄은 숨김, 표현 패널 접기 */
-function resetCard(card) {
-  card._tok = (card._tok || 0) + 1;
-  card.querySelectorAll(".typing").forEach(x => x.remove());
-  card.querySelectorAll(".blank").forEach(b => setBlank(b, false));
-  card.querySelectorAll(".chat > .row").forEach(r => {
-    r.classList.remove("pop", "peek");
-    if (+r.dataset.stage > 0) r.classList.add("later");
+  const rows = rowsOf(card);
+  rows.forEach(r => {
+    if (r.classList.contains("off")) { r.classList.remove("off"); r.classList.add("pop"); }
+    r.classList.remove("kq-on");
   });
-  card.dataset.stage = 0;
-  setExprOpen(card, false);
-  card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });
+  st.shown = rows.length;
+  st.full = true;
+  renderActions(card);
 }
 
-function hideAgain(card) {
-  const s = card._pa;
-  if (s) s.reset = true;            // 전체 듣기가 끝나면서 화면을 다시 펼치지 않도록
-  Player.stop();
-  setPA(card, "idle");
-  resetCard(card);
-  buzz();
+/* ---------- 듣기: 글자 없이 듣기 ---------- */
+function setCur(card, i) {
+  rowsOf(card).forEach((r, j) => r.classList.toggle("cur", j === i));
 }
-
-async function playAll(card) {
-  const cur = card._pa;
-  if (cur && cur.alive()) {                         // 재생 중이면 일시정지, 일시정지면 이어 듣기
-    if (cur.paused) { cur.paused = false; Player.resume(); setPA(card, "playing"); }
-    else { cur.paused = true; Player.pause(); setPA(card, "paused"); }
-    buzz();
+function listenStart(card) {
+  const st = card._st;
+  const rows = rowsOf(card);
+  const items = rows.map((r, i) => { const l = lineOf(card, i); return { text: l.en, who: whoOf(l), el: r }; });
+  card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });   // 처음부터: 제목·상황이 보이는 위치에서 시작
+  const seq = playSequence(items, {
+    rate: () => settings.drillRate,
+    onLine: i => { if (card._st !== st) return; setCur(card, i); if (i > 0) follow(card, rows[i]); },
+    onEnd: () => {
+      if (card._st !== st || st.seq !== seq) return;
+      st.seq = null;
+      setCur(card, -1);
+      renderActions(card);
+    }
+  });
+  st.seq = seq;
+  renderActions(card);
+}
+function listenPlay(card) {
+  const st = card._st;
+  if (st.seq && st.seq.alive()) {                   // 재생 중이면 일시정지, 일시정지면 이어 듣기 (버튼은 Player.onChange가 다시 그림)
+    if (Player.isPaused()) Player.resume(); else Player.pause();
     return;
   }
-  Player.stop();
-  const t0 = Player.getToken();
-  const s = card._pa = { paused: false, reset: false, alive: () => Player.getToken() === t0 };
-  const gate = async () => { while (s.paused && s.alive()) await sleep(120); };
-  card._tok = (card._tok || 0) + 1;                 // 진행 중이던 '입력 중' 표시 취소
-  card.querySelectorAll(".typing").forEach(x => x.remove());
-  setPA(card, "playing");
-  hideHint();
-  buzz();
-  const body = card.querySelector(".body");
-  let lastMeStage = -1;
-  try {
-    for (const row of Array.from(card.querySelectorAll(".chat > .row"))) {
-      await gate();
-      if (!s.alive()) break;
-      const st = +row.dataset.stage;
-      if (row.classList.contains("later")) {
-        if (row.classList.contains("them")) {
-          const typing = document.createElement("div");
-          typing.className = "row them typing pop";
-          typing.innerHTML = '<div class="bubble dots" aria-label="입력 중"><i></i><i></i><i></i></div>';
-          row.parentNode.insertBefore(typing, row);
-          ensureVisible(body, typing);
-          await sleep(650);
-          await gate();
-          typing.remove();
-          if (!s.alive()) break;
-        }
-        row.classList.remove("later");
-        row.classList.add("pop");
-      }
-      if (+card.dataset.stage < st) card.dataset.stage = st;
-      const blank = row.querySelector(".blank");
-      if (blank) {
-        lastMeStage = st;
-        if (!blank.classList.contains("shown")) setBlank(blank, true);
-      } else {
-        lastMeStage = -1;
-      }
-      ensureVisible(body, row);
-      const btn = row.querySelector(".say, .spk");
-      await Player.enqueue(btn.dataset.say, btn.dataset.who, btn);
-      if (!s.alive()) break;
-      await sleep(300);
-    }
-  } finally {
-    if (card._pa === s) card._pa = null;
-    if (!s.reset) {
-      setPA(card, "idle");
-      /* 다른 말풍선을 누르거나 카드를 넘겨서 끊겼을 때, 화면이 평소 흐름과 같은 상태가 되도록 정리 */
-      card.querySelectorAll(".row.later").forEach(r => {
-        if (+r.dataset.stage <= +card.dataset.stage) { r.classList.remove("later"); r.classList.add("pop"); }
-      });
-      if (lastMeStage >= 0 && +card.dataset.stage <= lastMeStage) advance(card, lastMeStage);
-    }
-  }
+  listenStart(card);
+}
+function listenReveal(card, on) {
+  card._st.revealed = on;
+  card.classList.toggle("masked", !on);
+  renderActions(card);
 }
 
-function toggleKo(cardEl) {
-  const on = !cardEl.classList.contains("ko-on");
-  cardEl.classList.toggle("ko-on", on);
-  cardEl.querySelector(".ko-btn").setAttribute("aria-pressed", on ? "true" : "false");
-  buzz();
+/* ---------- 쉐도잉: 한 줄씩 듣고 따라 말하기 ---------- */
+function shadowGo(card, i) {
+  const st = card._st;
+  const rows = rowsOf(card);
+  st.idx = i;
+  rows.forEach((r, j) => {
+    if (j === i && r.classList.contains("off")) r.classList.add("pop");
+    r.classList.toggle("off", j > i);
+    r.classList.toggle("past", j < i);
+    r.classList.toggle("cur", j === i);
+  });
+  if (i === 0) card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });
+  else follow(card, rows[i], true);
+  shadowSay(card);
+  renderActions(card);
 }
-
-function hideHint() {
-  const h = document.querySelector(".hint");
-  if (h) h.classList.add("gone");
+function shadowSay(card) {
+  const st = card._st;
+  const row = rowsOf(card)[st.idx];
+  if (!row) return;
+  const line = lineOf(card, st.idx);
+  Player.play(line.en, whoOf(line), row, { rate: settings.drillRate });
 }
 
 feed.addEventListener("click", e => {
   const t = e.target;
   let el;
-  /* '상대 영어 가리기' 중이면, 가려진 상대 대사를 탭할 때 그 줄만 보여 주고 읽어 줌 */
-  const hiddenThem = document.body.classList.contains("hide-them") && t.closest(".row.them:not(.peek):not(.typing)");
-  if (hiddenThem) {
-    hiddenThem.classList.add("peek");
-    const say = hiddenThem.querySelector(".say");
-    if (say) sayFromButton(say);
-    return;
-  }
-  /* 밑줄 표현: 가려진 빈칸 안이면 빈칸 열기로 처리 */
-  const xp = t.closest(".xp");
-  if (xp && !(xp.closest(".blank") && !xp.closest(".blank.shown"))) {
-    buzz();
-    openExpression(+xp.dataset.c, +xp.dataset.e);
-    return;
-  }
-  if ((el = t.closest(".blank"))) { onBlank(el); return; }
-  if ((el = t.closest(".say, .spk"))) { sayFromButton(el); return; }
+  /* 밑줄 표현: 영어가 보일 때만 누를 수 있음(가려진 영어는 display:none) */
+  if ((el = t.closest(".xp"))) { buzz(); openExpression(+el.dataset.c, +el.dataset.e, el.dataset.k); return; }
+  if ((el = t.closest(".spk"))) { sayFromButton(el); return; }
+  if ((el = t.closest("[data-act]"))) { onAct(el.closest(".card"), el.dataset.act); return; }
+  if ((el = t.closest(".bubble"))) { onBubble(el.closest(".card"), el.closest(".row")); return; }
   if ((el = t.closest(".gear"))) { openSettings(); return; }
   if ((el = t.closest(".jump"))) { openList(); return; }
-  if ((el = t.closest(".ko-btn"))) { toggleKo(el.closest(".card")); return; }
-  if ((el = t.closest(".pa-main"))) { playAll(el.closest(".card")); return; }
-  if ((el = t.closest(".rehide"))) { hideAgain(el.closest(".card")); return; }
-  if ((el = t.closest(".more"))) { toggleMore(el.closest(".card")); return; }
-  if ((el = t.closest(".chip"))) { buzz(); openExpression(+el.dataset.c, +el.dataset.e, el.dataset.k); return; }
   if ((el = t.closest(".restart"))) { feed.scrollTo({ top: 0, behavior: "smooth" }); return; }
 });
 
@@ -1766,66 +1757,42 @@ function jumpTo(idx) {
   }
 })();
 
-/* ---------- 빠른 토글: 상대 영어 가리기 / 내 대사 한글로 (모든 카드 공통, 다시 열어도 유지) ---------- */
-const TOGGLE_KEY = "engcards.toggles.v1";
-const toggles = (() => {
-  try {
-    const t = JSON.parse(localStorage.getItem(TOGGLE_KEY) || "null");
-    return { hideThem: !!(t && t.hideThem), meKo: !!(t && t.meKo) };
-  } catch (e) { return { hideThem: false, meKo: false }; }
-})();
-function applyToggles() {
-  document.body.classList.toggle("hide-them", toggles.hideThem);
-  document.body.classList.toggle("me-ko", toggles.meKo);
-  document.querySelectorAll(".qt").forEach(b => b.setAttribute("aria-pressed", toggles[b.dataset.qt] ? "true" : "false"));
+/* ---------- 모드 선택 (탭 바 바로 위) ---------- */
+const modeSeg = document.getElementById("modeSeg");
+function syncModebar() {
+  modeSeg.querySelectorAll("[data-mode]").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === mode ? "true" : "false"));
 }
-document.querySelector(".quickbar").addEventListener("click", e => {
-  const b = e.target.closest(".qt");
-  if (!b) return;
-  const k = b.dataset.qt;
-  toggles[k] = !toggles[k];
-  if (k === "hideThem") document.querySelectorAll(".row.them.peek").forEach(r => r.classList.remove("peek"));
-  try { localStorage.setItem(TOGGLE_KEY, JSON.stringify(toggles)); } catch (e) {}
-  applyToggles();
+modeSeg.addEventListener("click", e => {
+  const b = e.target.closest("[data-mode]");
+  if (!b || b.dataset.mode === mode) return;
+  mode = b.dataset.mode;
+  try { localStorage.setItem(MODE_KEY, mode); } catch (e) {}
+  Player.stop();
+  document.querySelectorAll(".card[data-i]").forEach(resetCard);
+  syncModebar();
   buzz();
 });
-applyToggles();
+syncModebar();
+document.querySelectorAll(".card[data-i]").forEach(resetCard);
+try { localStorage.removeItem("engcards.toggles.v1"); } catch (e) {}   // 예전 '빠른 토글' 기록 정리
 
-/* 카드를 넘기면 재생 중인 소리를 멈추고, 자동 재생이 켜져 있으면 첫 대사를 읽어줌 */
+/* ---------- 지금 보고 있는 카드 ---------- */
 let activeCard = null;
-let greetTimer = null;
 
-/* 자동 재생: 카드에 도착하면 지금 화면에 보이는 대화를 위에서부터 순서대로 읽음.
-   상대 대사와 '이미 연' 내 대사를 같이 읽고, 아직 안 연 내 빈칸에서 멈춤 */
-function readVisible(card) {
-  for (const r of Array.from(card.querySelectorAll(".chat > .row:not(.later):not(.typing)"))) {
-    if (r.classList.contains("them")) {
-      const s = r.querySelector(".say");
-      Player.enqueue(s.dataset.say, "them", s);
-    } else {
-      const b = r.querySelector(".blank");
-      if (!b || !b.classList.contains("shown")) break;
-      const s = r.querySelector(".spk");
-      Player.enqueue(s.dataset.say, "me", s);
-    }
-  }
-}
+/* 재생·일시정지·정지가 바뀌면 듣기 모드 버튼(재생 / 일시정지 / 이어 듣기)을 다시 그림 */
+Player.onChange(() => {
+  if (activeCard && activeCard._st && activeCard._st.mode === "listen") renderActions(activeCard);
+});
 
-function onCardActive(card) {
-  /* 정리 순서: 예약된 읽기 취소 → 재생·큐·일시정지 상태 정리 → 진도 저장 → (잠깐 머물면) 새 카드 읽기 */
-  clearTimeout(greetTimer);
+/* 카드를 넘기면: 소리 멈춤 → 떠난 카드는 처음 상태로(다시 와도 처음부터) → 진도 저장. 도착해도 자동 재생은 없음 */
+function onCardActive(card, prev) {
   Player.stop();
+  if (prev) resetCard(prev);
   if (card.dataset.i != null) {
     const key = cardKey(+card.dataset.i);
     progress.last = key;
     seenSet.add(key);
     saveProgress();
-  }
-  if (settings.autoplay && card.dataset.i != null) {
-    /* 빠르게 넘기는 중에 지나가는 카드는 읽지 않도록 잠깐 머문 뒤 시작 */
-    greetTimer = setTimeout(() => {
-      if (card === activeCard && currentTab === "cards" && !sheetOpen) readVisible(card);
-    }, 450);
   }
 }
 
@@ -1833,8 +1800,9 @@ try {
   const io = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (!en.isIntersecting || en.intersectionRatio < 0.6 || activeCard === en.target) return;
+      const prev = activeCard;
       activeCard = en.target;
-      onCardActive(activeCard);
+      onCardActive(activeCard, prev);
     });
   }, { root: feed, threshold: [0.6] });
   document.querySelectorAll(".card").forEach(c => io.observe(c));
@@ -2572,7 +2540,7 @@ function detailHtml(it) {
     (pastNotesHtml(id, false) ? '<section class="practice"><h4 class="sec-h">연습장 기록</h4>' + pastNotesHtml(id, false) + '</section>' : "");
   const goCard = detailOpts.fromCard ? "" :
     '<button class="btn go-card" type="button" data-go-card>이 표현이 나온 상황 카드로 가기</button>';
-  return (it.kind === "extra" ? '<p class="x-extra-note">밑줄 없이 대화에 나오는 추가 표현</p>' : "") +
+  return (it.kind === "extra" ? '<p class="x-extra-note">대화에 연한 점선 밑줄로 나오는 추가 표현</p>' : "") +
     (it.ex.ko ? '<p class="xp-ko">' + esc(it.ex.ko) + '</p>' : "") +
     studyBox +
     examplesHtml(it.ex) + storyHtml(it.ex) + practice + goCard;
@@ -2864,11 +2832,14 @@ if (location.hash === "#check") {
 
 /* ---------- 바텀시트 ---------- */
 let sheetOpen = false;
+/* 상황 카드의 밑줄에서 연 시트: 재생 중이던 소리를 일시정지해 두었다가, 닫을 때 이어서 재생.
+   { token: 연 순간의 Player 토큰, paused: 이 시트가 멈췄는지 }. 시트 안에서 다른 소리를 틀면 토큰이 바뀌어 이어 재생 안 함 */
+let sheetHold = null;
 
 const SHEET_FOOT_DEFAULT = '<button class="btn sheet-close" type="button" data-close>닫기</button>';
 /* foot: 시트 맨 아래 버튼 줄(엄지 위치). 없으면 '닫기' */
 function showSheet(ctx, title, html, foot) {
-  Player.stop();
+  if (!sheetHold || sheetHold.token !== Player.getToken()) Player.stop();
   sheetCtx.textContent = ctx;
   sheetTitle.textContent = title;
   sheetBody.innerHTML = html;
@@ -2905,8 +2876,13 @@ function openExpression(ci, ei, kind) {
   const card = CARDS[ci];
   const list = card && (kind === "extra" ? card.extraExpressions : card.expressions);
   const ex = list && list[ei];
-  if (!ex) return;
-  openExprDetail(exprIdOf(card, ex, ei, kind), { fromCard: true });
+  const id = ex && exprIdOf(card, ex, ei, kind);
+  if (!id || !EXPR_BY_ID[id]) return;
+  if (!sheetOpen) {
+    sheetHold = { token: Player.getToken(), paused: !Player.isPaused() };
+    if (sheetHold.paused) Player.pause();
+  }
+  openExprDetail(id, { fromCard: true });
 }
 
 function openList() {
@@ -2991,12 +2967,9 @@ function openSettings() {
       voiceField("voiceThem", "상대 목소리 (직원·친구 등, 예문)") +
       voiceField("voiceMe", "내 목소리 (내 대사, 썰)") +
     '</div>' +
-    '<div class="set-group"><span class="set-label">속도</span>' +
+    '<div class="set-group"><span class="set-label">속도 (읽기 모드 · 예문 · 썰)</span>' +
       seg("speed", [["0.85", "천천히"], ["1", "보통"]]) +
-    '</div>' +
-    '<div class="set-group"><div class="switch-row"><span class="set-label" id="lblAuto">자동 재생</span>' +
-      '<button class="switch" type="button" role="switch" data-switch="autoplay" aria-labelledby="lblAuto" aria-checked="' + settings.autoplay + '"></button></div>' +
-      '<p class="note">카드를 넘기거나, 다음 대사가 나오거나, 내 정답을 열 때 바로 읽어줘요.</p>' +
+      '<p class="note">듣기·쉐도잉 모드 속도는 카드 아래 0.8x / 1.0x 버튼으로 따로 정해요.</p>' +
     '</div>' +
     '<div class="set-group"><div class="btn-row">' +
       '<button class="btn" type="button" id="testVoice">목소리 들어보기</button>' +
@@ -3051,14 +3024,6 @@ sheetBody.addEventListener("click", e => {
     buzz();
     return;
   }
-  if ((el = t.closest("[data-switch]"))) {
-    const name = el.dataset.switch;
-    settings[name] = !settings[name];
-    saveSettings();
-    el.setAttribute("aria-checked", settings[name] ? "true" : "false");
-    buzz();
-    return;
-  }
   if ((el = t.closest("#testVoice"))) {
     if (Player.isPlaying(el)) { Player.stop(); return; }
     Player.play("Hi there! What can I get started for you?", "them", el);
@@ -3100,7 +3065,10 @@ sheetBody.addEventListener("change", e => {
 function hideSheet() {
   if (!sheetOpen) return;
   sheetOpen = false;
-  Player.stop();
+  const hold = sheetHold;
+  sheetHold = null;
+  if (hold && hold.token === Player.getToken()) { if (hold.paused) Player.resume(); }
+  else Player.stop();
   if (document.activeElement && sheet.contains(document.activeElement)) document.activeElement.blur();
   sheet.classList.remove("on", "dragging");
   sheet.style.transform = "";
