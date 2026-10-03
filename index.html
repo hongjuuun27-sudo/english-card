@@ -4680,7 +4680,7 @@ function runChecks() {
       const pc = parseChunks(x.chunks);
       if (pc.text !== x.en) issues.push(lt + ": 슬래시·연음 표시를 빼고 이으면 원문과 다름 — \"" + pc.text + "\" / 원문 \"" + x.en + "\"");
       pc.parts.forEach(p => {
-        const nw = pc.text.slice(p.s, p.e).split(/\s+/).filter(Boolean).length;
+        const nw = pc.text.slice(p.s, p.e).split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w)).length;   // 단어 = 글자·숫자가 있는 덩어리("…"는 안 셈, getScript와 같은 기준)
         if (!nw) issues.push(lt + ": 빈 청크 — " + x.chunks);
         else if (nw > 6) issues.push(lt + ": 청크 하나가 " + nw + "단어 (보통 2~5단어, 6단어까지) — " + x.chunks);
       });
