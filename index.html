@@ -897,21 +897,18 @@
   .dv-b.wide{ grid-column:1 / -1; height:62px; flex-direction:row; gap:9px; font-size:16.5px; }
   .dv-b.wide svg{ width:24px; height:24px; }
 
-  /* ---------- 연습 모드(청크·연음·발음): 상황 카드 위쪽 [연습] → 전체 화면, 한 문장씩 ----------
-     위 = 카드 이름·"문장 2/6 · 청크 1/3" + 카드 이동, 가운데 = 문장(청크 사이 슬래시, 지금 청크 강조, 연음은 단어 사이 작은 호) + 한글 + 발음 팁,
-     아래 = [이전] [한 번 더 듣기] [속도] [다음] (상황 카드 쉐도잉과 같은 버튼 모양) */
+  /* ---------- 연습 모드(청크·연음·발음): 상황 카드 위쪽 [연습] → 시작 화면 → 연습 화면(한 문장씩) ----------
+     시작 화면은 드라이브 모드 시작 화면과 같은 클래스(.dv-head·.dv-sbody·.dv-opt·.dv-sfoot …)를 그대로 씀.
+     연습 화면: 위 = 작은 ✕ + 위치 두 줄("카페에서 주문하기 · 1/2" / "대화 2/6 · 청크 1/3"), 가운데 = 문장(청크 사이 슬래시, 지금 청크 강조,
+     연음은 단어 사이 작은 호) + 괄호 속 한국어 뜻 + 한글 해석 + 발음 팁, 아래 = [이전] [한 번 더 듣기] [속도] [다음] (상황 카드 쉐도잉과 같은 버튼 모양) */
   .pc-mode{ position:fixed; inset:0; z-index:30; display:flex; flex-direction:column; background:var(--bg); color:var(--text); }
   .pc-mode[hidden]{ display:none; }
   body.practicing .toast{ bottom:calc(env(safe-area-inset-bottom, 0px) + 120px); }
-  .pc-cardnav{
-    flex:none; display:flex; align-items:center; height:38px; margin-top:-1px;
-    border-radius:999px; background:var(--bg-2); border:1px solid var(--line);
-  }
-  .pc-cb{ width:36px; height:36px; display:grid; place-items:center; border-radius:999px; color:var(--text-2); }
-  .pc-cb svg{ width:18px; height:18px; }
-  .pc-cb:active{ background:var(--line); }
-  .pc-cb:disabled{ opacity:.28; cursor:default; }
-  .pc-cb-l{ font-size:12.5px; font-weight:600; color:var(--muted); }
+  .dv-opt.wide{ grid-column:1 / -1; }
+  .dv-opt.wide small{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pc-loc2{ display:flex; gap:5px; }
+  .pc-loc2 .lab{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .pc-loc2 .stp{ flex:none; }
   .pc-scroll{
     flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none;
     display:flex; flex-direction:column;
@@ -952,6 +949,9 @@
     border:2px solid var(--accent); border-top:0; border-radius:0 0 50% 50% / 0 0 100% 100%;
     opacity:.85; pointer-events:none;
   }
+  .pc-gloss{ margin-top:10px; display:flex; flex-wrap:wrap; gap:4px 14px; font-size:14px; line-height:1.5; color:var(--muted); }   /* 괄호 속 한국어 뜻(문장에는 넣지 않고 따로) */
+  .pc-gloss:empty{ display:none; }
+  .pc-gloss b{ font-weight:600; color:var(--text-2); }
   .pc-ko{ margin-top:14px; font-size:16.5px; line-height:1.6; color:var(--muted); }
   .pc-tips{ margin-top:22px; display:flex; flex-direction:column; gap:8px; }
   .pc-tips:empty{ display:none; }
@@ -1096,8 +1096,11 @@
   <section class="dv-screen" id="dvSetup"></section>
   <section class="dv-screen" id="dvPlay" hidden></section>
 </div>
-<!-- 연습 모드(청크·연음·발음): 내용은 스크립트(연습 모드 부분)가 채움 -->
-<div class="pc-mode" id="practice" role="dialog" aria-modal="true" aria-label="연습 모드" hidden></div>
+<!-- 연습 모드(청크·연음·발음): 시작 화면(옵션) → 연습 화면. 내용은 스크립트(연습 모드 부분)가 채움 -->
+<div class="pc-mode" id="practice" role="dialog" aria-modal="true" aria-label="연습 모드" hidden>
+  <section class="dv-screen" id="pcSetup"></section>
+  <section class="dv-screen" id="pcPlay" hidden></section>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- 데이터: 카드는 카테고리별 파일, 질문은 questions.js (CLAUDE.md 참고) -->
@@ -2242,10 +2245,12 @@ function createReader(o) {
     })();
   }
   function seek(i, w) {
-    const items = list();
-    if (!items[i]) return;
-    if (active() && idx === i && Player.seekWord(SCRIPTS[+items[i].el.dataset.sc], w)) return;
-    play(i, w, active() ? single : typeof o.tapSingle === "function" ? !!o.tapSingle() : o.tapSingle !== false);
+    const items = list(), it = items[i];
+    if (!it) return;
+    /* w는 화면(el)의 단어 번호 → 읽는 글의 단어 번호 k = w − offset (연습 모드 썰 문장처럼 화면 글과 읽는 글이 다를 때) */
+    const k = w - (it.offset || 0);
+    if (active() && idx === i && Player.seekWord(it.script || SCRIPTS[+it.el.dataset.sc], k)) return;
+    play(i, Math.max(0, k - (it.from || 0)), active() ? single : typeof o.tapSingle === "function" ? !!o.tapSingle() : o.tapSingle !== false);
   }
   function toggle() {
     if (!active()) return false;
@@ -4372,17 +4377,51 @@ document.addEventListener("visibilitychange", () => {
 window.addEventListener("pagehide", () => { if (D.open) dvSavePos(); });
 
 /* ================= 연습 모드: 청크 · 연음 · 발음 (한 문장씩 말하기 연습) =================
-   상황 카드 위쪽 [연습] → 전체 화면. 지금 보던 카드의 첫 문장부터, 위쪽 ‹ 카드 › 로 다른 카드로.
-   한 문장 = 청크 단계(청크 하나씩 듣고 따라 말하기: 다음·이전·한 번 더) → 연결 단계(문장 전체를 이어서 듣고 한 번에 말하기) → 다음 문장.
-   청크가 하나뿐인 짧은 문장은 바로 연결 단계. 속도는 듣기·쉐도잉과 같은 drillRate(0.8x / 1.0x).
-   데이터(대사 줄): chunks — " / " = 끊어 읽는 곳, "‿" = 소리가 이어지는 곳(단어 사이 공백 대신). 예) "Can‿I get‿a / medium hot‿americano, / please?"
-     tips — [{ target, ko }] 발음·연음 팁. soloChunks — [청크 번호(1부터)] 경계가 어색해서 따로 음성을 만들 청크(선택).
-   슬래시·연음 표시는 화면에만 보이고, 음성은 원래 문장 음성 그대로(새로 만들지 않음).
-   재생: 인터랙티브 스크립트의 createReader 하나. 지금 문장의 항목 = [청크 1, …, 청크 n, 문장 전체] (단계 번호 = 항목 번호).
-     청크는 문장 음성(AudioCache 같은 키)의 단어 시간으로 그 구간만 재생(Player의 to — 앞뒤 0.1초 여유·짧은 페이드).
-     soloChunks로 표시된 청크만 그 청크 글을 따로 요청해서 재생(강조는 문장 안 그 자리). 내장 음성은 청크 글만 읽음 */
-const PC = { open: false, ci: 0, li: 0, step: 0, started: false, d: null, ui: null, openId: 0 };
+   상황 카드 위쪽 [연습] → 시작 화면(옵션 — 드라이브 모드 시작 화면과 같은 틀·CSS) → 연습 화면(한 문장씩).
+   재생 목록(buildPractice): 대화 줄(dlg) · 예문(ex) · 썰 문장(story)을 차례로.
+     카드 범위(지금 보던 카드 / 전체 / 카테고리): 카드마다 대화 → (예문까지) 핵심 표현마다 예문 5개 → (썰까지) 표현마다 예문 뒤에 썰 문장들
+     표현 범위(학습 중 / 오늘 복습 — 드라이브와 같은 driveExprs 순서): 표현마다 예문 5개 → 썰 문장들
+   한 문장 = 청크 단계(청크 하나씩 듣고 따라 말하기: 다음·이전·한 번 더) → 연결 단계(문장 전체를 한 번에) → [다음]으로 다음 문장.
+     청크가 하나뿐이거나 연습 방식이 '전체 문장만'이면 바로 연결 단계. 속도는 연습 모드 전용(시작 화면·연습 화면 공통, 저장).
+   데이터: 대사 줄·예문 = { chunks, tips, soloChunks? } / 썰 = story.sentences: [{ chunks, ko, tips, soloChunks? }]
+     chunks: " / " = 끊어 읽는 곳, "‿" = 소리가 이어지는 곳(단어 사이 공백 대신). 괄호 속 한국어 뜻은 넣지 않음(화면에서 문장 아래 따로 보여 줌)
+     썰 sentences의 chunks에서 표시를 빼고 공백 하나로 이으면 썰 영어(괄호 속 한국어를 뺀 것)와 똑같아야 함 → 그게 문장 나누기
+   소리(새 음성을 만들지 않음): 대사·예문은 그 문장 음성, 썰 문장은 썰 전체 음성(표현 시트·드라이브와 같은 캐시)의 그 문장 구간.
+     청크·썰 문장은 Player 구간 재생 ②(재생 전에 소리를 실제로 잘라 냄 — 'Player' 참고). soloChunks로 표시한 청크만 그 청크 글을 따로 요청.
+   화면 단어 ↔ 음성 단어: 화면 글(괄호 속 한국어를 뺀 문장)의 j번째 단어 = 음성 글의 (a0 + j)번째 단어
+   위치: 문장·단계가 바뀔 때마다, 닫을 때, pagehide에 저장. 끝까지 다 하면 위치를 지움 */
+const PRACTICE_KEY = "engcards.practice.v1";
+const PC_SCOPES = { current: "지금 보던 카드", all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현만", due: "오늘 복습할 표현만" };
+const PC_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지" };
+const PC_DEFAULT = { scope: "current", cats: [], content: "dialogue", method: "chunk", rate: 1 };
+
+/* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, cid(지금 보던 카드 범위일 때 그 카드), key(문장), step, block, bcid, bi, label } } */
+function loadPractice() {
+  try {
+    const s = JSON.parse(localStorage.getItem(PRACTICE_KEY) || "null");
+    if (s && typeof s === "object") {
+      const o = Object.assign({}, PC_DEFAULT, s.opts && typeof s.opts === "object" ? s.opts : {});
+      if (!PC_SCOPES[o.scope]) o.scope = "current";
+      if (!PC_CONTENT[o.content]) o.content = "dialogue";
+      o.method = o.method === "whole" ? "whole" : "chunk";
+      o.cats = Array.isArray(o.cats) ? o.cats.filter(c => typeof c === "string") : [];
+      o.rate = o.rate === 0.8 ? 0.8 : 1;
+      return { opts: o, pos: s.pos && typeof s.pos === "object" && s.pos.key ? s.pos : null };
+    }
+  } catch (e) {}
+  return { opts: Object.assign({}, PC_DEFAULT), pos: null };
+}
+const PC = Object.assign(loadPractice(), {
+  open: false, screen: "setup", openId: 0, curCi: 0,   // curCi: 연 순간에 보고 있던 카드('지금 보던 카드' 범위)
+  pl: null, idx: -1, step: 0, done: false,            // 재생 목록 · 지금 문장 번호 · 단계 · 끝까지 다 했는지
+  u: null, ui: null                                    // 지금 문장의 연습 정보(pcUnit) · 연습 화면 요소
+});
+function savePractice() {
+  try { localStorage.setItem(PRACTICE_KEY, JSON.stringify({ opts: PC.opts, pos: PC.pos })); } catch (e) {}
+}
 const practiceEl = document.getElementById("practice");
+const pcSetupEl = document.getElementById("pcSetup");
+const pcPlayEl = document.getElementById("pcPlay");
 
 /* chunks 글 → { text: 슬래시·연음 표시를 뺀 글(원문과 같아야 함), parts: [{ s, e }](text 안 청크 위치), links: [연음 공백 위치] } */
 function parseChunks(src) {
@@ -4399,200 +4438,414 @@ function parseChunks(src) {
   });
   return { text, parts, links };
 }
-/* 한 줄의 연습 정보. chunks가 없거나 원문과 안 맞으면 문장 전체를 청크 하나로(연습 데이터 없음) */
-function pcData(ci, li) {
-  const line = CARDS[ci].dialogue[li];
-  const en = line.en || "";
-  const sc = getScript(en);
-  const pc = line.chunks ? parseChunks(line.chunks) : null;
-  const has = !!pc && pc.text === en;
-  const parts = has ? pc.parts : [{ s: 0, e: en.length }];
-  const solo = has && Array.isArray(line.soloChunks) && parts.length > 1 ? line.soloChunks : [];
+/* 괄호 속 한국어 뜻을 뺀 글(연습 화면에 보이는 글·chunks와 비교하는 기준) */
+const stripGloss = t => String(t || "").replace(GLOSS_RE, "");
+
+/* 썰 → 연습 문장들 [{ text: 화면 글, data: sentences[i] 또는 null, a0, a1: 썰 음성 안 단어 번호 }]
+   sentences가 썰 영어와 맞으면 그대로, 없거나 안 맞으면 문장 부호로 나눔(연습 데이터 없음 — 문장 전체로 연습) */
+const STORY_SENTS = new WeakMap();
+function storySents(story) {
+  if (STORY_SENTS.has(story)) return STORY_SENTS.get(story);
+  const G = stripGloss(story.en), gsc = getScript(G);
+  let list = null;
+  if (Array.isArray(story.sentences) && story.sentences.length) {
+    const texts = story.sentences.map(s => (s && typeof s.chunks === "string" ? parseChunks(s.chunks).text : ""));
+    if (texts.join(" ") === G) list = texts.map((text, i) => ({ text, data: story.sentences[i] }));
+  }
+  if (!list) list = G.split(/(?<=[.!?]["”]?)\s+(?=[A-Z“"])/).filter(t => t.trim()).map(text => ({ text, data: null }));
+  let pos = 0;
+  list.forEach(s => {
+    const at = G.indexOf(s.text, pos), st = at < 0 ? pos : at;
+    pos = st + s.text.length;
+    s.a0 = -1; s.a1 = -1;
+    for (let i = st; i < pos; i++) { const w = gsc.wAt[i]; if (w >= 0) { if (s.a0 < 0) s.a0 = w; s.a1 = w; } }
+  });
+  const out = list.filter(s => s.a0 >= 0);
+  STORY_SENTS.set(story, out);
+  return out;
+}
+/* 음성 글에서 a0~a1 단어 구간 안의 괄호 속 한국어 뜻 → [{ en: 바로 앞 단어, ko: 뜻 }] */
+function glossesIn(text, a0, a1) {
+  const sc = getScript(text), out = [];
+  const re = new RegExp(GLOSS_RE.source, "g");
+  let m;
+  while ((m = re.exec(text))) {
+    let j = m.index - 1;
+    while (j >= 0 && /\s/.test(text[j])) j--;
+    const k = j >= 0 ? sc.wAt[j] : -1;
+    if (k < a0 || k > a1) continue;
+    const w = sc.words[k];
+    const en = w.pieces.map(p => text.slice(p[0], p[1])).join("").replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, "");
+    out.push({ en, ko: m[0].trim().replace(/^\(|\)$/g, "") });
+  }
+  return out;
+}
+
+/* ---- 재생 목록 → { items: [문장], blocks: [카드 또는 표현], exprScope }
+   문장 { kind: dlg|ex|story, ci, block, n, total, who, key, line(dlg) | ex·xid + x(ex) / si(story) } */
+function buildPractice(o, curCi) {
+  const items = [], blocks = [];
+  const exprScope = o.scope === "learning" || o.scope === "due";
+  const addBlock = (b, fill) => {                     // 문장이 하나라도 있을 때만 블록으로
+    const start = items.length;
+    fill(blocks.length);
+    if (items.length > start) blocks.push(Object.assign(b, { start }));
+  };
+  const exprItems = (bi, it, withEx, withStory) => {
+    const ex = it.ex, base = { block: bi, ci: it.ci, xid: it.id, ex };
+    if (withEx) (ex.examples || []).forEach((x, n, arr) => { if (x && x.en) items.push(Object.assign({ kind: "ex", x, n: n + 1, total: arr.length, who: "them" }, base)); });
+    if (withStory && ex.story && ex.story.en) storySents(ex.story).forEach((s, n, arr) => items.push(Object.assign({ kind: "story", si: n, n: n + 1, total: arr.length, who: "me" }, base)));
+  };
+  if (exprScope) {
+    driveExprs(o).forEach(it => addBlock({ kind: "expr", ci: it.ci, xid: it.id, key: "x" + it.id }, bi => exprItems(bi, it, true, true)));
+  } else {
+    CARDS.forEach((card, ci) => {
+      if (o.scope === "current" && ci !== curCi) return;
+      if (o.scope === "cat" && !o.cats.includes(card.category)) return;
+      addBlock({ kind: "card", ci, cid: card.id, key: "c" + card.id }, bi => {
+        const d = card.dialogue || [];
+        d.forEach((line, n) => { if (line.en) items.push({ kind: "dlg", line, who: whoOf(line), name: whoLabel(line.who), block: bi, ci, n: n + 1, total: d.length }); });
+        if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(bi, it, true, o.content === "story"));
+      });
+    });
+  }
+  items.forEach(it => { it.key = blocks[it.block].key + "/" + it.kind + "/" + (it.xid || "") + "/" + it.n; });
+  return { items, blocks, exprScope };
+}
+
+/* 문장 하나의 연습 정보 { it, audio(음성 글), display(화면 글), asc·dsc(각 글의 getScript), a0, a1, has(연습 데이터 있음),
+   chunks: [{ s, e(화면 글 위치), d0, d1(화면 단어 번호), solo }], links, tips, ko, glosses, who } */
+function pcUnit(it) {
+  let audio, display, data, a0 = 0, a1 = null, ko = "";
+  if (it.kind === "dlg") { audio = it.line.en; display = stripGloss(audio); data = it.line; ko = it.line.ko; }
+  else if (it.kind === "ex") { audio = it.x.en; display = stripGloss(audio); data = it.x; ko = it.x.ko; }
+  else {
+    const s = storySents(it.ex.story)[it.si];
+    audio = it.ex.story.en; display = s.text; data = s.data; a0 = s.a0; a1 = s.a1; ko = data ? data.ko : "";
+  }
+  const asc = getScript(audio), dsc = getScript(display);
+  if (a1 == null) a1 = asc.words.length - 1;
+  const pc = data && typeof data.chunks === "string" ? parseChunks(data.chunks) : null;
+  const has = !!pc && pc.text === display;
+  const parts = has ? pc.parts : [{ s: 0, e: display.length }];
+  const solo = has && Array.isArray(data.soloChunks) && parts.length > 1 ? data.soloChunks : [];
   const chunks = [];
   parts.forEach((p, n) => {
-    let k0 = -1, k1 = -1;
-    for (let i = p.s; i < p.e; i++) if (sc.wAt[i] >= 0) { if (k0 < 0) k0 = sc.wAt[i]; k1 = sc.wAt[i]; }
-    if (k0 >= 0) chunks.push({ s: p.s, e: p.e, k0, k1, solo: solo.includes(n + 1) });
+    let d0 = -1, d1 = -1;
+    for (let i = p.s; i < p.e; i++) if (dsc.wAt[i] >= 0) { if (d0 < 0) d0 = dsc.wAt[i]; d1 = dsc.wAt[i]; }
+    if (d0 >= 0) chunks.push({ s: p.s, e: p.e, d0, d1, solo: solo.includes(n + 1) });
   });
-  return { line, sc, has, chunks, links: has ? pc.links : [], tips: has && Array.isArray(line.tips) ? line.tips : [] };
+  return { it, audio, display, asc, dsc, a0, a1, has, chunks, links: has ? pc.links : [],
+    tips: has && Array.isArray(data.tips) ? data.tips : [], ko: ko || "", glosses: glossesIn(audio, a0, a1), who: it.who };
 }
-const pcSteps = d => (d.chunks.length > 1 ? d.chunks.length + 1 : 1);   // 청크 n개 + 연결 단계 1개 (청크 하나면 연결 단계만)
-const pcIsLink = () => PC.step === pcSteps(PC.d) - 1;
+/* 단계 수: 청크 n개 + 연결 단계 1개. 청크가 하나뿐이거나 '전체 문장만'이면 연결 단계만 */
+const pcSteps = u => (PC.opts.method === "chunk" && u.chunks.length > 1 ? u.chunks.length + 1 : 1);
+const pcIsLink = () => !!PC.u && PC.step === pcSteps(PC.u) - 1;
 
 /* 문장: 인터랙티브 스크립트(scriptHtml)로 그리고, 청크마다 .ck로 감싸 사이에 슬래시, 연음 자리는 .lk */
-function pcSentenceHtml(d) {
-  const last = d.chunks.length - 1;
-  const ranges = d.chunks.map((c, n) => ({
+function pcSentenceHtml(u) {
+  const last = u.chunks.length - 1;
+  const ranges = u.chunks.map((c, n) => ({
     s: c.s, e: c.e, open: '<span class="ck" data-ck="' + n + '">',
     close: '</span>' + (n < last ? '<span class="ck-sep" aria-hidden="true">/</span>' : "")
   }));
-  return scriptHtml(d.line.en, ranges, { links: new Set(d.links) });
+  return scriptHtml(u.display, ranges, { links: new Set(u.links) });
 }
 
+/* 재생기: 지금 문장의 항목 = [청크 1…n, 문장 전체] (청크 단계가 없으면 [문장 전체]). 단계 번호 = 항목 번호 */
 PC.rd = createReader({
   items: () => {
-    const d = PC.d, el = PC.ui && PC.ui.en.querySelector(".sc");
-    if (!d || !el) return [];
-    const who = whoOf(d.line);
-    const chunks = d.chunks.length > 1 ? d.chunks.map(c => (c.solo ?
-      { el, who, script: getScript(d.line.en.slice(c.s, c.e)), offset: c.k0 } :
-      { el, who, from: c.k0, to: c.k1 })) : [];
-    return chunks.concat([{ el, who }]);
+    const u = PC.u, el = PC.ui && PC.ui.en.querySelector(".sc");
+    if (!u || !el) return [];
+    const base = { el, who: u.who, script: u.asc };
+    const whole = u.a0 === 0 && u.a1 === u.asc.words.length - 1;        // 음성 전체가 이 문장(대사·예문) → 원래 mp3 그대로
+    const link = whole ? base : Object.assign({ from: u.a0, to: u.a1, offset: -u.a0 }, base);
+    if (pcSteps(u) === 1) return [link];
+    return u.chunks.map(c => (c.solo ?
+      { el, who: u.who, script: getScript(u.display.slice(c.s, c.e)), offset: c.d0 } :
+      Object.assign({}, base, { from: u.a0 + c.d0, to: u.a0 + c.d1, offset: -u.a0 }))).concat([link]);
   },
-  rate: () => settings.drillRate,
+  rate: () => PC.opts.rate,
   onEnd: () => pcPaint(),
   onChange: () => pcPaint()
 });
 Player.onChange(() => { if (PC.open) pcPaint(); });
 
-function pcHtml() {
+/* 지금 위치 [위 줄, 아래 줄] 예) "카페에서 주문하기 · 1/2" / "대화 2/6", "Can I get ~? · 예문 3/5", "Can I get ~? · 썰 · 문장 2/4" */
+function pcLabels(k) {
+  const pl = PC.pl, it = pl.items[k], card = CARDS[it.ci], B = pl.blocks.length, pos = (it.block + 1) + "/" + B;
+  const ph = it.ex ? it.ex.phrase : "";
+  return [
+    pl.exprScope ? "표현 " + pos + " · " + card.title : card.title + (B > 1 ? " · " + pos : ""),
+    it.kind === "dlg" ? "대화 " + it.n + "/" + it.total :
+      it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total : ph + " · 썰 · 문장 " + it.n + "/" + it.total
+  ];
+}
+
+/* ---- 위치 기억 ---- */
+function pcSavePos() {
+  const pl = PC.pl, it = pl && pl.items[PC.idx];
+  if (!it || PC.done) return;
+  PC.pos = {
+    scope: PC.opts.scope, cats: catsKey(PC.opts.cats), cid: PC.opts.scope === "current" ? CARDS[PC.curCi].id : null,
+    key: it.key, step: PC.step, block: pl.blocks[it.block].key, bcid: CARDS[it.ci].id, bi: it.block, label: pcLabels(PC.idx).join(" · ")
+  };
+  savePractice();
+}
+/* 저장된 위치 → 이 재생 목록의 문장 번호. 같은 문장 → 그 카드(표현)의 처음 → 가장 가까운 카드의 처음. 이어 할 수 없으면 -1 */
+function pcResumeIdx(pl) {
+  const p = PC.pos;
+  if (!p || !pl.items.length || p.scope !== PC.opts.scope) return -1;
+  if (p.scope === "cat" && p.cats !== catsKey(PC.opts.cats)) return -1;
+  if (p.scope === "current" && p.cid !== CARDS[PC.curCi].id) return -1;
+  const k = pl.items.findIndex(it => it.key === p.key);
+  if (k >= 0) return k;
+  const b = pl.blocks.find(bl => bl.key === p.block);
+  if (b) return b.start;
+  if (!pl.exprScope && p.bcid != null) return (pl.blocks.find(bl => bl.cid > p.bcid) || pl.blocks[pl.blocks.length - 1]).start;
+  return pl.blocks[Math.max(0, Math.min(p.bi || 0, pl.blocks.length - 1))].start;
+}
+
+/* ---- 시작 화면 (드라이브 모드 시작 화면과 같은 틀·CSS) ---- */
+function pcSetupHtml() {
+  const o = PC.opts, pl = buildPractice(o, PC.curCi), exprScope = pl.exprScope;
+  const nLearn = EXPR_LIST.filter(it => statusOf(it.id) === "learning").length;
+  const nDue = dueList().length;
+  const cats = (window.CATEGORY_DATA || []).map(c => c.name).filter(n => CARDS.some(c => c.category === n));
+  const opt = (v, sub, wide) => '<button class="dv-opt' + (wide ? " wide" : "") + '" type="button" data-pc-scope="' + v + '" aria-pressed="' + (o.scope === v) + '"><b>' + PC_SCOPES[v] + '</b><small>' + esc(sub) + '</small></button>';
+  const seg = (name, list) => '<div class="seg" data-pc-set="' + name + '">' +
+    list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
+  const contentNote = { dialogue: "대화문만 연습해요.", examples: "대화 → 핵심 표현마다 예문 5개", story: "대화 → 핵심 표현마다 예문 5개 → 썰" };
+  const resumeK = pcResumeIdx(pl);
+  let words = 0, noData = 0;
+  pl.items.forEach(it => {
+    const u = pcUnit(it);
+    words += u.a1 - u.a0 + 1;
+    if (!u.has) noData++;
+  });
+  const per = o.method === "chunk" ? 4 : 2;                                   // 듣기 + 따라 말하기(청크 단계면 한 번 더)
+  const mins = Math.max(1, Math.round((words * 0.4 * per / o.rate + pl.items.length * 2) / 60));
+  const empty = o.scope === "cat" && !o.cats.length ? "카테고리를 하나 이상 골라 주세요" :
+    o.scope === "learning" ? "학습 중인 표현이 없어요 · 표현 탭에서 '학습하기'를 시작해 보세요" :
+    o.scope === "due" ? "오늘 복습할 표현이 없어요" : "연습할 문장이 없어요";
+  const unit = exprScope ? "표현 " + pl.blocks.length + "개" : "카드 " + pl.blocks.length + "장";
+  return '<header class="dv-head">' +
+      '<button class="dv-x" type="button" data-pc="close" aria-label="닫기">' + ICON_X + '</button>' +
+      '<h2 class="dv-title">연습 모드</h2>' +
+    '</header>' +
+    '<div class="dv-sbody">' +
+      '<p class="dv-lead">한 문장씩 청크(끊어 읽는 덩어리)·연음·발음을 듣고 소리 내어 따라 말해요.</p>' +
+      '<div class="set-group"><span class="set-label">범위</span><div class="dv-scope">' +
+        opt("current", CARDS[PC.curCi].title, true) +
+        opt("all", "카드 " + CARDS.length + "장") +
+        opt("cat", o.scope === "cat" && o.cats.length ? o.cats.length + "개 고름" : "골라서 연습") +
+        opt("learning", nLearn + "개") +
+        opt("due", nDue + "개") +
+      '</div>' +
+      (o.scope === "cat" ? '<div class="dv-cats">' + cats.map(n =>
+        '<button class="dv-cat" type="button" data-pc-cat="' + esc(n) + '" aria-pressed="' + o.cats.includes(n) + '">' +
+          (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
+      '</div>' +
+      '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
+        seg("content", [["dialogue", "대화문만"], ["examples", "예문까지"], ["story", "썰까지"]]) +
+        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 예문 5개 → 썰 순서로 연습해요." : contentNote[o.content]) + '</p>' +
+      '</div>' +
+      '<div class="set-group"><span class="set-label">연습 방식</span>' +
+        seg("method", [["chunk", "청크 단계 포함"], ["whole", "전체 문장만"]]) +
+        '<p class="note">' + (o.method === "chunk" ?
+          "청크를 하나씩 듣고 따라 말한 다음, 문장 전체를 한 번에 이어서 말해요." :
+          "청크 단계 없이 문장 전체를 듣고 한 번에 따라 말해요.") + '</p>' +
+      '</div>' +
+      '<div class="set-group"><span class="set-label">속도</span>' + seg("rate", [["0.8", "0.8x"], ["1", "1.0x"]]) + '</div>' +
+    '</div>' +
+    '<footer class="dv-sfoot">' +
+      '<div class="dv-sum">' + (pl.items.length ? unit + " · 문장 " + pl.items.length + "개 · 약 " + mins + "분" +
+        (noData ? "<br>청크·발음 팁이 아직 없는 " + noData + "문장은 문장 전체로 연습해요" : "") : esc(empty)) + '</div>' +
+      '<div class="dv-go">' + (resumeK >= 0 ?
+        '<button class="btn" type="button" data-pc="restart">처음부터</button>' +
+        '<button class="btn main" type="button" data-pc="resume"><span>이어 하기</span><small>' + esc(PC.pos.label || "") + '</small></button>' :
+        '<button class="btn main" type="button" data-pc="start"' + (pl.items.length ? "" : " disabled") + '><span>시작</span></button>') +
+      '</div>' +
+    '</footer>';
+}
+function pcRenderSetup() {
+  const body = pcSetupEl.querySelector(".dv-sbody");
+  const y = body ? body.scrollTop : 0;
+  pcSetupEl.innerHTML = pcSetupHtml();
+  pcSetupEl.querySelector(".dv-sbody").scrollTop = y;
+}
+
+/* ---- 연습 화면 ---- */
+function pcPlayHtml() {
   return '<header class="dv-ptop">' +
       '<button class="dv-x" type="button" data-pc="close" aria-label="연습 모드 나가기">' + ICON_X + '</button>' +
-      '<div class="dv-loc"><div class="dv-loc1"></div><div class="dv-loc2"></div></div>' +
-      '<div class="pc-cardnav">' +
-        '<button class="pc-cb" type="button" data-pc="pcard" aria-label="이전 카드">' + ICON_BACK + '</button>' +
-        '<span class="pc-cb-l" aria-hidden="true">카드</span>' +
-        '<button class="pc-cb" type="button" data-pc="ncard" aria-label="다음 카드">' + ICON_ARROW + '</button>' +
-      '</div>' +
+      '<div class="dv-loc"><div class="dv-loc1"></div><div class="dv-loc2 pc-loc2"><span class="lab"></span><span class="stp"></span></div></div>' +
     '</header>' +
     '<div class="pc-scroll"><div class="pc-inner"><div class="pc-line">' +
       '<div class="pc-steps" aria-hidden="true"></div>' +
       '<div class="pc-who"></div>' +
       '<div class="pc-en" lang="en"></div>' +
+      '<div class="pc-gloss"></div>' +
       '<div class="pc-ko"></div>' +
       '<div class="pc-tips"></div>' +
     '</div></div></div>' +
     '<div class="pc-note" aria-live="polite"></div>' +
     '<div class="pc-bottom"><div class="actions"></div></div>';
 }
-
-/* 지금 문장을 다시 그림(문장·카드가 바뀔 때) */
-function pcRenderLine() {
-  const U = PC.ui, d = PC.d = pcData(PC.ci, PC.li);
+/* 지금 문장을 그림(문장이 바뀔 때) */
+function pcRenderUnit() {
+  const U = PC.ui, u = PC.u, it = u.it;
   const line = U.line.cloneNode(false);              // 새 문장이 들어오는 애니메이션을 다시 보이게
   U.line.replaceWith(line);
   U.line = line;
-  line.append(U.steps, U.who, U.en, U.ko, U.tips);
-  U.who.textContent = whoLabel(d.line.who);
-  U.who.classList.toggle("me", d.line.who === "me");
-  U.en.innerHTML = pcSentenceHtml(d);
-  U.en.classList.toggle("long", (d.line.en || "").length > 60);
-  U.ko.textContent = d.line.ko || "";
-  U.tips.innerHTML = d.tips.length ? '<div class="pc-tips-h">발음 팁</div>' +
-    d.tips.map(t => '<div class="pc-tip"><b lang="en">' + esc(t.target || "") + '</b>' + esc(t.ko || "") + '</div>').join("") : "";
-  const n = d.chunks.length;
-  U.steps.hidden = n < 2;
-  U.steps.innerHTML = n < 2 ? "" : d.chunks.map((c, i) => '<button class="pc-st" type="button" data-pc-step="' + i + '" tabindex="-1">' + (i + 1) + '</button>').join("") +
+  line.append(U.steps, U.who, U.en, U.gloss, U.ko, U.tips);
+  practiceEl.style.setProperty("--h", hueOf(CARDS[it.ci].category));
+  U.who.textContent = it.kind === "dlg" ? it.name : it.kind === "ex" ? "예문 " + it.n : "썰";
+  U.who.classList.toggle("me", it.who === "me");
+  U.en.innerHTML = pcSentenceHtml(u);
+  U.en.classList.toggle("long", u.display.length > 60);
+  U.gloss.innerHTML = u.glosses.map(g => '<span><b lang="en">' + esc(g.en) + '</b> ' + esc(g.ko) + '</span>').join("");
+  U.ko.textContent = u.ko;
+  U.tips.innerHTML = u.tips.length ? '<div class="pc-tips-h">발음 팁</div>' +
+    u.tips.map(t => '<div class="pc-tip"><b lang="en">' + esc(t.target || "") + '</b>' + esc(t.ko || "") + '</div>').join("") : "";
+  const n = u.chunks.length, steps = pcSteps(u);
+  U.steps.hidden = steps < 2;
+  U.steps.innerHTML = steps < 2 ? "" : u.chunks.map((c, i) => '<button class="pc-st" type="button" data-pc-step="' + i + '" tabindex="-1">' + (i + 1) + '</button>').join("") +
     '<button class="pc-st" type="button" data-pc-step="' + n + '" tabindex="-1">이어서</button>';
   U.scroll.scrollTop = 0;
 }
-
 /* 위치·강조·안내·버튼 (재생 상태가 바뀔 때마다) */
 function pcPaint() {
-  const U = PC.ui, d = PC.d;
-  if (!PC.open || !U || !d) return;
-  const card = CARDS[PC.ci], lines = (card.dialogue || []).length, n = d.chunks.length;
-  const link = pcIsLink(), s = PC.rd.state(), playing = s.active && !s.paused;
-  U.loc1.textContent = card.title + " · " + (PC.ci + 1) + "/" + CARDS.length;
-  U.loc2.textContent = "문장 " + (PC.li + 1) + "/" + lines + " · " + (link ? (n > 1 ? "이어서 말하기" : "한 번에 말하기") : "청크 " + (PC.step + 1) + "/" + n);
-  U.en.classList.toggle("chunking", !link);
-  U.en.querySelectorAll(".ck").forEach(c => c.classList.toggle("on", !link && +c.dataset.ck === PC.step));
+  const U = PC.ui, u = PC.u;
+  if (!PC.open || PC.screen !== "play" || !U || !u) return;
+  const steps = pcSteps(u), chunkMode = steps > 1, link = PC.step === steps - 1, n = u.chunks.length;
+  const s = PC.rd.state(), playing = s.active && !s.paused;
+  const L = pcLabels(PC.idx);
+  U.loc1.textContent = L[0];
+  U.lab.textContent = L[1];
+  U.stp.textContent = !chunkMode ? "" : link ? "· 이어서 말하기" : "· 청크 " + (PC.step + 1) + "/" + n;
+  U.en.classList.toggle("chunking", chunkMode && !link);
+  U.en.querySelectorAll(".ck").forEach(c => c.classList.toggle("on", chunkMode && !link && +c.dataset.ck === PC.step));
   U.steps.querySelectorAll(".pc-st").forEach(b => {
     const i = +b.dataset.pcStep;
-    b.classList.toggle("now", PC.started && i === PC.step);
-    b.classList.toggle("done", PC.started && i < PC.step);
+    b.classList.toggle("now", i === PC.step);
+    b.classList.toggle("done", i < PC.step);
   });
-  const note = !PC.started ? (d.has ? "청크마다 듣고 따라 말한 다음, 문장 전체를 한 번에 이어서 말해 봐요." : "이 카드는 아직 청크·발음 팁이 없어요. 문장 전체로 연습해요.") :
+  U.note.textContent = PC.done ? "끝까지 다 했어요! 수고했어요" :
     playing ? "듣는 중…" : s.active ? "멈췄어요 · '한 번 더 듣기'로 다시 들어요" :
-    !link ? "따라 말해 보세요" : n > 1 ? "이제 한 번에 이어서 말해 보세요" : "들은 대로 따라 말해 보세요";
-  U.note.textContent = note;
-  U.note.classList.toggle("go", PC.started && !s.active);
-  const atEnd = link && PC.li >= lines - 1;
-  const main = !PC.started ? ICON_PLAY + "<span>시작</span>" :
-    !atEnd ? NEXT_HTML : PC.ci < CARDS.length - 1 ? "<span>다음 카드</span>" + ICON_ARROW : ICON_RESTART + "<span>처음부터</span>";
-  const r = settings.drillRate === 1 ? "1.0" : String(settings.drillRate);
+    !link ? "따라 말해 보세요" : chunkMode ? "이제 한 번에 이어서 말해 보세요" : "들은 대로 따라 말해 보세요";
+  U.note.classList.toggle("go", !s.active);
+  const last = PC.idx >= PC.pl.items.length - 1 && link;
+  const main = PC.done ? ICON_RESTART + "<span>처음부터</span>" : last ? "<span>마치기</span>" : NEXT_HTML;
+  const r = PC.opts.rate === 1 ? "1.0" : String(PC.opts.rate);
   const b = (act, html, cls, dis, label) => '<button class="btn ' + cls + '" type="button" data-pc="' + act + '"' +
     (label ? ' aria-label="' + label + '"' : "") + (dis ? " disabled" : "") + '>' + html + '</button>';
-  const html = b("prev", "이전", "prev", !PC.started || (PC.li === 0 && PC.step === 0)) +
-    b("again", "한 번 더 듣기", "again", !PC.started) +
+  const html = b("prev", "이전", "prev", PC.idx === 0 && PC.step === 0) +
+    b("again", "한 번 더 듣기", "again") +
     b("rate", r + "x", "rate", false, "재생 속도 " + r + "배, 누르면 바뀜") +
     b("next", main, "main");
   if (U.actions._h !== html) { U.actions.innerHTML = html; U.actions._h = html; }   // 그대로면 다시 그리지 않음(누르는 중인 버튼이 바뀌지 않게)
-  U.prevCard.disabled = PC.ci <= 0;
-  U.nextCard.disabled = PC.ci >= CARDS.length - 1;
 }
 
-/* 단계로 가서 바로 재생: 문장 li의 step(0~청크 n-1 = 청크, 마지막 = 문장 전체) */
-function pcGo(li, step) {
-  if (li !== PC.li) { PC.li = li; pcRenderLine(); }
-  PC.step = Math.max(0, Math.min(step, pcSteps(PC.d) - 1));
-  PC.started = true;
+/* ---- 조작 ---- */
+/* 문장 k의 단계 step으로 가서 바로 재생(0~청크 n-1 = 청크, 마지막 = 문장 전체) */
+function pcGo(k, step) {
+  const pl = PC.pl;
+  if (!pl || !pl.items[k]) return;
+  if (k !== PC.idx || !PC.u) { PC.idx = k; PC.u = pcUnit(pl.items[k]); pcRenderUnit(); }
+  PC.step = Math.max(0, Math.min(step || 0, pcSteps(PC.u) - 1));
+  PC.done = false;
+  pcSavePos();
   pcPaint();
   PC.rd.play(PC.step, 0, true);
 }
-/* 카드 바꾸기: 그 카드의 첫 문장. play면 바로 첫 단계 재생(마지막 문장 뒤 [다음 카드]), 아니면 [시작]을 누를 때까지 기다림(위쪽 카드 이동) */
-function pcSetCard(ci, play) {
-  Player.stop();
-  PC.ci = Math.max(0, Math.min(ci, CARDS.length - 1));
-  PC.li = 0;
-  PC.step = 0;
-  PC.started = false;
-  practiceEl.style.setProperty("--h", hueOf(CARDS[PC.ci].category));
-  pcRenderLine();
-  pcPaint();
-  if (play) pcGo(0, 0);
-}
 function pcNext() {
-  if (!PC.started) { pcGo(PC.li, 0); return; }
-  const lines = CARDS[PC.ci].dialogue.length;
-  if (!pcIsLink()) pcGo(PC.li, PC.step + 1);
-  else if (PC.li < lines - 1) pcGo(PC.li + 1, 0);
-  else pcSetCard(PC.ci < CARDS.length - 1 ? PC.ci + 1 : PC.ci, true);   // 마지막 카드 끝이면 이 카드 처음부터
+  if (PC.done) { pcGo(0, 0); return; }
+  if (!pcIsLink()) pcGo(PC.idx, PC.step + 1);
+  else if (PC.idx < PC.pl.items.length - 1) pcGo(PC.idx + 1, 0);
+  else {                                              // 마지막 문장까지 다 함 → 다음엔 처음부터
+    PC.rd.stop();
+    PC.done = true;
+    PC.pos = null;
+    savePractice();
+    pcPaint();
+  }
 }
-/* 이전: 앞 청크 → (첫 청크면) 앞 문장의 연결 단계 */
+/* 이전: 앞 청크 → (첫 단계면) 앞 문장의 연결 단계 */
 function pcPrev() {
-  if (!PC.started) return;
-  if (PC.step > 0) pcGo(PC.li, PC.step - 1);
-  else if (PC.li > 0) pcGo(PC.li - 1, pcSteps(pcData(PC.ci, PC.li - 1)) - 1);
+  if (PC.step > 0 && !PC.done) pcGo(PC.idx, PC.step - 1);
+  else if (PC.done) pcGo(PC.idx, pcSteps(PC.u) - 1);
+  else if (PC.idx > 0) pcGo(PC.idx - 1, pcSteps(pcUnit(PC.pl.items[PC.idx - 1])) - 1);
 }
-/* 단어 탭: 청크 단계(시작 전 포함)면 그 단어가 있는 청크로 가서 재생, 연결 단계면 그 단어부터 문장 끝까지 */
+/* 단어 탭: 청크 단계면 그 단어가 있는 청크로 가서 재생, 연결 단계면 그 단어부터 문장 끝까지 */
 function pcTapWord(k) {
-  const d = PC.d;
-  if (PC.started && pcIsLink()) { PC.rd.seek(PC.step, k); return; }
-  const c = d.chunks.findIndex(x => k >= x.k0 && k <= x.k1);
-  pcGo(PC.li, d.chunks.length > 1 && c >= 0 ? c : 0);
+  const u = PC.u;
+  if (!u) return;
+  if (pcIsLink() && !PC.done) { PC.rd.seek(PC.step, k); return; }
+  const c = u.chunks.findIndex(x => k >= x.d0 && k <= x.d1);
+  pcGo(PC.idx, pcSteps(u) > 1 && c >= 0 ? c : 0);
 }
 
+/* ---- 열기 · 화면 바꾸기 · 닫기 ---- */
 function openPractice() {
   if (PC.open) return;
   Player.stop();
   buzz();
   PC.open = true;
-  practiceEl.innerHTML = pcHtml();
-  const q = s => practiceEl.querySelector(s);
-  PC.ui = { loc1: q(".dv-loc1"), loc2: q(".dv-loc2"), scroll: q(".pc-scroll"), line: q(".pc-line"), steps: q(".pc-steps"),
-    who: q(".pc-who"), en: q(".pc-en"), ko: q(".pc-ko"), tips: q(".pc-tips"), note: q(".pc-note"), actions: q(".pc-bottom .actions"),
-    prevCard: q('[data-pc="pcard"]'), nextCard: q('[data-pc="ncard"]') };
+  PC.curCi = activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : CARDS.length - 1;   // '끝' 화면이면 마지막 카드
+  pcScreen("setup");
   practiceEl.hidden = false;
   document.querySelector(".app").inert = true;
   document.body.classList.add("practicing");
-  pcSetCard(activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : 0, false);   // 지금 보던 카드부터(마지막 '끝' 화면이면 첫 카드)
   PC.openId = Date.now();
   try { history.pushState({ practice: PC.openId }, ""); } catch (e) {}
 }
-/* 닫으면 소리 멈춤 → 연습하던 카드가 상황 탭에 보이게 */
+function pcScreen(name) {
+  PC.screen = name;
+  pcSetupEl.hidden = name !== "setup";
+  pcPlayEl.hidden = name !== "play";
+  if (name === "setup") {
+    PC.rd.stop();
+    PC.ui = null;
+    PC.u = null;
+    pcPlayEl.innerHTML = "";
+    pcRenderSetup();
+  } else {
+    pcPlayEl.innerHTML = pcPlayHtml();
+    const q = s => pcPlayEl.querySelector(s);
+    PC.ui = { loc1: q(".dv-loc1"), lab: q(".pc-loc2 .lab"), stp: q(".pc-loc2 .stp"), scroll: q(".pc-scroll"), line: q(".pc-line"),
+      steps: q(".pc-steps"), who: q(".pc-who"), en: q(".pc-en"), gloss: q(".pc-gloss"), ko: q(".pc-ko"), tips: q(".pc-tips"),
+      note: q(".pc-note"), actions: q(".pc-bottom .actions") };
+  }
+}
+function pcStart(resume) {
+  PC.pl = buildPractice(PC.opts, PC.curCi);
+  if (!PC.pl.items.length) return;
+  let k = 0, step = 0;
+  if (resume) {
+    k = Math.max(0, pcResumeIdx(PC.pl));
+    if (PC.pos && PC.pl.items[k].key === PC.pos.key) step = PC.pos.step || 0;
+  }
+  pcScreen("play");
+  PC.idx = -1;
+  PC.done = false;
+  pcGo(k, step);
+}
+/* 닫으면 소리 멈춤·위치 저장 → (카드 범위면) 지금 문장의 카드가 상황 탭에 보이게 */
 function pcHide() {
   if (!PC.open) return;
+  const it = PC.screen === "play" && PC.pl ? PC.pl.items[PC.idx] : null;
+  if (it) pcSavePos();
+  PC.rd.stop();
   Player.stop();
   PC.open = false;
-  PC.ui = null;
-  PC.d = null;
+  pcScreen("setup");
+  PC.pl = null;
   practiceEl.hidden = true;
-  practiceEl.innerHTML = "";
   document.querySelector(".app").inert = false;
   document.body.classList.remove("practicing");
   const cur = activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : -1;
-  if (PC.ci !== cur) jumpTo(PC.ci);
+  if (it && it.kind === "dlg" && it.ci !== cur) jumpTo(it.ci);
 }
 function closePractice() {
   let viaHistory = false;
@@ -4605,6 +4858,7 @@ window.addEventListener("popstate", () => {
   try { st = history.state; } catch (e) {}
   if (PC.open && !(st && st.practice === PC.openId)) pcHide();
 });
+window.addEventListener("pagehide", () => { if (PC.open && PC.screen === "play") pcSavePos(); });
 
 practiceEl.addEventListener("click", e => {
   const t = e.target;
@@ -4614,16 +4868,31 @@ practiceEl.addEventListener("click", e => {
     const a = el.dataset.pc;
     buzz();
     if (a === "close") closePractice();
+    else if (a === "start" || a === "restart") pcStart(false);
+    else if (a === "resume") pcStart(true);
     else if (a === "next") pcNext();
     else if (a === "prev") pcPrev();
-    else if (a === "again") { if (PC.started) pcGo(PC.li, PC.step); }
-    else if (a === "rate") { settings.drillRate = settings.drillRate === 1 ? 0.8 : 1; saveSettings(); Player.setRate(settings.drillRate); pcPaint(); }
-    else if (a === "pcard") pcSetCard(PC.ci - 1, false);
-    else if (a === "ncard") pcSetCard(PC.ci + 1, false);
+    else if (a === "again") pcGo(PC.idx, PC.step);
+    else if (a === "rate") { PC.opts.rate = PC.opts.rate === 1 ? 0.8 : 1; savePractice(); Player.setRate(PC.opts.rate); pcPaint(); }
     return;
   }
-  if ((el = t.closest("[data-pc-step]"))) { buzz(); pcGo(PC.li, +el.dataset.pcStep); return; }
-  if ((el = t.closest(".pc-en .w"))) { buzz(); pcTapWord(+el.dataset.w); }
+  if ((el = t.closest("[data-pc-step]"))) { buzz(); pcGo(PC.idx, +el.dataset.pcStep); return; }
+  if ((el = t.closest(".pc-en .w"))) { buzz(); pcTapWord(+el.dataset.w); return; }
+  /* 시작 화면 옵션: 바꿀 때마다 저장(다음에 그대로 보여 줌) */
+  const o = PC.opts;
+  if ((el = t.closest("[data-pc-scope]"))) {
+    o.scope = el.dataset.pcScope;
+    if (o.scope === "cat" && !o.cats.length) o.cats = [CARDS[PC.curCi].category];
+  } else if ((el = t.closest("[data-pc-cat]"))) {
+    const n = el.dataset.pcCat;
+    o.cats = o.cats.includes(n) ? o.cats.filter(x => x !== n) : o.cats.concat([n]);
+  } else if ((el = t.closest("[data-pc-set] button"))) {
+    const name = el.parentNode.dataset.pcSet, v = el.dataset.v;
+    o[name] = name === "rate" ? parseFloat(v) : v;
+  } else return;
+  buzz();
+  savePractice();
+  pcRenderSetup();
 });
 
 /* ================= 웹앱 설치 (GitHub Pages 같은 https 주소에서만) ================= */
@@ -4639,7 +4908,7 @@ function sceneOf(card) {
 }
 function runChecks() {
   const issues = [];
-  const stats = { cards: CARDS.length, expressions: 0, examples: 0, meTurns: 0, questions: QUESTIONS.length, lines: 0, practiceLines: 0 };
+  const stats = { cards: CARDS.length, expressions: 0, examples: 0, meTurns: 0, questions: QUESTIONS.length, pUnits: 0, pDone: 0 };   // pUnits·pDone: 연습 문장 전체·데이터 있는 것
   const ids = new Set();
   const allExprIds = new Set();
   let prevId = -Infinity;
@@ -4668,33 +4937,34 @@ function runChecks() {
       const w = String(x.en || "").split(/\s+/).filter(Boolean).length;
       if (w > limit) issues.push(tag + ": me " + w + "단어 (상한 " + limit + ") — " + x.en);
     });
-    /* 연습 모드 데이터: 모든 줄에 chunks, 슬래시·연음 표시를 빼고 이으면 원문과 정확히 같음, 팁 1~2개, soloChunks는 청크 번호 */
-    stats.lines += d.length;
-    const noChunks = d.filter(x => !x.chunks).length;
-    if (noChunks) issues.push(tag + ": 연습 데이터(chunks) 없는 줄 " + noChunks + "개");
-    d.forEach((x, li) => {
-      if (!x.chunks) return;
-      stats.practiceLines++;
-      const lt = tag + " 대사 " + (li + 1);
-      if (typeof x.chunks !== "string") { issues.push(lt + ": chunks는 글(문자열)이어야 함"); return; }
+    /* 연습 모드 데이터(대화 줄·예문·썰 문장 공통): chunks의 슬래시·연음 표시를 빼고 이으면 원문과 정확히 같음(괄호 속 한국어는 뺀 기준),
+       청크 하나 6단어까지, 팁 0~2개(target이 문장에 있음), soloChunks는 청크 번호. 없는 문장은 카드마다 개수로 */
+    const miss = { dlg: 0, ex: 0, story: 0 };
+    const unitCheck = (lt, display, x) => {
+      stats.pUnits++;
+      if (!x || !x.chunks) return false;
+      stats.pDone++;
+      if (typeof x.chunks !== "string") { issues.push(lt + ": chunks는 글(문자열)이어야 함"); return true; }
       const pc = parseChunks(x.chunks);
-      if (pc.text !== x.en) issues.push(lt + ": 슬래시·연음 표시를 빼고 이으면 원문과 다름 — \"" + pc.text + "\" / 원문 \"" + x.en + "\"");
+      if (display != null && pc.text !== display) issues.push(lt + ": 슬래시·연음 표시를 빼고 이으면 원문과 다름 — \"" + pc.text + "\" / 원문 \"" + display + "\"");
       pc.parts.forEach(p => {
         const nw = pc.text.slice(p.s, p.e).split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w)).length;   // 단어 = 글자·숫자가 있는 덩어리("…"는 안 셈, getScript와 같은 기준)
         if (!nw) issues.push(lt + ": 빈 청크 — " + x.chunks);
         else if (nw > 6) issues.push(lt + ": 청크 하나가 " + nw + "단어 (보통 2~5단어, 6단어까지) — " + x.chunks);
       });
-      const tips = Array.isArray(x.tips) ? x.tips : [];
-      if (tips.length < 1 || tips.length > 2) issues.push(lt + ": 발음 팁 " + tips.length + "개 (1~2개)");
-      tips.forEach(tp => {
+      const tips = x.tips == null ? [] : x.tips;
+      if (!Array.isArray(tips) || tips.length > 2) issues.push(lt + ": 발음 팁은 0~2개 목록");
+      else tips.forEach(tp => {
         if (!tp || !tp.target || !tp.ko) { issues.push(lt + ": 발음 팁 target/ko 누락"); return; }
-        if (String(x.en).toLowerCase().indexOf(String(tp.target).toLowerCase()) < 0) issues.push(lt + ": 발음 팁 대상 \"" + tp.target + "\"이 문장에 없음");
+        if (pc.text.toLowerCase().indexOf(String(tp.target).toLowerCase()) < 0) issues.push(lt + ": 발음 팁 대상 \"" + tp.target + "\"이 문장에 없음");
       });
       if (x.soloChunks != null && !(Array.isArray(x.soloChunks) && pc.parts.length > 1 &&
           x.soloChunks.every(k => Number.isInteger(k) && k >= 1 && k <= pc.parts.length))) {
         issues.push(lt + ": soloChunks는 청크 번호(1~" + pc.parts.length + ") 목록이어야 함");
       }
-    });
+      return true;
+    };
+    d.forEach((x, li) => { if (!unitCheck(tag + " 대사 " + (li + 1), stripGloss(x.en), x)) miss.dlg++; });
     const ex = c.expressions || [];
     if (ex.length < 2 || ex.length > 5) issues.push(tag + ": 표현 " + ex.length + "개 (2~5개)");
     if (!Array.isArray(c.extraExpressions)) issues.push(tag + ": extraExpressions 칸 없음 (비어 있어도 [] 로)");
@@ -4723,7 +4993,21 @@ function runChecks() {
       stats.examples += n;
       if (n !== 5) issues.push(tag + " " + p + ": 예문 " + n + "개 (정확히 5개)");
       (e.examples || []).forEach(x => { if (!x.en || !x.ko) issues.push(tag + " " + p + ": 예문 en/ko 누락"); });
+      (e.examples || []).forEach((x, n) => { if (x && x.en && !unitCheck(tag + " " + p + " 예문 " + (n + 1), stripGloss(x.en), x)) miss.ex++; });
       if (!e.story || !e.story.en || !e.story.ko) { issues.push(tag + " " + p + ": 썰 누락"); return; }
+      /* 썰 연습 문장(story.sentences): 이으면 썰 영어(괄호 속 한국어를 뺀 것)와 같음, 문장마다 chunks·ko */
+      const st = e.story, G = stripGloss(st.en);
+      if (!Array.isArray(st.sentences) || !st.sentences.length) { miss.story++; stats.pUnits += storySents(st).length; }
+      else {
+        const texts = st.sentences.map(s => (s && typeof s.chunks === "string" ? parseChunks(s.chunks).text : ""));
+        if (texts.join(" ") !== G) issues.push(tag + " " + p + ": 썰 sentences의 chunks를 이으면 썰 영어(괄호 속 한국어 뺀 것)와 다름 — \"" + texts.join(" ") + "\"");
+        if (getScript(st.en).words.length !== getScript(G).words.length) issues.push(tag + " " + p + ": 썰의 괄호 속 한국어 때문에 단어 수가 달라짐(괄호 앞뒤 공백 확인)");
+        st.sentences.forEach((s, n) => {
+          const lt = tag + " " + p + " 썰 문장 " + (n + 1);
+          if (!unitCheck(lt, null, s)) issues.push(lt + ": chunks 없음");
+          if (!s || !s.ko) issues.push(lt + ": ko(한글 해석) 없음");
+        });
+      }
       if (!exprFound(e, e.story.en)) issues.push(tag + " " + p + ": 썰에 표현이 없음");
       if (/[가-힣]/.test(e.story.en)) issues.push(tag + " " + p + ": 썰 영어에 한글이 섞임");
       const sents = e.story.en.split(/(?<=[.!?]["”]?)\s+(?=[A-Z“"])/).length;
@@ -4731,6 +5015,8 @@ function runChecks() {
     };
     ex.forEach((e, idx) => checkExpr(e, "core", idx));
     (c.extraExpressions || []).forEach((e, idx) => checkExpr(e, "extra", idx));
+    const missTxt = [miss.dlg ? "대사 " + miss.dlg + "줄" : "", miss.ex ? "예문 " + miss.ex + "개" : "", miss.story ? "썰 " + miss.story + "편" : ""].filter(Boolean);
+    if (missTxt.length) issues.push(tag + ": 연습 데이터 없음 — " + missTxt.join(" · "));
   });
   const qSeen = new Set();
   QUESTIONS.forEach((q, i) => {
@@ -4748,7 +5034,7 @@ if (location.hash === "#check") {
     const r = runChecks();
     const s = r.stats;
     showSheet("자동 점검", r.issues.length ? "문제 " + r.issues.length + "개" : "이상 없음",
-      '<p class="note">카드 ' + s.cards + '장 · 표현 ' + s.expressions + '개 · 예문 ' + s.examples + '개 · me 턴 ' + s.meTurns + '개 · 질문 ' + s.questions + '개 · 연습 데이터 ' + s.practiceLines + ' / ' + s.lines + '줄</p>' +
+      '<p class="note">카드 ' + s.cards + '장 · 표현 ' + s.expressions + '개 · 예문 ' + s.examples + '개 · me 턴 ' + s.meTurns + '개 · 질문 ' + s.questions + '개 · 연습 데이터 ' + s.pDone + ' / ' + s.pUnits + '문장(대사·예문·썰)</p>' +
       (r.issues.length ? '<ul class="note">' + r.issues.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : ""));
   }, 300);
 }
