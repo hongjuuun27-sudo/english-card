@@ -729,5 +729,163 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 19,
+    category: "공항·숙소",
+    title: "비행기에서 뒷좌석 발 내려 달라고 하기",
+    situation: "장거리 비행 중이에요. 뒷좌석 승객이 다리를 뻗어서 발이 내 팔걸이 위에 올라와 있어요. 기분 상하지 않게 내려 달라고 하고 싶어요.",
+    hooks: [
+      { ko: "뒷사람 발이 내 팔걸이에 올라와 있을 때, 공손하게 뭐라고 하지?", line: 3 },
+      { ko: "모르는 사람에게 말을 걸 때, '귀찮게 해서 죄송해요'는 뭐라고 하지?", line: 1 },
+      { ko: "상대가 사과할 때, '괜찮아요, 고마워요'는 뭐라고 하지?", line: 5 }
+    ],
+    dialogue: [
+      { who: "me", en: "Excuse me, sorry to bother you.", ko: "저기요, 귀찮게 해서 죄송해요.",
+        chunks: "Excuse me, / sorry to bother you.",
+        tips: [{ target: "bother", ko: "th는 혀를 살짝 물고, '바더r'처럼 부드럽게." }] },
+      { who: "passenger", en: "Hm? Oh, hey. What's up?", ko: "네? 아, 네. 무슨 일이세요?",
+        chunks: "Hm? Oh, hey. What's‿up?",
+        tips: [{ target: "What's up", ko: "s가 up에 붙어 '왓썹'처럼 이어져요." }] },
+      { who: "me", en: "Would you mind moving your feet off my armrest?", ko: "제 팔걸이에서 발 좀 치워 주시겠어요?",
+        chunks: "Would‿you mind moving / your feet‿off my armrest?",
+        tips: [{ target: "Would you", ko: "d와 y가 만나 '우쥬'처럼 붙어요." },
+               { target: "armrest", ko: "첫음절 arm에 힘, '아r름레스트'처럼." }] },
+      { who: "passenger", en: "Oh, my gosh, I'm so sorry! I didn't even notice.", ko: "어머, 정말 죄송해요! 전혀 몰랐어요.",
+        chunks: "Oh, my gosh, / I'm so sorry! / I didn't even notice.",
+        tips: [{ target: "didn't even", ko: "didn't의 t는 거의 안 들리고 '디든 이븐'처럼." }] },
+      { who: "me", en: "No worries. I appreciate it.", ko: "괜찮아요. 고마워요.",
+        chunks: "No worries. / I appreciate‿it.",
+        tips: [{ target: "appreciate it", ko: "t가 굴러 '어프리시에이릿'처럼 이어져요." }] },
+      { who: "passenger", en: "Thanks for being so nice about it.", ko: "좋게 말해 주셔서 고마워요.",
+        chunks: "Thanks for being / so nice‿about‿it.",
+        tips: [{ target: "about it", ko: "t가 굴러 '어바우릿'처럼 이어져요." }] }
+    ],
+    expressions: [
+      {
+        id: "c19-e1",
+        phrase: "Sorry to bother you.",
+        ko: "'귀찮게 해서 죄송해요'라는 뜻이에요. 모르는 사람이나 바쁜 사람에게 말을 걸기 전에 붙이면 훨씬 공손해져요. 뒤에 but을 붙여 부탁을 이어 말해도 돼요. 비슷한 표현: Sorry to interrupt. / Excuse me, do you have a sec?",
+        examples: [
+          { en: "Sorry to bother you, but could you take our picture?", ko: "귀찮게 해서 죄송한데, 사진 좀 찍어 주실 수 있어요?",
+            chunks: "Sorry to bother you, / but could‿you take‿our picture?",
+            tips: [{ target: "could you", ko: "d와 y가 만나 '쿠쥬'처럼 붙어요." }] },
+          { en: "Sorry to bother you, but is this seat taken?", ko: "죄송한데, 여기 자리 있어요?",
+            chunks: "Sorry to bother you, / but is this seat taken?",
+            tips: [{ target: "seat taken", ko: "seat의 t는 멈추기만 하고 바로 taken으로." }] },
+          { en: "Sorry to bother you so late, but the AC isn't working.", ko: "늦은 시간에 죄송한데, 에어컨이 안 돼요.",
+            chunks: "Sorry to bother you so late, / but the AC isn't working.",
+            tips: [{ target: "isn't working", ko: "isn't의 t는 거의 안 들리고 '이즌 워r킹'처럼." }] },
+          { en: "Sorry to bother you, but do you have a minute?", ko: "바쁘신데 죄송해요, 잠깐 시간 되세요?",
+            chunks: "Sorry to bother you, / but do‿you have‿a minute?",
+            tips: [{ target: "have a minute", ko: "v가 a에 붙어 '해버 미닛'처럼." }] },
+          { en: "Sorry to bother you again, but I have one more question.", ko: "또 귀찮게 해서 죄송한데, 질문이 하나 더 있어요.",
+            chunks: "Sorry to bother you again, / but I have one more question.",
+            tips: [{ target: "again", ko: "두 번째 음절에 힘을 줘서 '어겐'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "So on my flight home, / the guy next to me / fell‿asleep / with his head on my shoulder.",
+              ko: "집에 오는 비행기에서 옆자리 남자가 내 어깨에 머리를 기대고 잠들었어.",
+              tips: [{ target: "fell asleep", ko: "l이 asleep에 붙어 '펠러슬립'처럼." }] },
+            { chunks: "I needed the bathroom so badly, / but I felt terrible / waking‿him‿up.",
+              ko: "화장실이 너무 급했는데, 깨우기가 너무 미안하더라.",
+              tips: [{ target: "waking him up", ko: "him의 h가 약해져 '웨이킹이멉'처럼 이어져요." }] },
+            { chunks: "I finally tapped him and whispered, / “Sorry to bother you, / but I really need / to get‿out.”",
+              ko: "결국 톡톡 치면서 “귀찮게 해서 죄송한데, 저 정말 나가야 해요.” 하고 속삭였지.",
+              tips: [{ target: "get out", ko: "t가 굴러 '게라웃'처럼 이어져요." }] },
+            { chunks: "He jumped‿up so fast / that he hit his head / on the overhead bin.",
+              ko: "그 사람이 너무 벌떡 일어나는 바람에 머리를 짐칸에 박았어.",
+              tips: [{ target: "jumped up", ko: "ed는 t 소리로 up에 붙어 '점텁'처럼." },
+                     { target: "overhead bin", ko: "'머리 위 짐칸'. over에 힘을 줘요." }] }
+          ],
+          en: "So on my flight home, the guy next to me fell asleep with his head on my shoulder. I needed the bathroom so badly, but I felt terrible waking him up. I finally tapped him and whispered, “Sorry to bother you, but I really need to get out.” He jumped up so fast that he hit his head on the overhead bin.",
+          ko: "집에 오는 비행기에서 옆자리 남자가 내 어깨에 머리를 기대고 잠들었어. 화장실이 너무 급했는데 깨우기가 너무 미안하더라. 결국 톡톡 치면서 “귀찮게 해서 죄송한데, 저 정말 나가야 해요.” 하고 속삭였지. 그 사람이 벌떡 일어나다가 짐칸에 머리를 쿵 박았어."
+        }
+      },
+      {
+        id: "c19-e2",
+        phrase: "Would you mind ~ing?",
+        ko: "'~해 주시겠어요?'라는 뜻이에요. 부탁할 때 쓰는 아주 공손한 표현이고, mind 뒤에는 동사ing가 와요. 대답이 'No'면 '괜찮아요, 해 드릴게요'라는 뜻이라 헷갈리지 않게 주의! 비슷한 표현: Could you ~? / Do you mind ~ing?",
+        examples: [
+          { en: "Would you mind closing the window a little?", ko: "창문 좀 조금 닫아 주시겠어요?",
+            chunks: "Would‿you mind closing / the window‿a little?",
+            tips: [{ target: "Would you", ko: "'우쥬'처럼 붙여 말해요." }] },
+          { en: "Would you mind watching my bag for a sec?", ko: "가방 잠깐만 봐 주실 수 있어요?",
+            chunks: "Would‿you mind / watching my bag for‿a sec?",
+            tips: [{ target: "for a sec", ko: "'잠깐만'. '포러섹'처럼 빠르게." }] },
+          { en: "Would you mind sending me the file again?", ko: "그 파일 다시 보내 주시겠어요?",
+            chunks: "Would‿you mind sending me / the file‿again?",
+            tips: [{ target: "file again", ko: "l이 again에 붙어 '파일러겐'처럼." }] },
+          { en: "Would you mind switching seats with me?", ko: "저랑 자리 좀 바꿔 주실 수 있어요?",
+            chunks: "Would‿you mind / switching seats with me?",
+            tips: [{ target: "switching seats", ko: "s 소리를 또렷하게, '스위칭 시츠'." }] },
+          { en: "Would you mind turning the music down a bit?", ko: "음악 소리 좀 줄여 주시겠어요?",
+            chunks: "Would‿you mind turning / the music down‿a bit?",
+            tips: [{ target: "turning", ko: "r을 굴려 '터r닝'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At the movies last night, / the guy behind me / kept kicking my seat.",
+              ko: "어젯밤 영화관에서 뒷사람이 계속 내 의자를 발로 찼어.",
+              tips: [{ target: "kept kicking", ko: "kept의 t는 멈추기만 하고 바로 kicking으로." }] },
+            { chunks: "After twenty minutes, / I turned‿around and said, / “Would‿you mind / not kicking my seat?”",
+              ko: "20분쯤 지나서 뒤돌아서 “의자 좀 안 차 주실래요?” 했지.",
+              tips: [{ target: "turned around", ko: "d가 around에 붙어 '턴더라운드'처럼." },
+                     { target: "twenty", ko: "nt의 t가 약해 '트웨니'처럼 들려요." }] },
+            { chunks: "He looked totally shocked / and said he had no idea.",
+              ko: "그 사람은 완전 놀란 얼굴로 전혀 몰랐다고 하더라.",
+              tips: [{ target: "totally", ko: "tt가 굴러 '토럴리'처럼." }] },
+            { chunks: "Then his little kid / popped‿up next to him, / and I realized / it wasn't him‿at‿all.",
+              ko: "그때 옆에서 꼬마가 쏙 고개를 내미는데, 차던 게 그 사람이 아니었던 거야.",
+              tips: [{ target: "at all", ko: "t가 굴러 '애롤'처럼 이어져요." }] }
+          ],
+          en: "At the movies last night, the guy behind me kept kicking my seat. After twenty minutes, I turned around and said, “Would you mind not kicking my seat?” He looked totally shocked and said he had no idea. Then his little kid popped up next to him, and I realized it wasn't him at all.",
+          ko: "어젯밤 영화관에서 뒷사람이 계속 내 의자를 발로 차는 거야. 20분쯤 참다가 뒤돌아서 “의자 좀 안 차 주실래요?” 했지. 그 사람은 완전 놀라서 전혀 몰랐다고 하더라. 그때 옆에서 꼬마가 쏙 고개를 내미는데, 차던 범인은 그 사람이 아니었어."
+        }
+      },
+      {
+        id: "c19-e3",
+        phrase: "I appreciate it.",
+        ko: "'신경 써 줘서 고마워요'라는 뜻이에요. Thank you보다 조금 더 진심이 담긴 느낌이라, 누가 내 부탁을 들어줬을 때 딱 좋아요. 비슷한 표현: Thanks a lot. / I really appreciate it.",
+        examples: [
+          { en: "Thanks for waiting for me. I appreciate it.", ko: "기다려 줘서 고마워. 진짜 고마워.",
+            chunks: "Thanks for waiting for me. / I appreciate‿it.",
+            tips: [{ target: "appreciate it", ko: "t가 굴러 '어프리시에이릿'처럼." }] },
+          { en: "You fixed it so fast. I appreciate it.", ko: "이렇게 빨리 고쳐 주시다니, 정말 고마워요.",
+            chunks: "You fixed‿it so fast. / I appreciate‿it.",
+            tips: [{ target: "fixed it", ko: "ed는 t 소리로 it에 붙어 '픽스팃'처럼." }] },
+          { en: "Oh, you saved me a seat? I appreciate it.", ko: "어, 내 자리 맡아 줬어? 고마워.",
+            chunks: "Oh, you saved me‿a seat? / I appreciate‿it.",
+            tips: [{ target: "saved me a seat", ko: "질문이라 seat에서 끝을 올려요." }] },
+          { en: "Thanks for the ride to the airport. I appreciate it.", ko: "공항까지 태워 줘서 정말 고마워요.",
+            chunks: "Thanks for the ride / to the airport. / I appreciate‿it.",
+            tips: [{ target: "ride", ko: "입술을 모으고 시작해 '롸이드'처럼." }] },
+          { en: "I know you're busy, so I appreciate it.", ko: "바쁘신 거 아는데, 신경 써 주셔서 감사해요.",
+            chunks: "I know you're busy, / so I appreciate‿it.",
+            tips: [{ target: "you're busy", ko: "you're는 약하게 '유어r', busy에 힘을 줘요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My neighbor saw me / carrying‿a huge box / up the stairs yesterday.",
+              ko: "어제 이웃이 내가 커다란 상자를 들고 계단 올라가는 걸 봤어.",
+              tips: [{ target: "neighbor", ko: "'네이버r', 첫음절에 힘." }] },
+            { chunks: "Without‿a word, / he grabbed the other‿end / and helped me all the way / to the fourth floor.",
+              ko: "아무 말 없이 상자 반대쪽을 잡더니 4층까지 같이 들어 줬어.",
+              tips: [{ target: "Without a word", ko: "t가 굴러 '위다우러 워r드'처럼." },
+                     { target: "fourth floor", ko: "th 다음 바로 floor로, '포r쓰 플로어r'." }] },
+            { chunks: "I said, / “Thanks so much, / I appreciate‿it,” / and offered him‿a drink.",
+              ko: "“정말 고마워요.” 하고 음료수를 하나 건넸지.",
+              tips: [{ target: "offered him a", ko: "him의 h가 약해 '오퍼r딤어'처럼 이어져요." }] },
+            { chunks: "He said, / “No problem, / I just wanted to see / what was‿in the box.”",
+              ko: "그랬더니 “괜찮아요, 그냥 상자에 뭐가 들었는지 궁금했어요.” 하더라.",
+              tips: [{ target: "wanted to", ko: "nt의 t가 약해져 '워니드투'처럼." }] }
+          ],
+          en: "My neighbor saw me carrying a huge box up the stairs yesterday. Without a word, he grabbed the other end and helped me all the way to the fourth floor. I said, “Thanks so much, I appreciate it,” and offered him a drink. He said, “No problem, I just wanted to see what was in the box.”",
+          ko: "어제 이웃이 내가 커다란 상자를 들고 계단 올라가는 걸 봤어. 아무 말 없이 반대쪽을 잡더니 4층까지 같이 들어 주더라. “정말 고마워요.” 하고 음료수를 하나 건넸지. 그랬더니 “괜찮아요, 그냥 상자에 뭐가 들었는지 궁금했어요.” 하는 거야."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

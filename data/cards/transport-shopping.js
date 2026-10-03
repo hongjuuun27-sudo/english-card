@@ -962,5 +962,166 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 23,
+    category: "이동·쇼핑",
+    title: "택시 기사님과 스몰토크하기",
+    situation: "공항에서 시내로 가는 택시 안이에요. 기사님이 먼저 말을 걸어와서, 어디서 왔는지와 이 동네 맛집 같은 가벼운 얘기를 나눠요.",
+    scene: "free",
+    hooks: [
+      { ko: "어디서 왔냐는 질문에 한국에서 놀러 왔다고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "기사님께 택시 운전하신 지 얼마나 됐냐고 물을 때, 뭐라고 하지?", line: 4 },
+      { ko: "기사님께 딥디시 피자 맛집을 추천해 달라고 할 때, 뭐라고 하지?", line: 6 }
+    ],
+    dialogue: [
+      { who: "driver", en: "So, is this your first time in Chicago?", ko: "그래서, 시카고는 처음이세요?",
+        chunks: "So, / is this your first time / in Chicago?",
+        tips: [{ target: "first time", ko: "first의 t는 약하게, 질문이라 끝을 올려요." }] },
+      { who: "me", en: "Yeah, it is! I'm visiting from Korea.", ko: "네, 처음이에요! 한국에서 놀러 왔어요.",
+        chunks: "Yeah, it‿is! / I'm visiting from Korea.",
+        tips: [{ target: "visiting", ko: "'비지팅', 첫음절에 힘." }] },
+      { who: "driver", en: "Oh, nice! Welcome to the Windy City.", ko: "오, 좋네요! 바람의 도시에 오신 걸 환영해요.",
+        chunks: "Oh, nice! / Welcome to the Windy City.",
+        tips: [{ target: "Windy City", ko: "시카고의 별명. City의 t가 굴러 '씨리'처럼." }] },
+      { who: "me", en: "Thanks! How long have you been driving a cab?", ko: "감사해요! 택시 운전하신 지 얼마나 되셨어요?",
+        chunks: "Thanks! / How long have you been / driving‿a cab?",
+        tips: [{ target: "How long have you been", ko: "'하우롱 해뷰빈'처럼 빠르게 이어 말해요." }] },
+      { who: "driver", en: "Almost twenty years. I know this city like the back of my hand.", ko: "거의 20년이요. 이 도시는 손바닥 보듯 훤해요.",
+        chunks: "Almost twenty years. / I know this city / like the back‿of my hand.",
+        tips: [{ target: "the back of my hand", ko: "'손바닥 보듯 훤하다'. back of는 '배커브'처럼." }] },
+      { who: "me", en: "Then any recommendations for deep-dish pizza?", ko: "그럼 딥디시 피자 맛집 추천해 주실 데 있어요?",
+        chunks: "Then any recommendations / for deep-dish pizza?",
+        tips: [{ target: "recommendations", ko: "'레커멘데이션즈', '데이'에 힘." }] },
+      { who: "driver", en: "Oh, for sure. Skip the touristy spots and try Pequod's.", ko: "오, 그럼요. 관광객용 가게 말고 피쿼즈에 가 보세요.",
+        chunks: "Oh, for sure. / Skip the touristy spots / and try Pequod's.",
+        tips: [{ target: "touristy", ko: "'관광객 많은'. '투어리스티'." }] },
+      { who: "me", en: "Awesome, I'll check it out tonight!", ko: "좋아요, 오늘 밤에 가 볼게요!",
+        chunks: "Awesome, / I'll check‿it‿out tonight!",
+        tips: [{ target: "check it out", ko: "'체키라웃'처럼 한 번에 이어져요." }] }
+    ],
+    expressions: [
+      {
+        id: "c23-e1",
+        phrase: "I'm visiting from ~.",
+        ko: "'~에서 놀러 왔어요'라는 뜻이에요. 여행지에서 어디서 왔냐는 질문에 '잠깐 들른 사람'이라는 느낌까지 담아 대답할 수 있어요. 비슷한 표현: I'm from ~. / I'm here from ~ for a few days.",
+        examples: [
+          { en: "I'm visiting from Seoul, so I don't know the area.", ko: "서울에서 놀러 와서 이 동네를 잘 몰라요.",
+            chunks: "I'm visiting from Seoul, / so I don't know the area.",
+            tips: [{ target: "the area", ko: "the가 '디'로, '디 에어리어'." }] },
+          { en: "I'm visiting from out of town for a wedding.", ko: "결혼식 때문에 다른 지역에서 왔어요.",
+            chunks: "I'm visiting from out‿of town / for‿a wedding.",
+            tips: [{ target: "out of town", ko: "'다른 지역에서'. '아우러브 타운'처럼." }] },
+          { en: "Hi, I'm Mina. I'm visiting from Korea for a conference.", ko: "안녕하세요, 미나예요. 학회 때문에 한국에서 왔어요.",
+            chunks: "Hi, I'm Mina. / I'm visiting from Korea / for‿a conference.",
+            tips: [{ target: "conference", ko: "'칸퍼런스', 첫음절에 힘." }] },
+          { en: "I'm visiting from Canada, and this is my first time here.", ko: "캐나다에서 왔는데, 여기는 처음이에요.",
+            chunks: "I'm visiting from Canada, / and this‿is / my first time here.",
+            tips: [{ target: "this is", ko: "s가 is에 붙어 '디시즈'처럼." }] },
+          { en: "I'm visiting from Japan, so is tipping expected here?", ko: "일본에서 왔는데, 여기는 팁을 줘야 하나요?",
+            chunks: "I'm visiting from Japan, / so is tipping expected here?",
+            tips: [{ target: "tipping", ko: "'티핑', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "In Paris, / a waiter heard my accent / and asked where I was from.",
+              ko: "파리에서 웨이터가 내 억양을 듣더니 어디서 왔냐고 묻더라.",
+              tips: [{ target: "accent", ko: "'액센트', 첫음절에 힘." }] },
+            { chunks: "I said, / “I'm visiting from Korea,” / and his whole face lit‿up.",
+              ko: "“한국에서 놀러 왔어요.” 했더니 얼굴이 확 밝아졌어.",
+              tips: [{ target: "lit up", ko: "'환해졌다'. t가 굴러 '리럽'처럼." }] },
+            { chunks: "He told me / he's obsessed with K-dramas / and started listing / his favorite actors.",
+              ko: "케이 드라마에 푹 빠졌다면서 좋아하는 배우들을 줄줄이 말하기 시작했어.",
+              tips: [{ target: "obsessed", ko: "'옵세스트', 두 번째 음절에 힘." }] },
+            { chunks: "I got free dessert / and‿a thirty-minute review / of every show he's watched.",
+              ko: "덕분에 디저트는 공짜로 먹었는데, 그 사람이 본 드라마 리뷰를 30분 동안 들었어.",
+              tips: [{ target: "thirty-minute", ko: "th는 혀를 물고, '써r리 미닛'처럼." }] }
+          ],
+          en: "In Paris, a waiter heard my accent and asked where I was from. I said, “I'm visiting from Korea,” and his whole face lit up. He told me he's obsessed with K-dramas and started listing his favorite actors. I got free dessert and a thirty-minute review of every show he's watched.",
+          ko: "파리에서 웨이터가 내 억양을 듣더니 어디서 왔냐고 물었어. “한국에서 놀러 왔어요.” 했더니 얼굴이 확 밝아지더라. 케이 드라마에 푹 빠졌다면서 좋아하는 배우들을 줄줄이 읊기 시작했어. 디저트는 공짜로 먹었는데, 그 사람이 본 드라마 리뷰를 30분이나 들었지."
+        }
+      },
+      {
+        id: "c23-e2",
+        phrase: "How long have you been ~ing?",
+        ko: "'~한 지 얼마나 됐어요?'라는 뜻이에요. 지금까지 계속해 온 일(일·취미·사는 곳)의 기간을 물을 때 써요. 스몰토크에서 상대 얘기를 끌어내기 좋아요. 비슷한 표현: How long have you ~? / Since when have you been ~ing?",
+        examples: [
+          { en: "How long have you been living in Seoul?", ko: "서울에 산 지 얼마나 됐어요?",
+            chunks: "How long have you been / living‿in Seoul?",
+            tips: [{ target: "living in", ko: "g가 in에 붙어 '리빙인'처럼." }] },
+          { en: "How long have you been waiting here?", ko: "여기서 기다린 지 얼마나 되셨어요?",
+            chunks: "How long have you been / waiting here?",
+            tips: [{ target: "waiting", ko: "t가 굴러 '웨이링'처럼." }] },
+          { en: "How long have you been working at this company?", ko: "이 회사에서 일한 지 얼마나 됐어요?",
+            chunks: "How long have you been / working‿at this company?",
+            tips: [{ target: "working at", ko: "g가 at에 붙어 '워r킹앳'처럼." }] },
+          { en: "How long have you been learning English?", ko: "영어 배운 지 얼마나 됐어요?",
+            chunks: "How long have you been / learning English?",
+            tips: [{ target: "learning English", ko: "'러r닝 잉글리시', r을 굴려요." }] },
+          { en: "How long have you been playing the guitar?", ko: "기타 친 지 얼마나 됐어?",
+            chunks: "How long have you been / playing the guitar?",
+            tips: [{ target: "guitar", ko: "두 번째 음절에 힘, '기타r'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At‿a café in Lisbon, / I sat next to / an‿old man drawing the street / on‿a napkin.",
+              ko: "리스본의 카페에서 냅킨에 거리를 그리고 있는 할아버지 옆에 앉았어.",
+              tips: [{ target: "napkin", ko: "'냅킨', 첫음절에 힘." }] },
+            { chunks: "I asked him, / “How long have you been drawing?” / and he said, / “About sixty years, / every single morning.”",
+              ko: "“그림 그리신 지 얼마나 되셨어요?” 물었더니 “한 60년쯤, 매일 아침마다.” 하시더라.",
+              tips: [{ target: "asked him", ko: "him의 h가 약해 '애스크팀'처럼." }] },
+            { chunks: "Then he signed the napkin / and handed‿it to me.",
+              ko: "그러더니 냅킨에 사인을 해서 나한테 주셨어.",
+              tips: [{ target: "handed it", ko: "d가 it에 붙어 '핸디딧'처럼." }] },
+            { chunks: "It's framed‿on my wall now.",
+              ko: "지금 그거 액자에 넣어서 우리 집 벽에 걸려 있어.",
+              tips: [{ target: "framed", ko: "ed는 d 소리로 on에 붙어 '프레임돈'처럼." }] }
+          ],
+          en: "At a café in Lisbon, I sat next to an old man drawing the street on a napkin. I asked him, “How long have you been drawing?” and he said, “About sixty years, every single morning.” Then he signed the napkin and handed it to me. It's framed on my wall now.",
+          ko: "리스본 카페에서 냅킨에 거리 풍경을 그리는 할아버지 옆에 앉았어. “그림 그리신 지 얼마나 되셨어요?” 물었더니 “한 60년쯤, 매일 아침마다.” 하시더라. 그러더니 그 냅킨에 사인을 해서 나한테 주셨어. 지금 액자에 넣어서 우리 집 벽에 걸어 뒀어."
+        }
+      },
+      {
+        id: "c23-e3",
+        phrase: "Any recommendations for ~?",
+        ko: "'~ 추천해 주실 만한 데 있어요?'라는 뜻이에요. 현지인·직원에게 맛집·관광지·메뉴를 물을 때 짧고 자연스럽게 쓸 수 있어요. 앞에 Do you have를 붙이면 더 공손해요. 비슷한 표현: Can you recommend ~? / What's good around here?",
+        examples: [
+          { en: "Any recommendations for brunch around here?", ko: "이 근처 브런치 맛집 추천해 주실 데 있어요?",
+            chunks: "Any recommendations / for brunch around here?",
+            tips: [{ target: "around here", ko: "d가 약해져 '어라운 히어r'." }] },
+          { en: "Do you have any recommendations for a first-timer?", ko: "처음 온 사람한테 추천해 주실 거 있어요?",
+            chunks: "Do‿you have any recommendations / for‿a first-timer?",
+            tips: [{ target: "first-timer", ko: "'처음 해 보는 사람'. '퍼r스타이머r'." }] },
+          { en: "Any recommendations for a good book?", ko: "괜찮은 책 추천해 줄 거 있어?",
+            chunks: "Any recommendations / for‿a good book?",
+            tips: [{ target: "good book", ko: "good의 d는 멈추기만 하고 바로 book으로." }] },
+          { en: "Any recommendations for what to order?", ko: "뭐 시키면 좋을지 추천해 주실래요?",
+            chunks: "Any recommendations / for what to order?",
+            tips: [{ target: "what to", ko: "t가 약해 '와러'처럼 이어져요." }] },
+          { en: "Any recommendations for things to do at night?", ko: "밤에 할 만한 거 추천해 주실 수 있어요?",
+            chunks: "Any recommendations / for things to do‿at night?",
+            tips: [{ target: "at night", ko: "t가 굴러 '앳 나잇'을 빠르게." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "In Tokyo, / I asked my hotel concierge, / “Any recommendations / for ramen nearby?”",
+              ko: "도쿄에서 호텔 컨시어지한테 “근처에 라멘 맛집 추천해 주실 데 있어요?” 하고 물었어.",
+              tips: [{ target: "concierge", ko: "'칸시어r쥐', 프랑스어에서 온 말." }] },
+            { chunks: "He drew me‿a map / with just one tiny shop circled.",
+              ko: "그분이 지도를 그려 주는데 조그만 가게 딱 한 곳에만 동그라미를 쳐 주더라.",
+              tips: [{ target: "circled", ko: "'써r클드', r을 굴려요." }] },
+            { chunks: "There was no sign, / no English menu, / and‿a forty-minute line.",
+              ko: "간판도 없고 영어 메뉴도 없고, 줄은 40분이었어.",
+              tips: [{ target: "forty-minute", ko: "t가 굴러 '포r리 미닛'처럼." }] },
+            { chunks: "It was hands down / the best bowl‿of ramen / I've‿ever had.",
+              ko: "근데 진짜 내 인생 최고의 라멘이었어.",
+              tips: [{ target: "hands down", ko: "'두말할 것 없이'. d는 거의 안 들려 '핸즈 다운'." }] }
+          ],
+          en: "In Tokyo, I asked my hotel concierge, “Any recommendations for ramen nearby?” He drew me a map with just one tiny shop circled. There was no sign, no English menu, and a forty-minute line. It was hands down the best bowl of ramen I've ever had.",
+          ko: "도쿄에서 호텔 컨시어지한테 “근처에 라멘 맛집 추천해 주실 데 있어요?” 하고 물었어. 지도를 그려 주는데 조그만 가게 딱 한 곳에만 동그라미가 있더라. 간판도 없고 영어 메뉴도 없고 줄은 40분이었어. 근데 두말할 것 없이 내 인생 최고의 라멘이었어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

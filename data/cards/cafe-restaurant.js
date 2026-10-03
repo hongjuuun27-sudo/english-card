@@ -687,5 +687,488 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 20,
+    category: "카페·식당",
+    title: "스테이크 주문하기",
+    situation: "스테이크하우스에서 주문해요. 고기 굽기 정도를 말하고, 소스는 따로 달라고 하고 싶어요.",
+    hooks: [
+      { ko: "스테이크집에서 립아이로 주문할 때, 뭐라고 하지?", line: 2 },
+      { ko: "스테이크 굽기를 미디엄 레어로 해 달라고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "소스는 따로 달라고 할 때, 뭐라고 하지?", line: 5 }
+    ],
+    dialogue: [
+      { who: "server", en: "Hi there, are you ready to order?", ko: "안녕하세요, 주문하시겠어요?",
+        chunks: "Hi there, / are you ready to order?",
+        tips: [{ target: "ready to order", ko: "'레디 투 오더r', 질문이라 끝을 올려요." }] },
+      { who: "me", en: "Yes, I'll have the ribeye, please.", ko: "네, 립아이로 주세요.",
+        chunks: "Yes, / I'll have the ribeye, / please.",
+        tips: [{ target: "ribeye", ko: "'립아이'처럼, rib에 힘을 줘요." }] },
+      { who: "server", en: "Great choice. How would you like it cooked?", ko: "좋은 선택이에요. 굽기는 어떻게 해 드릴까요?",
+        chunks: "Great choice. / How would‿you like‿it cooked?",
+        tips: [{ target: "How would you like it", ko: "'하우쥬 라이킷'처럼 빠르게 이어져요." },
+               { target: "cooked", ko: "ed는 t 소리로 '쿡트'." }] },
+      { who: "me", en: "Medium rare, please.", ko: "미디엄 레어로 해 주세요.",
+        chunks: "Medium rare, please.",
+        tips: [{ target: "Medium rare", ko: "'미디엄 레어r', rare의 r을 굴려요." }] },
+      { who: "me", en: "Could I get the peppercorn sauce on the side?", ko: "후추 소스는 따로 주실 수 있어요?",
+        chunks: "Could‿I get the peppercorn sauce / on the side?",
+        tips: [{ target: "Could I", ko: "d가 I에 붙어 '쿠다이'처럼." },
+               { target: "on the side", ko: "'따로'. side에 힘을 줘요." }] },
+      { who: "server", en: "Sure thing. Would you like a side salad or fries?", ko: "그럼요. 사이드는 샐러드랑 감자튀김 중에 뭘로 드릴까요?",
+        chunks: "Sure thing. / Would‿you like‿a side salad / or fries?",
+        tips: [{ target: "or fries?", ko: "고르는 질문이라 마지막 fries에서 끝을 내려요." }] },
+      { who: "me", en: "Fries, please. That's all for now.", ko: "감자튀김이요. 일단 그게 다예요.",
+        chunks: "Fries, please. / That's‿all for now.",
+        tips: [{ target: "That's all", ko: "s가 all에 붙어 한 단어처럼 '댓솔'." }] }
+    ],
+    expressions: [
+      {
+        id: "c20-e1",
+        phrase: "I'll have ~.",
+        ko: "'~로 할게요, ~ 주세요'라는 뜻이에요. 식당에서 메뉴를 정했을 때 가장 자연스럽게 쓰는 말이에요. Can I get ~?보다 조금 더 단정한 느낌. 비슷한 표현: I'll go with ~. / I'll take ~.",
+        examples: [
+          { en: "I'll have the chicken sandwich, no onions.", ko: "치킨 샌드위치로 주세요, 양파는 빼고요.",
+            chunks: "I'll have the chicken sandwich, / no onions.",
+            tips: [{ target: "sandwich", ko: "d는 거의 안 들리고 '샌위치'처럼." }] },
+          { en: "I'll have what she's having.", ko: "저도 저분이랑 같은 걸로 할게요.",
+            chunks: "I'll have what she's having.",
+            tips: [{ target: "what she's", ko: "what의 t는 멈추기만 하고 '왓 쉬즈'." }] },
+          { en: "I'll have a small coffee and a muffin.", ko: "작은 커피 하나랑 머핀 하나 주세요.",
+            chunks: "I'll have‿a small coffee / and‿a muffin.",
+            tips: [{ target: "and a", ko: "d가 약해져 '애너'처럼 이어져요." }] },
+          { en: "I'll have another beer, thanks.", ko: "맥주 한 잔 더 주세요, 고마워요.",
+            chunks: "I'll have‿another beer, / thanks.",
+            tips: [{ target: "have another", ko: "v가 another에 붙어 '해버나더r'처럼." }] },
+          { en: "For dessert, I'll have the cheesecake.", ko: "디저트는 치즈케이크로 할게요.",
+            chunks: "For dessert, / I'll have the cheesecake.",
+            tips: [{ target: "dessert", ko: "두 번째 음절에 힘, '디저r트'. desert(사막)와 구별!" }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "Last week / my friend took me / to‿a fancy French restaurant, / and I couldn't read / a single thing on the menu.",
+              ko: "지난주에 친구가 고급 프렌치 레스토랑에 데려갔는데, 메뉴판을 하나도 못 읽겠더라.",
+              tips: [{ target: "restaurant", ko: "'레스터랑', 첫음절에 힘." }] },
+            { chunks: "When the waiter came, / I just pointed / at the next table / and said, / “I'll have what they're having.”",
+              ko: "웨이터가 오길래 옆 테이블을 가리키면서 “저분들 드시는 걸로 주세요.” 했지.",
+              tips: [{ target: "waiter", ko: "t가 굴러 '웨이러r'처럼." },
+                     { target: "pointed", ko: "nt의 t가 약해 '포이니드'처럼 들려요." }] },
+            { chunks: "It turned‿out to be snails.",
+              ko: "알고 보니 달팽이 요리였어.",
+              tips: [{ target: "turned out", ko: "'알고 보니 ~였다'. d가 out에 붙어 '턴다웃'처럼." }] },
+            { chunks: "Honestly, / they were kind‿of amazing.",
+              ko: "솔직히 꽤 맛있었어.",
+              tips: [{ target: "kind of", ko: "'좀, 꽤'. '카인더브'처럼 빠르게." }] }
+          ],
+          en: "Last week my friend took me to a fancy French restaurant, and I couldn't read a single thing on the menu. When the waiter came, I just pointed at the next table and said, “I'll have what they're having.” It turned out to be snails. Honestly, they were kind of amazing.",
+          ko: "지난주에 친구가 고급 프렌치 레스토랑에 데려갔는데, 메뉴판을 하나도 못 읽겠더라. 웨이터가 오길래 옆 테이블을 가리키면서 “저분들 드시는 걸로 주세요.” 했지. 알고 보니 달팽이 요리였어. 근데 솔직히 꽤 맛있었어."
+        }
+      },
+      {
+        id: "c20-e2",
+        phrase: "How would you like ~?",
+        ko: "'~는 어떻게 해 드릴까요?'라는 뜻이에요. 직원이 내 취향을 물을 때 자주 들어요. 굽기(How would you like it cooked?), 커피(How would you like your coffee?), 결제(How would you like to pay?). 비슷한 표현: How do you want ~? / What would you like?",
+        examples: [
+          { en: "How would you like your eggs?", ko: "달걀은 어떻게 해 드릴까요?",
+            chunks: "How would‿you like your eggs?",
+            tips: [{ target: "your eggs", ko: "r이 eggs에 붙어 '유어렉스'처럼." }] },
+          { en: "How would you like to pay, cash or card?", ko: "계산은 어떻게 하시겠어요, 현금이요 카드요?",
+            chunks: "How would‿you like to pay, / cash or card?",
+            tips: [{ target: "cash or card?", ko: "고르는 질문이라 card에서 끝을 내려요." }] },
+          { en: "How would you like your coffee?", ko: "커피는 어떻게 드릴까요?",
+            chunks: "How would‿you like your coffee?",
+            tips: [{ target: "coffee", ko: "'커피'보다 '카피'에 가깝게." }] },
+          { en: "How would you like the bills, in twenties?", ko: "지폐는 어떻게 드릴까요, 20달러짜리로요?",
+            chunks: "How would‿you like the bills, / in twenties?",
+            tips: [{ target: "twenties", ko: "nt의 t가 약해 '트웨니즈'처럼." }] },
+          { en: "How would you like your hair cut today?", ko: "오늘 머리는 어떻게 잘라 드릴까요?",
+            chunks: "How would‿you like / your hair cut today?",
+            tips: [{ target: "hair cut", ko: "cut의 t는 멈추기만 하고 바로 today로." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "So I finally went / to‿a fancy hair salon / for the first time.",
+              ko: "드디어 처음으로 고급 미용실에 가 봤거든.",
+              tips: [{ target: "salon", ko: "두 번째 음절에 힘, '설란'." }] },
+            { chunks: "The stylist asked, / “How would‿you like‿it today?” / and I totally panicked.",
+              ko: "디자이너가 “오늘은 어떻게 해 드릴까요?” 묻는데 완전 당황했어.",
+              tips: [{ target: "like it today", ko: "t가 굴러 '라이킷 터데이'처럼 이어져요." },
+                     { target: "panicked", ko: "ed는 t 소리로 '패닉트'." }] },
+            { chunks: "I said, / “Just‿a little shorter,” / and somehow walked‿out with bangs.",
+              ko: "“조금만 짧게요.” 했는데 어쩌다 보니 앞머리를 내고 나왔어.",
+              tips: [{ target: "walked out", ko: "ed가 t 소리로 out에 붙어 '웍타웃'처럼." }] },
+            { chunks: "My mom still hasn't stopped laughing.",
+              ko: "엄마는 아직도 웃고 있어.",
+              tips: [{ target: "hasn't stopped", ko: "hasn't의 t는 거의 안 들리고 '해즌 스탑트'." }] }
+          ],
+          en: "So I finally went to a fancy hair salon for the first time. The stylist asked, “How would you like it today?” and I totally panicked. I said, “Just a little shorter,” and somehow walked out with bangs. My mom still hasn't stopped laughing.",
+          ko: "드디어 처음으로 고급 미용실에 가 봤거든. 디자이너가 “오늘은 어떻게 해 드릴까요?” 묻는데 완전 당황했어. “조금만 짧게요.” 했는데 어쩌다 앞머리를 내고 나왔지 뭐야. 엄마는 아직도 웃고 있어."
+        }
+      },
+      {
+        id: "c20-e3",
+        phrase: "on the side",
+        ko: "'따로(곁들여서)'라는 뜻이에요. 소스·드레싱을 음식 위에 붓지 말고 옆에 따로 달라고 할 때 써요. 'a side of fries'처럼 side만 쓰면 '곁들이 메뉴'. 비슷한 표현: separately / in a separate cup",
+        examples: [
+          { en: "Can I get the dressing on the side?", ko: "드레싱은 따로 주실 수 있어요?",
+            chunks: "Can‿I get the dressing / on the side?",
+            tips: [{ target: "dressing", ko: "'드레싱', 첫음절에 힘." }] },
+          { en: "I'd like gravy on the side, please.", ko: "그레이비는 따로 주세요.",
+            chunks: "I'd like gravy / on the side, please.",
+            tips: [{ target: "gravy", ko: "'그레이비', 첫음절에 힘." }] },
+          { en: "She wants the syrup on the side.", ko: "그녀는 시럽을 따로 원해요.",
+            chunks: "She wants the syrup / on the side.",
+            tips: [{ target: "syrup", ko: "'시럽'보다 '써럽'에 가깝게." }] },
+          { en: "No butter on top, just on the side.", ko: "버터는 위에 말고 따로 주세요.",
+            chunks: "No butter on top, / just on the side.",
+            tips: [{ target: "butter on", ko: "tt가 굴러 '버러론'처럼." }] },
+          { en: "Is it okay to get the hot sauce on the side?", ko: "핫소스는 따로 받아도 될까요?",
+            chunks: "Is‿it okay / to get the hot sauce / on the side?",
+            tips: [{ target: "Is it okay", ko: "s가 it에 붙어 '이짓 오케이'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend Jess / is the pickiest‿eater I know.",
+              ko: "내 친구 제스는 내가 아는 사람 중에 제일 입맛이 까다로워.",
+              tips: [{ target: "pickiest eater", ko: "t가 eater에 붙어 '피키에스티러r'처럼." }] },
+            { chunks: "At every restaurant, / she orders everything on the side, / even the cheese on her burger.",
+              ko: "식당에 가면 뭐든 따로 달라고 해, 버거 치즈까지.",
+              tips: [{ target: "orders everything", ko: "s가 everything에 붙어 '오r더r제브리띵'처럼." }] },
+            { chunks: "Last night / the server brought her plate / with like eight tiny bowls / around‿it.",
+              ko: "어젯밤엔 직원이 접시 주위에 작은 그릇을 한 여덟 개쯤 둘러서 가져왔어.",
+              tips: [{ target: "brought her", ko: "her의 h가 약해 '브로러r'처럼." }] },
+            { chunks: "It looked less like dinner / and more like‿a science experiment.",
+              ko: "저녁밥이라기보다 과학 실험 같았어.",
+              tips: [{ target: "experiment", ko: "두 번째 음절에 힘, '익스페리먼트'." }] }
+          ],
+          en: "My friend Jess is the pickiest eater I know. At every restaurant, she orders everything on the side, even the cheese on her burger. Last night the server brought her plate with like eight tiny bowls around it. It looked less like dinner and more like a science experiment.",
+          ko: "내 친구 제스는 내가 아는 사람 중에 제일 입맛이 까다로워. 식당에 가면 뭐든 따로 달라고 하는데, 버거 치즈까지 따로야. 어젯밤엔 직원이 접시 주위에 조그만 그릇을 한 여덟 개 둘러서 가져왔어. 저녁밥이라기보다 과학 실험 같더라."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 21,
+    category: "카페·식당",
+    title: "치폴레에서 주문하기",
+    situation: "치폴레 같은 멕시칸 패스트푸드점이에요. 줄을 따라가며 밥·콩·고기·토핑을 하나씩 골라 부리토 볼을 만들어요.",
+    hooks: [
+      { ko: "과카몰리 추가하면 돈을 더 내야 하냐고 물을 때, 뭐라고 하지?", line: 4 },
+      { ko: "치즈는 조금만 넣어 달라고 할 때, 뭐라고 하지?", line: 6 },
+      { ko: "주문을 다 해서 그거면 된다고 할 때, 뭐라고 하지?", line: 8 }
+    ],
+    dialogue: [
+      { who: "staff", en: "Hey! What can I get started for you?", ko: "안녕하세요! 뭘로 시작해 드릴까요?",
+        chunks: "Hey! / What can‿I get started / for you?",
+        tips: [{ target: "get started", ko: "get의 t는 멈추기만 하고 바로 started로." }] },
+      { who: "me", en: "A burrito bowl with brown rice, please.", ko: "현미밥으로 부리토 볼 하나 주세요.",
+        chunks: "A burrito bowl / with brown rice, please.",
+        tips: [{ target: "burrito", ko: "'버리토'처럼, 두 번째 음절에 힘." }] },
+      { who: "staff", en: "Black or pinto beans? And which protein?", ko: "검은콩이요, 핀토콩이요? 고기는 뭘로 하실래요?",
+        chunks: "Black or pinto beans? / And which protein?",
+        tips: [{ target: "pinto beans?", ko: "고르는 질문이라 beans에서 끝을 내려요." },
+               { target: "protein", ko: "'프로틴', 첫음절에 힘." }] },
+      { who: "me", en: "Black beans and chicken. Is guac extra?", ko: "검은콩이랑 치킨이요. 과카몰리는 추가 요금 있어요?",
+        chunks: "Black beans‿and chicken. / Is guac‿extra?",
+        tips: [{ target: "guac", ko: "과카몰리(guacamole)를 줄인 말. '구왁'처럼 짧게." },
+               { target: "Is guac extra?", ko: "yes/no 질문이라 끝을 올려요." }] },
+      { who: "staff", en: "Yep, it's two fifty extra. Still want it?", ko: "네, 2.5달러 추가예요. 그래도 넣어 드릴까요?",
+        chunks: "Yep, / it's two fifty extra. / Still want‿it?",
+        tips: [{ target: "two fifty", ko: "가격은 이렇게 끊어 말해요. 2.50달러 = 'two fifty'." }] },
+      { who: "me", en: "Sure. Just go light on the cheese, please.", ko: "네. 치즈는 조금만 넣어 주세요.",
+        chunks: "Sure. / Just go light‿on the cheese, / please.",
+        tips: [{ target: "go light on", ko: "'~을 조금만'. t가 on에 붙어 '고 라이론'처럼." }] },
+      { who: "staff", en: "You got it. Anything else?", ko: "알겠습니다. 더 필요한 거 있으세요?",
+        chunks: "You got‿it. / Anything‿else?",
+        tips: [{ target: "Anything else?", ko: "g가 else에 붙어 '애니띵엘스', 끝을 올려요." }] },
+      { who: "me", en: "That's it, thanks!", ko: "그거면 돼요, 감사해요!",
+        chunks: "That's‿it, thanks!",
+        tips: [{ target: "That's it", ko: "s가 it에 붙어 '대짓'처럼 이어져요." }] }
+    ],
+    expressions: [
+      {
+        id: "c21-e1",
+        phrase: "Is ~ extra?",
+        ko: "'~는 추가 요금 있어요?'라는 뜻이에요. 토핑·사이드·서비스에 돈이 더 드는지 물어볼 때 딱이에요. 대답은 보통 'Yep, it's ~ extra.'(네, ~ 추가예요). 비슷한 표현: Does ~ cost extra? / Is there a charge for ~?",
+        examples: [
+          { en: "Is breakfast extra, or is it included?", ko: "조식은 따로 내야 해요, 포함이에요?",
+            chunks: "Is breakfast‿extra, / or‿is‿it included?",
+            tips: [{ target: "included?", ko: "고르는 질문이라 끝을 내려요." }] },
+          { en: "Is it extra if I want oat milk?", ko: "귀리 우유로 바꾸면 추가 요금 있어요?",
+            chunks: "Is‿it‿extra / if I want oat milk?",
+            tips: [{ target: "oat milk", ko: "oat의 t는 멈추기만 해요, '오웃 밀크'." }] },
+          { en: "Is the parking extra at this hotel?", ko: "이 호텔은 주차가 유료예요?",
+            chunks: "Is the parking‿extra / at this hotel?",
+            tips: [{ target: "parking extra", ko: "g가 extra에 붙어 '파r킹엑스트라'처럼." }] },
+          { en: "Is a second bag extra on this flight?", ko: "이 항공편은 두 번째 짐이 추가 요금이에요?",
+            chunks: "Is‿a second bag‿extra / on this flight?",
+            tips: [{ target: "second bag", ko: "d는 거의 안 들리고 '세컨 백'처럼." }] },
+          { en: "Is delivery extra, or is it free?", ko: "배송비는 따로예요, 무료예요?",
+            chunks: "Is delivery‿extra, / or‿is‿it free?",
+            tips: [{ target: "delivery", ko: "두 번째 음절에 힘, '딜리버리'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At‿a hotel in Vegas, / I grabbed some chips / from the minibar / at midnight.",
+              ko: "라스베이거스 호텔에서 한밤중에 미니바에서 과자를 꺼내 먹었어.",
+              tips: [{ target: "minibar", ko: "'미니바r', 첫음절에 힘." }] },
+            { chunks: "The next morning, / I asked the front desk, / “Is the minibar‿extra?”",
+              ko: "다음 날 아침에 프런트에 “미니바는 따로 계산이에요?” 하고 물었지.",
+              tips: [{ target: "front desk", ko: "front의 t는 멈추기만 하고 바로 desk로." }] },
+            { chunks: "Turns‿out / that tiny bag‿of chips / cost twelve dollars.",
+              ko: "알고 보니 그 작은 과자 한 봉지가 12달러였어.",
+              tips: [{ target: "Turns out", ko: "'알고 보니'. s가 out에 붙어 '턴자웃'처럼." }] },
+            { chunks: "Those were the most expensive chips / I've‿ever eaten.",
+              ko: "내 인생에서 제일 비싼 과자였어.",
+              tips: [{ target: "I've ever eaten", ko: "v가 ever에 붙어 '아이베버r 이튼'처럼." }] }
+          ],
+          en: "At a hotel in Vegas, I grabbed some chips from the minibar at midnight. The next morning, I asked the front desk, “Is the minibar extra?” Turns out that tiny bag of chips cost twelve dollars. Those were the most expensive chips I've ever eaten.",
+          ko: "라스베이거스 호텔에서 한밤중에 미니바 과자를 꺼내 먹었거든. 다음 날 아침에 프런트에 “미니바는 따로 계산이에요?” 하고 물었지. 알고 보니 그 조그만 과자 한 봉지가 12달러더라. 내 인생에서 제일 비싼 과자였어."
+        }
+      },
+      {
+        id: "c21-e2",
+        phrase: "go light on ~",
+        ko: "'~은 조금만 (넣어 주세요)'라는 뜻이에요. 소스·치즈·얼음·설탕을 적게 넣어 달라고 할 때 써요. 반대로 많이 원하면 'extra ~'. 비슷한 표현: Just a little ~, please. / Easy on the ~.",
+        examples: [
+          { en: "Go light on the ice, please.", ko: "얼음은 조금만 넣어 주세요.",
+            chunks: "Go light‿on the ice, / please.",
+            tips: [{ target: "light on", ko: "t가 on에 붙어 '라이론'처럼." }] },
+          { en: "Please go light on the salt for me.", ko: "저는 소금 조금만 넣어 주세요.",
+            chunks: "Please go light‿on the salt / for me.",
+            tips: [{ target: "salt", ko: "l을 살짝 넣어 '솔트'." }] },
+          { en: "I'm trying to go light on sugar these days.", ko: "요즘 설탕을 좀 줄이려고 해.",
+            chunks: "I'm trying to / go light‿on sugar / these days.",
+            tips: [{ target: "trying to", ko: "'트라잉 투'를 빠르게 '트라잉너'처럼." }] },
+          { en: "Just go light on the mayo, okay?", ko: "마요네즈는 조금만 넣어 줘, 알았지?",
+            chunks: "Just go light‿on the mayo, / okay?",
+            tips: [{ target: "mayo", ko: "'메이오'처럼, 첫음절에 힘." }] },
+          { en: "The chef can go light on the spice if you want.", ko: "원하시면 셰프가 덜 맵게 해 드릴 수 있어요.",
+            chunks: "The chef can / go light‿on the spice / if you want.",
+            tips: [{ target: "chef", ko: "ch가 '쉬' 소리, '셰f'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My dad always tells waiters / to go light‿on the spice.",
+              ko: "우리 아빠는 늘 웨이터한테 덜 맵게 해 달라고 해.",
+              tips: [{ target: "waiters", ko: "t가 굴러 '웨이러r즈'처럼." }] },
+            { chunks: "Last night‿at a Thai place, / he said‿it again, / very seriously.",
+              ko: "어젯밤 태국 음식점에서도 아주 진지하게 또 그 말을 했지.",
+              tips: [{ target: "said it again", ko: "d가 it에 붙어 '세딧 어겐'처럼." }] },
+            { chunks: "The waiter nodded, / and then brought‿out / the spiciest curry I've‿ever seen.",
+              ko: "웨이터는 고개를 끄덕이더니, 내가 본 것 중 제일 매운 카레를 들고 왔어.",
+              tips: [{ target: "spiciest", ko: "'스파이시스트', 첫음절에 힘." }] },
+            { chunks: "Dad ate the whole thing, / sweating and smiling / like nothing happened.",
+              ko: "아빠는 땀을 뻘뻘 흘리면서도 아무 일 없다는 듯 웃으며 다 먹었어.",
+              tips: [{ target: "nothing happened", ko: "g는 약하게, '나띵 해픈드'." }] }
+          ],
+          en: "My dad always tells waiters to go light on the spice. Last night at a Thai place, he said it again, very seriously. The waiter nodded, and then brought out the spiciest curry I've ever seen. Dad ate the whole thing, sweating and smiling like nothing happened.",
+          ko: "우리 아빠는 늘 웨이터한테 덜 맵게 해 달라고 해. 어젯밤 태국 음식점에서도 아주 진지하게 또 그 말을 했지. 웨이터는 고개를 끄덕이더니, 내가 본 것 중 제일 매운 카레를 들고 왔어. 아빠는 땀을 뻘뻘 흘리면서도 아무렇지 않은 척 웃으며 다 먹었어."
+        }
+      },
+      {
+        id: "c21-e3",
+        phrase: "That's it.",
+        ko: "'그거면 돼요, 그게 다예요'라는 뜻이에요. 주문이 끝났을 때나 더 필요한 거 없냐는 질문에 쓰면 딱이에요. 맥락에 따라 '바로 그거야!'라는 뜻도 돼요. 비슷한 표현: That's all. / I'm good, thanks.",
+        examples: [
+          { en: "That's it for me, thanks.", ko: "저는 그거면 돼요, 감사해요.",
+            chunks: "That's‿it for me, / thanks.",
+            tips: [{ target: "That's it", ko: "s가 it에 붙어 '대짓'처럼." }] },
+          { en: "Just the shampoo? Yeah, that's it.", ko: "샴푸만요? 네, 그게 다예요.",
+            chunks: "Just the shampoo? / Yeah, that's‿it.",
+            tips: [{ target: "shampoo", ko: "두 번째 음절에 힘, '샘푸'." }] },
+          { en: "That's it! That's the song I was looking for.", ko: "바로 그거야! 내가 찾던 노래가 그거야.",
+            chunks: "That's‿it! / That's the song / I was looking for.",
+            tips: [{ target: "looking for", ko: "g는 약하게 '루킨 포r'." }] },
+          { en: "Two tickets, and that's it.", ko: "표 두 장이요, 그게 다예요.",
+            chunks: "Two tickets, / and that's‿it.",
+            tips: [{ target: "tickets", ko: "'티킷츠', 첫음절에 힘." }] },
+          { en: "Okay, that's it for today's meeting.", ko: "좋아요, 오늘 회의는 여기까지예요.",
+            chunks: "Okay, / that's‿it for today's meeting.",
+            tips: [{ target: "today's meeting", ko: "'투데이즈 미링'처럼 t가 굴러요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I was‿in line / at‿a coffee shop / behind‿a guy / ordering for his whole office.",
+              ko: "카페에서 줄을 서 있는데, 앞사람이 사무실 전체 걸 주문하고 있었어.",
+              tips: [{ target: "was in line", ko: "s가 in에 붙어 '워진 라인'처럼." }] },
+            { chunks: "He listed like fifteen drinks, / each with‿a different / milk‿and syrup.",
+              ko: "음료를 한 열다섯 잔쯤 부르는데, 다 우유랑 시럽이 달랐어.",
+              tips: [{ target: "fifteen", ko: "teen에 힘, '피프틴'. fifty와 구별!" }] },
+            { chunks: "When the cashier finally asked, / “Anything‿else?” / he said, / “That's‿it,” / and the whole line clapped.",
+              ko: "드디어 계산원이 “더 필요하신 거 있으세요?” 묻자 그 사람이 “그게 다예요.” 했는데, 줄 선 사람들이 다 박수를 쳤어.",
+              tips: [{ target: "clapped", ko: "ed는 t 소리로 '클랩트'." }] },
+            { chunks: "I just wanted‿a / plain black coffee.",
+              ko: "난 그냥 블랙커피 한 잔 마시고 싶었을 뿐인데.",
+              tips: [{ target: "wanted a", ko: "nt의 t가 약해 '워니더'처럼." }] }
+          ],
+          en: "I was in line at a coffee shop behind a guy ordering for his whole office. He listed like fifteen drinks, each with a different milk and syrup. When the cashier finally asked, “Anything else?” he said, “That's it,” and the whole line clapped. I just wanted a plain black coffee.",
+          ko: "카페에서 줄을 서 있는데, 앞사람이 사무실 사람들 걸 전부 주문하더라. 음료를 한 열다섯 잔 부르는데 우유랑 시럽이 다 달랐어. 드디어 계산원이 “더 필요하신 거 있으세요?” 묻자 그 사람이 “그게 다예요.” 하니까 줄 선 사람들이 박수를 쳤어. 난 그냥 블랙커피 한 잔 마시고 싶었을 뿐인데."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 22,
+    category: "카페·식당",
+    title: "서브웨이에서 샌드위치 주문하기",
+    situation: "서브웨이 같은 샌드위치 가게예요. 빵 종류와 길이를 고르고, 구울지, 어떤 야채·소스를 넣을지 말해야 해요.",
+    hooks: [
+      { ko: "양파랑 올리브만 빼고 다 넣어 달라고 할 때, 뭐라고 하지?", line: 6 },
+      { ko: "샌드위치에 치즈를 추가해 달라고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "소스는 조금만 달라고 할 때, 뭐라고 하지?", line: 8 }
+    ],
+    dialogue: [
+      { who: "staff", en: "Hi! What kind of bread would you like?", ko: "안녕하세요! 빵은 어떤 걸로 하시겠어요?",
+        chunks: "Hi! / What kind‿of bread / would‿you like?",
+        tips: [{ target: "kind of", ko: "'카인더브'처럼 빠르게." }] },
+      { who: "me", en: "Italian herbs and cheese, footlong, please.", ko: "이탈리안 허브 앤 치즈로, 30센티 주세요.",
+        chunks: "Italian herbs‿and cheese, / footlong, please.",
+        tips: [{ target: "footlong", ko: "'30cm 길이'. foot의 t는 멈추기만 해요." }] },
+      { who: "staff", en: "Want it toasted?", ko: "구워 드릴까요?",
+        chunks: "Want‿it toasted?",
+        tips: [{ target: "Want it toasted?", ko: "t가 굴러 '워닛 토스티드', 끝을 올려요." }] },
+      { who: "me", en: "Yes, please. And can you add pepper jack?", ko: "네. 그리고 페퍼잭 치즈 추가해 주실 수 있어요?",
+        chunks: "Yes, please. / And can you add pepper jack?",
+        tips: [{ target: "pepper jack", ko: "고추가 든 치즈 이름. '페퍼r 잭'." }] },
+      { who: "staff", en: "Sure. What veggies do you want on it?", ko: "네. 야채는 뭐 넣어 드릴까요?",
+        chunks: "Sure. / What veggies / do‿you want‿on‿it?",
+        tips: [{ target: "want on it", ko: "t가 굴러 '워너닛'처럼 이어져요." }] },
+      { who: "me", en: "Everything but onions and olives.", ko: "양파랑 올리브 빼고 다 넣어 주세요.",
+        chunks: "Everything but onions‿and olives.",
+        tips: [{ target: "Everything but", ko: "'~ 빼고 전부'. but의 t는 멈추기만 해요." }] },
+      { who: "staff", en: "Got it. Any sauce?", ko: "알겠습니다. 소스는요?",
+        chunks: "Got‿it. / Any sauce?",
+        tips: [{ target: "Any sauce?", ko: "질문이라 끝을 올려요." }] },
+      { who: "me", en: "Just a little chipotle mayo, please.", ko: "치폴레 마요 조금만 주세요.",
+        chunks: "Just‿a little chipotle mayo, / please.",
+        tips: [{ target: "chipotle", ko: "'치포틀레이', 두 번째 음절에 힘." }] }
+    ],
+    expressions: [
+      {
+        id: "c22-e1",
+        phrase: "What kind of ~?",
+        ko: "'어떤 (종류의) ~?'라는 뜻이에요. 빵·음료·음식·영화 등 종류를 물을 때 가장 많이 쓰고, 가게에서 직원에게 자주 들어요. 비슷한 표현: What type of ~? / Which ~?",
+        examples: [
+          { en: "What kind of music do you listen to?", ko: "어떤 음악 들어?",
+            chunks: "What kind‿of music / do‿you listen to?",
+            tips: [{ target: "listen", ko: "t는 소리 나지 않아요, '리슨'." }] },
+          { en: "What kind of dressing would you like?", ko: "드레싱은 어떤 걸로 하시겠어요?",
+            chunks: "What kind‿of dressing / would‿you like?",
+            tips: [{ target: "would you", ko: "'우쥬'처럼 붙여요." }] },
+          { en: "What kind of work do you do?", ko: "무슨 일 하세요?",
+            chunks: "What kind‿of work / do‿you do?",
+            tips: [{ target: "do you do", ko: "'두유 두'를 빠르게 '쥬 두'처럼." }] },
+          { en: "What kind of room did you book?", ko: "어떤 방으로 예약하셨어요?",
+            chunks: "What kind‿of room / did‿you book?",
+            tips: [{ target: "did you", ko: "d와 y가 만나 '디쥬'처럼." }] },
+          { en: "What kind of phone charger do you need?", ko: "어떤 휴대폰 충전기가 필요하세요?",
+            chunks: "What kind‿of phone charger / do‿you need?",
+            tips: [{ target: "charger", ko: "'차r저r', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On my first day / in New York, / I went‿into‿a bagel shop / and asked for‿a bagel.",
+              ko: "뉴욕에 간 첫날, 베이글 가게에 들어가서 베이글 하나 달라고 했어.",
+              tips: [{ target: "bagel", ko: "'베이글', 첫음절에 힘." }] },
+            { chunks: "The guy behind the counter / fired back, / “What kind‿of bagel, / what spread, / toasted‿or not?”",
+              ko: "카운터 직원이 “베이글은 뭐로, 스프레드는 뭐로, 구워요 말아요?” 하고 쏘아붙이듯 물었어.",
+              tips: [{ target: "fired back", ko: "'바로 받아치다'. d는 거의 안 들려요." }] },
+            { chunks: "I panicked / and said “yes” / to all three questions.",
+              ko: "당황해서 세 질문에 다 “네.”라고 해 버렸지.",
+              tips: [{ target: "panicked", ko: "ed는 t 소리로 '패닉트'." }] },
+            { chunks: "I ended‿up with / a toasted everything bagel / with three kinds‿of cream cheese.",
+              ko: "결국 크림치즈가 세 종류나 들어간 구운 에브리띵 베이글을 받았어.",
+              tips: [{ target: "ended up", ko: "'결국 ~하게 됐다'. d가 up에 붙어 '엔디덥'처럼." }] }
+          ],
+          en: "On my first day in New York, I went into a bagel shop and asked for a bagel. The guy behind the counter fired back, “What kind of bagel, what spread, toasted or not?” I panicked and said “yes” to all three questions. I ended up with a toasted everything bagel with three kinds of cream cheese.",
+          ko: "뉴욕 간 첫날에 베이글 가게에 들어가서 베이글 하나 달라고 했거든. 카운터 직원이 “베이글은 뭐로, 스프레드는 뭐로, 구워요 말아요?” 하고 쏘아붙이듯 묻더라. 당황해서 세 질문에 전부 “네.” 해 버렸지. 결국 크림치즈 세 종류가 든 구운 에브리띵 베이글을 받았어."
+        }
+      },
+      {
+        id: "c22-e2",
+        phrase: "Everything but ~.",
+        ko: "'~ 빼고 전부요'라는 뜻이에요. 토핑·야채를 고를 때 하나하나 말하는 대신 싫은 것만 빼 달라고 하면 돼요. 여기서 but은 '~ 빼고'. 비슷한 표현: Everything except ~. / All of them, no ~.",
+        examples: [
+          { en: "Everything but tomatoes, please.", ko: "토마토 빼고 다 넣어 주세요.",
+            chunks: "Everything but tomatoes, please.",
+            tips: [{ target: "tomatoes", ko: "'터메이토우즈', 두 번째 음절에 힘." }] },
+          { en: "I packed everything but my toothbrush.", ko: "칫솔 빼고 다 챙겼어.",
+            chunks: "I packed everything / but my toothbrush.",
+            tips: [{ target: "packed", ko: "ed는 t 소리로 '팩트'." }] },
+          { en: "I'll eat everything but the mushrooms.", ko: "버섯 빼고는 다 먹을게.",
+            chunks: "I'll eat everything / but the mushrooms.",
+            tips: [{ target: "mushrooms", ko: "'머쉬룸즈', 첫음절에 힘." }] },
+          { en: "We've got everything but the cake ready.", ko: "케이크 빼고 다 준비됐어.",
+            chunks: "We've got everything / but the cake ready.",
+            tips: [{ target: "We've got", ko: "'위브 갓', 빠르고 약하게." }] },
+          { en: "Everything but the jacket fits perfectly.", ko: "재킷 빼고는 다 딱 맞아요.",
+            chunks: "Everything but the jacket / fits perfectly.",
+            tips: [{ target: "jacket", ko: "'재킷', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I let my roommate order pizza / for‿us last night.",
+              ko: "어젯밤에 룸메이트한테 피자 주문을 맡겼어.",
+              tips: [{ target: "roommate", ko: "'룸메잇', 첫음절에 힘." }] },
+            { chunks: "I told her, / “Get everything but pineapple,” / because I really hate‿it / on pizza.",
+              ko: "“파인애플 빼고 다 넣어.” 했지, 피자에 파인애플은 진짜 싫거든.",
+              tips: [{ target: "told her", ko: "her의 h가 약해 '톨더r'처럼." }] },
+            { chunks: "The pizza showed‿up / covered‿in pineapple / and nothing‿else.",
+              ko: "근데 피자가 파인애플만 잔뜩 올라간 채로 왔어.",
+              tips: [{ target: "showed up", ko: "'도착했다'. d가 up에 붙어 '쇼우덥'처럼." }] },
+            { chunks: "She swears she heard / “everything but” / as “nothing but.”",
+              ko: "룸메는 “빼고 다”를 “만 잔뜩”으로 들었다고 우겨.",
+              tips: [{ target: "swears", ko: "'스웨어r즈', 끝 s는 z 소리." }] }
+          ],
+          en: "I let my roommate order pizza for us last night. I told her, “Get everything but pineapple,” because I really hate it on pizza. The pizza showed up covered in pineapple and nothing else. She swears she heard “everything but” as “nothing but.”",
+          ko: "어젯밤에 룸메이트한테 피자 주문을 맡겼어. 피자에 파인애플은 진짜 싫어서 “파인애플 빼고 다 넣어.” 했거든. 근데 피자가 파인애플만 잔뜩 올라간 채로 왔어. 룸메는 “빼고 다(everything but)”를 “만 잔뜩(nothing but)”으로 들었다고 우겨."
+        }
+      },
+      {
+        id: "c22-e3",
+        phrase: "Can you add ~?",
+        ko: "'~ 추가해 주실 수 있어요?'라는 뜻이에요. 토핑·치즈·샷처럼 뭔가를 더 넣어 달라고 할 때, 명단·채팅방에 사람을 더할 때도 써요. 비슷한 표현: Could I add ~? / Can I get extra ~?",
+        examples: [
+          { en: "Can you add an extra shot to my latte?", ko: "라떼에 샷 하나 추가해 주실 수 있어요?",
+            chunks: "Can you add‿an‿extra shot / to my latte?",
+            tips: [{ target: "add an extra", ko: "'애더넥스트라'처럼 한 번에 이어져요." }] },
+          { en: "Can you add my name to the list?", ko: "명단에 제 이름 추가해 주실 수 있어요?",
+            chunks: "Can you add my name / to the list?",
+            tips: [{ target: "list", ko: "'리스트', 끝 t는 약하게." }] },
+          { en: "Can you add bacon to the burger?", ko: "버거에 베이컨 추가해 주실 수 있어요?",
+            chunks: "Can you add bacon / to the burger?",
+            tips: [{ target: "bacon", ko: "'베이컨', 첫음절에 힘." }] },
+          { en: "Can you add Jenny to the group chat?", ko: "제니도 단톡방에 추가해 줄래?",
+            chunks: "Can you add Jenny / to the group chat?",
+            tips: [{ target: "group chat", ko: "'단톡방'. chat의 t는 멈추기만 해요." }] },
+          { en: "Can you add more ice, please?", ko: "얼음 좀 더 넣어 주실 수 있어요?",
+            chunks: "Can you add more‿ice, / please?",
+            tips: [{ target: "more ice", ko: "r이 ice에 붙어 '모어라이스'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At‿a burger place in Texas, / I asked, / “Can you add jalapeños?” / thinking I'd get‿a few slices.",
+              ko: "텍사스의 버거집에서 몇 조각 넣어 주는 줄 알고 “할라피뇨 추가해 주실 수 있어요?” 했거든.",
+              tips: [{ target: "jalapeños", ko: "j가 'ㅎ' 소리, '할라페뇨스'." }] },
+            { chunks: "The cook laughed / and dumped like‿a whole jar / on my burger.",
+              ko: "요리사가 웃더니 한 병을 통째로 버거에 쏟아 버렸어.",
+              tips: [{ target: "laughed", ko: "gh는 f 소리, ed는 t 소리로 '래프트'." }] },
+            { chunks: "My mouth was‿on fire / for‿an‿hour.",
+              ko: "한 시간 동안 입에 불이 났어.",
+              tips: [{ target: "an hour", ko: "h는 소리 나지 않아 '어나워r'처럼." }] },
+            { chunks: "Next time / I'm asking for just‿a couple.",
+              ko: "다음엔 딱 두어 개만 달라고 할 거야.",
+              tips: [{ target: "Next time", ko: "Next의 t는 거의 안 들리고 '넥스 타임'." }] }
+          ],
+          en: "At a burger place in Texas, I asked, “Can you add jalapeños?” thinking I'd get a few slices. The cook laughed and dumped like a whole jar on my burger. My mouth was on fire for an hour. Next time I'm asking for just a couple.",
+          ko: "텍사스 버거집에서 몇 조각 넣어 주겠거니 하고 “할라피뇨 추가해 주실 수 있어요?” 했거든. 요리사가 웃더니 한 병을 통째로 버거에 쏟아 버렸어. 한 시간 동안 입에서 불이 났지. 다음엔 딱 두어 개만 달라고 할 거야."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

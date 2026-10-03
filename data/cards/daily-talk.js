@@ -766,5 +766,166 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 24,
+    category: "일상 대화",
+    title: "엘리베이터에서 짐 든 사람 도와주기",
+    situation: "아파트 엘리베이터에 탔는데, 양손 가득 짐을 든 사람이 뛰어와요. 문을 잡아 주고, 버튼을 못 누르는 그 사람 대신 몇 층 가는지 물어보려고 해요.",
+    hooks: [
+      { ko: "짐 든 사람에게 몇 층 가시냐고 물을 때, 뭐라고 하지?", line: 4 },
+      { ko: "들고 있는 가방을 대신 들어 주겠다고 할 때, 뭐라고 하지?", line: 6 },
+      { ko: "엘리베이터 문을 잡고 '어서 타세요'라고 할 때, 뭐라고 하지?", line: 2 }
+    ],
+    dialogue: [
+      { who: "stranger", en: "Oh, hold the door, please!", ko: "아, 문 좀 잡아 주세요!",
+        chunks: "Oh, / hold the door, please!",
+        tips: [{ target: "hold the door", ko: "hold의 d는 약하게, '홀 더 도어r'." }] },
+      { who: "me", en: "Got it! Come on in.", ko: "네! 타세요.",
+        chunks: "Got‿it! / Come‿on‿in.",
+        tips: [{ target: "Come on in", ko: "'커머닌'처럼 한 번에 이어져요." }] },
+      { who: "stranger", en: "Thanks. Sorry, my hands are totally full.", ko: "고마워요. 죄송해요, 손이 꽉 찼네요.",
+        chunks: "Thanks. / Sorry, / my hands‿are totally full.",
+        tips: [{ target: "totally", ko: "tt가 굴러 '토럴리'처럼." }] },
+      { who: "me", en: "No problem. What floor?", ko: "괜찮아요. 몇 층 가세요?",
+        chunks: "No problem. / What floor?",
+        tips: [{ target: "What floor?", ko: "짧게 묻는 말이라 floor에서 끝을 올려요." }] },
+      { who: "stranger", en: "Twelve, please. Thank you so much.", ko: "12층이요. 정말 고마워요.",
+        chunks: "Twelve, please. / Thank you so much.",
+        tips: [{ target: "Twelve", ko: "끝 v를 살짝 떨어 '트웰브'." }] },
+      { who: "me", en: "Here, let me get that bag for you.", ko: "여기, 그 가방은 제가 들어 드릴게요.",
+        chunks: "Here, / let me get that bag / for you.",
+        tips: [{ target: "let me", ko: "'렛 미'를 빠르게 '레미'처럼." }] },
+      { who: "stranger", en: "Oh, you're a lifesaver. Thanks!", ko: "어머, 덕분에 살았어요. 고마워요!",
+        chunks: "Oh, you're‿a lifesaver. / Thanks!",
+        tips: [{ target: "lifesaver", ko: "'구세주'. life에 힘, '라이프세이버r'." }] },
+      { who: "me", en: "Here's twelve. Have a good one!", ko: "12층이에요. 좋은 하루 보내세요!",
+        chunks: "Here's twelve. / Have‿a good one!",
+        tips: [{ target: "Here's twelve", ko: "s가 twelve에 붙어 '히어r즈 트웰브'." }] }
+    ],
+    expressions: [
+      {
+        id: "c24-e1",
+        phrase: "hold the door",
+        forms: ["holding the door", "held the door"],
+        ko: "'문을 잡아 주다'라는 뜻이에요. 엘리베이터나 출입문이 닫히기 전에 누가 오면 자주 들어요. 'Can you hold the door?'처럼 부탁할 때도, 'I'll hold the door.'처럼 내가 잡아 줄 때도 써요. 비슷한 표현: Keep the door open. / Hold the elevator!",
+        examples: [
+          { en: "Can you hold the door for a second?", ko: "잠깐만 문 좀 잡아 줄래요?",
+            chunks: "Can you hold the door / for‿a second?",
+            tips: [{ target: "for a second", ko: "'잠깐만'. '포러 세컨드'처럼." }] },
+          { en: "I'll hold the door, go ahead.", ko: "제가 문 잡고 있을게요, 먼저 가세요.",
+            chunks: "I'll hold the door, / go‿ahead.",
+            tips: [{ target: "go ahead", ko: "'고어헤드'처럼 이어져요." }] },
+          { en: "Thanks for holding the door!", ko: "문 잡아 줘서 고마워요!",
+            chunks: "Thanks for holding the door!",
+            tips: [{ target: "holding", ko: "'홀딩', d는 약하게." }] },
+          { en: "Someone hold the door, the delivery guy is coming!", ko: "누가 문 좀 잡아 줘요, 택배 기사님 오세요!",
+            chunks: "Someone hold the door, / the delivery guy is coming!",
+            tips: [{ target: "delivery guy", ko: "'딜리버리 가이', 두 번째 음절에 힘." }] },
+          { en: "He held the door for me at the café.", ko: "그 사람이 카페에서 나를 위해 문을 잡아 줬어.",
+            chunks: "He held the door for me / at the café.",
+            tips: [{ target: "held the", ko: "d와 th가 이어져 '헬더'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "This morning / I saw my neighbor / running toward the elevator / with‿a giant coffee.",
+              ko: "오늘 아침에 이웃이 커다란 커피를 들고 엘리베이터 쪽으로 뛰어오는 걸 봤어.",
+              tips: [{ target: "elevator", ko: "'엘러베이러r', 첫음절에 힘." }] },
+            { chunks: "I yelled, / “I'll hold the door!” / and stuck my arm‿out.",
+              ko: "“문 잡을게요!” 하고 소리치면서 팔을 쭉 내밀었지.",
+              tips: [{ target: "stuck my arm out", ko: "arm이 out에 붙어 '아r마웃'처럼." }] },
+            { chunks: "The door closed anyway, / right‿on my arm, / and I screamed louder / than she did.",
+              ko: "근데 문이 그냥 닫혀서 내 팔이 끼었고, 내가 그분보다 더 크게 소리 질렀어.",
+              tips: [{ target: "right on", ko: "t가 굴러 '라이론'처럼." }] },
+            { chunks: "She made‿it in, though, / and gave me half her muffin / as‿a thank-you.",
+              ko: "그래도 그분은 무사히 탔고, 고맙다며 머핀 반쪽을 줬어.",
+              tips: [{ target: "made it in", ko: "'제때 들어왔다'. '메이딧 인'처럼." }] }
+          ],
+          en: "This morning I saw my neighbor running toward the elevator with a giant coffee. I yelled, “I'll hold the door!” and stuck my arm out. The door closed anyway, right on my arm, and I screamed louder than she did. She made it in, though, and gave me half her muffin as a thank-you.",
+          ko: "오늘 아침에 이웃이 커다란 커피를 들고 엘리베이터로 뛰어오는 걸 봤어. “문 잡을게요!” 하고 소리치면서 팔을 쭉 내밀었지. 근데 문이 그냥 닫히면서 내 팔이 끼었고, 내가 그분보다 더 크게 소리를 질렀어. 그래도 그분은 무사히 탔고, 고맙다고 머핀 반쪽을 주더라."
+        }
+      },
+      {
+        id: "c24-e2",
+        phrase: "What floor?",
+        ko: "'몇 층 가세요?'라는 뜻이에요. 엘리베이터에서 버튼 앞에 선 사람이 다른 사람 대신 눌러 줄 때 짧게 물어요. 좀 더 공손하게는 'What floor are you going to?'. 비슷한 표현: Which floor? / Where to?",
+        examples: [
+          { en: "What floor are you going to?", ko: "몇 층 가세요?",
+            chunks: "What floor are you going to?",
+            tips: [{ target: "going to", ko: "'고잉 투'를 빠르게, 질문 끝을 올려요." }] },
+          { en: "Excuse me, what floor is the gym on?", ko: "실례지만, 헬스장은 몇 층이에요?",
+            chunks: "Excuse me, / what floor‿is the gym on?",
+            tips: [{ target: "gym on", ko: "m이 on에 붙어 '지먼'처럼." }] },
+          { en: "What floor do you live on?", ko: "몇 층 사세요?",
+            chunks: "What floor do‿you live on?",
+            tips: [{ target: "live on", ko: "v가 on에 붙어 '리번'처럼." }] },
+          { en: "Sorry, what floor did you say?", ko: "죄송해요, 몇 층이라고 하셨죠?",
+            chunks: "Sorry, / what floor did‿you say?",
+            tips: [{ target: "did you", ko: "'디쥬'처럼 붙어요." }] },
+          { en: "What floor is the meeting room on?", ko: "회의실이 몇 층이에요?",
+            chunks: "What floor‿is / the meeting room on?",
+            tips: [{ target: "meeting room", ko: "t가 굴러 '미링 룸'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I got‿into‿a hotel elevator / with‿a guy carrying three suitcases.",
+              ko: "호텔 엘리베이터에 탔는데, 여행 가방을 세 개나 든 남자가 같이 탔어.",
+              tips: [{ target: "suitcases", ko: "'숫케이시즈', 첫음절에 힘." }] },
+            { chunks: "I asked, / “What floor?” / and he said, / “Thirty-two, thank you!”",
+              ko: "“몇 층 가세요?” 물었더니 “32층이요, 고마워요!” 하더라.",
+              tips: [{ target: "Thirty-two", ko: "th는 혀를 물고, '써r리 투'." }] },
+            { chunks: "I hit the button, / but the elevator went straight down / to the basement instead.",
+              ko: "버튼을 눌렀는데 엘리베이터가 오히려 지하로 쭉 내려가 버렸어.",
+              tips: [{ target: "button", ko: "tt는 멈추듯 '벗은'처럼." }] },
+            { chunks: "We both just / stared‿at each other / and laughed / the whole way back‿up.",
+              ko: "우리 둘 다 서로 쳐다보다가 다시 올라가는 내내 웃었어.",
+              tips: [{ target: "stared at", ko: "d가 at에 붙어 '스테어r댓'처럼." }] }
+          ],
+          en: "I got into a hotel elevator with a guy carrying three suitcases. I asked, “What floor?” and he said, “Thirty-two, thank you!” I hit the button, but the elevator went straight down to the basement instead. We both just stared at each other and laughed the whole way back up.",
+          ko: "호텔 엘리베이터에 탔는데 여행 가방을 세 개나 든 남자가 같이 탔어. “몇 층 가세요?” 물었더니 “32층이요, 고마워요!” 하더라. 버튼을 눌렀는데 엘리베이터가 오히려 지하까지 쭉 내려가 버렸어. 우리 둘 다 서로 멍하니 보다가 다시 올라가는 내내 웃었어."
+        }
+      },
+      {
+        id: "c24-e3",
+        phrase: "Let me get ~ for you.",
+        ko: "'~는 제가 해 드릴게요'라는 뜻이에요. 문·가방·버튼처럼 상대가 하기 힘든 걸 대신 해 주겠다고 할 때 써요. 친절하고 자연스러운 말투예요. 비슷한 표현: I'll get ~ for you. / Here, I got it.",
+        examples: [
+          { en: "Let me get the door for you.", ko: "문은 제가 열어 드릴게요.",
+            chunks: "Let me get the door / for you.",
+            tips: [{ target: "Let me", ko: "'레미'처럼 빠르게." }] },
+          { en: "Let me get that for you, it looks heavy.", ko: "그거 제가 들어 드릴게요, 무거워 보여요.",
+            chunks: "Let me get that for you, / it looks heavy.",
+            tips: [{ target: "get that", ko: "get의 t는 멈추기만 하고 바로 that으로." }] },
+          { en: "Let me get a menu for you.", ko: "메뉴판 가져다 드릴게요.",
+            chunks: "Let me get‿a menu / for you.",
+            tips: [{ target: "get a", ko: "t가 굴러 '게러'처럼." }] },
+          { en: "Let me get the bill for you tonight.", ko: "오늘 밤은 내가 계산할게.",
+            chunks: "Let me get the bill / for you tonight.",
+            tips: [{ target: "bill", ko: "'빌', l을 끝까지 길게." }] },
+          { en: "Let me get a towel for you.", ko: "수건 갖다줄게.",
+            chunks: "Let me get‿a towel / for you.",
+            tips: [{ target: "towel", ko: "'타월', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At the airport, / I saw an‿old lady / struggling to lift her suitcase / onto the scale.",
+              ko: "공항에서 할머니 한 분이 캐리어를 저울에 올리느라 애쓰시는 걸 봤어.",
+              tips: [{ target: "struggling", ko: "'스트러글링', 첫음절에 힘." }] },
+            { chunks: "I walked‿over and said, / “Let me get that for you.”",
+              ko: "다가가서 “제가 들어 드릴게요.” 했지.",
+              tips: [{ target: "walked over", ko: "ed가 t 소리로 over에 붙어 '웍토버r'처럼." }] },
+            { chunks: "It was so heavy / I almost dropped‿it / on my own foot.",
+              ko: "근데 너무 무거워서 내 발에 떨어뜨릴 뻔했어.",
+              tips: [{ target: "dropped it", ko: "ed가 t 소리로 it에 붙어 '드랍팃'처럼." }] },
+            { chunks: "She laughed and said / it was full‿of kimchi / for her grandkids.",
+              ko: "할머니는 웃으면서 손주들 줄 김치가 가득 들었다고 하셨어.",
+              tips: [{ target: "full of", ko: "l이 of에 붙어 '풀러브'처럼." }] }
+          ],
+          en: "At the airport, I saw an old lady struggling to lift her suitcase onto the scale. I walked over and said, “Let me get that for you.” It was so heavy I almost dropped it on my own foot. She laughed and said it was full of kimchi for her grandkids.",
+          ko: "공항에서 할머니 한 분이 캐리어를 저울에 올리느라 애쓰시는 걸 봤어. 다가가서 “제가 들어 드릴게요.” 했지. 근데 너무 무거워서 내 발에 떨어뜨릴 뻔했어. 할머니는 웃으면서 손주들 줄 김치가 가득 들었다고 하시더라."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );
