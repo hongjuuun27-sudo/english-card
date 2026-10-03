@@ -3356,7 +3356,11 @@ function statusOf(id) {
   return s.status === "mastered" ? "mastered" : "learning";
 }
 const STATUS_LABEL = { new: "미학습", learning: "학습 중", mastered: "익힘" };
-function picksToday() { return (study.picks[studyToday()] || []).length; }
+/* 오늘 새로 고른 표현 수: 오늘 고른 것 중 지금도 학습 중(또는 익힘)인 것만. 오늘 골랐다가 중단한 건 세지 않음(그 자리를 다시 쓸 수 있게).
+   중단을 고치기 전 기록(오늘 목록에 중단한 표현이 남아 있음)도 이렇게 세면 바로 풀림 */
+function picksToday() {
+  return (study.picks[studyToday()] || []).filter(id => study.items[id] && study.items[id].status !== "stopped").length;
+}
 
 function startLearning(id) {
   const t = studyToday();
@@ -3379,6 +3383,9 @@ function stopLearning(id) {
   if (!s) return;
   s.status = "stopped";     // 연습장 기록(notes)은 그대로 남김
   delete s.due;
+  /* 오늘 고른 표현을 오늘 중단하면 오늘 목록에서 빼서 그 자리를 다시 비움. 어제 이전에 시작한 표현은 오늘 개수와 상관없으니 그대로 */
+  const t = studyToday(), list = study.picks[t];
+  if (list && list.includes(id)) study.picks[t] = list.filter(x => x !== id);
   saveStudy();
 }
 /* 오늘 복습할 표현: 날짜가 지난(밀린) 것까지 모두, 오래된 것부터 */
@@ -5083,23 +5090,56 @@ if ("serviceWorker" in navigator && location.protocol === "https:") {
 function sceneOf(card) {
   return card.scene || (card.category === "일상 대화" ? "free" : "task");   // task: 정해진 용건(10단어), free: 자유 대화(12단어)
 }
+/* 카드 데이터 검사(규칙 = CLAUDE.md '카드 만들기 — 필수 항목 체크리스트'). 앱의 진짜 함수(밑줄·청크·썰 문장 나누기)로 확인.
+   issues = 고쳐야 하는 문제, warnings = 규칙 권장 사항(앱은 동작함). 글 형식: "카드 3 (id 3) 어느 항목: 무엇이 문제".
+   파일 단위 검사(JS 문법·index.html/sw.js 등록·카드 파일 위치·기존 id 바뀜)는 .claude/check-cards.html이 이 함수에 더해서 함.
+   카드에 새 칸이 생기면 아래 KEYS와 검사, CLAUDE.md 체크리스트를 같이 고칠 것 */
+const CHECK_KEYS = {
+  card: ["id", "category", "title", "situation", "scene", "dialogue", "expressions", "extraExpressions"],
+  line: ["who", "en", "ko", "chunks", "tips", "soloChunks"],
+  expr: ["id", "phrase", "forms", "meaning", "ko", "examples", "story"],
+  ex: ["en", "ko", "chunks", "tips", "soloChunks"],
+  story: ["en", "ko", "sentences"],
+  sent: ["chunks", "ko", "tips", "soloChunks"],
+  tip: ["target", "ko"]
+};
 function runChecks() {
-  const issues = [];
+  const issues = [], warnings = [];
   const stats = { cards: CARDS.length, expressions: 0, examples: 0, meTurns: 0, questions: QUESTIONS.length, pUnits: 0, pDone: 0 };   // pUnits·pDone: 연습 문장 전체·데이터 있는 것
   const ids = new Set();
   const allExprIds = new Set();
-  let prevId = -Infinity;
+  const titles = {};
+  /* 모르는 칸(오타 — 앱이 읽지 않아서 그 데이터가 빠진 것과 같음) */
+  const keyCheck = (o, kind, where) => {
+    if (!o || typeof o !== "object") return;
+    Object.keys(o).forEach(k => { if (!CHECK_KEYS[kind].includes(k)) issues.push(where + ": 모르는 칸 \"" + k + "\" — 오타? (앱이 읽지 않음)"); });
+  };
+  const sentCount = t => String(t || "").split(/(?<=[.!?]["”]?)\s+(?=[A-Z“"])/).filter(s => s.trim()).length;
+  const curly = (t, where) => { if (/’/.test(t || "")) warnings.push(where + ": 둥근 아포스트로피(’) — 곧은 ' 로"); };
   CARDS.forEach((c, i) => {
     const tag = "카드 " + (i + 1) + (c.id != null ? " (id " + c.id + ")" : "");
+    keyCheck(c, "card", tag);
     if (c.id == null) issues.push(tag + ": id 없음");
     else {
+      if (!Number.isInteger(c.id)) issues.push(tag + ": id는 정수여야 함 — " + JSON.stringify(c.id));
       if (ids.has(c.id)) issues.push(tag + ": id 중복");
-      if (typeof c.id === "number" && c.id <= prevId) issues.push(tag + ": id가 앞 카드보다 작음");
       ids.add(c.id);
-      if (typeof c.id === "number") prevId = c.id;
     }
     ["category", "title", "situation"].forEach(k => { if (!c[k]) issues.push(tag + ": " + k + " 없음"); });
-    const d = c.dialogue || [];
+    if (c.category && !(c.category in CATEGORY_HUE)) issues.push(tag + ": category \"" + c.category + "\"가 categories.js에 없음 (색·이모지·카테고리 고르기에 안 나옴)");
+    if (c.scene != null && c.scene !== "task" && c.scene !== "free") issues.push(tag + ": scene은 \"task\" 또는 \"free\" — " + c.scene);
+    if (c.title) {
+      if (titles[c.title]) warnings.push(tag + ": 제목이 카드 " + titles[c.title] + "와 같음 — " + c.title);
+      titles[c.title] = i + 1;
+    }
+    if (c.situation && /[.!?]/.test(c.situation) && String(c.situation).split(/(?<=[.!?])\s+/).filter(Boolean).length > 3) warnings.push(tag + ": 상황 설명이 길어요(1~2문장 권장)");
+    if (c.dialogue != null && !Array.isArray(c.dialogue)) issues.push(tag + ": dialogue는 목록이어야 함");
+    const d = Array.isArray(c.dialogue) ? c.dialogue : [];
+    d.forEach((x, li) => {
+      keyCheck(x, "line", tag + " 대사 " + (li + 1));
+      if (!x || typeof x.who !== "string" || !x.who) issues.push(tag + " 대사 " + (li + 1) + ": who(화자) 없음");
+      curly(x && x.en, tag + " 대사 " + (li + 1));
+    });
     if (d.length < 4 || d.length > 10) issues.push(tag + ": 대화 " + d.length + "줄 (4~10줄)");
     const me = d.filter(x => x.who === "me");
     if (me.length < 2) issues.push(tag + ": me 턴 " + me.length + "개 (2턴 이상)");
@@ -5129,9 +5169,11 @@ function runChecks() {
         if (!nw) issues.push(lt + ": 빈 청크 — " + x.chunks);
         else if (nw > 6) issues.push(lt + ": 청크 하나가 " + nw + "단어 (보통 2~5단어, 6단어까지) — " + x.chunks);
       });
+      if (pc.links.length > 3) warnings.push(lt + ": 연음 표시(‿) " + pc.links.length + "곳 — 문장마다 0~3곳 권장");
       const tips = x.tips == null ? [] : x.tips;
       if (!Array.isArray(tips) || tips.length > 2) issues.push(lt + ": 발음 팁은 0~2개 목록");
       else tips.forEach(tp => {
+        keyCheck(tp, "tip", lt + " 발음 팁");
         if (!tp || !tp.target || !tp.ko) { issues.push(lt + ": 발음 팁 target/ko 누락"); return; }
         if (pc.text.toLowerCase().indexOf(String(tp.target).toLowerCase()) < 0) issues.push(lt + ": 발음 팁 대상 \"" + tp.target + "\"이 문장에 없음");
       });
@@ -5154,6 +5196,12 @@ function runChecks() {
       stats.expressions++;
       const p = "\"" + e.phrase + "\"";
       const want = kind === "core" ? "e" : "x";
+      keyCheck(e, "expr", tag + " " + p);
+      if (e.phrase != null && typeof e.phrase !== "string") issues.push(tag + " " + p + ": phrase는 글(문자열)이어야 함");
+      if (e.forms != null && !(Array.isArray(e.forms) && e.forms.every(f => typeof f === "string" && f))) issues.push(tag + " " + p + ": forms는 글 목록이어야 함");
+      if (e.examples != null && !Array.isArray(e.examples)) issues.push(tag + " " + p + ": examples는 목록이어야 함");
+      /* 목록·복습에 보이는 짧은 뜻(shortMeaning): meaning이 없으면 ko 맨 앞 '…' 안 글자 */
+      if (e.ko && !e.meaning && !/'[^']{1,40}'/.test(e.ko)) warnings.push(tag + " " + p + ": ko에 '짧은 뜻'(작은따옴표)이 없음 — 목록·복습의 짧은 뜻이 \"" + shortMeaning(e) + "\"로 보임");
       if (!e.id) issues.push(tag + " " + p + ": 표현 id 없음");
       else {
         if (allExprIds.has(e.id)) issues.push(tag + " " + p + ": 표현 id 중복 — " + e.id);
@@ -5169,11 +5217,25 @@ function runChecks() {
       const n = (e.examples || []).length;
       stats.examples += n;
       if (n !== 5) issues.push(tag + " " + p + ": 예문 " + n + "개 (정확히 5개)");
-      (e.examples || []).forEach(x => { if (!x.en || !x.ko) issues.push(tag + " " + p + ": 예문 en/ko 누락"); });
+      const exSeen = new Set();
+      (e.examples || []).forEach((x, n) => {
+        const lt = tag + " " + p + " 예문 " + (n + 1);
+        keyCheck(x, "ex", lt);
+        if (!x || !x.en || !x.ko) { issues.push(lt + ": en/ko 누락"); return; }
+        if (exSeen.has(x.en)) issues.push(lt + ": 앞 예문과 같은 문장");
+        exSeen.add(x.en);
+        if (!exprFound(e, x.en)) warnings.push(lt + ": 예문에 표현이 안 보임(활용형이면 forms에) — " + x.en);
+        if (/[가-힣]/.test(x.en)) warnings.push(lt + ": 예문 영어에 한글(괄호 뜻은 쓰지 않는 게 원칙)");
+        if (sentCount(x.en) > 2) warnings.push(lt + ": 예문은 한 번에 하는 말(짧은 문장 1~2개) — " + x.en);
+        curly(x.en, lt);
+      });
       (e.examples || []).forEach((x, n) => { if (x && x.en && !unitCheck(tag + " " + p + " 예문 " + (n + 1), stripGloss(x.en), x)) miss.ex++; });
       if (!e.story || !e.story.en || !e.story.ko) { issues.push(tag + " " + p + ": 썰 누락"); return; }
       /* 썰 연습 문장(story.sentences): 이으면 썰 영어(괄호 속 한국어를 뺀 것)와 같음, 문장마다 chunks·ko */
       const st = e.story, G = stripGloss(st.en);
+      keyCheck(st, "story", tag + " " + p + " 썰");
+      curly(st.en, tag + " " + p + " 썰");
+      if (/"/.test(st.en)) warnings.push(tag + " " + p + " 썰: 인용은 둥근 따옴표 “ ” 로");
       if (!Array.isArray(st.sentences) || !st.sentences.length) { miss.story++; stats.pUnits += storySents(st).length; }
       else {
         const texts = st.sentences.map(s => (s && typeof s.chunks === "string" ? parseChunks(s.chunks).text : ""));
@@ -5181,6 +5243,7 @@ function runChecks() {
         if (getScript(st.en).words.length !== getScript(G).words.length) issues.push(tag + " " + p + ": 썰의 괄호 속 한국어 때문에 단어 수가 달라짐(괄호 앞뒤 공백 확인)");
         st.sentences.forEach((s, n) => {
           const lt = tag + " " + p + " 썰 문장 " + (n + 1);
+          keyCheck(s, "sent", lt);
           if (!unitCheck(lt, null, s)) issues.push(lt + ": chunks 없음");
           if (!s || !s.ko) issues.push(lt + ": ko(한글 해석) 없음");
         });
@@ -5203,7 +5266,10 @@ function runChecks() {
     qSeen.add(k);
   });
   if (QUESTIONS.length < 60) issues.push("질문 " + QUESTIONS.length + "개 (60개 이상 권장)");
-  return { stats, issues };
+  /* 카드 id는 1부터 빈칸 없이 이어지는 게 원칙(카드를 지웠으면 빈칸이 정상일 수 있음) */
+  const nums = Array.from(ids).filter(Number.isInteger).sort((a, b) => a - b);
+  nums.forEach((n, k) => { const want = k ? nums[k - 1] + 1 : 1; if (n !== want) warnings.push("카드 id: " + want + (n - 1 > want ? "~" + (n - 1) : "") + "번이 비어 있음 (새 카드는 가장 큰 id 다음 번호로)"); });
+  return { stats, issues, warnings };
 }
 window.runChecks = runChecks;
 if (location.hash === "#check") {
@@ -5212,7 +5278,8 @@ if (location.hash === "#check") {
     const s = r.stats;
     showSheet("자동 점검", r.issues.length ? "문제 " + r.issues.length + "개" : "이상 없음",
       '<p class="note">카드 ' + s.cards + '장 · 표현 ' + s.expressions + '개 · 예문 ' + s.examples + '개 · me 턴 ' + s.meTurns + '개 · 질문 ' + s.questions + '개 · 연습 데이터 ' + s.pDone + ' / ' + s.pUnits + '문장(대사·예문·썰)</p>' +
-      (r.issues.length ? '<ul class="note">' + r.issues.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : ""));
+      (r.issues.length ? '<ul class="note">' + r.issues.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : "") +
+      (r.warnings.length ? '<p class="note">권장 사항(앱은 동작함) ' + r.warnings.length + '개</p><ul class="note">' + r.warnings.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : ""));
   }, 300);
 }
 
