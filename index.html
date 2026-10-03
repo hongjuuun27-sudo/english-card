@@ -263,7 +263,6 @@
   .sh-mid .row .bubble{ transition:font-size .2s ease, background-color .3s ease, border-color .3s ease, box-shadow .3s ease, transform .12s ease; }
   .sh-mid .row.cur .bubble{ font-size:20.5px; }
   .sh-mid.sh-live .row:not(.cur):not(.past) > *{ opacity:.62; }
-  .actions .repeat{ padding:0 11px; }
 
   /* 듣기: 정답 확인 전에는 대화 대신 두 사람 아이콘(왼쪽 상대, 오른쪽 나). 말하는 쪽은 진한 테두리 + 은은하게 퍼짐, 안 말하는 쪽은 흐리게
      카드 클래스: masked(정답 확인 전) · talk-them / talk-me(지금 말하는 쪽) · lpaused(일시정지) */
@@ -517,9 +516,17 @@
   .prog-text b{ color:var(--accent); }
   .bar{ height:6px; border-radius:3px; background:var(--bg-3); overflow:hidden; }
   .bar i{ display:block; height:100%; border-radius:3px; background:var(--accent); }
-  .toc-group{ margin-top:34px; }
-  .toc-group:first-of-type{ margin-top:26px; }
-  .toc-head{ display:flex; align-items:center; gap:11px; margin-bottom:10px; }
+  /* 카테고리는 접어서(.toc-group) 보여 주고, 지금 보던 카드의 카테고리만 펼침(.open). 머리를 누르면 펼치기·접기, 위쪽 [전체 펼치기 / 전체 접기] */
+  .toc-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:22px; }
+  .toc-bar .set-label{ margin:0; }
+  .toc-all{ height:34px; padding:0 14px; border-radius:999px; font-size:14px; font-weight:600; color:var(--accent); background:var(--accent-soft); }
+  .toc-group{ margin-top:6px; border-bottom:1px solid var(--line); }
+  .toc-head{ width:100%; display:flex; align-items:center; gap:11px; padding:10px 2px; text-align:left; }
+  .toc-chev{ flex:none; width:22px; height:22px; color:var(--faint); transition:transform .2s ease; }
+  .toc-chev svg{ width:22px; height:22px; }
+  .toc-group.open .toc-chev{ transform:rotate(180deg); }
+  .toc-group:not(.open) .toc{ display:none; }
+  .toc-group.open .toc{ margin-bottom:12px; }
   .toc-emoji{
     flex:none; width:36px; height:36px; border-radius:11px;
     display:grid; place-items:center; font-size:19px; line-height:1;
@@ -833,6 +840,7 @@
   }
   .dv-cat[aria-pressed="true"]{ color:var(--accent); border-color:var(--accent); background:var(--accent-soft); }
   .dv-sbody .seg button{ font-size:15px; }
+  .dv-sbody .seg2{ margin-top:6px; }   /* 내용: 두 번째 줄(대화 없이 — 예문만·썰만) */
   .dv-dis{ opacity:.4; pointer-events:none; }
   .dv-pre-row{ display:flex; gap:8px; margin-top:10px; }
   .dv-pre-row .btn{ flex:1; height:48px; font-size:15.5px; }
@@ -1211,7 +1219,6 @@ const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="tru
 const ICON_LIST ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>';
 const ICON_SLIDERS ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>';
 const ICON_CAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v-4.5L6.2 7a2 2 0 0 1 1.9-1.4h7.8A2 2 0 0 1 17.8 7l2.2 5.5V17"/><path d="M3.5 17h17M4 12.5h16M6 17v2M18 17v2"/><circle cx="7.6" cy="14.8" r=".6" fill="currentColor"/><circle cx="16.4" cy="14.8" r=".6" fill="currentColor"/></svg>';
-const ICON_REPEAT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2.5l3 3-3 3"/><path d="M4 11.5v-1a5 5 0 0 1 5-5h11"/><path d="M7 21.5l-3-3 3-3"/><path d="M20 12.5v1a5 5 0 0 1-5 5H4"/></svg>';
 const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 const ICON_PREV = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="5.5" width="2.6" height="13" rx="1"/><path d="M19 6.6v10.8a1 1 0 0 1-1.55.83L10 13.2a1.4 1.4 0 0 1 0-2.4l7.45-5.03A1 1 0 0 1 19 6.6z"/></svg>';
 const ICON_NEXT = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="16.4" y="5.5" width="2.6" height="13" rx="1"/><path d="M5 6.6v10.8a1 1 0 0 0 1.55.83L14 13.2a1.4 1.4 0 0 0 0-2.4L6.55 5.77A1 1 0 0 0 5 6.6z"/></svg>';
@@ -2309,9 +2316,10 @@ let mode = (() => {
   try { const m = localStorage.getItem(MODE_KEY); return m && MODES[m] ? m : "read"; } catch (e) { return "read"; }
 })();
 
-/* 쉐도잉 난이도(모든 카드 공통, 저장): easy 쉬움(영어 보며 한 줄씩) / mid 중간(영어 보며 쉬지 않고 이어서 — 동시 따라 말하기, 반복 켜기)
+/* 쉐도잉 난이도(모든 카드 공통, 저장): easy 쉬움(영어 보며 한 줄씩) / mid 중간(영어 보며 쉬지 않고 이어서 — 동시 따라 말하기)
    / hard 어려움(영어 없이 두 사람 아이콘만 보며 한 줄씩, 막히면 '정답 보기').
-   저장 { level, repeat, v: 2 }. v가 없는 예전 기록의 "hard"는 그때의 '어려움'(쉬지 않고 이어서) = 지금의 mid로 옮김 */
+   저장 { level, v: 2 }. v가 없는 예전 기록의 "hard"는 그때의 '어려움'(쉬지 않고 이어서) = 지금의 mid로 옮김.
+   (예전의 repeat — 중간에서 끝나면 처음부터 다시 — 은 2026-10-03에 없앰. 저장에 남아 있어도 읽지 않음) */
 const SHADOW_KEY = "engcards.shadow.v1";
 const SHADOW_LEVELS = ["easy", "mid", "hard"];
 const shadowPref = (() => {
@@ -2319,12 +2327,12 @@ const shadowPref = (() => {
     const s = JSON.parse(localStorage.getItem(SHADOW_KEY) || "null");
     if (s && typeof s === "object") {
       const level = s.v !== 2 && s.level === "hard" ? "mid" : s.level;
-      const p = { level: SHADOW_LEVELS.includes(level) ? level : "easy", repeat: !!s.repeat, v: 2 };
+      const p = { level: SHADOW_LEVELS.includes(level) ? level : "easy", v: 2 };
       if (s.v !== 2) try { localStorage.setItem(SHADOW_KEY, JSON.stringify(p)); } catch (e) {}
       return p;
     }
   } catch (e) {}
-  return { level: "easy", repeat: false, v: 2 };
+  return { level: "easy", v: 2 };
 })();
 function saveShadowPref() {
   try { localStorage.setItem(SHADOW_KEY, JSON.stringify(shadowPref)); } catch (e) {}
@@ -2345,7 +2353,8 @@ function resetCard(card) {
   /* shadow: level(easy 쉬움 / mid 중간 / hard 어려움) · started(중간에서 시작했는지)
      어려움: idx(지금 줄) · peek(지금 줄 정답 보기 중) · revealed(마지막 줄까지 끝나서 대화 전체를 보여 줌) */
   /* hold: 연습 모드에서 돌아온 뒤 '이어 듣기'로 이어 갈 줄(듣기·쉐도잉 중간, 없으면 -1). 무엇이든 재생을 시작하면 지움 */
-  const st = card._st = { mode, level: shadowPref.level, shown: 0, full: false, revealed: false, idx: -1, started: false, peek: false, timer: null, rd: null, hold: -1 };
+  /* focus: 가장 최근에 재생했거나(cardReader onItem) 나타난·옮긴 줄(-1 = 아직 없음) — 연습 버튼이 이 줄부터 */
+  const st = card._st = { mode, level: shadowPref.level, shown: 0, full: false, revealed: false, idx: -1, started: false, peek: false, timer: null, rd: null, hold: -1, focus: -1 };
   st.rd = cardReader(card, st);
   card.classList.remove("m-read", "m-listen", "m-shadow", "masked", "lpaused", "sh-mid", "sh-live", "sh-blind", "peek");
   card.classList.add("m-" + mode);
@@ -2382,20 +2391,22 @@ function cardReader(card, st) {
     onItem: i => {
       if (card._st !== st) return;
       st.hold = -1;
+      st.focus = i;                                  // 연습 버튼은 가장 최근에 재생했거나 나타난 줄부터(cardLineNow)
       if (isMid(st)) { midCur(card, i); return; }
-      if (isBlind(st)) { renderActions(card); return; }     // 어려움: 재생이 시작되면 말하는 쪽 아이콘 퍼짐(단어 탭 재생 포함)
       if (st.mode !== "listen" || st.rd.state().single) return;
       setCur(card, i);
       if (i > 0 && !card.classList.contains("masked")) follow(card, rowsOf(card)[i]);   // 아이콘 화면에서는 스크롤할 줄이 없음
     },
     onEnd: complete => {
       if (card._st !== st) return;
-      if (isMid(st)) { midEnd(card, complete); return; }
-      if (isBlind(st)) { renderActions(card); return; }     // 어려움: 한 줄이 끝나면 말하는 쪽 아이콘 퍼짐 멈춤(lpaused)
+      if (isMid(st)) { midEnd(card); return; }
       if (st.mode !== "listen") return;
       setCur(card, -1);
       renderActions(card);
-    }
+    },
+    /* 재생이 시작되거나(문장마다) 끝나면 버튼(재생 / 일시정지 / 이어 듣기)과 어려움의 아이콘 퍼짐을 다시 그림.
+       예) 중간에서 일시정지한 채 앞 줄 단어를 누르면 바로 재생되므로 버튼도 [일시정지]로 */
+    onChange: () => { if (card._st === st && (st.mode === "listen" || isMid(st) || isBlind(st))) renderActions(card); }
   });
 }
 
@@ -2423,9 +2434,13 @@ function renderActions(card) {
   const n = rowsOf(card).length;
   let html = "", note = "";
   if (st.mode === "read") {
+    /* 왼쪽 버튼: 아직 다 안 나왔으면 [전체 보기](전체 보기 중이면 [접기]).
+       [다음]으로 모든 줄이 다 나왔으면 — 한글로 남은 내 대사가 있으면 [내 답변 영어로](내 대사 전부 영어), 전부 영어면 [접기](한 번에 처음 상태로) */
     const end = st.shown >= n && !st.timer;
-    html = actBtn("all", st.full ? "접기" : "전체 보기", st.full ? "on" : "") +
-      actBtn("next", end ? AGAIN_HTML : NEXT_HTML, "main");
+    const kq = rowsOf(card).some(r => r.classList.contains("me") && r.classList.contains("kq-on"));
+    const left = st.full ? actBtn("all", "접기", "on") : !end ? actBtn("all", "전체 보기") :
+      kq ? actBtn("meen", "내 답변 영어로") : actBtn("fold", "접기", "on");
+    html = left + actBtn("next", end ? AGAIN_HTML : NEXT_HTML, "main");
   } else if (st.mode === "listen") {
     const rs = st.rd.state();
     const live = rs.active && !rs.single;                             // 대화 전체 이어 재생 중(한 줄만 듣기는 제외)
@@ -2438,16 +2453,15 @@ function renderActions(card) {
       actBtn("play", main, "main");
     if (!st.revealed) note = "▶ 재생을 누르면 대화 전체를 글자 없이 들려줘요. 다 듣고 '정답 확인'.";
   } else if (isMid(st)) {
-    /* 중간: [처음부터] [속도] [반복] [재생/일시정지] — 시작 전엔 [속도] [반복] [시작] */
+    /* 중간: [처음부터] [속도] [재생/일시정지] — 시작 전엔 [속도] [시작] */
     const rs = st.rd.state();
-    const rep = actBtn("repeat", ICON_REPEAT + "<span>반복</span>", "repeat" + (shadowPref.repeat ? " on" : ""), "반복 " + (shadowPref.repeat ? "끄기" : "켜기"));
     if (!st.started) {
-      html = rateBtn() + rep + actBtn("mplay", ICON_PLAY + "<span>시작</span>", "main");
+      html = rateBtn() + actBtn("mplay", ICON_PLAY + "<span>시작</span>", "main");
       note = "대화 전체를 쉬지 않고 이어서 들려줘요. 들리는 대로 바로 겹쳐서 따라 말해 보세요.";
     } else {
       const main = !rs.active ? ICON_PLAY + "<span>" + (st.hold >= 0 ? "이어 듣기" : "재생") + "</span>" :
         rs.paused ? ICON_PLAY + "<span>이어 듣기</span>" : ICON_PAUSE + "<span>일시정지</span>";
-      html = actBtn("mrestart", ICON_RESTART, "ico-btn", "처음부터") + rateBtn() + rep + actBtn("mplay", main, "main");
+      html = actBtn("mrestart", ICON_RESTART, "ico-btn", "처음부터") + rateBtn() + actBtn("mplay", main, "main");
     }
   } else if (st.idx < 0) {
     html = actBtn("start", ICON_PLAY + "<span>시작</span>", "main");
@@ -2481,6 +2495,8 @@ function onAct(card, act) {
   if (st.mode === "read") {
     if (act === "next") readNext(card);
     else if (act === "all") { if (st.full) restartCard(card); else readAll(card); }
+    else if (act === "meen") { rowsOf(card).forEach(r => r.classList.remove("kq-on")); document.body.classList.add("hinted"); renderActions(card); }
+    else if (act === "fold") restartCard(card);
   } else if (st.mode === "listen") {
     if (act === "play") listenPlay(card);
     else if (act === "replay") listenStart(card);
@@ -2488,7 +2504,6 @@ function onAct(card, act) {
   } else if (isMid(st)) {
     if (act === "mplay") midPlay(card);
     else if (act === "mrestart") midStart(card, 0, 0);
-    else if (act === "repeat") { shadowPref.repeat = !shadowPref.repeat; saveShadowPref(); renderActions(card); }
   } else if (isBlind(st)) {
     const n = rowsOf(card).length;
     if (act === "start") blindGo(card, 0);
@@ -2514,6 +2529,7 @@ function onBubble(card, row, target) {
     if (row.classList.contains("kq-on") && row.classList.contains("playing")) Player.stop();   // 한글로 돌아가면(스피커도 숨김) 그 줄 소리도 멈춤
     document.body.classList.add("hinted");
     buzz();
+    renderActions(card);                            // 다 나온 뒤면 [내 답변 영어로] ↔ [접기]
     /* 말풍선 크기가 바뀌었으니, 바뀐 글자가 나타나는 애니메이션(.25초)이 끝난 뒤 그 줄 전체가 보이게 맞춤(이미 보이면 그대로) */
     clearTimeout(row._fit);
     row._fit = setTimeout(() => { if (card._st === st && row.isConnected) follow(card, row); }, 260);
@@ -2543,6 +2559,7 @@ function toggleRate(card) {
 
 /* ---------- 읽기: 떠올리고 확인하기 ---------- */
 function showRow(card, row) {
+  card._st.focus = +row.dataset.l;
   row.classList.remove("off");
   row.classList.add("pop");
   follow(card, row);
@@ -2625,6 +2642,7 @@ function shadowGo(card, i) {
   const st = card._st;
   const rows = rowsOf(card);
   st.idx = i;
+  st.focus = i;
   rows.forEach((r, j) => {
     if (j === i && r.classList.contains("off")) r.classList.add("pop");
     r.classList.toggle("off", j > i);
@@ -2659,6 +2677,7 @@ function blindPaint(card) {
 function blindGo(card, i) {
   const st = card._st;
   st.idx = i;
+  st.focus = i;
   st.peek = false;
   st.revealed = false;
   blindPaint(card);
@@ -2684,7 +2703,7 @@ function blindFinish(card) {
 
 /* ---------- 쉐도잉 중간: 쉬지 않고 대화 전체를 이어서(줄 사이 MID_GAP) — 같은 카드 재생기(cardReader)를 그대로 씀 ----------
    시작하면 모든 줄이 보이고, 지금 줄은 크게(.cur) + 노래방식 채우기, 지나간 줄은 흐리게, 화면이 지금 줄을 따라감.
-   단어 탭 → 그 위치부터 끝까지(seek, tapSingle false). 반복이 켜져 있으면 끝까지 듣고 처음부터 다시 */
+   단어 탭 → 그 위치부터 끝까지(seek, tapSingle false). 끝까지 들으면 멈춤(예전 '반복'은 없앰) */
 function midStart(card, i, w) {
   const st = card._st;
   clearTimeout(st.timer);
@@ -2710,18 +2729,9 @@ function midCur(card, i) {
   });
   follow(card, rowsOf(card)[i], true);
 }
-function midEnd(card, complete) {
-  const st = card._st;
-  if (complete && shadowPref.repeat) {                    // 반복: 잠깐 쉬고 처음부터
-    clearTimeout(st.timer);
-    st.timer = setTimeout(() => {
-      st.timer = null;
-      if (card._st === st && isMid(st) && shadowPref.repeat && !st.rd.state().active) midStart(card, 0, 0);
-    }, 900);
-  } else {
-    card.classList.remove("sh-live");
-    rowsOf(card).forEach(r => r.classList.remove("cur", "past"));
-  }
+function midEnd(card) {
+  card.classList.remove("sh-live");
+  rowsOf(card).forEach(r => r.classList.remove("cur", "past"));
   renderActions(card);
 }
 
@@ -3796,11 +3806,17 @@ document.querySelector(".tabbar").addEventListener("click", e => {
    소리는 모두 Player → AudioCache(다른 화면에서 들은 문장은 그대로 재사용). 한국어는 읽지 않음.
    재생 순서
    - 카드 범위: 카드마다 [새 카드 효과음] 대화 전체 → 핵심 표현마다 [표현 효과음] 표현 읽기 → 예문 5개 → 썰
-     (내용: 대화문만 = 대화만 / 예문까지 = 대화 → 표현마다 표현 읽기 + 예문 / 썰까지 = + 썰)
+     (내용: 대화문만 = 대화만 / 예문까지 = 대화 → 표현마다 표현 읽기 + 예문 / 썰까지 = + 썰 / 예문만·썰만 = 대화 없이 표현 읽기 + 예문 또는 썰)
    - 표현 범위(학습 중 / 오늘 복습): 표현마다 [표현 효과음] 표현 읽기 → 예문 5개 → 썰 */
 const DRIVE_KEY = "engcards.drive.v1";
 const DRIVE_SCOPES = { all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현", due: "오늘 복습할 표현" };
-const DRIVE_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지" };
+/* 내용(드라이브·연습 모드 공통): dialogue 대화문만 / examples 예문까지 / story 썰까지 — 대화 포함
+   / exOnly 예문만 / storyOnly 썰만 — 대화 없이 핵심 표현의 예문 또는 썰만. 시작 화면에서 두 줄([대화 포함 3개] [대화 없이 2개])로 보여 줌 */
+const CONTENT_ROWS = [[["dialogue", "대화문만"], ["examples", "예문까지"], ["story", "썰까지"]], [["exOnly", "예문만"], ["storyOnly", "썰만"]]];
+const hasDlg = c => c !== "exOnly" && c !== "storyOnly";
+const hasEx = c => c === "examples" || c === "story" || c === "exOnly";
+const hasStory = c => c === "story" || c === "storyOnly";
+const DRIVE_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지", exOnly: "예문만", storyOnly: "썰만" };
 const DV_DEFAULT = { scope: "all", cats: [], content: "story", shadow: false, rate: 1 };
 
 /* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, key(문장), block(카드·표현), cid, bi, label } } */
@@ -3866,11 +3882,12 @@ function buildDrive(o) {
   } else {
     CARDS.forEach((card, ci) => {
       if (o.scope === "cat" && !o.cats.includes(card.category)) return;
-      const b = blocks.length, d = card.dialogue || [];
-      blocks.push({ kind: "card", ci, cid: card.id, key: "c" + card.id, start: items.length });
-      d.forEach((line, n) => push({ kind: "dlg", text: line.en, ko: line.ko || "", who: whoOf(line), name: whoLabel(line.who), fx: n === 0 ? "card" : null, block: b, ci, n: n + 1, total: d.length }));
-      /* 대화문만 = 대화만(표현 효과음·표현 읽기·예문·썰 없음) / 예문까지 = 표현마다 표현 읽기 + 예문 / 썰까지 = + 썰 */
-      if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(b, it, true, o.content === "story"));
+      const b = blocks.length, d = card.dialogue || [], start = items.length;
+      blocks.push({ kind: "card", ci, cid: card.id, key: "c" + card.id, start });
+      if (hasDlg(o.content)) d.forEach((line, n) => push({ kind: "dlg", text: line.en, ko: line.ko || "", who: whoOf(line), name: whoLabel(line.who), fx: n === 0 ? "card" : null, block: b, ci, n: n + 1, total: d.length }));
+      /* 대화문만 = 대화만(표현 효과음·표현 읽기·예문·썰 없음) / 예문까지 = 표현마다 표현 읽기 + 예문 / 썰까지 = + 썰 / 예문만·썰만 = 대화 없이 표현마다 표현 읽기 + 예문(또는 썰) */
+      if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(b, it, hasEx(o.content), hasStory(o.content)));
+      if (items[start] && !hasDlg(o.content)) items[start].fx = "card";   // 대화가 없으면 카드의 첫 문장(표현 읽기)에서 새 카드 효과음
     });
   }
   items.forEach(it => { it.key = blocks[it.block].key + "/" + it.kind + "/" + (it.xid || "") + "/" + it.n; });
@@ -4226,9 +4243,10 @@ function dvSetupHtml() {
   const exprScope = pl.exprScope;
   const cats = (window.CATEGORY_DATA || []).map(c => c.name).filter(n => CARDS.some(c => c.category === n));
   const opt = (v, sub) => '<button class="dv-opt" type="button" data-dv-scope="' + v + '" aria-pressed="' + (o.scope === v) + '"><b>' + DRIVE_SCOPES[v] + '</b><small>' + sub + '</small></button>';
-  const seg = (name, list) => '<div class="seg" data-dv-set="' + name + '">' +
+  const seg = (name, list, cls) => '<div class="seg' + (cls ? " " + cls : "") + '" data-dv-set="' + name + '">' +
     list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
-  const contentNote = { dialogue: "대화만 이어서 들어요.", examples: "대화 → 핵심 표현마다 표현 읽기 + 예문 5개", story: "대화 → 핵심 표현마다 표현 읽기 + 예문 5개 + 썰" };
+  const contentNote = { dialogue: "대화만 이어서 들어요.", examples: "대화 → 핵심 표현마다 표현 읽기 + 예문 5개", story: "대화 → 핵심 표현마다 표현 읽기 + 예문 5개 + 썰",
+    exOnly: "대화 없이 핵심 표현마다 표현 읽기 + 예문 5개", storyOnly: "대화 없이 핵심 표현마다 표현 읽기 + 썰" };
   const resumeK = dvResumeIdx(pl);
   let words = 0;
   pl.items.forEach(it => { words += getScript(it.text).words.length * (o.shadow && it.kind !== "story" ? 2 : 1); });
@@ -4254,7 +4272,7 @@ function dvSetupHtml() {
           (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
       '</div>' +
       '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
-        seg("content", [["dialogue", "대화문만"], ["examples", "예문까지"], ["story", "썰까지"]]) +
+        seg("content", CONTENT_ROWS[0]) + seg("content", CONTENT_ROWS[1], "seg2") +
         '<p class="note">' + (exprScope ? "표현 범위는 표현마다 표현 → 예문 5개 → 썰 순서로 들어요." : contentNote[o.content]) + '</p>' +
       '</div>' +
       '<div class="set-group"><span class="set-label">따라 말할 시간</span>' +
@@ -4507,7 +4525,7 @@ window.addEventListener("pagehide", () => { if (D.open) dvSavePos(); });
    위치: 문장·단계가 바뀔 때마다, 닫을 때, pagehide에 저장. 끝까지 다 하면 위치를 지움 */
 const PRACTICE_KEY = "engcards.practice.v1";
 const PC_SCOPES = { current: "지금 보던 카드", all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현만", due: "오늘 복습할 표현만" };
-const PC_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지" };
+const PC_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지", exOnly: "예문만", storyOnly: "썰만" };   // 뜻은 CONTENT_ROWS(드라이브 모드 부분)
 const PC_DEFAULT = { scope: "current", cats: [], content: "dialogue", method: "chunk", rate: 1 };
 
 /* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, cid(지금 보던 카드 범위일 때 그 카드), key(문장), step, block, bcid, bi, label } } */
@@ -4621,8 +4639,8 @@ function buildPractice(o, curCi) {
       if (o.scope === "cat" && !o.cats.includes(card.category)) return;
       addBlock({ kind: "card", ci, cid: card.id, key: "c" + card.id }, bi => {
         const d = card.dialogue || [];
-        d.forEach((line, n) => { if (line.en) items.push({ kind: "dlg", line, who: whoOf(line), name: whoLabel(line.who), block: bi, ci, n: n + 1, total: d.length }); });
-        if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(bi, it, true, o.content === "story"));
+        if (hasDlg(o.content)) d.forEach((line, n) => { if (line.en) items.push({ kind: "dlg", line, who: whoOf(line), name: whoLabel(line.who), block: bi, ci, n: n + 1, total: d.length }); });
+        if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(bi, it, hasEx(o.content), hasStory(o.content)));
       });
     });
   }
@@ -4730,9 +4748,10 @@ function pcSetupHtml() {
   const nDue = dueList().length;
   const cats = (window.CATEGORY_DATA || []).map(c => c.name).filter(n => CARDS.some(c => c.category === n));
   const opt = (v, sub, wide) => '<button class="dv-opt' + (wide ? " wide" : "") + '" type="button" data-pc-scope="' + v + '" aria-pressed="' + (o.scope === v) + '"><b>' + PC_SCOPES[v] + '</b><small>' + esc(sub) + '</small></button>';
-  const seg = (name, list) => '<div class="seg" data-pc-set="' + name + '">' +
+  const seg = (name, list, cls) => '<div class="seg' + (cls ? " " + cls : "") + '" data-pc-set="' + name + '">' +
     list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
-  const contentNote = { dialogue: "대화문만 연습해요.", examples: "대화 → 핵심 표현마다 예문 5개", story: "대화 → 핵심 표현마다 예문 5개 → 썰" };
+  const contentNote = { dialogue: "대화문만 연습해요.", examples: "대화 → 핵심 표현마다 예문 5개", story: "대화 → 핵심 표현마다 예문 5개 → 썰",
+    exOnly: "대화 없이 핵심 표현마다 예문 5개", storyOnly: "대화 없이 핵심 표현마다 썰" };
   const resumeK = pcResumeIdx(pl);
   let words = 0, noData = 0;
   pl.items.forEach(it => {
@@ -4764,7 +4783,7 @@ function pcSetupHtml() {
           (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
       '</div>' +
       '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
-        seg("content", [["dialogue", "대화문만"], ["examples", "예문까지"], ["story", "썰까지"]]) +
+        seg("content", CONTENT_ROWS[0]) + seg("content", CONTENT_ROWS[1], "seg2") +
         '<p class="note">' + (exprScope ? "표현 범위는 표현마다 예문 5개 → 썰 순서로 연습해요." : contentNote[o.content]) + '</p>' +
       '</div>' +
       '<div class="set-group"><span class="set-label">연습 방식</span>' +
@@ -4935,14 +4954,12 @@ function pcQuick(run, pick) {
   PC.done = false;
   pcGo(Math.max(0, PC.pl.items.findIndex(pick)), 0);
 }
-/* 상황 카드에서 보던 줄: 읽기 = 마지막으로 나타난 줄(전체 보기면 첫 줄), 듣기·중간 = 재생 중이던 줄(재생 전이면 첫 줄), 쉬움·어려움 = 지금 줄 */
+/* 상황 카드에서 보던 줄(모든 모드 같음) = 가장 최근에 한 일의 줄 st.focus:
+   재생한 줄(스피커·단어 탭·이어 듣기 중 지나간 줄 — cardReader onItem) 또는 나타나거나 옮긴 줄(읽기 [다음]·쉐도잉 [다음]/[이전]) 중 더 나중 것.
+   예) 5줄까지 나온 뒤 2줄을 다시 들었으면 2줄, 2줄을 들은 뒤 [다음]으로 6줄이 나왔으면 6줄. 아직 아무것도 안 했으면 첫 줄 */
 function cardLineNow(card) {
   const st = card._st;
-  if (!st) return 0;
-  const rs = st.rd.state();
-  if (st.mode === "read") return st.full ? 0 : Math.max(0, st.shown - 1);
-  if (st.mode === "listen" || isMid(st)) return rs.active ? rs.index : Math.max(0, st.hold);
-  return Math.max(0, st.idx);
+  return st && st.focus >= 0 ? st.focus : 0;
 }
 /* 카드 [연습]: 이 카드를 보던 줄부터. 카드 상태(card._st·대화 표시)는 그대로 두고, 닫을 때 멈춘 상태로 되살림 */
 function practiceCard(card) {
@@ -5170,6 +5187,16 @@ function runChecks() {
         else if (nw > 6) issues.push(lt + ": 청크 하나가 " + nw + "단어 (보통 2~5단어, 6단어까지) — " + x.chunks);
       });
       if (pc.links.length > 3) warnings.push(lt + ": 연음 표시(‿) " + pc.links.length + "곳 — 문장마다 0~3곳 권장");
+      /* 말줄임표·대시 바로 옆 슬래시: 음성(TTS)이 긴 쉼으로 읽는데 그 근처 단어 시간이 밀려서, 잘라 쓰면 옆 청크의 단어가 섞임
+         (2026-10-03 카드 8 "You got it. … / Alright, here we are!" — 앞 청크가 Alright까지 읽음) → 두 청크 모두 soloChunks로 */
+      const solo = Array.isArray(x.soloChunks) ? x.soloChunks : [];
+      pc.parts.forEach((p, k) => {
+        const q = pc.parts[k + 1];
+        if (!q) return;
+        const L = pc.text.slice(p.s, p.e), R = pc.text.slice(q.s, q.e);
+        if ((/(…|—|–|\.\.\.)["”’]?\s*$/.test(L) || /^\s*["“]?(…|—|–|\.\.\.)/.test(R)) && !(solo.includes(k + 1) && solo.includes(k + 2)))
+          issues.push(lt + ": 청크 " + (k + 1) + "·" + (k + 2) + " 경계가 말줄임표·대시 바로 옆 — 잘라 쓰면 옆 단어가 섞임(두 청크 모두 soloChunks에 넣기, 또는 슬래시를 옮기기)");
+      });
       const tips = x.tips == null ? [] : x.tips;
       if (!Array.isArray(tips) || tips.length > 2) issues.push(lt + ": 발음 팁은 0~2개 목록");
       else tips.forEach(tp => {
@@ -5381,10 +5408,11 @@ function openList() {
   });
   const listHtml = groups.map(g => {
     const seenInGroup = g.items.filter(i => seenSet.has(cardKey(i))).length;
-    return '<section class="toc-group" style="--h:' + hueOf(g.name) + '">' +
-      '<div class="toc-head"><span class="toc-emoji" aria-hidden="true">' + (CATEGORY_EMOJI[g.name] || "📌") + '</span>' +
+    const open = g.items.includes(cur);                // 지금 보던 카드의 카테고리만 펼침
+    return '<section class="toc-group' + (open ? " open" : "") + '" style="--h:' + hueOf(g.name) + '">' +
+      '<button class="toc-head" type="button" data-toc aria-expanded="' + open + '"><span class="toc-emoji" aria-hidden="true">' + (CATEGORY_EMOJI[g.name] || "📌") + '</span>' +
         '<h4 class="toc-cat">' + esc(g.name) + '</h4>' +
-        '<span class="toc-cnt">' + seenInGroup + ' / ' + g.items.length + '</span></div>' +
+        '<span class="toc-cnt">' + seenInGroup + ' / ' + g.items.length + '</span><span class="toc-chev" aria-hidden="true">' + ICON_CHEVRON + '</span></button>' +
       '<ul class="toc">' +
       g.items.map(i => {
         const seen = seenSet.has(cardKey(i));
@@ -5401,11 +5429,24 @@ function openList() {
       '<div class="bar"><i style="width:' + pct + '%"></i></div>' + warn + '</div>' +
     '<div class="btn-row"><button class="btn" type="button" id="goUnseen">안 본 카드로</button>' +
       '<button class="btn" type="button" id="goFirst">처음부터</button></div>' +
+    '<div class="toc-bar"><span class="set-label">카테고리</span><button class="toc-all" type="button" data-toc-all></button></div>' +
     listHtml +
     '<div class="set-group"><div class="btn-row"><button class="btn" type="button" id="resetProgress">본 기록 지우기</button></div></div>';
   showSheet("카드 " + CARDS.length + "장", "목록", html);
+  syncTocAll();
   const curEl = sheetBody.querySelector(".toc-item.current");
   if (curEl) sheetBody.scrollTop = Math.max(0, curEl.offsetTop - sheetBody.clientHeight / 2);
+}
+/* 목록의 카테고리 펼치기·접기: 머리 하나(data-toc) / 전체(data-toc-all — 하나라도 접혀 있으면 [전체 펼치기], 다 펼쳐져 있으면 [전체 접기]) */
+function syncTocAll() {
+  const b = sheetBody.querySelector("[data-toc-all]");
+  if (!b) return;
+  const groups = Array.from(sheetBody.querySelectorAll(".toc-group"));
+  b.textContent = groups.every(g => g.classList.contains("open")) ? "전체 접기" : "전체 펼치기";
+}
+function setTocOpen(g, open) {
+  g.classList.toggle("open", open);
+  g.querySelector("[data-toc]").setAttribute("aria-expanded", String(open));
 }
 
 function goFromList(idx) {
@@ -5484,6 +5525,14 @@ sheetBody.addEventListener("click", e => {
       rd.seek(Array.from(sec.querySelectorAll(".sc")).indexOf(el.closest(".sc")), +el.dataset.w);
       return;
     }
+  }
+  if ((el = t.closest("[data-toc]"))) { const g = el.closest(".toc-group"); setTocOpen(g, !g.classList.contains("open")); syncTocAll(); buzz(); return; }
+  if ((el = t.closest("[data-toc-all]"))) {
+    const groups = Array.from(sheetBody.querySelectorAll(".toc-group")), open = !groups.every(g => g.classList.contains("open"));
+    groups.forEach(g => setTocOpen(g, open));
+    syncTocAll();
+    buzz();
+    return;
   }
   if ((el = t.closest("[data-go]"))) { goFromList(+el.dataset.go); return; }
   if ((el = t.closest("#goFirst"))) { goFromList(0); return; }
