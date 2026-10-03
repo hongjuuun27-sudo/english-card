@@ -252,14 +252,17 @@
   .row > *{ transition:opacity .3s ease; }
   .row.past > *{ opacity:.42; }   /* 줄 자체는 popIn 애니메이션이 opacity를 잡고 있어서 안쪽을 흐리게 */
 
-  /* 쉐도잉 쉬움 / 어려움 선택 (쉐도잉 모드에서만, 카드 위쪽) */
-  .sh-seg{ width:200px; margin-top:16px; }
+  /* 쉐도잉 쉬움 / 중간 / 어려움 선택 (쉐도잉 모드에서만, 카드 위쪽) */
+  .sh-seg{ width:264px; max-width:100%; margin-top:16px; }
   .card:not(.m-shadow) .sh-seg{ display:none; }   /* 읽기·듣기에서는 숨김 (아래 .seg{display:flex}보다 우선하도록 선택자를 구체적으로) */
   .sh-seg button{ height:34px; font-size:14.5px; }
-  /* 어려움: 지금 줄을 크게, 아직 안 나온 줄은 조금 흐리게 */
-  .sh-hard .row .bubble{ transition:font-size .2s ease, background-color .3s ease, border-color .3s ease, box-shadow .3s ease, transform .12s ease; }
-  .sh-hard .row.cur .bubble{ font-size:20.5px; }
-  .sh-hard.sh-live .row:not(.cur):not(.past) > *{ opacity:.62; }
+  /* 어려움: 아이콘(.masked) 아래에 지금 줄만 '정답 보기'(.peek) */
+  .sh-blind.peek .chat{ display:flex; margin-top:6px; }
+  .sh-blind.peek .duo{ flex:none; min-height:0; padding-bottom:0; }
+  /* 중간: 지금 줄을 크게, 아직 안 나온 줄은 조금 흐리게 */
+  .sh-mid .row .bubble{ transition:font-size .2s ease, background-color .3s ease, border-color .3s ease, box-shadow .3s ease, transform .12s ease; }
+  .sh-mid .row.cur .bubble{ font-size:20.5px; }
+  .sh-mid.sh-live .row:not(.cur):not(.past) > *{ opacity:.62; }
   .actions .repeat{ padding:0 11px; }
 
   /* 듣기: 정답 확인 전에는 대화 대신 두 사람 아이콘(왼쪽 상대, 오른쪽 나). 말하는 쪽은 진한 테두리 + 은은하게 퍼짐, 안 말하는 쪽은 흐리게
@@ -374,6 +377,12 @@
   .actions .prev{ width:52px; padding:0; }
   .actions .again{ width:76px; padding:0 6px; font-size:14.5px; line-height:1.25; white-space:normal; text-align:center; }   /* 두 줄로 접어 '다음' 자리를 넓게 */
   .actions .restart{ flex:1; }
+  /* 쉐도잉 어려움: 버튼 5개 [이전] [한 번 더 듣기] [정답 보기] [속도] [다음] — 360px에서도 [다음]이 가장 넓게 */
+  .actions.five{ gap:6px; }
+  .actions.five .prev{ width:46px; }
+  .actions.five .again{ width:62px; padding:0 4px; font-size:13.5px; }
+  .actions.five .peek{ width:56px; padding:0 4px; font-size:13.5px; line-height:1.25; white-space:normal; text-align:center; }
+  .actions.five .rate{ width:48px; }
   .swipe-hint{ font-size:12.5px; color:var(--faint); }
 
   /* ---------- 모드 선택: 탭 바 바로 위, 상황 탭에서만 ---------- */
@@ -1508,6 +1517,7 @@ function renderCard(card, i) {
       '<p class="situation">' + esc(card.situation) + '</p>' +
       '<div class="seg sh-seg" role="group" aria-label="쉐도잉 난이도">' +
         '<button type="button" data-sh="easy" aria-pressed="false">쉬움</button>' +
+        '<button type="button" data-sh="mid" aria-pressed="false">중간</button>' +
         '<button type="button" data-sh="hard" aria-pressed="false">어려움</button></div>' +
       '<p class="mnote"></p>' +
       duoHtml(card) +
@@ -2299,20 +2309,29 @@ let mode = (() => {
   try { const m = localStorage.getItem(MODE_KEY); return m && MODES[m] ? m : "read"; } catch (e) { return "read"; }
 })();
 
-/* 쉐도잉 난이도: easy(한 줄씩) / hard(쉬지 않고 이어서 — 동시 따라 말하기) + 어려움의 반복 켜기. 모든 카드 공통, 저장 */
+/* 쉐도잉 난이도(모든 카드 공통, 저장): easy 쉬움(영어 보며 한 줄씩) / mid 중간(영어 보며 쉬지 않고 이어서 — 동시 따라 말하기, 반복 켜기)
+   / hard 어려움(영어 없이 두 사람 아이콘만 보며 한 줄씩, 막히면 '정답 보기').
+   저장 { level, repeat, v: 2 }. v가 없는 예전 기록의 "hard"는 그때의 '어려움'(쉬지 않고 이어서) = 지금의 mid로 옮김 */
 const SHADOW_KEY = "engcards.shadow.v1";
+const SHADOW_LEVELS = ["easy", "mid", "hard"];
 const shadowPref = (() => {
   try {
     const s = JSON.parse(localStorage.getItem(SHADOW_KEY) || "null");
-    if (s && typeof s === "object") return { level: s.level === "hard" ? "hard" : "easy", repeat: !!s.repeat };
+    if (s && typeof s === "object") {
+      const level = s.v !== 2 && s.level === "hard" ? "mid" : s.level;
+      const p = { level: SHADOW_LEVELS.includes(level) ? level : "easy", repeat: !!s.repeat, v: 2 };
+      if (s.v !== 2) try { localStorage.setItem(SHADOW_KEY, JSON.stringify(p)); } catch (e) {}
+      return p;
+    }
   } catch (e) {}
-  return { level: "easy", repeat: false };
+  return { level: "easy", repeat: false, v: 2 };
 })();
 function saveShadowPref() {
   try { localStorage.setItem(SHADOW_KEY, JSON.stringify(shadowPref)); } catch (e) {}
 }
-const HARD_GAP = 250;                          // 어려움: 줄 사이 짧은 간격(ms). 다음 음성을 불러오는 시간이 더해져 실제로는 약 0.3초
-const isHard = st => st.mode === "shadow" && st.level === "hard";
+const MID_GAP = 250;                          // 중간: 줄 사이 짧은 간격(ms). 다음 음성을 불러오는 시간이 더해져 실제로는 약 0.3초
+const isMid = st => st.mode === "shadow" && st.level === "mid";
+const isBlind = st => st.mode === "shadow" && st.level === "hard";   // 어려움: 영어 없이 듣고 따라 말하기
 
 const rowsOf = card => Array.from(card.querySelectorAll(".chat > .row:not(.typing)"));
 const lineOf = (card, li) => CARDS[+card.dataset.i].dialogue[li];
@@ -2323,13 +2342,16 @@ function resetCard(card) {
   const old = card._st;
   if (old && old.timer) clearTimeout(old.timer);
   /* read: shown(보이는 줄 수)·full(전체 보기) / listen: revealed(정답 확인) / shadow: idx(지금 줄) / 공통: rd(대화 재생기) */
-  /* shadow: level(쉬움/어려움) · started(어려움에서 시작했는지) */
-  /* hold: 연습 모드에서 돌아온 뒤 '이어 듣기'로 이어 갈 줄(듣기·쉐도잉 어려움, 없으면 -1). 무엇이든 재생을 시작하면 지움 */
-  const st = card._st = { mode, level: shadowPref.level, shown: 0, full: false, revealed: false, idx: -1, started: false, timer: null, rd: null, hold: -1 };
+  /* shadow: level(easy 쉬움 / mid 중간 / hard 어려움) · started(중간에서 시작했는지)
+     어려움: idx(지금 줄) · peek(지금 줄 정답 보기 중) · revealed(마지막 줄까지 끝나서 대화 전체를 보여 줌) */
+  /* hold: 연습 모드에서 돌아온 뒤 '이어 듣기'로 이어 갈 줄(듣기·쉐도잉 중간, 없으면 -1). 무엇이든 재생을 시작하면 지움 */
+  const st = card._st = { mode, level: shadowPref.level, shown: 0, full: false, revealed: false, idx: -1, started: false, peek: false, timer: null, rd: null, hold: -1 };
   st.rd = cardReader(card, st);
-  card.classList.remove("m-read", "m-listen", "m-shadow", "masked", "lpaused", "sh-hard", "sh-live");
+  card.classList.remove("m-read", "m-listen", "m-shadow", "masked", "lpaused", "sh-mid", "sh-live", "sh-blind", "peek");
   card.classList.add("m-" + mode);
-  card.classList.toggle("sh-hard", isHard(st));
+  card.classList.toggle("sh-mid", isMid(st));
+  card.classList.toggle("sh-blind", isBlind(st));
+  if (isBlind(st)) card.classList.add("masked");          // 어려움: 듣기 모드처럼 두 사람 아이콘
   card.querySelectorAll("[data-sh]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.sh === shadowPref.level)));
   card.querySelector(".chat").innerHTML = CHAT_HTML[+card.dataset.i];
   setCur(card, -1);
@@ -2355,19 +2377,21 @@ function cardReader(card, st) {
   return createReader({
     items: () => rowsOf(card).map((r, i) => ({ el: r.querySelector(".sc"), who: whoOf(lineOf(card, i)), btn: r })),
     rate: () => (st.mode === "read" ? settings.speed : settings.drillRate),
-    gap: () => (isHard(st) ? HARD_GAP : 350),
-    tapSingle: () => !isHard(st),                  // 어려움: 단어를 누르면 거기서부터 끝까지 이어서
+    gap: () => (isMid(st) ? MID_GAP : 350),
+    tapSingle: () => !isMid(st),                  // 중간: 단어를 누르면 거기서부터 끝까지 이어서
     onItem: i => {
       if (card._st !== st) return;
       st.hold = -1;
-      if (isHard(st)) { hardCur(card, i); return; }
+      if (isMid(st)) { midCur(card, i); return; }
+      if (isBlind(st)) { renderActions(card); return; }     // 어려움: 재생이 시작되면 말하는 쪽 아이콘 퍼짐(단어 탭 재생 포함)
       if (st.mode !== "listen" || st.rd.state().single) return;
       setCur(card, i);
       if (i > 0 && !card.classList.contains("masked")) follow(card, rowsOf(card)[i]);   // 아이콘 화면에서는 스크롤할 줄이 없음
     },
     onEnd: complete => {
       if (card._st !== st) return;
-      if (isHard(st)) { hardEnd(card, complete); return; }
+      if (isMid(st)) { midEnd(card, complete); return; }
+      if (isBlind(st)) { renderActions(card); return; }     // 어려움: 한 줄이 끝나면 말하는 쪽 아이콘 퍼짐 멈춤(lpaused)
       if (st.mode !== "listen") return;
       setCur(card, -1);
       renderActions(card);
@@ -2413,27 +2437,39 @@ function renderActions(card) {
       actBtn("answer", st.revealed ? "가리기" : "정답 확인", st.revealed ? "on" : "") +
       actBtn("play", main, "main");
     if (!st.revealed) note = "▶ 재생을 누르면 대화 전체를 글자 없이 들려줘요. 다 듣고 '정답 확인'.";
-  } else if (isHard(st)) {
-    /* 어려움: [처음부터] [속도] [반복] [재생/일시정지] — 시작 전엔 [속도] [반복] [시작] */
+  } else if (isMid(st)) {
+    /* 중간: [처음부터] [속도] [반복] [재생/일시정지] — 시작 전엔 [속도] [반복] [시작] */
     const rs = st.rd.state();
     const rep = actBtn("repeat", ICON_REPEAT + "<span>반복</span>", "repeat" + (shadowPref.repeat ? " on" : ""), "반복 " + (shadowPref.repeat ? "끄기" : "켜기"));
     if (!st.started) {
-      html = rateBtn() + rep + actBtn("hplay", ICON_PLAY + "<span>시작</span>", "main");
+      html = rateBtn() + rep + actBtn("mplay", ICON_PLAY + "<span>시작</span>", "main");
       note = "대화 전체를 쉬지 않고 이어서 들려줘요. 들리는 대로 바로 겹쳐서 따라 말해 보세요.";
     } else {
       const main = !rs.active ? ICON_PLAY + "<span>" + (st.hold >= 0 ? "이어 듣기" : "재생") + "</span>" :
         rs.paused ? ICON_PLAY + "<span>이어 듣기</span>" : ICON_PAUSE + "<span>일시정지</span>";
-      html = actBtn("hrestart", ICON_RESTART, "ico-btn", "처음부터") + rateBtn() + rep + actBtn("hplay", main, "main");
+      html = actBtn("mrestart", ICON_RESTART, "ico-btn", "처음부터") + rateBtn() + rep + actBtn("mplay", main, "main");
     }
   } else if (st.idx < 0) {
     html = actBtn("start", ICON_PLAY + "<span>시작</span>", "main");
-    note = "한 줄씩 들려줘요. 듣고 나서 소리 내어 따라 말해 보세요.";
+    note = isBlind(st) ? "영어 없이 한 줄씩 들려줘요. 듣고 나서 소리 내어 따라 말해 보세요. 막히면 '정답 보기'." :
+      "한 줄씩 들려줘요. 듣고 나서 소리 내어 따라 말해 보세요.";
+  } else if (isBlind(st)) {
+    /* 어려움: [이전] [한 번 더 듣기] [정답 보기] [속도] [다음] — 버튼 5개라 좁게(.five), 다음이 가장 크게 오른쪽.
+       마지막 줄에선 [마치기](대화 전체 보이기) → 그 뒤 [처음부터]. 재생 중일 때만 말하는 쪽 아이콘이 퍼짐 */
+    const rs = st.rd.state();
+    card.classList.toggle("lpaused", !(rs.active && !rs.paused));
+    const main = st.revealed ? AGAIN_HTML : st.idx >= n - 1 ? "<span>마치기</span>" : NEXT_HTML;
+    html = actBtn("prev", "이전", "prev", "", st.idx <= 0 && !st.revealed) + actBtn("again", "한 번 더 듣기", "again") +
+      actBtn("peek", st.peek ? "가리기" : "정답 보기", "peek" + (st.peek ? " on" : ""), "", st.revealed) + rateBtn() +
+      actBtn("next", main, "main");
   } else {
     /* [이전] [한 번 더 듣기] [속도] [다음] — 다음이 가장 크게 오른쪽(엄지 자리). 첫 줄에선 이전 비활성 */
     html = actBtn("prev", "이전", "prev", "", st.idx <= 0) + actBtn("again", "한 번 더 듣기", "again") + rateBtn() +
       actBtn("next", st.idx >= n - 1 ? "<span>처음부터</span>" : NEXT_HTML, "main");
   }
-  card.querySelector(".actions").innerHTML = html;
+  const acts = card.querySelector(".actions");
+  acts.innerHTML = html;
+  acts.classList.toggle("five", isBlind(st) && st.idx >= 0);
   card.querySelector(".mnote").textContent = note;
 }
 
@@ -2449,10 +2485,17 @@ function onAct(card, act) {
     if (act === "play") listenPlay(card);
     else if (act === "replay") listenStart(card);
     else if (act === "answer") listenReveal(card, !st.revealed);
-  } else if (isHard(st)) {
-    if (act === "hplay") hardPlay(card);
-    else if (act === "hrestart") hardStart(card, 0, 0);
+  } else if (isMid(st)) {
+    if (act === "mplay") midPlay(card);
+    else if (act === "mrestart") midStart(card, 0, 0);
     else if (act === "repeat") { shadowPref.repeat = !shadowPref.repeat; saveShadowPref(); renderActions(card); }
+  } else if (isBlind(st)) {
+    const n = rowsOf(card).length;
+    if (act === "start") blindGo(card, 0);
+    else if (act === "next") { if (st.revealed) blindGo(card, 0); else if (st.idx < n - 1) blindGo(card, st.idx + 1); else blindFinish(card); }
+    else if (act === "again") shadowSay(card);
+    else if (act === "peek") blindPeek(card, !st.peek);
+    else if (act === "prev") { if (st.revealed) blindGo(card, n - 1); else if (st.idx > 0) blindGo(card, st.idx - 1); }
   } else {
     if (act === "start") shadowGo(card, 0);
     else if (act === "next") shadowGo(card, st.idx >= rowsOf(card).length - 1 ? 0 : st.idx + 1);
@@ -2598,10 +2641,51 @@ function shadowSay(card) {
   if (st.idx >= 0) st.rd.play(st.idx, 0, true);
 }
 
-/* ---------- 쉐도잉 어려움: 쉬지 않고 대화 전체를 이어서(줄 사이 HARD_GAP) — 같은 카드 재생기(cardReader)를 그대로 씀 ----------
+/* ---------- 쉐도잉 어려움: 영어 없이 한 줄씩 듣고 따라 말하기 ----------
+   듣기 모드처럼 두 사람 아이콘(masked) + 말하는 쪽 강조 + "3 / 6". [다음]을 눌러야 다음 줄을 재생(쉬움과 같은 한 줄 재생).
+   [정답 보기] = 지금 줄만 영어 + 작은 한글(아이콘 아래, .peek), 다른 줄로 가면 다시 숨김.
+   [마치기](마지막 줄) → 아이콘이 사라지고 대화 전체(revealed), 버튼은 [처음부터] */
+function blindPaint(card) {
+  const st = card._st;
+  card.classList.toggle("masked", !st.revealed);
+  card.classList.toggle("peek", st.peek && !st.revealed);
+  rowsOf(card).forEach((r, j) => {
+    const on = st.revealed || (st.peek && j === st.idx);
+    if (on && r.classList.contains("off")) r.classList.add("pop");
+    r.classList.toggle("off", !on);
+  });
+  setCur(card, st.revealed ? -1 : st.idx);         // 줄 강조(.cur) · 말하는 쪽 아이콘 · "3 / 6"
+}
+function blindGo(card, i) {
+  const st = card._st;
+  st.idx = i;
+  st.peek = false;
+  st.revealed = false;
+  blindPaint(card);
+  card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });
+  st.rd.play(i, 0, true);
+  renderActions(card);
+}
+function blindPeek(card, on) {
+  const st = card._st;
+  st.peek = on;
+  blindPaint(card);
+  if (on) follow(card, rowsOf(card)[st.idx]);
+  renderActions(card);
+}
+function blindFinish(card) {
+  const st = card._st;
+  st.peek = false;
+  st.revealed = true;
+  blindPaint(card);
+  card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });
+  renderActions(card);
+}
+
+/* ---------- 쉐도잉 중간: 쉬지 않고 대화 전체를 이어서(줄 사이 MID_GAP) — 같은 카드 재생기(cardReader)를 그대로 씀 ----------
    시작하면 모든 줄이 보이고, 지금 줄은 크게(.cur) + 노래방식 채우기, 지나간 줄은 흐리게, 화면이 지금 줄을 따라감.
    단어 탭 → 그 위치부터 끝까지(seek, tapSingle false). 반복이 켜져 있으면 끝까지 듣고 처음부터 다시 */
-function hardStart(card, i, w) {
+function midStart(card, i, w) {
   const st = card._st;
   clearTimeout(st.timer);
   st.timer = null;
@@ -2613,12 +2697,12 @@ function hardStart(card, i, w) {
   st.rd.play(i || 0, w || 0, false);
   renderActions(card);
 }
-function hardPlay(card) {
+function midPlay(card) {
   const st = card._st;
   if (st.rd.state().active) { st.rd.toggle(); return; }   // 버튼 모양은 Player.onChange가 다시 그림
-  hardStart(card, st.hold >= 0 ? st.hold : 0, 0);         // 연습 모드에서 돌아온 뒤면 멈춘 줄부터
+  midStart(card, st.hold >= 0 ? st.hold : 0, 0);         // 연습 모드에서 돌아온 뒤면 멈춘 줄부터
 }
-function hardCur(card, i) {
+function midCur(card, i) {
   card.classList.add("sh-live");
   rowsOf(card).forEach((r, j) => {
     r.classList.toggle("cur", j === i);
@@ -2626,13 +2710,13 @@ function hardCur(card, i) {
   });
   follow(card, rowsOf(card)[i], true);
 }
-function hardEnd(card, complete) {
+function midEnd(card, complete) {
   const st = card._st;
   if (complete && shadowPref.repeat) {                    // 반복: 잠깐 쉬고 처음부터
     clearTimeout(st.timer);
     st.timer = setTimeout(() => {
       st.timer = null;
-      if (card._st === st && isHard(st) && shadowPref.repeat && !st.rd.state().active) hardStart(card, 0, 0);
+      if (card._st === st && isMid(st) && shadowPref.repeat && !st.rd.state().active) midStart(card, 0, 0);
     }, 900);
   } else {
     card.classList.remove("sh-live");
@@ -2641,7 +2725,7 @@ function hardEnd(card, complete) {
   renderActions(card);
 }
 
-/* 쉬움 / 어려움 선택(쉐도잉 모드 카드 위쪽): 모든 카드 공통, 저장. 바꾸면 소리를 멈추고 카드를 처음 상태로 */
+/* 쉬움 / 중간 / 어려움 선택(쉐도잉 모드 카드 위쪽): 모든 카드 공통, 저장. 바꾸면 소리를 멈추고 카드를 처음 상태로 */
 function setShadowLevel(level) {
   if (level === shadowPref.level) return;
   shadowPref.level = level;
@@ -2737,7 +2821,7 @@ let activeCard = null;
 /* 재생·일시정지·정지가 바뀌면 듣기 모드 버튼(재생 / 일시정지 / 이어 듣기)을 다시 그림 */
 Player.onChange(() => {
   const st = activeCard && activeCard._st;
-  if (st && (st.mode === "listen" || isHard(st))) renderActions(activeCard);
+  if (st && (st.mode === "listen" || isMid(st) || isBlind(st))) renderActions(activeCard);
 });
 
 /* 카드를 넘기면: 소리 멈춤 → 떠난 카드는 처음 상태로(다시 와도 처음부터) → 진도 저장. 도착해도 자동 재생은 없음 */
@@ -4844,20 +4928,20 @@ function pcQuick(run, pick) {
   PC.done = false;
   pcGo(Math.max(0, PC.pl.items.findIndex(pick)), 0);
 }
-/* 상황 카드에서 보던 줄: 읽기 = 마지막으로 나타난 줄(전체 보기면 첫 줄), 듣기·어려움 = 재생 중이던 줄(재생 전이면 첫 줄), 쉬움 = 지금 줄 */
+/* 상황 카드에서 보던 줄: 읽기 = 마지막으로 나타난 줄(전체 보기면 첫 줄), 듣기·중간 = 재생 중이던 줄(재생 전이면 첫 줄), 쉬움·어려움 = 지금 줄 */
 function cardLineNow(card) {
   const st = card._st;
   if (!st) return 0;
   const rs = st.rd.state();
   if (st.mode === "read") return st.full ? 0 : Math.max(0, st.shown - 1);
-  if (st.mode === "listen" || isHard(st)) return rs.active ? rs.index : Math.max(0, st.hold);
+  if (st.mode === "listen" || isMid(st)) return rs.active ? rs.index : Math.max(0, st.hold);
   return Math.max(0, st.idx);
 }
 /* 카드 [연습]: 이 카드를 보던 줄부터. 카드 상태(card._st·대화 표시)는 그대로 두고, 닫을 때 멈춘 상태로 되살림 */
 function practiceCard(card) {
   if (PC.open || !card._st) return;
   const st = card._st, rs = st.rd.state(), li = cardLineNow(card);
-  const cont = st.mode === "listen" || isHard(st);
+  const cont = st.mode === "listen" || isMid(st);
   const hold = cont && rs.active && !rs.single ? rs.index : st.hold;   // 이어 재생 중이었으면 돌아와서 그 줄부터 '이어 듣기'
   pcShow({ kind: "card", card, st, hold: cont ? hold : -1, scroll: card.querySelector(".body").scrollTop });
   PC.curCi = +card.dataset.i;
@@ -4877,7 +4961,7 @@ function pcRestore(o) {
   if (st !== o.st) return;                            // 그사이 카드가 처음 상태로 바뀌었으면 그대로
   st.hold = o.hold;
   if (st.hold >= 0 && st.mode === "listen") setCur(card, st.hold);
-  if (st.hold >= 0 && isHard(st)) {
+  if (st.hold >= 0 && isMid(st)) {
     card.classList.add("sh-live");
     rowsOf(card).forEach((r, j) => { r.classList.toggle("cur", j === st.hold); r.classList.toggle("past", j < st.hold); });
   }
