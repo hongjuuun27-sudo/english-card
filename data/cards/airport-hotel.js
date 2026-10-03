@@ -45,6 +45,7 @@
       {
         id: "c4-e1",
         phrase: "I'm here on ~.",
+        teaser: "입국심사에서 '휴가로 왔어요', '출장으로 왔어요'의 공통 틀은?",
         ko: "'~ 때문에 왔어요'라는 뜻으로, 방문 목적을 말할 때 딱이에요. on vacation(휴가), on business(출장) 두 개만 기억해도 입국심사는 끝. 비슷한 표현: I'm here for ~. / I'm visiting ~.",
         examples: [
           { en: "I'm here on business for a conference.", ko: "학회 때문에 출장 왔어요.",
@@ -89,6 +90,7 @@
       {
         id: "c4-e2",
         phrase: "planning on ~",
+        teaser: "'~할 생각이에요'를 원어민처럼 말하는 법, 뭘까?",
         ko: "'~할 계획이에요/생각이에요'라는 뜻이에요. plan to ~와 같은 뜻인데, 대화에선 planning on ~ing가 정말 자주 들려요. 심사관이 How long are you planning on staying?처럼 빠르게 물어보니 귀에 익혀 두세요.",
         examples: [
           { en: "Are you planning on coming to the party tonight?", ko: "오늘 밤 파티에 올 생각이야?",
@@ -130,6 +132,7 @@
       {
         id: "c4-e3",
         phrase: "About ~",
+        teaser: "'열흘쯤이요'처럼 숫자 앞에 붙이는 '대략', 한 단어로?",
         ko: "'~쯤, 대략 ~'이라는 뜻이에요. 숫자나 시간 앞에 붙이면 딱 맞아떨어지지 않아도 돼서 대답하기 훨씬 편해져요. 비슷한 표현: around ~ / ~ or so",
         examples: [
           { en: "It's about a ten-minute walk from here.", ko: "여기서 걸어서 10분쯤 걸려요.",
@@ -211,6 +214,7 @@
       {
         id: "c5-e1",
         phrase: "I have a reservation under ~.",
+        teaser: "호텔 프런트에서 '김으로 예약했어요'는 어떻게 말할까?",
         ko: "'~ 이름으로 예약했어요'라는 뜻이에요. 호텔·식당·렌터카 어디서든 그대로 써요. 뒤에 성(last name)만 붙이면 돼요. 비슷한 표현: I booked under ~. / The reservation's under ~.",
         examples: [
           { en: "Hi, I have a reservation under Park for two at seven.", ko: "안녕하세요, 7시에 두 명 박으로 예약했어요.",
@@ -253,6 +257,7 @@
       {
         id: "c5-e2",
         phrase: "Here you go.",
+        teaser: "여권이나 카드를 건네면서 '여기요'는 뭐라고 하지?",
         ko: "'여기요/여기 있어요'라는 뜻이에요. 물건을 건넬 때 하는 말로 점원도, 손님도 둘 다 써요. 비슷한 표현: Here it is. / There you go.",
         examples: [
           { en: "Here you go, one large pepperoni.", ko: "여기 있습니다, 페퍼로니 라지 하나요.",
@@ -296,6 +301,7 @@
       {
         id: "c5-e3",
         phrase: "You're all set.",
+        teaser: "체크인이 다 끝났을 때 직원이 '다 됐습니다'라고 하는 말은?",
         ko: "'다 됐어요, 이제 끝났어요'라는 뜻이에요. 체크인·결제·접수가 끝났을 때 직원이 꼭 하는 말이에요. 이 말이 들리면 이제 가도 된다는 뜻! 비슷한 표현: You're good to go.",
         examples: [
           { en: "You're all set, your new phone is ready to go.", ko: "다 됐어요, 새 폰 바로 쓰시면 돼요.",
@@ -379,6 +385,7 @@
       {
         id: "c6-e1",
         phrase: "~ isn't working.",
+        teaser: "호텔 방 에어컨이 고장 났을 때, 프런트에 뭐라고 해야 할까?",
         ko: "'~가 안 돼요/고장 났어요'라는 뜻이에요. 기계나 물건이 제대로 안 될 때 제일 쉽게 쓰는 말이에요. broken(망가진)보다 부드러워요. 비슷한 표현: ~ is broken. / ~ doesn't work.",
         examples: [
           { en: "The microwave in the break room isn't working again.", ko: "탕비실 전자레인지 또 안 돼요.",
@@ -423,6 +430,7 @@
       {
         id: "c6-e2",
         phrase: "I can't connect to ~.",
+        teaser: "와이파이가 안 잡힐 때 '연결이 안 돼요'는 영어로?",
         ko: "'~에 연결이 안 돼요'라는 뜻이에요. 와이파이, 블루투스, 프린터처럼 '연결'하는 건 다 이걸로 해결돼요. 비슷한 표현: I can't get on the Wi-Fi. / The Wi-Fi isn't working.",
         examples: [
           { en: "I can't connect to the printer from my laptop.", ko: "제 노트북에서 프린터 연결이 안 돼요.",
@@ -465,6 +473,7 @@
       {
         id: "c6-e3",
         phrase: "right away",
+        teaser: "'바로 사람 보내 드릴게요'의 '바로', 원어민은 뭐라고 할까?",
         ko: "'바로, 즉시'라는 뜻이에요. 직원이 '바로 해 드릴게요' 할 때 거의 항상 들려요. now보다 부드럽고 친절한 느낌이에요. 비슷한 표현: right now / in a sec(금방)",
         examples: [
           { en: "I'll get that fixed right away.", ko: "그거 바로 고쳐 드릴게요.",
@@ -563,6 +572,7 @@
       {
         id: "c14-e1",
         phrase: "I'd like to ~.",
+        teaser: "공항 카운터에서 '이 캐리어 부치고 싶어요'의 '~하고 싶어요'는?",
         ko: "'~하고 싶어요'를 공손하게 말하는 패턴이에요. I want to보다 훨씬 부드러워서 가게·호텔·공항에서 요청할 때 딱이에요. 비슷한 표현: Can I ~? / I was hoping to ~.",
         examples: [
           { en: "I'd like to check in, please.", ko: "체크인하고 싶어요.",
@@ -603,6 +613,7 @@
       {
         id: "c14-e2",
         phrase: "Go ahead and ~.",
+        teaser: "직원이 '저울에 올려 주세요' 할 때 앞에 붙이는 말은?",
         ko: "'(그럼) ~하세요'라는 뜻이에요. 직원이 다음 할 일을 안내할 때 정말 자주 쓰는 말이에요. 명령처럼 딱딱하지 않고 '편하게 ~하시면 돼요' 느낌이에요. 그냥 Go ahead.는 '그러세요/먼저 하세요'예요.",
         examples: [
           { en: "Go ahead and have a seat. The doctor will be right with you.", ko: "앉아 계세요. 의사 선생님이 곧 오실 거예요.",
@@ -647,6 +658,7 @@
       {
         id: "c14-e3",
         phrase: "Is it possible to ~?",
+        teaser: "'창가 자리로 받을 수 있을까요?' 정중하게 가능한지 묻는 틀은?",
         ko: "'~할 수 있을까요?'라는 뜻이에요. 안 될 수도 있는 부탁을 조심스럽게 꺼낼 때 좋아요. 자리 변경, 일정 조정, 예외 요청에 딱이에요. 비슷한 표현: Would it be possible to ~?(더 공손)",
         examples: [
           { en: "Is it possible to change my flight to Sunday?", ko: "비행기를 일요일로 바꿀 수 있을까요?",
@@ -689,6 +701,7 @@
       {
         id: "c14-e4",
         phrase: "Can I bring ~?",
+        teaser: "보조배터리를 들고 타도 되는지 물을 때 쓰는 틀은?",
         ko: "'~ 가져가도/데려가도 돼요?'라는 뜻이에요. 기내 반입, 파티에 친구 데려가기, 음식 반입 등을 물을 때 써요. on board(기내에), to the party(파티에)처럼 뒤에 장소를 붙여요. 비슷한 표현: Am I allowed to bring ~?",
         examples: [
           { en: "Can I bring a friend to the party?", ko: "파티에 친구 데려가도 돼?",
@@ -765,6 +778,7 @@
       {
         id: "c19-e1",
         phrase: "Sorry to bother you.",
+        teaser: "모르는 사람에게 말 걸기 전, '귀찮게 해서 죄송해요'는?",
         ko: "'귀찮게 해서 죄송해요'라는 뜻이에요. 모르는 사람이나 바쁜 사람에게 말을 걸기 전에 붙이면 훨씬 공손해져요. 뒤에 but을 붙여 부탁을 이어 말해도 돼요. 비슷한 표현: Sorry to interrupt. / Excuse me, do you have a sec?",
         examples: [
           { en: "Sorry to bother you, but could you take our picture?", ko: "귀찮게 해서 죄송한데, 사진 좀 찍어 주실 수 있어요?",
@@ -806,6 +820,7 @@
       {
         id: "c19-e2",
         phrase: "Would you mind ~ing?",
+        teaser: "기분 안 상하게 '~ 좀 해 주시겠어요?' 부탁하는 최고급 공손 표현은?",
         ko: "'~해 주시겠어요?'라는 뜻이에요. 부탁할 때 쓰는 아주 공손한 표현이고, mind 뒤에는 동사ing가 와요. 대답이 'No'면 '괜찮아요, 해 드릴게요'라는 뜻이라 헷갈리지 않게 주의! 비슷한 표현: Could you ~? / Do you mind ~ing?",
         examples: [
           { en: "Would you mind closing the window a little?", ko: "창문 좀 조금 닫아 주시겠어요?",
@@ -847,6 +862,7 @@
       {
         id: "c19-e3",
         phrase: "I appreciate it.",
+        teaser: "부탁을 들어준 사람에게, 그냥 고맙다는 말보다 더 진심인 한마디는?",
         ko: "'신경 써 줘서 고마워요'라는 뜻이에요. Thank you보다 조금 더 진심이 담긴 느낌이라, 누가 내 부탁을 들어줬을 때 딱 좋아요. 비슷한 표현: Thanks a lot. / I really appreciate it.",
         examples: [
           { en: "Thanks for waiting for me. I appreciate it.", ko: "기다려 줘서 고마워. 진짜 고마워.",

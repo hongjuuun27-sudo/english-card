@@ -44,6 +44,7 @@
       {
         id: "c10-e1",
         phrase: "I know, right?",
+        teaser: "'그러니까요! 내 말이!' 맞장구칠 때 원어민이 쓰는 한마디는?",
         ko: "'그러니까요!', '내 말이!'라는 뜻이에요. 상대 말에 크게 공감할 때 써요. 스몰토크에서 대화를 자연스럽게 이어 주는 최고의 맞장구예요. 비슷한 표현: Totally. / Tell me about it.",
         examples: [
           { en: "I know, right? This place has the best pizza in town.", ko: "그러니까! 여기가 동네에서 피자 제일 맛있어.",
@@ -87,6 +88,7 @@
       {
         id: "c10-e2",
         phrase: "supposed to ~",
+        teaser: "'이따 비 온대요?'에서 '온대요', 뭐라고 할까?",
         ko: "'~하기로 되어 있다', '~라던데'라는 뜻이에요. 날씨 예보나 소문처럼 '그렇다더라'를 말할 때 딱이에요. 약속이나 규칙을 말할 때도 써요. 빨리 말하면 '서포즈투'처럼 붙어서 들려요.",
         examples: [
           { en: "It's supposed to snow this weekend.", ko: "이번 주말에 눈 온대.",
@@ -127,6 +129,7 @@
       {
         id: "c10-e3",
         phrase: "Good call.",
+        teaser: "'우산 챙겨!'라는 말에 '좋은 생각이야'를 두 단어로?",
         ko: "'좋은 생각이야, 잘 판단했어'라는 뜻이에요. 상대의 제안이나 선택이 괜찮을 때 칭찬처럼 해요. 짧고 자연스러워서 원어민이 정말 자주 써요. 비슷한 표현: Good idea. / Smart move.",
         examples: [
           { en: "Bringing a jacket was a good call. It's freezing up here.", ko: "재킷 가져온 거 잘했다. 여기 엄청 춥네.",
@@ -213,6 +216,7 @@
       {
         id: "c11-e1",
         phrase: "How was your ~?",
+        teaser: "월요일 아침 동료가 '주말 어땠어?' 물을 때 쓰는 틀은?",
         ko: "'~ 어땠어?'라는 뜻이에요. 주말, 여행, 휴가, 면접 등 뭐든 뒤에 붙여서 물어봐요. 대답은 It was great! / It was okay. / It was kind of boring.처럼 짧게 시작하면 돼요. 비슷한 표현: How did ~ go?",
         examples: [
           { en: "How was your trip to Japan?", ko: "일본 여행 어땠어?",
@@ -255,6 +259,7 @@
       {
         id: "c11-e2",
         phrase: "I went ~ing.",
+        teaser: "'등산 갔어', '쇼핑하러 갔어'를 한 틀로 말하는 법은?",
         ko: "'~하러 갔어'라는 뜻이에요. go hiking(등산), go shopping(쇼핑), go camping(캠핑)처럼 활동을 말할 때 go 뒤에 -ing를 붙여요. 지난 일이니까 went. went to hiking처럼 to를 넣지 않도록 조심!",
         examples: [
           { en: "I went shopping for a new coat on Saturday.", ko: "토요일에 새 코트 사러 쇼핑 갔어.",
@@ -297,6 +302,7 @@
       {
         id: "c11-e3",
         phrase: "stay in",
+        teaser: "'주말에 그냥 집에 있었어'의 '집에 있다', 두 단어로?",
         forms: ["stayed in"],
         ko: "'집에 있다, 안 나가다'라는 뜻이에요. 외출하지 않고 집에서 쉴 때 써요. 반대는 go out(놀러 나가다). 동료가 I just stayed in.이라고 하면 '그냥 집에 있었어'예요.",
         examples: [
@@ -380,6 +386,7 @@
       {
         id: "c12-e1",
         phrase: "How do you know ~?",
+        teaser: "파티에서 처음 만난 사람이 '에밀리랑은 어떻게 아세요?' 묻는 말은?",
         ko: "'~를 어떻게 아세요?'라는 뜻이에요. 파티에서 처음 만난 사람과 대화를 여는 단골 질문이에요. 대답은 We work together. / We met in college.처럼 하면 돼요. '어떻게 그렇게 잘 알아?'라는 뜻으로도 써요.",
         examples: [
           { en: "How do you know the bride?", ko: "신부랑은 어떻게 아세요?",
@@ -422,6 +429,7 @@
       {
         id: "c12-e2",
         phrase: "used to ~",
+        teaser: "'예전엔 같이 일했었어요(지금은 아니고)'의 그 '예전엔'은?",
         ko: "'예전엔 ~했었어(지금은 아니야)'라는 뜻이에요. 과거의 습관이나 상태를 말할 때 써요. We used to work together.는 '예전에 같이 일했어요'. 빨리 말하면 '유스터'처럼 들려요.",
         examples: [
           { en: "I used to live in Boston for work.", ko: "일 때문에 보스턴에 살았었어요.",
@@ -464,6 +472,7 @@
       {
         id: "c12-e3",
         phrase: "Small world!",
+        teaser: "알고 보니 친구의 친구였을 때, '세상 참 좁네요!'는?",
         ko: "'세상 참 좁네요!'라는 뜻이에요. 우연히 아는 사람이 겹치거나 뜻밖의 인연을 알게 됐을 때 써요. 비슷한 표현: What a coincidence!(이런 우연이!)",
         examples: [
           { en: "You went to my high school too? Small world!", ko: "너도 우리 고등학교 나왔어? 세상 좁다!",
@@ -555,6 +564,7 @@
       {
         id: "c17-e1",
         phrase: "Are you free ~?",
+        teaser: "친구에게 '이번 주말에 시간 돼?' 물을 때 쓰는 틀은?",
         ko: "'~에 시간 돼?'라는 뜻이에요. 약속 잡을 때 제일 먼저 꺼내는 말이에요. 뒤에 this weekend, tonight, on Friday처럼 시간을 붙여요. 대답: Yeah, I'm free! / Sorry, I'm busy. 비슷한 표현: Do you have time ~?",
         examples: [
           { en: "Are you free for a quick call this afternoon?", ko: "오늘 오후에 잠깐 통화할 시간 돼요?",
@@ -597,6 +607,7 @@
       {
         id: "c17-e2",
         phrase: "check ~ out",
+        teaser: "'새로 생긴 식당 가 볼래?'의 '가서 구경하다', 원어민은?",
         ko: "'~를 (가서) 구경하다, 확인해 보다'라는 뜻이에요. 새로 생긴 가게, 영상, 장소를 '한번 가 보자/봐 봐' 할 때 써요. 대상이 it, this처럼 짧으면 check it out처럼 가운데 넣어요. 호텔 '체크아웃'과는 다른 뜻이에요.",
         examples: [
           { en: "You have to check out this café near my office.", ko: "우리 회사 근처에 있는 이 카페 꼭 가 봐.",
@@ -641,6 +652,7 @@
       {
         id: "c17-e3",
         phrase: "How about ~?",
+        teaser: "'토요일 6시 어때?' 하고 제안할 때 쓰는 틀은?",
         ko: "'~ 어때?'라는 뜻이에요. 시간, 장소, 아이디어를 제안할 때 쓰는 만능 패턴이에요. 뒤에 명사나 -ing를 붙여요: How about Friday? / How about getting pizza? 비슷한 표현: What about ~? / Why don't we ~?",
         examples: [
           { en: "How about Italian tonight?", ko: "오늘 저녁 이탈리아 음식 어때?",
@@ -683,6 +695,7 @@
       {
         id: "c17-e4",
         phrase: "Let me know if ~.",
+        teaser: "'혹시 뭐 바뀌면 알려 줘'는 영어로 어떻게?",
         ko: "'~하면 알려 줘'라는 뜻이에요. 약속, 일, 부탁을 마무리할 때 자주 붙이는 말이에요. if 대신 when(~하면 그때)도 많이 써요. 비슷한 표현: Keep me posted.(계속 소식 알려 줘)",
         examples: [
           { en: "Let me know if you need anything else.", ko: "더 필요한 거 있으면 말씀하세요.",
@@ -724,6 +737,7 @@
       {
         id: "c17-e5",
         phrase: "catch up",
+        teaser: "오랜만에 만난 친구랑 '그동안 못 한 얘기 하자'의 그 동사, 두 단어로?",
         forms: ["catching up"],
         ko: "'(오랜만에) 근황을 나누다, 밀린 얘기를 하다'라는 뜻이에요. 오래 못 본 친구에게 We should catch up!(얼굴 한번 보자/얘기 좀 하자)처럼 정말 자주 써요. '밀린 걸 따라잡다'라는 뜻도 있어요: catch up on work.",
         examples: [
@@ -807,6 +821,7 @@
       {
         id: "c24-e1",
         phrase: "hold the door",
+        teaser: "닫히는 엘리베이터 앞에서 '문 좀 잡아 주세요!'는?",
         forms: ["holding the door", "held the door"],
         ko: "'문을 잡아 주다'라는 뜻이에요. 엘리베이터나 출입문이 닫히기 전에 누가 오면 자주 들어요. 'Can you hold the door?'처럼 부탁할 때도, 'I'll hold the door.'처럼 내가 잡아 줄 때도 써요. 비슷한 표현: Keep the door open. / Hold the elevator!",
         examples: [
@@ -848,6 +863,7 @@
       {
         id: "c24-e2",
         phrase: "What floor?",
+        teaser: "엘리베이터에서 짐 든 사람에게 '몇 층 가세요?'를 두 단어로?",
         ko: "'몇 층 가세요?'라는 뜻이에요. 엘리베이터에서 버튼 앞에 선 사람이 다른 사람 대신 눌러 줄 때 짧게 물어요. 좀 더 공손하게는 'What floor are you going to?'. 비슷한 표현: Which floor? / Where to?",
         examples: [
           { en: "What floor are you going to?", ko: "몇 층 가세요?",
@@ -888,6 +904,7 @@
       {
         id: "c24-e3",
         phrase: "Let me get ~ for you.",
+        teaser: "짐 든 사람에게 '그거 제가 들어 드릴게요'는?",
         ko: "'~는 제가 해 드릴게요'라는 뜻이에요. 문·가방·버튼처럼 상대가 하기 힘든 걸 대신 해 주겠다고 할 때 써요. 친절하고 자연스러운 말투예요. 비슷한 표현: I'll get ~ for you. / Here, I got it.",
         examples: [
           { en: "Let me get the door for you.", ko: "문은 제가 열어 드릴게요.",

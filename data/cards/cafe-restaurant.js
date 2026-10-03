@@ -45,6 +45,7 @@
       {
         id: "c1-e1",
         phrase: "Can I get ~?",
+        teaser: "카페에서 주문할 때 원어민이 제일 많이 쓰는 첫마디는?",
         ko: "주문할 때 제일 많이 쓰는 말로, '~ 주세요'를 부드럽게 말하는 느낌이에요. 뒤에 please를 붙이면 더 공손해요. 주문뿐 아니라 뭔가 부탁할 때도 두루 써요. 비슷한 표현: I'll have ~. / Could I get ~?",
         examples: [
           { en: "Can I get the check when you get a chance?", ko: "시간 되실 때 계산서 좀 주시겠어요?",
@@ -85,6 +86,7 @@
       {
         id: "c1-e2",
         phrase: "~ to go",
+        teaser: "'포장이요!' 영어로 두 단어면 끝난다는데, 뭘까?",
         ko: "'포장해서 가져갈게요'라는 뜻이에요. 음식·음료 이름 뒤에 붙이면 끝. 점원이 For here or to go?(드시고 가세요, 가져가세요?)라고 물으면 To go 한마디로 답하면 돼요. 먹다 남은 음식을 싸 달라고 할 때도 써요. 비슷한 표현: takeout(포장 음식)",
         examples: [
           { en: "Can I get the rest of this to go?", ko: "남은 거 포장해 갈 수 있을까요?",
@@ -128,6 +130,7 @@
       {
         id: "c1-e3",
         phrase: "Sure thing.",
+        teaser: "부탁을 받고 '물론이죠!' 하고 시원하게 답할 때, 두 단어로?",
         ko: "'물론이죠', '그럼요'라는 밝은 대답이에요. 그냥 Sure보다 친근하고 기분 좋은 느낌. 점원이 손님 부탁에 대답할 때 정말 자주 들려요. 비슷한 표현: You got it. / No problem.",
         examples: [
           { en: "Sure thing, I'll send you the file in a minute.", ko: "그럼요, 금방 파일 보내드릴게요.",
@@ -214,6 +217,7 @@
       {
         id: "c2-e1",
         phrase: "I think I ordered ~.",
+        teaser: "주문이 잘못 나왔을 때, 기분 안 상하게 '제가 ~ 시킨 것 같은데요'는?",
         ko: "'제가 ~ 시킨 것 같은데요'라는 뜻이에요. 앞에 I think를 붙이면 따지는 느낌 없이 부드럽게 실수를 짚을 수 있어요. 맨 앞에 Sorry나 Excuse me를 붙이면 더 자연스러워요. 비슷한 표현: I actually ordered ~. / This isn't what I ordered.(조금 더 직접적)",
         examples: [
           { en: "Excuse me, I think I ordered the salad, not the soup.", ko: "저기요, 수프 말고 샐러드 시킨 것 같은데요.",
@@ -260,6 +264,7 @@
       {
         id: "c2-e2",
         phrase: "My bad.",
+        teaser: "친구한테 '아, 내 실수!' 하고 가볍게 사과할 때, 딱 두 단어?",
         ko: "'아, 내 실수! 미안' 하는 가벼운 사과예요. 큰 잘못보다는 사소한 실수에 써요. 점원이나 친구한테서 자주 들려서 알아듣기만 해도 좋아요. 비슷한 표현: Sorry about that. / That's on me.(그건 내 탓이야)",
         examples: [
           { en: "My bad, I sent you the wrong file.", ko: "죄송해요, 파일을 잘못 보냈네요.",
@@ -304,6 +309,7 @@
       {
         id: "c2-e3",
         phrase: "No worries.",
+        teaser: "누가 미안하다고 할 때 '괜찮아요, 신경 쓰지 마세요'를 쿨하게 한마디로?",
         ko: "'괜찮아요, 신경 쓰지 마세요'라는 뜻이에요. 상대가 사과할 때도, 고마워할 때도 둘 다 쓸 수 있어서 정말 편해요. 캐주얼하고 아주 흔해요. 비슷한 표현: No problem. / All good.",
         examples: [
           { en: "No worries, we can push the meeting to tomorrow.", ko: "괜찮아요, 회의는 내일로 미루면 돼요.",
@@ -385,6 +391,7 @@
       {
         id: "c3-e1",
         phrase: "the check",
+        teaser: "식당에서 '계산서 주세요' 할 때, 미국에선 이 단어를 더 많이 써요. 뭘까?",
         ko: "식당의 '계산서'는 미국에서 보통 the check라고 해요. bill도 통하지만 미국에선 check가 훨씬 흔해요. 멀리 있는 직원에게 허공에 사인하는 손짓만 해도 알아들어요. 비슷한 표현: Check, please. / Can we get the bill?",
         examples: [
           { en: "Excuse me, could we get the check, please?", ko: "저기요, 계산서 좀 주시겠어요?",
@@ -426,6 +433,7 @@
       {
         id: "c3-e2",
         phrase: "separate",
+        teaser: "직원이 '한 번에 계산하실 거예요?' 물을 때, '따로따로요'는 한 단어로?",
         ko: "'따로따로'라는 뜻이에요. 식당에서 Together or separate?(같이 계산하세요, 따로 하세요?)라고 물으면 Separate, please.는 각자 계산, Together, please.는 한 번에 계산이에요. 비슷한 표현: separate checks(계산서 따로)",
         examples: [
           { en: "Can we get separate checks, please?", ko: "계산서 따로 주실 수 있어요?",
@@ -467,6 +475,7 @@
       {
         id: "c3-e3",
         phrase: "be right back",
+        teaser: "직원이 뭔가 가지러 가면서 '금방 올게요' 할 때 꼭 하는 말은?",
         ko: "'금방 올게요'라는 뜻이에요. 직원이 뭔가 가지러 갈 때 거의 매번 하는 말이에요. 문자에선 brb로 줄여 쓰기도 해요. 비슷한 표현: Give me a sec. / Back in a minute.",
         examples: [
           { en: "I'll be right back with your drinks.", ko: "음료 금방 가져다 드릴게요.",
@@ -559,6 +568,7 @@
       {
         id: "c13-e1",
         phrase: "put ~ down",
+        teaser: "맛집 웨이팅 명단에 '이름 올려 드릴까요?' 할 때 쓰는 동사는?",
         ko: "'(명단에) ~를 올려 두다, 적어 두다'라는 뜻이에요. 식당 대기 명단, 예약, 참가자 명단에 이름을 올릴 때 써요. Put me down for ~는 '~에 나도 끼워 줘/신청할게'예요. 비슷한 표현: sign ~ up",
         examples: [
           { en: "Can you put me down for two tickets?", ko: "저 티켓 두 장으로 올려 주실래요?",
@@ -602,6 +612,7 @@
       {
         id: "c13-e2",
         phrase: "Do you mind if ~?",
+        teaser: "'혹시 바깥 자리 앉아도 될까요?' 공손하게 허락을 구하는 틀은?",
         ko: "'~해도 될까요?'라는 공손한 부탁이에요. 대답이 헷갈리는데, 괜찮다는 대답은 Not at all.(전혀요 = 괜찮아요)이나 Go ahead.예요. 비슷한 표현: Is it okay if ~? / Can I ~?",
         examples: [
           { en: "Do you mind if I sit here?", ko: "여기 앉아도 될까요?",
@@ -644,6 +655,7 @@
       {
         id: "c13-e3",
         phrase: "make a note of ~",
+        teaser: "직원이 '메모해 둘게요' 할 때 하는 말은?",
         ko: "'~를 메모해 두다, 기억해 두다'라는 뜻이에요. 직원이 요청 사항을 적어 둘 때 자주 들려요. 나도 '기억해 둘게'라고 할 때 써요. 비슷한 표현: write ~ down / keep ~ in mind",
         examples: [
           { en: "I'll make a note of your allergy for the kitchen.", ko: "주방에 알레르기 있으시다고 메모해 둘게요.",
@@ -727,6 +739,7 @@
       {
         id: "c20-e1",
         phrase: "I'll have ~.",
+        teaser: "식당에서 메뉴를 정했을 때 '~로 할게요'는?",
         ko: "'~로 할게요, ~ 주세요'라는 뜻이에요. 식당에서 메뉴를 정했을 때 가장 자연스럽게 쓰는 말이에요. Can I get ~?보다 조금 더 단정한 느낌. 비슷한 표현: I'll go with ~. / I'll take ~.",
         examples: [
           { en: "I'll have the chicken sandwich, no onions.", ko: "치킨 샌드위치로 주세요, 양파는 빼고요.",
@@ -768,6 +781,7 @@
       {
         id: "c20-e2",
         phrase: "How would you like ~?",
+        teaser: "직원이 '굽기는 어떻게 해 드릴까요?' 물을 때 쓰는 틀은?",
         ko: "'~는 어떻게 해 드릴까요?'라는 뜻이에요. 직원이 내 취향을 물을 때 자주 들어요. 굽기(How would you like it cooked?), 커피(How would you like your coffee?), 결제(How would you like to pay?). 비슷한 표현: How do you want ~? / What would you like?",
         examples: [
           { en: "How would you like your eggs?", ko: "달걀은 어떻게 해 드릴까요?",
@@ -809,6 +823,7 @@
       {
         id: "c20-e3",
         phrase: "on the side",
+        teaser: "'소스는 따로 주세요'의 '따로', 세 단어로?",
         ko: "'따로(곁들여서)'라는 뜻이에요. 소스·드레싱을 음식 위에 붓지 말고 옆에 따로 달라고 할 때 써요. 'a side of fries'처럼 side만 쓰면 '곁들이 메뉴'. 비슷한 표현: separately / in a separate cup",
         examples: [
           { en: "Can I get the dressing on the side?", ko: "드레싱은 따로 주실 수 있어요?",
@@ -891,6 +906,7 @@
       {
         id: "c21-e1",
         phrase: "Is ~ extra?",
+        teaser: "'과카몰리 넣으면 돈 더 내요?' 추가 요금을 묻는 짧은 틀은?",
         ko: "'~는 추가 요금 있어요?'라는 뜻이에요. 토핑·사이드·서비스에 돈이 더 드는지 물어볼 때 딱이에요. 대답은 보통 'Yep, it's ~ extra.'(네, ~ 추가예요). 비슷한 표현: Does ~ cost extra? / Is there a charge for ~?",
         examples: [
           { en: "Is breakfast extra, or is it included?", ko: "조식은 따로 내야 해요, 포함이에요?",
@@ -931,6 +947,7 @@
       {
         id: "c21-e2",
         phrase: "go light on ~",
+        teaser: "'치즈는 조금만 넣어 주세요'의 '조금만', 원어민은?",
         ko: "'~은 조금만 (넣어 주세요)'라는 뜻이에요. 소스·치즈·얼음·설탕을 적게 넣어 달라고 할 때 써요. 반대로 많이 원하면 'extra ~'. 비슷한 표현: Just a little ~, please. / Easy on the ~.",
         examples: [
           { en: "Go light on the ice, please.", ko: "얼음은 조금만 넣어 주세요.",
@@ -971,6 +988,7 @@
       {
         id: "c21-e3",
         phrase: "That's it.",
+        teaser: "주문 끝! '그거면 돼요'를 두 단어로?",
         ko: "'그거면 돼요, 그게 다예요'라는 뜻이에요. 주문이 끝났을 때나 더 필요한 거 없냐는 질문에 쓰면 딱이에요. 맥락에 따라 '바로 그거야!'라는 뜻도 돼요. 비슷한 표현: That's all. / I'm good, thanks.",
         examples: [
           { en: "That's it for me, thanks.", ko: "저는 그거면 돼요, 감사해요.",
@@ -1051,6 +1069,7 @@
       {
         id: "c22-e1",
         phrase: "What kind of ~?",
+        teaser: "샌드위치 가게에서 '빵은 어떤 걸로 하실래요?' 할 때 쓰는 틀은?",
         ko: "'어떤 (종류의) ~?'라는 뜻이에요. 빵·음료·음식·영화 등 종류를 물을 때 가장 많이 쓰고, 가게에서 직원에게 자주 들어요. 비슷한 표현: What type of ~? / Which ~?",
         examples: [
           { en: "What kind of music do you listen to?", ko: "어떤 음악 들어?",
@@ -1091,6 +1110,7 @@
       {
         id: "c22-e2",
         phrase: "Everything but ~.",
+        teaser: "'양파만 빼고 다 넣어 주세요'를 짧게 말하는 법은?",
         ko: "'~ 빼고 전부요'라는 뜻이에요. 토핑·야채를 고를 때 하나하나 말하는 대신 싫은 것만 빼 달라고 하면 돼요. 여기서 but은 '~ 빼고'. 비슷한 표현: Everything except ~. / All of them, no ~.",
         examples: [
           { en: "Everything but tomatoes, please.", ko: "토마토 빼고 다 넣어 주세요.",
@@ -1131,6 +1151,7 @@
       {
         id: "c22-e3",
         phrase: "Can you add ~?",
+        teaser: "'치즈 추가해 주실 수 있어요?'는 영어로?",
         ko: "'~ 추가해 주실 수 있어요?'라는 뜻이에요. 토핑·치즈·샷처럼 뭔가를 더 넣어 달라고 할 때, 명단·채팅방에 사람을 더할 때도 써요. 비슷한 표현: Could I add ~? / Can I get extra ~?",
         examples: [
           { en: "Can you add an extra shot to my latte?", ko: "라떼에 샷 하나 추가해 주실 수 있어요?",

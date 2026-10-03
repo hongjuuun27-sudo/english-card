@@ -44,6 +44,7 @@
       {
         id: "c7-e1",
         phrase: "Do you know where ~ is?",
+        teaser: "길에서 '지하철역이 어디 있는지 아세요?' 공손하게 묻는 법은?",
         ko: "'~이 어디 있는지 아세요?'라는 뜻이에요. 그냥 Where is ~?보다 훨씬 공손하게 들려요. 모르는 사람에게 물을 땐 앞에 Excuse me를 꼭 붙이세요. 비슷한 표현: Where can I find ~?",
         examples: [
           { en: "Excuse me, do you know where the nearest restroom is?", ko: "실례지만, 제일 가까운 화장실이 어디 있는지 아세요?",
@@ -89,6 +90,7 @@
       {
         id: "c7-e2",
         phrase: "say that again",
+        teaser: "상대 말이 너무 빨라서 못 알아들었을 때, 다시 말해 달라는 표현은?",
         ko: "'다시 한번 말해 주시겠어요?'라는 뜻이에요. 못 알아들었을 때 당황하지 말고 Sorry, could you say that again?으로 다시 들으면 돼요. a little slower(조금 천천히)를 붙이면 더 좋아요. 친구 사이에선 놀랐을 때 '뭐라고?' 느낌으로도 써요. 비슷한 표현: Sorry? / Come again?",
         examples: [
           { en: "Sorry, could you say that again? It's really loud in here.", ko: "죄송한데 다시 말해 주실래요? 여기 너무 시끄러워서요.",
@@ -132,6 +134,7 @@
       {
         id: "c7-e3",
         phrase: "You can't miss it.",
+        teaser: "길 알려 주면서 '바로 보일 거예요' 할 때 원어민 단골 멘트는?",
         ko: "'바로 보일 거예요, 못 찾을 수가 없어요'라는 뜻이에요. 길을 알려 준 사람이 마지막에 자주 덧붙여요. 이 말이 나오면 거의 다 왔다는 뜻이에요.",
         examples: [
           { en: "It's the big red building on the corner. You can't miss it.", ko: "모퉁이에 있는 큰 빨간 건물이에요. 바로 보일 거예요.",
@@ -215,6 +218,7 @@
       {
         id: "c8-e1",
         phrase: "How long will it take?",
+        teaser: "택시 타자마자 '얼마나 걸려요?'는 영어로?",
         ko: "'얼마나 걸릴까요?'라는 뜻이에요. 이동 시간, 대기 시간, 수리 시간 모두 이걸로 물어요. 뒤에 to + 동작을 붙이면 '~하는 데 얼마나 걸려요?'가 돼요. 비슷한 표현: How long does it take ~?(평소에 얼마나 걸리는지)",
         examples: [
           { en: "How long will it take to get to the airport?", ko: "공항까지 얼마나 걸릴까요?",
@@ -256,6 +260,7 @@
       {
         id: "c8-e2",
         phrase: "drop ~ off",
+        teaser: "'정문 앞에 내려 주세요'에 꼭 들어가는 동사 표현은?",
         ko: "'(차로) ~를 내려 주다', '(물건을) 맡기다/갖다 놓다'라는 뜻이에요. 택시에서 Could you drop me off at ~?는 '~에 내려 주세요'예요. 반대로 '태우러 오다'는 pick ~ up. 비슷한 표현: Can you let me out here?(여기서 내려 주세요)",
         examples: [
           { en: "Can you drop me off at the corner?", ko: "저 모퉁이에 내려 주실 수 있어요?",
@@ -298,6 +303,7 @@
       {
         id: "c8-e3",
         phrase: "You got it.",
+        teaser: "기사님이 '알겠습니다, 그렇게 할게요'를 세 단어로 하면?",
         ko: "'알겠어요, 그렇게 할게요'라는 뜻이에요. 부탁을 받았을 때 시원하게 '접수!' 하는 느낌이에요. 직원, 기사님, 친구가 자주 써요. 비슷한 표현: Sure thing. / Will do.",
         examples: [
           { en: "You got it, boss. I'll handle it.", ko: "알겠습니다, 팀장님. 제가 처리할게요.",
@@ -393,6 +399,7 @@
       {
         id: "c9-e1",
         phrase: "Do you have this in ~?",
+        teaser: "옷 가게에서 '이거 미디엄도 있어요?' 물을 때 쓰는 틀은?",
         ko: "'이거 ~로도 있어요?'라는 뜻이에요. 사이즈·색깔·종류를 물을 때 만능 문장이에요. in 뒤에 a medium, black, size 8처럼 붙이면 돼요. 비슷한 표현: Does this come in ~?",
         examples: [
           { en: "Do you have this in a size eight?", ko: "이거 8 사이즈 있어요?",
@@ -437,6 +444,7 @@
       {
         id: "c9-e2",
         phrase: "Let me check ~.",
+        teaser: "직원이 '창고에 확인해 볼게요' 할 때 하는 말은?",
         ko: "'확인해 볼게요'라는 뜻이에요. 직원이 재고나 예약을 확인하러 갈 때 꼭 하는 말이에요. 나도 바로 대답하기 곤란할 때 쓰기 좋아요. 비슷한 표현: Let me see. / I'll double-check.",
         examples: [
           { en: "Let me check my calendar and get back to you.", ko: "일정 확인해 보고 다시 연락드릴게요.",
@@ -479,6 +487,7 @@
       {
         id: "c9-e3",
         phrase: "It's a little ~.",
+        teaser: "입어 봤더니 '좀 끼네요', '좀 크네요' 할 때 앞에 붙는 말은?",
         ko: "'좀 ~하네요'라는 뜻이에요. 불만을 부드럽게 말할 때 좋아요. tight(끼는), loose(헐렁한), long(긴) 같은 단어만 바꿔 끼우면 끝. 비슷한 표현: It's kind of ~. / It's a bit ~.",
         examples: [
           { en: "It's a little tight around the shoulders.", ko: "어깨가 좀 끼네요.",
@@ -569,6 +578,7 @@
       {
         id: "c15-e1",
         phrase: "Does this ~ go to ~?",
+        teaser: "'이 버스 미술관 가요?' 버스 타기 전에 꼭 쓰는 질문은?",
         ko: "'이 ~ ~에 가요?'라는 뜻이에요. 버스, 지하철, 기차가 목적지에 가는지 확인할 때 쓰는 패턴이에요. bus, train, shuttle만 바꿔 끼우면 돼요. 비슷한 표현: Is this the right bus for ~?",
         examples: [
           { en: "Does this train go to Brooklyn?", ko: "이 지하철 브루클린 가요?",
@@ -613,6 +623,7 @@
       {
         id: "c15-e2",
         phrase: "hop on",
+        teaser: "기사님이 '네, 타세요!' 할 때 쓰는 두 단어 표현은?",
         forms: ["hopped on"],
         ko: "'(버스·차·자전거에) 올라타다'라는 뜻이에요. get on보다 가볍고 캐주얼한 느낌이에요. 반대는 hop off(내리다). '참여하다'라는 뜻으로 hop on a call(통화에 들어오다)처럼도 써요.",
         examples: [
@@ -659,6 +670,7 @@
       {
         id: "c15-e3",
         phrase: "get off",
+        teaser: "'어디서 내려야 해요?'의 '내리다', 두 단어로?",
         ko: "'(버스·지하철·비행기에서) 내리다'라는 뜻이에요. 어디서 내리는지 물을 때 Where should I get off?를 꼭 기억하세요. 반대는 get on(타다). get off work(퇴근하다)도 자주 써요.",
         examples: [
           { en: "Where should I get off for Central Park?", ko: "센트럴파크 가려면 어디서 내려야 해요?",
@@ -700,6 +712,7 @@
       {
         id: "c15-e4",
         phrase: "give ~ a heads-up",
+        teaser: "'내릴 때 되면 미리 말씀드릴게요'의 '미리 알려 주다'는?",
         ko: "'~에게 미리 알려 주다, 귀띔해 주다'라는 뜻이에요. 나중에 놀라지 않게 미리 말해 줄 때 써요. Thanks for the heads-up!(미리 알려 줘서 고마워!)도 정말 자주 들려요.",
         examples: [
           { en: "Can you give me a heads-up before the boss comes in?", ko: "팀장님 오시기 전에 미리 좀 알려 줄래?",
@@ -796,6 +809,7 @@
       {
         id: "c16-e1",
         phrase: "Would you like ~ or ~?",
+        teaser: "직원이 '환불해 드릴까요, 교환해 드릴까요?' 묻는 틀은?",
         ko: "'~로 하실래요, ~로 하실래요?'라는 뜻이에요. 점원이 선택지를 줄 때 거의 이 패턴이에요. 대답은 고른 것만 말하면 끝: An exchange, please. 비슷한 표현: Do you want ~ or ~?(더 캐주얼)",
         examples: [
           { en: "Would you like soup or salad with that?", ko: "수프로 하실래요, 샐러드로 하실래요?",
@@ -836,6 +850,7 @@
       {
         id: "c16-e2",
         phrase: "exchange ~ for ~",
+        teaser: "'더 큰 사이즈로 바꿀 수 있어요?'의 '~를 ~로 바꾸다'는?",
         ko: "'~를 ~로 바꾸다/교환하다'라는 뜻이에요. 가게에서 사이즈나 색을 바꿀 때 써요. 환전할 때도 exchange dollars for won처럼 똑같이 써요. 비슷한 표현: swap ~ for ~(캐주얼)",
         examples: [
           { en: "Can I exchange this shirt for a medium?", ko: "이 셔츠 미디엄으로 바꿀 수 있어요?",
@@ -879,6 +894,7 @@
       {
         id: "c16-e3",
         phrase: "Let me grab ~.",
+        teaser: "직원이 '32 사이즈로 하나 가져올게요' 할 때 쓰는 말은?",
         ko: "'~ 좀 가져올게요/챙길게요'라는 뜻이에요. grab은 원래 '잡다'인데 대화에선 '가볍게 가져오다, 사다, 먹다'로 엄청 자주 써요. grab a coffee(커피 한잔하다), grab lunch(점심 먹다)도 같은 느낌이에요.",
         examples: [
           { en: "Let me grab my jacket, and I'll be right out.", ko: "재킷만 챙겨서 바로 나갈게.",
@@ -919,6 +935,7 @@
       {
         id: "c16-e4",
         phrase: "Sorry for ~.",
+        teaser: "'번거롭게 해서 죄송해요'의 앞부분, 뭐라고 할까?",
         ko: "'~해서 미안해요'라는 뜻이에요. for 뒤에 명사나 -ing를 붙여요: Sorry for the wait.(기다리게 해서 죄송해요), Sorry for being late. 가볍게 사과할 때 만능 패턴이에요. 비슷한 표현: Sorry about ~.",
         examples: [
           { en: "Sorry for the wait. Your table is ready.", ko: "기다리게 해서 죄송해요. 자리 준비됐어요.",
@@ -1004,6 +1021,7 @@
       {
         id: "c23-e1",
         phrase: "I'm visiting from ~.",
+        teaser: "여행지에서 '한국에서 놀러 왔어요'는 어떻게 말할까?",
         ko: "'~에서 놀러 왔어요'라는 뜻이에요. 여행지에서 어디서 왔냐는 질문에 '잠깐 들른 사람'이라는 느낌까지 담아 대답할 수 있어요. 비슷한 표현: I'm from ~. / I'm here from ~ for a few days.",
         examples: [
           { en: "I'm visiting from Seoul, so I don't know the area.", ko: "서울에서 놀러 와서 이 동네를 잘 몰라요.",
@@ -1044,6 +1062,7 @@
       {
         id: "c23-e2",
         phrase: "How long have you been ~ing?",
+        teaser: "기사님께 '운전하신 지 얼마나 되셨어요?' 묻는 틀은?",
         ko: "'~한 지 얼마나 됐어요?'라는 뜻이에요. 지금까지 계속해 온 일(일·취미·사는 곳)의 기간을 물을 때 써요. 스몰토크에서 상대 얘기를 끌어내기 좋아요. 비슷한 표현: How long have you ~? / Since when have you been ~ing?",
         examples: [
           { en: "How long have you been living in Seoul?", ko: "서울에 산 지 얼마나 됐어요?",
@@ -1084,6 +1103,7 @@
       {
         id: "c23-e3",
         phrase: "Any recommendations for ~?",
+        teaser: "현지인에게 '맛집 추천해 주실 데 있어요?' 짧게 묻는 법은?",
         ko: "'~ 추천해 주실 만한 데 있어요?'라는 뜻이에요. 현지인·직원에게 맛집·관광지·메뉴를 물을 때 짧고 자연스럽게 쓸 수 있어요. 앞에 Do you have를 붙이면 더 공손해요. 비슷한 표현: Can you recommend ~? / What's good around here?",
         examples: [
           { en: "Any recommendations for brunch around here?", ko: "이 근처 브런치 맛집 추천해 주실 데 있어요?",

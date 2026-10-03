@@ -62,6 +62,7 @@
       {
         id: "c18-e1",
         phrase: "come down with ~",
+        teaser: "'감기 걸리려나 봐' 하고 으슬으슬할 때 쓰는 표현은?",
         forms: ["coming down with ~", "came down with ~"],
         ko: "'(감기 등에) 걸리다, 걸리려고 하다'라는 뜻이에요. 막 아프기 시작할 때 I think I'm coming down with something.(뭔가 걸린 것 같아)처럼 써요. 뒤에 a cold(감기), the flu(독감)를 붙여요.",
         examples: [
@@ -104,6 +105,7 @@
       {
         id: "c18-e2",
         phrase: "I have a ~.",
+        teaser: "약국에서 '목이 아프고 콧물이 나요' 증상을 말하는 기본 틀은?",
         ko: "'~가 있어요'라는 뜻으로, 증상을 말할 때 제일 쉬운 패턴이에요: I have a headache(두통), a fever(열), a sore throat(목 아픔), a runny nose(콧물). 질문이나 요청 앞에도 써요: I have a question. 비슷한 표현: My ~ hurts.(~가 아파요)",
         examples: [
           { en: "I have a headache, so I'll skip the meeting.", ko: "머리가 아파서 회의는 빠질게요.",
@@ -147,6 +149,7 @@
       {
         id: "c18-e3",
         phrase: "I've been ~ing.",
+        teaser: "'어제부터 계속 기침해요'처럼 계속되는 증상을 말하는 틀은?",
         ko: "'(계속) ~하고 있어요'라는 뜻이에요. 어떤 일이 얼마 동안 이어지고 있는지 말할 때 써요. 증상을 말할 때 I've been coughing for two days.처럼 since(~부터), for(~ 동안)를 붙이면 완벽해요.",
         examples: [
           { en: "I've been working here for about a year.", ko: "여기서 일한 지 1년쯤 됐어요.",
@@ -189,6 +192,7 @@
       {
         id: "c18-e4",
         phrase: "Do you have anything for ~?",
+        teaser: "약국에서 '기침에 듣는 약 있어요?' 물을 때 쓰는 틀은?",
         ko: "'~에 듣는 거(약) 있어요?'라는 뜻이에요. 약국에서 증상 뒤에 붙여 말하면 끝이에요. 가게에서 '~용으로 쓸 만한 거 있어요?'라는 뜻으로도 써요.",
         examples: [
           { en: "Do you have anything for a headache?", ko: "두통약 같은 거 있어요?",
