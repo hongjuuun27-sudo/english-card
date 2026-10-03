@@ -582,7 +582,7 @@
   .badge[hidden]{ display:none; }
 
   /* ---------- 표현 탭 ---------- */
-  /* ---------- 홈: 위 = 오늘의 질문(크게, 누르면 그 카드의 그 줄로), 아래 = 바로가기 2×2(엄지 자리) ---------- */
+  /* ---------- 홈: 위 = 질문 카드 "이럴 땐 어떻게?"(크게, 누르면 그 카드의 그 줄로), 아래 = 바로가기 2×2(엄지 자리) ---------- */
   .home{
     display:flex; flex-direction:column;
     overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain;
@@ -646,6 +646,31 @@
   .rv-more{ margin:8px 2px 0; font-size:13px; color:var(--faint); }
   .rv-start{ width:100%; margin-top:12px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
 
+  /* 궁금증 카드 3개: 문구(teaser) → 누르면 뒤집혀 정답 표현 + 짧은 뜻 + [자세히 보기] */
+  .x-teasers{ margin-top:22px; }
+  .xt-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .xt-title{ margin:0; font-size:17px; font-weight:700; color:var(--text); }
+  .xt-more{ flex:none; height:34px; padding:0 14px; border-radius:999px; font-size:14px; font-weight:600; color:var(--accent); background:var(--accent-soft); }
+  .xt-list{ display:flex; flex-direction:column; gap:10px; }
+  .xt-card{
+    width:100%; text-align:left; padding:15px 16px; border-radius:18px;
+    background:hsl(var(--h) 50% 55% / var(--tag-a)); border:1.5px solid hsl(var(--h) 52% var(--tag-l) / .3);
+    transition:transform .12s ease;
+  }
+  .xt-card:active{ transform:scale(.985); }
+  .xt-q{ display:block; font-size:17px; line-height:1.45; font-weight:650; color:var(--text); word-break:keep-all; }
+  .xt-tap{ display:block; margin-top:8px; font-size:13px; font-weight:600; color:hsl(var(--h) 52% var(--tag-l)); }
+  .xt-card.open .xt-tap{ display:none; }
+  .xt-a{ display:none; margin-top:10px; padding-top:10px; border-top:1px dashed hsl(var(--h) 52% var(--tag-l) / .45); animation:fadeIn .3s ease both; }
+  .xt-card.open .xt-a{ display:block; }
+  .xt-phrase{ display:block; font-size:20px; font-weight:700; color:var(--accent); }
+  .xt-mean{ display:block; margin-top:2px; font-size:14.5px; color:var(--text-2); }
+  .xt-detail{ display:inline-block; margin-top:8px; font-size:13.5px; font-weight:600; color:var(--accent); }
+  /* 표현 목록: 카테고리 접기(머리를 누르면 펼치기·접기, 위쪽 [전체 펼치기/접기]). 검색 중엔 모두 펼침 */
+  .x-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:22px; }
+  .x-bar .set-label{ margin:0; }
+  .toc-group:not(.open) .x-items{ display:none; }
+  .toc-group.open .x-items{ margin-bottom:12px; }
   .x-tools{ margin-top:22px; display:flex; flex-direction:column; gap:10px; }
   .x-search{ height:46px; }
   .x-filter button{ font-size:14px; height:38px; }
@@ -1053,7 +1078,7 @@
 
 <div class="app">
   <div class="views">
-    <!-- 홈: 오늘의 질문 + 바로가기 4칸. 내용은 스크립트(홈 부분)가 채움. 앱을 켜면 항상 여기서 시작 -->
+    <!-- 홈: 질문 카드 "이럴 땐 어떻게?" + 바로가기 4칸. 내용은 스크립트(홈 부분)가 채움. 앱을 켜면 항상 여기서 시작 -->
     <section class="view home off" id="viewHome" aria-label="홈" inert></section>
     <main class="view feed" id="feed" aria-label="영어 회화 카드"></main>
 
@@ -1075,6 +1100,9 @@
       </header>
 
       <div class="rv-card" id="rvCard"></div>
+
+      <!-- 궁금증 카드 3개(표현의 teaser — 누르면 정답 표현이 뒤집혀 나오고 [자세히 보기]) -->
+      <section class="x-teasers" id="xTeasers" aria-label="궁금증 카드"></section>
 
       <div class="x-tools">
         <input class="field x-search" id="xSearch" type="search" placeholder="표현이나 뜻으로 검색 (영어·한국어)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
@@ -3505,9 +3533,11 @@ const X = {
   rv: document.getElementById("rvCard"),
   search: document.getElementById("xSearch"),
   filter: document.getElementById("xFilter"),
-  list: document.getElementById("xList")
+  list: document.getElementById("xList"),
+  teasers: document.getElementById("xTeasers")
 };
 let xFilter = "all";
+const xOpen = new Set();                // 표현 목록에서 펼친 카테고리(처음엔 모두 접힘)
 
 function statusPill(st) {
   return '<span class="st st-' + st + '">' + (st === "mastered" ? ICON_CHECK : "") + STATUS_LABEL[st] + '</span>';
@@ -3555,10 +3585,17 @@ function renderExprList() {
     X.list.innerHTML = '<p class="w-empty">' + (q ? "검색 결과가 없어요." : "해당하는 표현이 없어요.") + '</p>';
     return;
   }
-  X.list.innerHTML = groups.map(g =>
-    '<section class="toc-group" style="--h:' + hueOf(g.name) + '">' +
-      '<div class="toc-head"><span class="toc-emoji" aria-hidden="true">' + (CATEGORY_EMOJI[g.name] || "📌") + '</span>' +
-        '<h4 class="toc-cat">' + esc(g.name) + '</h4><span class="toc-cnt">' + g.items.length + '개</span></div>' +
+  /* 카테고리는 접힌 채로(xOpen에 있는 것만 펼침, 앱을 쓰는 동안 기억). 검색 중엔 결과가 다 보이게 모두 펼침 */
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
+  const isOpen = g => !!q || xOpen.has(g.name);
+  X.list.innerHTML =
+    '<div class="x-bar"><span class="set-label">' + (q ? "검색 결과" : "전체 표현") + ' ' + total + '개</span>' +
+      (q ? "" : '<button class="toc-all" type="button" data-xall>' + (groups.every(isOpen) ? "전체 접기" : "전체 펼치기") + '</button>') + '</div>' +
+    groups.map(g =>
+    '<section class="toc-group' + (isOpen(g) ? " open" : "") + '" style="--h:' + hueOf(g.name) + '" data-xcat="' + esc(g.name) + '">' +
+      '<button class="toc-head" type="button" data-xtoc aria-expanded="' + isOpen(g) + '"><span class="toc-emoji" aria-hidden="true">' + (CATEGORY_EMOJI[g.name] || "📌") + '</span>' +
+        '<h4 class="toc-cat">' + esc(g.name) + '</h4><span class="toc-cnt">' + g.items.length + '개</span>' +
+        (q ? "" : '<span class="toc-chev" aria-hidden="true">' + ICON_CHEVRON + '</span>') + '</button>' +
       '<ul class="x-items">' + g.items.map(it =>
         '<li><button class="x-item' + (it.kind === "extra" ? " extra" : "") + '" type="button" data-xid="' + esc(it.id) + '">' +
           '<span class="x-main"><span class="x-phrase">' + esc(it.ex.phrase) + '</span>' +
@@ -3572,6 +3609,7 @@ function renderExprList() {
 function renderExprTab() {
   X.date.textContent = koDate(studyToday(), true);
   renderReviewCard();
+  renderTeasers();
   renderExprList();
   updateExprBadge();
 }
@@ -3587,7 +3625,68 @@ X.filter.addEventListener("click", e => {
 });
 X.list.addEventListener("click", e => {
   const b = e.target.closest("[data-xid]");
-  if (b) { buzz(); openExprDetail(b.dataset.xid, {}); }
+  if (b) { buzz(); openExprDetail(b.dataset.xid, {}); return; }
+  const h = e.target.closest("[data-xtoc]");
+  if (h && !X.search.value.trim()) {
+    const name = h.closest(".toc-group").dataset.xcat;
+    if (xOpen.has(name)) xOpen.delete(name); else xOpen.add(name);
+    buzz(); renderExprList(); return;
+  }
+  if (e.target.closest("[data-xall]")) {
+    const names = Array.from(X.list.querySelectorAll(".toc-group")).map(g => g.dataset.xcat);
+    const allOpen = names.every(n => xOpen.has(n));
+    names.forEach(n => { if (allOpen) xOpen.delete(n); else xOpen.add(n); });
+    buzz(); renderExprList();
+  }
+});
+/* ---- 궁금증 카드 3개: 핵심 표현의 teaser("~할 때, 뭐라고 하지?") — 누르면 뒤집혀 정답 표현·짧은 뜻·[자세히 보기] ----
+   고르기(pickTeasers): 앱을 켤 때 한 번 · [다른 3개]마다(표현 탭을 다시 그려도 그대로). 미학습 표현 먼저(모자라면 학습 중·익힘), 그중 무작위.
+   최근에 나온 9개(3번 분량)는 빼고. 기록 engcards.teaser.v1 { recent: [표현id, …] } */
+const TEASER_KEY = "engcards.teaser.v1";
+const teaserState = (() => {
+  try {
+    const s = JSON.parse(localStorage.getItem(TEASER_KEY) || "null");
+    if (s && Array.isArray(s.recent)) return { recent: s.recent.filter(x => typeof x === "string").slice(-9) };
+  } catch (e) {}
+  return { recent: [] };
+})();
+let teaserPick = null;                  // 지금 보여 주는 3개 [표현id]
+const teaserOpen = new Set();           // 뒤집어 본 카드
+function pickTeasers() {
+  const all = EXPR_LIST.filter(it => it.kind === "core" && it.ex.teaser);
+  const block = new Set(teaserState.recent.slice(-Math.max(0, Math.min(9, all.length - 3))));
+  const pool = all.filter(it => !block.has(it.id));
+  const shuffle = list => { const a = list.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const rank = it => ({ new: 0, learning: 1, mastered: 2 })[statusOf(it.id)];
+  const pick = shuffle(pool).sort((a, b) => rank(a) - rank(b)).slice(0, 3).map(it => it.id);
+  teaserState.recent = teaserState.recent.filter(id => !pick.includes(id)).concat(pick).slice(-9);
+  try { localStorage.setItem(TEASER_KEY, JSON.stringify(teaserState)); } catch (e) {}
+  teaserOpen.clear();
+  return pick;
+}
+function renderTeasers() {
+  if (!teaserPick) teaserPick = pickTeasers();
+  const items = teaserPick.map(id => EXPR_BY_ID[id]).filter(Boolean);
+  if (!items.length) { X.teasers.innerHTML = ""; return; }
+  X.teasers.innerHTML = '<div class="xt-head"><h3 class="xt-title">이 말, 영어로 뭐라고 할까?</h3>' +
+      '<button class="xt-more" type="button" data-xt-more>다른 3개</button></div>' +
+    '<div class="xt-list">' + items.map(it =>
+      '<button class="xt-card' + (teaserOpen.has(it.id) ? " open" : "") + '" type="button" data-xt="' + esc(it.id) + '" style="--h:' + hueOf(it.card.category) + '">' +
+        '<span class="xt-q">' + esc(it.ex.teaser) + '</span>' +
+        '<span class="xt-tap">눌러서 정답 보기</span>' +
+        '<span class="xt-a"><span class="xt-phrase" lang="en">' + esc(it.ex.phrase) + '</span>' +
+          '<span class="xt-mean">' + esc(shortMeaning(it.ex)) + '</span>' +
+          '<span class="xt-detail">예문·썰 자세히 보기 ›</span></span>' +
+      '</button>').join("") + '</div>';
+}
+X.teasers.addEventListener("click", e => {
+  if (e.target.closest("[data-xt-more]")) { buzz(); teaserPick = pickTeasers(); renderTeasers(); return; }
+  const c = e.target.closest("[data-xt]");
+  if (!c) return;
+  buzz();
+  const id = c.dataset.xt;
+  if (!teaserOpen.has(id)) { teaserOpen.add(id); c.classList.add("open"); }   // 처음 누르면 정답
+  else openExprDetail(id, {});                                                // 정답이 보인 뒤 누르면 자세히(예문·썰·학습하기)
 });
 X.rv.addEventListener("click", e => {
   const one = e.target.closest("[data-review]");
@@ -3822,7 +3921,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 /* ================= 홈 =================
-   위: 오늘의 질문 — 카드의 hooks({ ko: 질문, line: 내 대사 줄 번호(1부터) }) 중 하나를 크게. 앱을 켤 때마다·[다른 질문]마다 새로 고름.
+   위: 질문 카드 "이럴 땐 어떻게?" — 카드의 hooks({ ko: 질문, line: 내 대사 줄 번호(1부터) }) 중 하나를 크게. 앱을 켤 때마다·[다른 질문]마다 새로 고름.
      고르는 순서(pickHook): 아직 안 본 카드의 질문(그중 무작위) → 없으면 가장 오래전에 본 카드(progress.at)의 질문. 최근에 나온 10개는 빼고.
      누르면(openHook) 그 카드로 가서 읽기 모드, 연결된 내 대사 줄까지 나온 상태(그 줄은 한글) + 잠깐 강조 → 답을 떠올린 뒤 탭해서 영어로 확인.
    아래: 바로가기 2×2 — 상황 / 표현 / 글쓰기(그 탭으로) · 드라이브(시작 화면) + 작은 현황.
@@ -3882,7 +3981,7 @@ function renderHome() {
     '<header class="w-top"><div><div class="w-date">' + esc(koDate(dateKey(), true)) + '</div><h2 class="w-title">한 장 영어</h2></div></header>' +
     '<div class="hq">' + (x ?
       '<button class="hq-card" type="button" data-hq-go style="--h:' + hueOf(card.category) + '">' +
-        '<span class="hq-label">오늘의 질문</span><span class="hq-text">' + esc(x.h.ko) + '</span>' +
+        '<span class="hq-label">이럴 땐 어떻게?</span><span class="hq-text">' + esc(x.h.ko) + '</span>' +
         '<span class="hq-go">눌러서 떠올려 보기' + ICON_ARROW + '</span></button>' +
       '<div class="hq-meta"><span class="hq-src">' + (CATEGORY_EMOJI[card.category] || "") + " " + esc(card.category) + " · " + esc(card.title) + '</span>' +
         '<button class="hq-next" type="button" data-hq-next>다른 질문</button></div>' :
@@ -3978,7 +4077,7 @@ const hasDlg = c => c !== "exOnly" && c !== "storyOnly";
 const hasEx = c => c === "examples" || c === "story" || c === "exOnly";
 const hasStory = c => c === "story" || c === "storyOnly";
 const DRIVE_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지", exOnly: "예문만", storyOnly: "썰만" };
-const DV_DEFAULT = { scope: "all", cats: [], content: "story", shadow: false, rate: 1 };
+const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", shadow: false, rate: 1 };   // order: seq 차례대로 / random 랜덤(카드·표현 순서를 섞음)
 
 /* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, key(문장), block(카드·표현), cid, bi, label } } */
 function loadDrive() {
@@ -3989,6 +4088,7 @@ function loadDrive() {
       if (!DRIVE_SCOPES[o.scope]) o.scope = "all";
       if (!DRIVE_CONTENT[o.content]) o.content = "story";
       o.cats = Array.isArray(o.cats) ? o.cats.filter(c => typeof c === "string") : [];
+      o.order = o.order === "random" ? "random" : "seq";
       o.shadow = !!o.shadow;
       o.rate = o.rate === 0.8 ? 0.8 : 1;
       return { opts: o, pos: s.pos && typeof s.pos === "object" && s.pos.key ? s.pos : null };
@@ -4376,7 +4476,8 @@ function dvSavePos() {
   const it = D.pl.items[D.idx], bl = D.pl.items[D.idx] && D.pl.blocks[dvBlockIndex(D.idx)];
   D.pos = {
     scope: D.opts.scope, cats: catsKey(D.opts.cats), key: it.key, block: bl ? bl.key : "",
-    cid: CARDS[it.ci].id, bi: dvBlockIndex(D.idx), label: CARDS[it.ci].title + " · " + driveLabels(D.idx)[1]
+    cid: CARDS[it.ci].id, bi: dvBlockIndex(D.idx), label: CARDS[it.ci].title + " · " + driveLabels(D.idx)[1],
+    order: D.opts.order === "random" ? D.pl.blocks.map(b => b.key) : undefined   // 랜덤일 때 섞은 순서(이어 듣기에 그대로 씀)
   };
   saveDrive();
 }
@@ -4435,6 +4536,11 @@ function dvSetupHtml() {
       '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
         seg("content", CONTENT_ROWS[0]) + seg("content", CONTENT_ROWS[1], "seg2") +
         '<p class="note">' + (exprScope ? "표현 범위는 표현마다 표현 → 예문 5개 → 썰 순서로 들어요." : contentNote[o.content]) + '</p>' +
+      '</div>' +
+      '<div class="set-group"><span class="set-label">순서</span>' +
+        seg("order", [["seq", "차례대로"], ["random", "랜덤"]]) +
+        '<p class="note">' + (o.order === "random" ? (exprScope ? "표현" : "카드") + " 순서를 섞어서 들어요. 한 " + (exprScope ? "표현" : "카드") + " 안의 순서(대화 → 예문 → 썰)는 그대로예요. [처음부터]를 누를 때마다 새로 섞여요." :
+          (exprScope ? "표현 목록 순서대로 들어요." : "카드 번호 순서대로 들어요.")) + '</p>' +
       '</div>' +
       '<div class="set-group"><span class="set-label">따라 말할 시간</span>' +
         seg("shadow", [["false", "없음"], ["true", "문장 길이만큼 쉬기"]]) +
@@ -4573,8 +4679,34 @@ function dvScreen(name) {
     dvLock(true);
   }
 }
+/* 블록(카드·표현) 순서를 order(블록 key 목록)대로 바꾼 재생 목록. order에 없는 블록은 뒤에 그대로. 한 블록 안의 문장 순서는 그대로 */
+function dvReorder(pl, order) {
+  const rank = {};
+  order.forEach((k, i) => { rank[k] = i; });
+  const idx = pl.blocks.map((b, i) => i).sort((a, b) => {
+    const ra = pl.blocks[a].key in rank ? rank[pl.blocks[a].key] : 1e9 + a, rb = pl.blocks[b].key in rank ? rank[pl.blocks[b].key] : 1e9 + b;
+    return ra - rb;
+  });
+  const items = [], blocks = [];
+  idx.forEach(bi => {
+    const b = pl.blocks[bi], from = pl.items[b.start].block, nb = blocks.length;
+    blocks.push(Object.assign({}, b, { start: items.length }));
+    pl.items.forEach(it => { if (it.block === from) items.push(Object.assign({}, it, { block: nb })); });
+  });
+  return { items, blocks, exprScope: pl.exprScope };
+}
+function dvShuffled(keys) {
+  const a = keys.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
 function dvStart(resume) {
   D.pl = buildDrive(D.opts);
+  /* 랜덤: 이어 듣기면 저장해 둔 순서(pos.order) 그대로, 처음부터면 새로 섞음 */
+  if (D.opts.order === "random" && D.pl.blocks.length > 1) {
+    const saved = resume && D.pos && Array.isArray(D.pos.order) ? D.pos.order : null;
+    D.pl = dvReorder(D.pl, saved || dvShuffled(D.pl.blocks.map(b => b.key)));
+  }
   D.els = [];
   if (!D.pl.items.length) return;
   const k = resume ? Math.max(0, dvResumeIdx(D.pl)) : 0;
@@ -5277,7 +5409,7 @@ const CHECK_KEYS = {
   card: ["id", "category", "title", "situation", "scene", "hooks", "dialogue", "expressions", "extraExpressions"],
   hook: ["ko", "line"],
   line: ["who", "en", "ko", "chunks", "tips", "soloChunks"],
-  expr: ["id", "phrase", "forms", "meaning", "ko", "examples", "story"],
+  expr: ["id", "phrase", "teaser", "forms", "meaning", "ko", "examples", "story"],
   ex: ["en", "ko", "chunks", "tips", "soloChunks"],
   story: ["en", "ko", "sentences"],
   sent: ["chunks", "ko", "tips", "soloChunks"],
@@ -5315,8 +5447,8 @@ function runChecks() {
     if (c.situation && /[.!?]/.test(c.situation) && String(c.situation).split(/(?<=[.!?])\s+/).filter(Boolean).length > 3) warnings.push(tag + ": 상황 설명이 길어요(1~2문장 권장)");
     if (c.dialogue != null && !Array.isArray(c.dialogue)) issues.push(tag + ": dialogue는 목록이어야 함");
     const d = Array.isArray(c.dialogue) ? c.dialogue : [];
-    /* hooks: 홈 '오늘의 질문' 1~3개 { ko: 질문, line: 내(me) 대사 줄 번호(1부터) }. 한 줄에 질문 하나(질문 기록 key = 카드id:line) */
-    if (!Array.isArray(c.hooks) || !c.hooks.length) issues.push(tag + ": hooks(홈 '오늘의 질문') 없음 — 1~3개");
+    /* hooks: 홈 질문 카드(이럴 땐 어떻게?) 1~3개 { ko: 질문, line: 내(me) 대사 줄 번호(1부터) }. 한 줄에 질문 하나(질문 기록 key = 카드id:line) */
+    if (!Array.isArray(c.hooks) || !c.hooks.length) issues.push(tag + ": hooks(홈 질문) 없음 — 1~3개");
     else {
       if (c.hooks.length > 3) issues.push(tag + ": hooks " + c.hooks.length + "개 (1~3개)");
       const hookLines = new Set();
@@ -5400,8 +5532,12 @@ function runChecks() {
     if (!Array.isArray(c.extraExpressions)) issues.push(tag + ": extraExpressions 칸 없음 (비어 있어도 [] 로)");
 
     /* 밑줄 시뮬레이션: 화면과 똑같은 규칙으로 어떤 표현이 실제로 밑줄이 생기는지 */
-    const usedSim = new Set();
-    d.forEach(x => findRanges(x.en || "", c, i, usedSim).forEach(r => usedSim.add(r.ei)));
+    const usedSim = new Set(), meSim = new Set();
+    d.forEach(x => findRanges(x.en || "", c, i, usedSim).forEach(r => { usedSim.add(r.ei); if (x.who === "me") meSim.add(r.ei); }));
+    /* 핵심 표현은 내(me) 대사에서 밑줄이 생기는 것 위주로(2026-10-03 사용자 요청 — 카드 25부터 적용, 그 전 카드는 그대로) */
+    const nCore = (c.expressions || []).length;
+    if (Number.isInteger(c.id) && c.id >= 25 && nCore && meSim.size * 2 < nCore)
+      warnings.push(tag + ": 핵심 표현 " + nCore + "개 중 내 대사에 밑줄이 생기는 게 " + meSim.size + "개 — 내 대사에서 고르는 게 원칙(절반 넘게)");
 
     const checkExpr = (e, kind, idx) => {
       stats.expressions++;
@@ -5412,6 +5548,12 @@ function runChecks() {
       if (e.forms != null && !(Array.isArray(e.forms) && e.forms.every(f => typeof f === "string" && f))) issues.push(tag + " " + p + ": forms는 글 목록이어야 함");
       if (e.examples != null && !Array.isArray(e.examples)) issues.push(tag + " " + p + ": examples는 목록이어야 함");
       /* 목록·복습에 보이는 짧은 뜻(shortMeaning): meaning이 없으면 ko 맨 앞 '…' 안 글자 */
+      /* teaser: 표현 탭 '궁금증 카드' 문구(핵심 표현은 필수). 정답 영어는 넣지 않고 물음표로 끝 */
+      if (kind === "core" && (typeof e.teaser !== "string" || !e.teaser.trim())) issues.push(tag + " " + p + ": teaser(표현 탭 궁금증 문구) 없음");
+      if (typeof e.teaser === "string" && e.teaser.trim()) {
+        if (/[A-Za-z]{2,}/.test(e.teaser)) warnings.push(tag + " " + p + ": teaser에 영어가 섞임(정답 영어는 넣지 않기) — " + e.teaser);
+        if (!/[?？]$/.test(e.teaser.trim())) warnings.push(tag + " " + p + ": teaser는 물음표로 끝내기 — " + e.teaser);
+      }
       if (e.ko && !e.meaning && !/'[^']{1,40}'/.test(e.ko)) warnings.push(tag + " " + p + ": ko에 '짧은 뜻'(작은따옴표)이 없음 — 목록·복습의 짧은 뜻이 \"" + shortMeaning(e) + "\"로 보임");
       if (!e.id) issues.push(tag + " " + p + ": 표현 id 없음");
       else {
@@ -5877,7 +6019,7 @@ sheetHead.addEventListener("touchend", () => {
   else sheet.style.transform = "";
 });
 
-/* ---------- 시작: 스크립트를 끝까지 읽었으니 홈의 오늘의 질문을 고르고 그림(앱을 켤 때마다 새 질문) ---------- */
+/* ---------- 시작: 스크립트를 끝까지 읽었으니 홈 질문 카드를 고르고 그림(앱을 켤 때마다 새 질문) ---------- */
 homeReady = true;
 homeHook = pickHook();
 renderHome();
