@@ -60,13 +60,38 @@
         forms: ["coming down with ~", "came down with ~"],
         ko: "'(감기 등에) 걸리다, 걸리려고 하다'라는 뜻이에요. 막 아프기 시작할 때 I think I'm coming down with something.(뭔가 걸린 것 같아)처럼 써요. 뒤에 a cold(감기), the flu(독감)를 붙여요.",
         examples: [
-          { en: "I'm coming down with something, so I'll work from home today.", ko: "뭔가 걸린 것 같아서 오늘은 재택근무할게요." },
-          { en: "Half of our tour group came down with the flu.", ko: "우리 투어 일행 절반이 독감에 걸렸어." },
-          { en: "Drink some tea so you don't come down with a cold.", ko: "감기 안 걸리게 차 좀 마셔." },
-          { en: "You look pale. Are you coming down with something?", ko: "너 얼굴이 창백해. 어디 아픈 거 아니야?" },
-          { en: "I always come down with something right before a big trip.", ko: "난 꼭 큰 여행 직전에 뭔가에 걸리더라." }
+          { en: "I'm coming down with something, so I'll work from home today.", ko: "뭔가 걸린 것 같아서 오늘은 재택근무할게요.",
+            chunks: "I'm coming down with something, / so I'll work from home today.",
+            tips: [{ target: "coming down with", ko: "'(병에) 걸리려고 하다'. 한 덩어리로 빠르게." }] },
+          { en: "Half of our tour group came down with the flu.", ko: "우리 투어 일행 절반이 독감에 걸렸어.",
+            chunks: "Half‿of‿our tour group / came down with the flu.",
+            tips: [{ target: "Half of our", ko: "l은 소리 나지 않고 '해퍼바워r'처럼 이어져요." }] },
+          { en: "Drink some tea so you don't come down with a cold.", ko: "감기 안 걸리게 차 좀 마셔.",
+            chunks: "Drink some tea / so you don't / come down with‿a cold.",
+            tips: [{ target: "with a", ko: "th가 a에 붙어 '위더'처럼." }] },
+          { en: "You look pale. Are you coming down with something?", ko: "너 얼굴이 창백해. 어디 아픈 거 아니야?",
+            chunks: "You look pale. / Are you coming down / with something?",
+            tips: [{ target: "pale", ko: "l로 짧게 끝내요. '페이러'처럼 늘이지 않아요." }] },
+          { en: "I always come down with something right before a big trip.", ko: "난 꼭 큰 여행 직전에 뭔가에 걸리더라.",
+            chunks: "I always come down / with something / right before‿a big trip.",
+            tips: [{ target: "right before", ko: "right의 t는 멈추기만 하고 바로 before로." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "So right before / my trip to Japan, / I started coming down / with‿a cold.",
+              ko: "일본 여행 직전에 감기 기운이 오기 시작했어.",
+              tips: [{ target: "started", ko: "t가 굴러 '스타r리드'처럼 들려요." }] },
+            { chunks: "I was so scared / it would ruin the whole trip / that I drank, / like, ten cups‿of ginger tea.",
+              ko: "여행 다 망칠까 봐 너무 무서워서 생강차를 한 열 잔은 마셨어.",
+              tips: [{ target: "ruin", ko: "두 음절로 또렷하게 '루인'." },
+                     { target: "cups of", ko: "s가 of에 붙어 '컵서브'처럼." }] },
+            { chunks: "By the time / I landed‿in Tokyo, / I felt totally fine.",
+              ko: "도쿄에 도착할 때쯤엔 완전 멀쩡해졌어.",
+              tips: [{ target: "landed in", ko: "d가 in에 붙어 '랜디딘'처럼." }] },
+            { chunks: "Now I swear by ginger tea / for everything.",
+              ko: "이제 나는 뭐든 생강차면 다 된다고 믿어.",
+              tips: [{ target: "swear by", ko: "'~가 최고라고 믿다'. swear에 힘을 줘요." }] }
+          ],
           en: "So right before my trip to Japan, I started coming down with a cold. I was so scared it would ruin the whole trip that I drank, like, ten cups of ginger tea. By the time I landed in Tokyo, I felt totally fine. Now I swear by ginger tea for everything.",
           ko: "일본 여행 바로 전에 감기 기운이 오기 시작했거든. 여행을 통째로 망칠까 봐 너무 무서워서 생강차를 한 열 잔은 마셨어. 도쿄에 도착할 때쯤엔 완전히 멀쩡해졌어. 이제 나는 뭐든 생강차로 해결하는 사람이 됐어."
         }
@@ -76,13 +101,40 @@
         phrase: "I have a ~.",
         ko: "'~가 있어요'라는 뜻으로, 증상을 말할 때 제일 쉬운 패턴이에요: I have a headache(두통), a fever(열), a sore throat(목 아픔), a runny nose(콧물). 질문이나 요청 앞에도 써요: I have a question. 비슷한 표현: My ~ hurts.(~가 아파요)",
         examples: [
-          { en: "I have a headache, so I'll skip the meeting.", ko: "머리가 아파서 회의는 빠질게요." },
-          { en: "I have a quick question about my bill.", ko: "계산서에 대해 잠깐 여쭤볼 게 있어요." },
-          { en: "I have a fever. Can I cancel my tour?", ko: "열이 나는데, 투어 취소할 수 있을까요?" },
-          { en: "I have a sore throat from singing karaoke all night.", ko: "밤새 노래방에서 노래해서 목이 아파." },
-          { en: "I have a food allergy, so no nuts, please.", ko: "음식 알레르기가 있어서 견과류는 빼 주세요." }
+          { en: "I have a headache, so I'll skip the meeting.", ko: "머리가 아파서 회의는 빠질게요.",
+            chunks: "I have‿a headache, / so I'll skip the meeting.",
+            tips: [{ target: "have a", ko: "v가 a에 붙어 '해버'처럼." },
+                   { target: "headache", ko: "ache는 '에이크', '헤데이크'처럼." }] },
+          { en: "I have a quick question about my bill.", ko: "계산서에 대해 잠깐 여쭤볼 게 있어요.",
+            chunks: "I have‿a quick question / about my bill.",
+            tips: [{ target: "question", ko: "첫음절에 힘을 줘서 '퀘스천'." }] },
+          { en: "I have a fever. Can I cancel my tour?", ko: "열이 나는데, 투어 취소할 수 있을까요?",
+            chunks: "I have‿a fever. / Can‿I cancel my tour?",
+            tips: [{ target: "fever", ko: "f와 v 모두 윗니로 아랫입술을 살짝 물어요." }] },
+          { en: "I have a sore throat from singing karaoke all night.", ko: "밤새 노래방에서 노래해서 목이 아파.",
+            chunks: "I have‿a sore throat / from singing karaoke / all night.",
+            tips: [{ target: "karaoke", ko: "영어로는 '캐리오우키'처럼 발음해요." }] },
+          { en: "I have a food allergy, so no nuts, please.", ko: "음식 알레르기가 있어서 견과류는 빼 주세요.",
+            chunks: "I have‿a food‿allergy, / so no nuts, please.",
+            tips: [{ target: "food allergy", ko: "d가 allergy에 붙어 '푸댈러r쥐'처럼." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "Last Friday / I told my boss, / “I have‿a terrible headache,” / and left work early.",
+              ko: "지난 금요일에 팀장님한테 “머리가 너무 아파요” 하고 일찍 퇴근했어.",
+              tips: [{ target: "terrible", ko: "'테'에 힘을 줘서 '테러블'." },
+                     { target: "left work", ko: "left의 t는 거의 빠지고 바로 work로." }] },
+            { chunks: "I went straight home / and took‿a long nap.",
+              ko: "곧장 집에 가서 낮잠을 길게 잤지.",
+              tips: [{ target: "took a", ko: "k가 a에 붙어 '투커'처럼." }] },
+            { chunks: "Then I went‿out for dinner / and ran‿into my whole team / at the same restaurant.",
+              ko: "그러고 저녁 먹으러 나갔는데 같은 식당에서 팀 전체를 마주쳤어.",
+              tips: [{ target: "went out", ko: "t가 out에 붙어 '웬타웃'처럼." },
+                     { target: "ran into", ko: "'우연히 마주쳤다'. '래닌투'처럼." }] },
+            { chunks: "I've never eaten soup / so dramatically.",
+              ko: "그렇게 연기하듯 수프를 먹어 본 건 처음이야.",
+              tips: [{ target: "dramatically", ko: "'매'에 힘을 줘요. 드러'매'티클리." }] }
+          ],
           en: "Last Friday I told my boss, “I have a terrible headache,” and left work early. I went straight home and took a long nap. Then I went out for dinner and ran into my whole team at the same restaurant. I've never eaten soup so dramatically.",
           ko: "지난 금요일에 팀장님께 “머리가 너무 아파요.” 하고 일찍 퇴근했거든. 집에 가자마자 낮잠을 푹 잤지. 그러고 저녁 먹으러 나갔는데 같은 식당에서 우리 팀 전체를 딱 마주쳤어. 그렇게 아픈 척하면서 수프를 먹어 본 건 처음이야."
         }
@@ -92,13 +144,39 @@
         phrase: "I've been ~ing.",
         ko: "'(계속) ~하고 있어요'라는 뜻이에요. 어떤 일이 얼마 동안 이어지고 있는지 말할 때 써요. 증상을 말할 때 I've been coughing for two days.처럼 since(~부터), for(~ 동안)를 붙이면 완벽해요.",
         examples: [
-          { en: "I've been working here for about a year.", ko: "여기서 일한 지 1년쯤 됐어요." },
-          { en: "I've been waiting for twenty minutes. Is our order coming?", ko: "20분째 기다리고 있는데요. 주문한 거 나오나요?" },
-          { en: "I've been meaning to call you!", ko: "너한테 계속 전화하려고 했었어!" },
-          { en: "I've been traveling around Europe for a month.", ko: "한 달째 유럽 여행 중이에요." },
-          { en: "I've been sneezing all morning.", ko: "아침 내내 재채기가 나요." }
+          { en: "I've been working here for about a year.", ko: "여기서 일한 지 1년쯤 됐어요.",
+            chunks: "I've been working here / for‿about‿a year.",
+            tips: [{ target: "about a", ko: "t가 굴러 '어바우러'처럼." }] },
+          { en: "I've been waiting for twenty minutes. Is our order coming?", ko: "20분째 기다리고 있는데요. 주문한 거 나오나요?",
+            chunks: "I've been waiting / for twenty minutes. / Is‿our‿order coming?",
+            tips: [{ target: "Is our order", ko: "'이자워r로r더r'처럼 한 번에 이어져요." }] },
+          { en: "I've been meaning to call you!", ko: "너한테 계속 전화하려고 했었어!",
+            chunks: "I've been meaning to call you!",
+            tips: [{ target: "meaning to", ko: "'~하려고 했어'. '미닝투'를 빠르게." }] },
+          { en: "I've been traveling around Europe for a month.", ko: "한 달째 유럽 여행 중이에요.",
+            chunks: "I've been traveling‿around Europe / for‿a month.",
+            tips: [{ target: "Europe", ko: "첫음절에 힘을 줘서 '유럽'." }] },
+          { en: "I've been sneezing all morning.", ko: "아침 내내 재채기가 나요.",
+            chunks: "I've been sneezing / all morning.",
+            tips: [{ target: "sneezing", ko: "z 소리 두 번, '스니-징'." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "I've been trying / to wake‿up at 6 a.m. / every day this month.",
+              ko: "이번 달엔 매일 아침 6시에 일어나려고 노력 중이야.",
+              tips: [{ target: "wake up", ko: "k가 up에 붙어 '웨이컵'처럼." }] },
+            { chunks: "The first week went great, / and I felt like / a productivity genius.",
+              ko: "첫 주는 완전 잘돼서 내가 생산성 천재 같았어.",
+              tips: [{ target: "productivity", ko: "'티'에 힘을 줘요. 프로덕'티'비티." },
+                     { target: "genius", ko: "첫음절에 힘을 줘서 '지니어스'." }] },
+            { chunks: "The second week, / I started hitting snooze / five times every morning.",
+              ko: "둘째 주엔 매일 아침 알람을 다섯 번씩 미루기 시작했어.",
+              tips: [{ target: "hitting", ko: "tt가 굴러 '히링'처럼 들려요." },
+                     { target: "snooze", ko: "'알람을 미루다'. 끝은 z 소리 '스누-즈'." }] },
+            { chunks: "Now I'm back / to waking‿up at eight, / but I tell everyone / I'm still trying.",
+              ko: "지금은 다시 8시에 일어나는데, 사람들한텐 아직 노력 중이라고 해.",
+              tips: [{ target: "waking up", ko: "g가 up에 붙어 '웨이킹업'처럼." }] }
+          ],
           en: "I've been trying to wake up at 6 a.m. every day this month. The first week went great, and I felt like a productivity genius. The second week, I started hitting snooze five times every morning. Now I'm back to waking up at eight, but I tell everyone I'm still trying.",
           ko: "이번 달엔 매일 아침 6시에 일어나려고 노력 중이야. 첫 주는 완벽해서 내가 무슨 생산성 천재 같았어. 둘째 주부터는 매일 아침 알람을 다섯 번씩 미루기 시작했지. 지금은 다시 8시에 일어나는데, 사람들한텐 아직 노력 중이라고 말해."
         }
@@ -108,13 +186,40 @@
         phrase: "Do you have anything for ~?",
         ko: "'~에 듣는 거(약) 있어요?'라는 뜻이에요. 약국에서 증상 뒤에 붙여 말하면 끝이에요. 가게에서 '~용으로 쓸 만한 거 있어요?'라는 뜻으로도 써요.",
         examples: [
-          { en: "Do you have anything for a headache?", ko: "두통약 같은 거 있어요?" },
-          { en: "Do you have anything for sunburn?", ko: "햇볕에 탄 데 바르는 거 있어요?" },
-          { en: "Do you have anything for a five-year-old's birthday?", ko: "다섯 살 생일 선물로 괜찮은 거 있어요?" },
-          { en: "Do you have anything for people who don't eat meat?", ko: "고기 안 먹는 사람이 먹을 만한 메뉴 있어요?" },
-          { en: "Do you have anything for jet lag?", ko: "시차 적응에 도움 되는 거 있어요?" }
+          { en: "Do you have anything for a headache?", ko: "두통약 같은 거 있어요?",
+            chunks: "Do you have‿anything / for‿a headache?",
+            tips: [{ target: "have anything", ko: "v가 anything에 붙어 '해베니띵'처럼." }] },
+          { en: "Do you have anything for sunburn?", ko: "햇볕에 탄 데 바르는 거 있어요?",
+            chunks: "Do you have‿anything / for sunburn?",
+            tips: [{ target: "sunburn", ko: "첫음절에 힘을 줘서 '썬버r언'." }] },
+          { en: "Do you have anything for a five-year-old's birthday?", ko: "다섯 살 생일 선물로 괜찮은 거 있어요?",
+            chunks: "Do you have‿anything / for‿a five-year-old's birthday?",
+            tips: [{ target: "five-year-old's", ko: "한 단어처럼 빠르게, 끝은 z 소리." }] },
+          { en: "Do you have anything for people who don't eat meat?", ko: "고기 안 먹는 사람이 먹을 만한 메뉴 있어요?",
+            chunks: "Do you have‿anything / for people / who don't‿eat meat?",
+            tips: [{ target: "don't eat", ko: "t가 약해져 '도니잇'처럼 이어져요." }] },
+          { en: "Do you have anything for jet lag?", ko: "시차 적응에 도움 되는 거 있어요?",
+            chunks: "Do you have‿anything / for jet lag?",
+            tips: [{ target: "jet lag", ko: "'시차 피로'. jet의 t는 멈추기만 해요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "So on my trip to Bali, / I got the worst sunburn / of my life / on the very first day.",
+              ko: "발리 여행 첫날에 인생 최악의 화상을 입었어.",
+              tips: [{ target: "worst sunburn", ko: "worst의 t는 거의 빠지고 바로 sunburn으로." }] },
+            { chunks: "I walked‿into‿a pharmacy / looking like‿a lobster / and asked, / “Do you have‿anything / for this?”",
+              ko: "랍스터 같은 몰골로 약국에 들어가서 “이거에 바르는 거 있어요?” 하고 물었지.",
+              tips: [{ target: "walked into a", ko: "l은 소리 나지 않고, '웍틴투어'처럼 이어져요." },
+                     { target: "lobster", ko: "첫음절에 힘을 줘서 '랍스터r'." }] },
+            { chunks: "The pharmacist didn't say‿a word, / she just handed me / a giant bottle‿of aloe.",
+              ko: "약사는 아무 말 없이 커다란 알로에 한 통을 건네주더라.",
+              tips: [{ target: "pharmacist", ko: "첫음절에 힘을 줘서 '파r머시스트'." },
+                     { target: "bottle of", ko: "tt가 굴러 '바를러브'처럼." }] },
+            { chunks: "I basically lived‿in that aloe / for the rest‿of the week.",
+              ko: "그 주 내내 거의 알로에 속에서 살았어.",
+              tips: [{ target: "lived in", ko: "d가 in에 붙어 '리브딘'처럼." },
+                     { target: "aloe", ko: "첫음절에 힘을 줘서 '앨로우'." }] }
+          ],
           en: "So on my trip to Bali, I got the worst sunburn of my life on the very first day. I walked into a pharmacy looking like a lobster and asked, “Do you have anything for this?” The pharmacist didn't say a word, she just handed me a giant bottle of aloe. I basically lived in that aloe for the rest of the week.",
           ko: "발리 여행 첫날에 인생 최악으로 햇볕에 탔거든. 랍스터 같은 몰골로 약국에 들어가서 “이거에 바를 거 있어요?” 하고 물었어. 약사는 아무 말 없이 커다란 알로에 한 통을 건네주더라. 남은 일주일 동안 거의 그 알로에를 바르고 살았어."
         }

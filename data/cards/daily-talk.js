@@ -41,13 +41,40 @@
         phrase: "I know, right?",
         ko: "'그러니까요!', '내 말이!'라는 뜻이에요. 상대 말에 크게 공감할 때 써요. 스몰토크에서 대화를 자연스럽게 이어 주는 최고의 맞장구예요. 비슷한 표현: Totally. / Tell me about it.",
         examples: [
-          { en: "I know, right? This place has the best pizza in town.", ko: "그러니까! 여기가 동네에서 피자 제일 맛있어." },
-          { en: "I know, right? Mondays should be illegal.", ko: "내 말이! 월요일은 법으로 금지해야 돼." },
-          { en: "I know, right? I can't believe they broke up.", ko: "그러니까! 걔네 헤어진 거 진짜 믿기지가 않아." },
-          { en: "I know, right? The view from up here is unreal.", ko: "그러니까요! 여기서 보는 경치 말도 안 되죠." },
-          { en: "I know, right? Everything's on sale today.", ko: "내 말이! 오늘 전부 세일이야." }
+          { en: "I know, right? This place has the best pizza in town.", ko: "그러니까! 여기가 동네에서 피자 제일 맛있어.",
+            chunks: "I know, right? / This place has the best pizza / in town.",
+            tips: [{ target: "I know, right?", ko: "공감하는 말. right에 힘을 주고 끝을 올려요." }] },
+          { en: "I know, right? Mondays should be illegal.", ko: "내 말이! 월요일은 법으로 금지해야 돼.",
+            chunks: "I know, right? / Mondays should be‿illegal.",
+            tips: [{ target: "be illegal", ko: "y 소리로 이어져 '비일리걸'처럼." },
+                   { target: "Mondays", ko: "끝 s는 z 소리로 '먼데이즈'." }] },
+          { en: "I know, right? I can't believe they broke up.", ko: "그러니까! 걔네 헤어진 거 진짜 믿기지가 않아.",
+            chunks: "I know, right? / I can't believe / they broke‿up.",
+            tips: [{ target: "broke up", ko: "'헤어졌다'. k가 up에 붙어 '브로우컵'처럼." }] },
+          { en: "I know, right? The view from up here is unreal.", ko: "그러니까요! 여기서 보는 경치 말도 안 되죠.",
+            chunks: "I know, right? / The view from‿up here / is‿unreal.",
+            tips: [{ target: "from up", ko: "m이 up에 붙어 '프러멉'처럼." },
+                   { target: "unreal", ko: "'말도 안 되게 좋다'. real에 힘을 줘요." }] },
+          { en: "I know, right? Everything's on sale today.", ko: "내 말이! 오늘 전부 세일이야.",
+            chunks: "I know, right? / Everything's‿on sale today.",
+            tips: [{ target: "Everything's on", ko: "s가 on에 붙어 '에브리띵존'처럼." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "My roommate came home yesterday / and said, / “Why‿is rent so expensive?”",
+              ko: "어제 룸메이트가 집에 오더니 “월세 왜 이렇게 비싸?” 하는 거야.",
+              tips: [{ target: "expensive", ko: "'펜'에 힘을 줘요. 익'스펜'시브." }] },
+            { chunks: "I just yelled, / “I know, right?” / from the kitchen.",
+              ko: "나는 부엌에서 그냥 “내 말이!” 하고 소리쳤지.",
+              tips: [{ target: "yelled", ko: "y로 시작해 '옐드', ed는 d 소리." }] },
+            { chunks: "Then we spent two hours / looking‿at apartments / in other cities / that we'll never actually move to.",
+              ko: "그러고 둘이서 절대 이사 안 갈 다른 도시 아파트를 두 시간 동안 구경했어.",
+              tips: [{ target: "looking at", ko: "g가 at에 붙어 '루킹앳'처럼." },
+                     { target: "actually", ko: "빠르게 '액슐리'처럼 줄어들어요." }] },
+            { chunks: "It was weirdly fun, / though.",
+              ko: "근데 이상하게 재밌었어.",
+              tips: [{ target: "though", ko: "'그래도'. th는 혀를 이 사이에 대고 울려 '도우'." }] }
+          ],
           en: "My roommate came home yesterday and said, “Why is rent so expensive?” I just yelled, “I know, right?” from the kitchen. Then we spent two hours looking at apartments in other cities that we'll never actually move to. It was weirdly fun, though.",
           ko: "어제 룸메이트가 집에 오자마자 “월세가 왜 이렇게 비싸?” 하는 거야. 나는 부엌에서 “내 말이!” 하고 소리쳤지. 그러고는 절대 이사 갈 일 없는 다른 도시 집들을 두 시간 동안 구경했어. 근데 이상하게 재밌더라."
         }
@@ -57,13 +84,37 @@
         phrase: "supposed to ~",
         ko: "'~하기로 되어 있다', '~라던데'라는 뜻이에요. 날씨 예보나 소문처럼 '그렇다더라'를 말할 때 딱이에요. 약속이나 규칙을 말할 때도 써요. 빨리 말하면 '서포즈투'처럼 붙어서 들려요.",
         examples: [
-          { en: "It's supposed to snow this weekend.", ko: "이번 주말에 눈 온대." },
-          { en: "We're supposed to submit the report by Friday.", ko: "보고서는 금요일까지 내야 해요." },
-          { en: "This place is supposed to have the best tacos in LA.", ko: "여기가 LA에서 타코 제일 맛있는 집이래." },
-          { en: "You were supposed to call me last night!", ko: "너 어젯밤에 나한테 전화하기로 했잖아!" },
-          { en: "The train was supposed to leave ten minutes ago.", ko: "기차가 10분 전에 출발했어야 하는데." }
+          { en: "It's supposed to snow this weekend.", ko: "이번 주말에 눈 온대.",
+            chunks: "It's supposed to snow / this weekend.",
+            tips: [{ target: "supposed to", ko: "d와 t가 겹쳐 '써포스투'처럼 한 번에." }] },
+          { en: "We're supposed to submit the report by Friday.", ko: "보고서는 금요일까지 내야 해요.",
+            chunks: "We're supposed to submit the report / by Friday.",
+            tips: [{ target: "submit the", ko: "t는 멈추기만 하고 바로 the로." }] },
+          { en: "This place is supposed to have the best tacos in LA.", ko: "여기가 LA에서 타코 제일 맛있는 집이래.",
+            chunks: "This place‿is supposed to have / the best tacos in LA.",
+            tips: [{ target: "place is", ko: "s가 is에 붙어 '플레이시즈'처럼." }] },
+          { en: "You were supposed to call me last night!", ko: "너 어젯밤에 나한테 전화하기로 했잖아!",
+            chunks: "You were supposed to call me / last night!",
+            tips: [{ target: "supposed", ko: "따지는 말이라 supposed에 힘을 줘요." }] },
+          { en: "The train was supposed to leave ten minutes ago.", ko: "기차가 10분 전에 출발했어야 하는데.",
+            chunks: "The train was supposed to leave / ten minutes‿ago.",
+            tips: [{ target: "minutes ago", ko: "s가 ago에 붙어 '미닛서고우'처럼." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "So the weather‿app said / it was supposed to be sunny / all day, / so I wore / my brand-new white sneakers.",
+              ko: "날씨 앱에서 하루 종일 맑을 거라고 해서, 새로 산 흰 운동화를 신고 나갔거든.",
+              tips: [{ target: "weather app", ko: "r이 app에 붙어 '웨더r랩'처럼." }] },
+            { chunks: "Guess what happened?",
+              ko: "무슨 일 났게?",
+              tips: [{ target: "Guess what", ko: "s와 w를 이어 '게스왓', t는 약하게." }] },
+            { chunks: "Ten minutes after / I left the house, / it started pouring.",
+              ko: "집 나선 지 10분 만에 비가 쏟아지기 시작했어.",
+              tips: [{ target: "started", ko: "t가 굴러 '스타r리드'처럼 들려요." }] },
+            { chunks: "My sneakers are now / a lovely shade‿of gray.",
+              ko: "지금 내 운동화는 아주 예쁜 회색이 됐어.",
+              tips: [{ target: "shade of", ko: "d가 of에 붙어 '셰이더브'처럼." }] }
+          ],
           en: "So the weather app said it was supposed to be sunny all day, so I wore my brand-new white sneakers. Guess what happened? Ten minutes after I left the house, it started pouring. My sneakers are now a lovely shade of gray.",
           ko: "날씨 앱에서 하루 종일 맑을 거라길래 새로 산 흰 운동화를 신고 나갔거든. 어떻게 됐게? 집 나서고 10분 만에 비가 쏟아지기 시작했어. 내 운동화는 이제 아주 예쁜 회색이 됐어."
         }
@@ -73,13 +124,40 @@
         phrase: "Good call.",
         ko: "'좋은 생각이야, 잘 판단했어'라는 뜻이에요. 상대의 제안이나 선택이 괜찮을 때 칭찬처럼 해요. 짧고 자연스러워서 원어민이 정말 자주 써요. 비슷한 표현: Good idea. / Smart move.",
         examples: [
-          { en: "Bringing a jacket was a good call. It's freezing up here.", ko: "재킷 가져온 거 잘했다. 여기 엄청 춥네." },
-          { en: "Good call on the restaurant, the food was amazing.", ko: "식당 잘 골랐다, 음식 진짜 맛있었어." },
-          { en: "Good call, let's push the launch to next week.", ko: "좋은 생각이에요, 출시는 다음 주로 미루죠." },
-          { en: "Leaving early was a good call. Traffic was terrible.", ko: "일찍 나온 게 신의 한 수였어. 길이 엄청 막혔거든." },
-          { en: "Getting the bigger size was a good call.", ko: "큰 사이즈로 산 거 잘한 선택이었어." }
+          { en: "Bringing a jacket was a good call. It's freezing up here.", ko: "재킷 가져온 거 잘했다. 여기 엄청 춥네.",
+            chunks: "Bringing‿a jacket / was‿a good call. / It's freezing‿up here.",
+            tips: [{ target: "good call", ko: "d는 멈추기만 하고 바로 call로." }] },
+          { en: "Good call on the restaurant, the food was amazing.", ko: "식당 잘 골랐다, 음식 진짜 맛있었어.",
+            chunks: "Good call‿on the restaurant, / the food was amazing.",
+            tips: [{ target: "call on", ko: "l이 on에 붙어 '콜론'처럼." }] },
+          { en: "Good call, let's push the launch to next week.", ko: "좋은 생각이에요, 출시는 다음 주로 미루죠.",
+            chunks: "Good call, / let's push the launch / to next week.",
+            tips: [{ target: "launch", ko: "'런치'보다 '론치'에 가깝게." }] },
+          { en: "Leaving early was a good call. Traffic was terrible.", ko: "일찍 나온 게 신의 한 수였어. 길이 엄청 막혔거든.",
+            chunks: "Leaving‿early / was‿a good call. / Traffic was terrible.",
+            tips: [{ target: "Leaving early", ko: "g가 early에 붙어 '리빙어r리'처럼." },
+                   { target: "terrible", ko: "'테'에 힘을 줘서 '테러블'." }] },
+          { en: "Getting the bigger size was a good call.", ko: "큰 사이즈로 산 거 잘한 선택이었어.",
+            chunks: "Getting the bigger size / was‿a good call.",
+            tips: [{ target: "Getting", ko: "tt가 굴러 '게링'처럼 들려요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "Last weekend / my friend suggested / we leave for the beach / at 6 a.m., / and I almost killed‿her.",
+              ko: "지난 주말에 친구가 새벽 6시에 바다로 출발하자고 해서 진짜 죽일 뻔했어.",
+              tips: [{ target: "suggested", ko: "'제'에 힘을 줘요. 써'제'스티드." },
+                     { target: "killed her", ko: "h가 약해져 '킬더r'처럼." }] },
+            { chunks: "But when we got there, / the parking lot was‿empty / and the sunrise was beautiful.",
+              ko: "근데 도착하니까 주차장은 텅 비어 있고 해 뜨는 게 너무 예뻤어.",
+              tips: [{ target: "got there", ko: "t는 멈추기만 하고 바로 there로." },
+                     { target: "was empty", ko: "s가 empty에 붙어 '워젬티'처럼." }] },
+            { chunks: "By ten, / there was literally / a two-hour wait / just to park.",
+              ko: "10시쯤 되니까 진짜 주차만 하는 데 두 시간 기다려야 하더라.",
+              tips: [{ target: "two-hour", ko: "h가 소리 나지 않아 '투아워r'." }] },
+            { chunks: "Okay, fine, / that was‿a good call.",
+              ko: "그래, 인정, 그건 잘한 선택이었어.",
+              tips: [{ target: "Okay, fine", ko: "마지못해 인정하는 말투라 fine을 길게." }] }
+          ],
           en: "Last weekend my friend suggested we leave for the beach at 6 a.m., and I almost killed her. But when we got there, the parking lot was empty and the sunrise was beautiful. By ten, there was literally a two-hour wait just to park. Okay, fine, that was a good call.",
           ko: "지난 주말에 친구가 새벽 6시에 바다로 출발하자고 해서 진짜 한 대 칠 뻔했거든. 근데 도착하니까 주차장은 텅 비어 있고 일출은 너무 예쁜 거야. 10시쯤엔 주차만 하는 데 진짜 두 시간을 기다려야 했어. 그래, 인정. 그건 잘한 판단이었어."
         }
@@ -128,13 +206,39 @@
         phrase: "How was your ~?",
         ko: "'~ 어땠어?'라는 뜻이에요. 주말, 여행, 휴가, 면접 등 뭐든 뒤에 붙여서 물어봐요. 대답은 It was great! / It was okay. / It was kind of boring.처럼 짧게 시작하면 돼요. 비슷한 표현: How did ~ go?",
         examples: [
-          { en: "How was your trip to Japan?", ko: "일본 여행 어땠어?" },
-          { en: "How was your first day at the new job?", ko: "새 회사 첫날 어땠어?" },
-          { en: "How was your steak? Was it cooked okay?", ko: "스테이크 어떠셨어요? 잘 익었나요?" },
-          { en: "How was your date last night? Tell me everything!", ko: "어젯밤 데이트 어땠어? 다 말해 봐!" },
-          { en: "How was your flight? You must be exhausted.", ko: "비행은 어땠어? 엄청 피곤하겠다." }
+          { en: "How was your trip to Japan?", ko: "일본 여행 어땠어?",
+            chunks: "How was‿your trip / to Japan?",
+            tips: [{ target: "was your", ko: "s와 y가 만나 '워져'처럼 붙어요." }] },
+          { en: "How was your first day at the new job?", ko: "새 회사 첫날 어땠어?",
+            chunks: "How was‿your first day / at the new job?",
+            tips: [{ target: "first day", ko: "first의 t는 거의 빠지고 바로 day로." }] },
+          { en: "How was your steak? Was it cooked okay?", ko: "스테이크 어떠셨어요? 잘 익었나요?",
+            chunks: "How was‿your steak? / Was‿it cooked‿okay?",
+            tips: [{ target: "Was it", ko: "s가 it에 붙어 '워짓'처럼." },
+                   { target: "cooked okay", ko: "ed가 t 소리로 okay에 붙어 '쿡토우케이'." }] },
+          { en: "How was your date last night? Tell me everything!", ko: "어젯밤 데이트 어땠어? 다 말해 봐!",
+            chunks: "How was‿your date / last night? / Tell me‿everything!",
+            tips: [{ target: "everything", ko: "신나게 물어보는 말이라 everything에 힘을 줘요." }] },
+          { en: "How was your flight? You must be exhausted.", ko: "비행은 어땠어? 엄청 피곤하겠다.",
+            chunks: "How was‿your flight? / You must be‿exhausted.",
+            tips: [{ target: "exhausted", ko: "'조'에 힘, h는 소리 나지 않아 '이그조스티드'." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "My mom called me last night / and asked, / “How was‿your week?”",
+              ko: "어젯밤에 엄마가 전화해서 “이번 주 어땠어?” 하고 물어보셨어.",
+              tips: [{ target: "called me", ko: "ed는 d 소리로 짧게, me로 바로." }] },
+            { chunks: "I said‿it was fine, / and then she talked / for‿an hour / about her new neighbor's dog.",
+              ko: "괜찮았다고 했더니, 엄마가 새 이웃집 개 얘기를 한 시간 동안 하시더라.",
+              tips: [{ target: "for an hour", ko: "h가 소리 나지 않아 '포r러나워r'처럼." },
+                     { target: "neighbor's", ko: "gh는 소리 나지 않아 '네이버r즈'." }] },
+            { chunks: "I didn't say‿a single word / after that.",
+              ko: "그 뒤로 나는 한마디도 안 했어.",
+              tips: [{ target: "single word", ko: "g 다음 l을 또렷하게 '싱글 워r드'." }] },
+            { chunks: "Honestly, / I love those calls, / though.",
+              ko: "근데 솔직히 그런 통화가 너무 좋아.",
+              tips: [{ target: "those calls", ko: "th는 혀를 이 사이에, 끝 s는 z 소리." }] }
+          ],
           en: "My mom called me last night and asked, “How was your week?” I said it was fine, and then she talked for an hour about her new neighbor's dog. I didn't say a single word after that. Honestly, I love those calls, though.",
           ko: "어젯밤에 엄마가 전화해서 “이번 주 어땠어?” 하고 물어보셨거든. 나는 괜찮았다고 했는데, 그 뒤로 엄마가 새 이웃집 강아지 얘기를 한 시간 동안 하셨어. 그 뒤로 나는 한마디도 못 했어. 근데 솔직히 그런 통화가 너무 좋아."
         }
@@ -144,13 +248,39 @@
         phrase: "I went ~ing.",
         ko: "'~하러 갔어'라는 뜻이에요. go hiking(등산), go shopping(쇼핑), go camping(캠핑)처럼 활동을 말할 때 go 뒤에 -ing를 붙여요. 지난 일이니까 went. went to hiking처럼 to를 넣지 않도록 조심!",
         examples: [
-          { en: "I went shopping for a new coat on Saturday.", ko: "토요일에 새 코트 사러 쇼핑 갔어." },
-          { en: "I went camping with my coworkers last weekend.", ko: "지난 주말에 회사 동료들이랑 캠핑 갔어." },
-          { en: "I went swimming at the hotel pool this morning.", ko: "오늘 아침에 호텔 수영장에서 수영했어." },
-          { en: "I went bowling with my friends and totally lost.", ko: "친구들이랑 볼링 치러 갔다가 완전 졌어." },
-          { en: "I went running along the river before breakfast.", ko: "아침 먹기 전에 강변 따라 달리기했어." }
+          { en: "I went shopping for a new coat on Saturday.", ko: "토요일에 새 코트 사러 쇼핑 갔어.",
+            chunks: "I went shopping / for‿a new coat / on Saturday.",
+            tips: [{ target: "Saturday", ko: "t가 굴러 '쌔러r데이'처럼 들려요." }] },
+          { en: "I went camping with my coworkers last weekend.", ko: "지난 주말에 회사 동료들이랑 캠핑 갔어.",
+            chunks: "I went camping / with my coworkers / last weekend.",
+            tips: [{ target: "went camping", ko: "went의 t는 멈추기만 하고 바로 camping으로." }] },
+          { en: "I went swimming at the hotel pool this morning.", ko: "오늘 아침에 호텔 수영장에서 수영했어.",
+            chunks: "I went swimming / at the hotel pool / this morning.",
+            tips: [{ target: "hotel", ko: "'호'가 아니라 '텔'에 힘을 줘요." }] },
+          { en: "I went bowling with my friends and totally lost.", ko: "친구들이랑 볼링 치러 갔다가 완전 졌어.",
+            chunks: "I went bowling / with my friends / and totally lost.",
+            tips: [{ target: "bowling", ko: "'볼링'보다 입을 동그랗게 '보울링'." }] },
+          { en: "I went running along the river before breakfast.", ko: "아침 먹기 전에 강변 따라 달리기했어.",
+            chunks: "I went running / along the river / before breakfast.",
+            tips: [{ target: "river", ko: "v는 윗니로 아랫입술을 살짝 물어 '리버r'." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "So last Saturday / I went skiing / for the first time / in my life.",
+              ko: "지난 토요일에 태어나서 처음으로 스키를 타러 갔어.",
+              tips: [{ target: "first time", ko: "t가 겹쳐 '퍼r스타임'처럼 한 번에." }] },
+            { chunks: "I spent most‿of the day / on my butt / while a five-year-old / zoomed past me / like‿a pro.",
+              ko: "다섯 살짜리가 프로처럼 내 옆을 쌩 지나가는 동안, 나는 하루 대부분을 엉덩방아만 찧었어.",
+              tips: [{ target: "most of", ko: "t가 of에 붙어 '모스터브'처럼." },
+                     { target: "five-year-old", ko: "한 단어처럼 빠르게 '파이브이어r올드'." }] },
+            { chunks: "By the end‿of the day, / I could finally make‿it / down the bunny hill / without falling.",
+              ko: "하루가 끝날 무렵엔 드디어 초보 슬로프를 안 넘어지고 내려올 수 있었어.",
+              tips: [{ target: "end of", ko: "d가 of에 붙어 '엔더브'처럼." },
+                     { target: "make it", ko: "k가 it에 붙어 '메이킷'처럼." }] },
+            { chunks: "I'm calling that‿a win.",
+              ko: "이 정도면 이긴 걸로 칠래.",
+              tips: [{ target: "that a", ko: "t가 굴러 '대러'처럼 이어져요." }] }
+          ],
           en: "So last Saturday I went skiing for the first time in my life. I spent most of the day on my butt while a five-year-old zoomed past me like a pro. By the end of the day, I could finally make it down the bunny hill without falling. I'm calling that a win.",
           ko: "지난 토요일에 태어나서 처음으로 스키 타러 갔거든. 하루 대부분을 엉덩방아 찧으면서 보냈는데, 다섯 살짜리 꼬마가 프로처럼 내 옆을 쌩 지나가더라. 하루가 끝날 즈음엔 드디어 초보 슬로프를 안 넘어지고 내려왔어. 이 정도면 승리라고 칠게."
         }
@@ -161,13 +291,40 @@
         forms: ["stayed in"],
         ko: "'집에 있다, 안 나가다'라는 뜻이에요. 외출하지 않고 집에서 쉴 때 써요. 반대는 go out(놀러 나가다). 동료가 I just stayed in.이라고 하면 '그냥 집에 있었어'예요.",
         examples: [
-          { en: "Let's just stay in and order pizza tonight.", ko: "오늘 밤엔 그냥 집에서 피자 시켜 먹자." },
-          { en: "It's raining, so I'm gonna stay in today.", ko: "비 와서 오늘은 집에 있을래." },
-          { en: "I'd rather stay in than go to the office party.", ko: "회사 파티 가느니 집에 있는 게 나아." },
-          { en: "We decided to stay in on our last night in Paris and pack.", ko: "파리에서 마지막 밤엔 숙소에서 짐 싸기로 했어." },
-          { en: "Do you want to go out or stay in for dinner?", ko: "저녁 밖에서 먹을래, 집에서 먹을래?" }
+          { en: "Let's just stay in and order pizza tonight.", ko: "오늘 밤엔 그냥 집에서 피자 시켜 먹자.",
+            chunks: "Let's just stay‿in / and order pizza tonight.",
+            tips: [{ target: "stay in", ko: "y 소리로 이어져 '스테이인'처럼." }] },
+          { en: "It's raining, so I'm gonna stay in today.", ko: "비 와서 오늘은 집에 있을래.",
+            chunks: "It's raining, / so I'm gonna stay‿in today.",
+            tips: [{ target: "gonna", ko: "going to를 줄인 말. '거나'처럼 가볍게." }] },
+          { en: "I'd rather stay in than go to the office party.", ko: "회사 파티 가느니 집에 있는 게 나아.",
+            chunks: "I'd rather stay‿in / than go to the‿office party.",
+            tips: [{ target: "rather", ko: "'차라리'. th는 혀를 이 사이에 대고 울려요." }] },
+          { en: "We decided to stay in on our last night in Paris and pack.", ko: "파리에서 마지막 밤엔 숙소에서 짐 싸기로 했어.",
+            chunks: "We decided to stay‿in / on our last night in Paris / and pack.",
+            tips: [{ target: "decided to", ko: "d와 t가 겹쳐 '디사이디투'처럼." }] },
+          { en: "Do you want to go out or stay in for dinner?", ko: "저녁 밖에서 먹을래, 집에서 먹을래?",
+            chunks: "Do you want to go‿out / or stay‿in for dinner?",
+            tips: [{ target: "want to", ko: "'워너'처럼 줄어들어요." },
+                   { target: "go out", ko: "둘 중 고르는 질문이라 out에서 올리고 dinner에서 내려요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "My friends begged me / to go clubbing on Friday, / but I told them / I wanted to stay‿in.",
+              ko: "친구들이 금요일에 클럽 가자고 엄청 졸랐는데, 나는 집에 있고 싶다고 했어.",
+              tips: [{ target: "begged me", ko: "ed는 d 소리로 '베그드', me로 바로." },
+                     { target: "told them", ko: "them은 약하게 '톨뎀'처럼." }] },
+            { chunks: "I put‿on‿a face mask, / ordered fried chicken, / and watched three movies / in‿a row.",
+              ko: "마스크팩 붙이고, 치킨 시키고, 영화를 세 편 연달아 봤지.",
+              tips: [{ target: "put on a", ko: "t가 굴러 '푸로너'처럼 이어져요." },
+                     { target: "in a row", ko: "'연달아'. '이너 로우'처럼." }] },
+            { chunks: "Then I saw their photos / on Instagram / and felt zero regret.",
+              ko: "그러고 인스타에서 걔네 사진 봤는데 후회가 하나도 안 되더라.",
+              tips: [{ target: "regret", ko: "'그렛'에 힘을 줘요. 리'그렛'." }] },
+            { chunks: "Best Friday‿ever.",
+              ko: "최고의 금요일이었어.",
+              tips: [{ target: "Friday ever", ko: "y 소리로 이어져 '프라이데이에버r'처럼." }] }
+          ],
           en: "My friends begged me to go clubbing on Friday, but I told them I wanted to stay in. I put on a face mask, ordered fried chicken, and watched three movies in a row. Then I saw their photos on Instagram and felt zero regret. Best Friday ever.",
           ko: "금요일에 친구들이 클럽 가자고 엄청 졸랐는데, 난 그냥 집에 있고 싶다고 했어. 마스크팩 붙이고 치킨 시켜서 영화 세 편을 연달아 봤지. 그러고 나서 걔네 인스타 사진을 봤는데 후회가 하나도 안 되더라. 최고의 금요일이었어."
         }
@@ -212,13 +369,39 @@
         phrase: "How do you know ~?",
         ko: "'~를 어떻게 아세요?'라는 뜻이에요. 파티에서 처음 만난 사람과 대화를 여는 단골 질문이에요. 대답은 We work together. / We met in college.처럼 하면 돼요. '어떻게 그렇게 잘 알아?'라는 뜻으로도 써요.",
         examples: [
-          { en: "How do you know the bride?", ko: "신부랑은 어떻게 아세요?" },
-          { en: "How do you know so much about wine?", ko: "와인에 대해 어떻게 그렇게 잘 알아?" },
-          { en: "How do you know our manager? Did you two work together before?", ko: "저희 매니저님은 어떻게 아세요? 전에 같이 일하셨어요?" },
-          { en: "How do you know about this place? It's not even on Google Maps.", ko: "여기는 어떻게 알았어? 구글 지도에도 안 나오는데." },
-          { en: "How do you know my sister?", ko: "우리 언니는 어떻게 알아요?" }
+          { en: "How do you know the bride?", ko: "신부랑은 어떻게 아세요?",
+            chunks: "How do‿you know / the bride?",
+            tips: [{ target: "do you", ko: "빠르게 말하면 '다야'처럼 뭉개져요." }] },
+          { en: "How do you know so much about wine?", ko: "와인에 대해 어떻게 그렇게 잘 알아?",
+            chunks: "How do‿you know / so much‿about wine?",
+            tips: [{ target: "much about", ko: "ch가 about에 붙어 '머처바웃'처럼." }] },
+          { en: "How do you know our manager? Did you two work together before?", ko: "저희 매니저님은 어떻게 아세요? 전에 같이 일하셨어요?",
+            chunks: "How do‿you know‿our manager? / Did‿you two work together / before?",
+            tips: [{ target: "know our", ko: "w 소리로 이어져 '노우아워r'처럼." },
+                   { target: "Did you", ko: "d와 y가 만나 '디쥬'처럼." }] },
+          { en: "How do you know about this place? It's not even on Google Maps.", ko: "여기는 어떻게 알았어? 구글 지도에도 안 나오는데.",
+            chunks: "How do‿you know / about this place? / It's not‿even on Google Maps.",
+            tips: [{ target: "not even", ko: "t가 굴러 '나리븐'처럼." }] },
+          { en: "How do you know my sister?", ko: "우리 언니는 어떻게 알아요?",
+            chunks: "How do‿you know / my sister?",
+            tips: [{ target: "sister", ko: "t를 약하게, 끝 r은 혀를 말아요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "At my cousin's wedding, / this guy sat next to me / and asked, / “So, / how do‿you know the groom?”",
+              ko: "사촌 결혼식에서 어떤 남자가 옆에 앉더니 “신랑이랑은 어떻게 아세요?” 하고 물었어.",
+              tips: [{ target: "sat next to me", ko: "sat의 t는 멈추기만 하고, next의 t도 거의 빠져요." }] },
+            { chunks: "I said / I was the bride's cousin, / and he said, / “Oh, I'm the groom's old roommate.”",
+              ko: "신부 사촌이라고 했더니 “아, 저는 신랑 예전 룸메이트예요.” 하더라.",
+              tips: [{ target: "bride's", ko: "끝 ds는 '즈'처럼 울려요." },
+                     { target: "old roommate", ko: "d는 거의 안 들리고 바로 roommate로." }] },
+            { chunks: "We ended‿up talking all night / and judging everyone's dance moves / together.",
+              ko: "결국 밤새 얘기하면서 둘이 같이 사람들 춤 실력을 평가했어.",
+              tips: [{ target: "ended up", ko: "d가 up에 붙어 '엔디덥'처럼." }] },
+            { chunks: "Now we're actually good friends.",
+              ko: "지금은 진짜 친한 친구가 됐어.",
+              tips: [{ target: "actually", ko: "빠르게 '액슐리'처럼 줄어들어요." }] }
+          ],
           en: "At my cousin's wedding, this guy sat next to me and asked, “So, how do you know the groom?” I said I was the bride's cousin, and he said, “Oh, I'm the groom's old roommate.” We ended up talking all night and judging everyone's dance moves together. Now we're actually good friends.",
           ko: "사촌 결혼식에서 어떤 남자가 내 옆에 앉더니 “신랑이랑은 어떻게 아세요?” 하고 묻더라. 나는 신부 사촌이라고 했고, 그 사람은 “아, 저는 신랑 예전 룸메이트예요.” 했지. 결국 밤새 수다 떨면서 같이 사람들 춤 실력을 평가했어. 지금은 진짜 친한 친구가 됐어."
         }
@@ -228,13 +411,39 @@
         phrase: "used to ~",
         ko: "'예전엔 ~했었어(지금은 아니야)'라는 뜻이에요. 과거의 습관이나 상태를 말할 때 써요. We used to work together.는 '예전에 같이 일했어요'. 빨리 말하면 '유스터'처럼 들려요.",
         examples: [
-          { en: "I used to live in Boston for work.", ko: "일 때문에 보스턴에 살았었어요." },
-          { en: "We used to come to this diner every Sunday.", ko: "우리 예전에 일요일마다 이 식당에 왔었잖아." },
-          { en: "She used to be my best friend in middle school.", ko: "걔는 중학교 때 내 단짝이었어." },
-          { en: "I used to hate flying, but now I love it.", ko: "예전엔 비행기 타는 게 싫었는데, 지금은 너무 좋아." },
-          { en: "This coffee shop used to be a bookstore.", ko: "이 카페 예전엔 서점이었어." }
+          { en: "I used to live in Boston for work.", ko: "일 때문에 보스턴에 살았었어요.",
+            chunks: "I used to live‿in Boston / for work.",
+            tips: [{ target: "used to", ko: "'유즈드 투'가 아니라 '유스터'처럼." }] },
+          { en: "We used to come to this diner every Sunday.", ko: "우리 예전에 일요일마다 이 식당에 왔었잖아.",
+            chunks: "We used to come / to this diner / every Sunday.",
+            tips: [{ target: "diner", ko: "'다이너r', 간단한 식당이에요." }] },
+          { en: "She used to be my best friend in middle school.", ko: "걔는 중학교 때 내 단짝이었어.",
+            chunks: "She used to be / my best friend / in middle school.",
+            tips: [{ target: "best friend", ko: "best의 t는 거의 빠지고 바로 friend로." }] },
+          { en: "I used to hate flying, but now I love it.", ko: "예전엔 비행기 타는 게 싫었는데, 지금은 너무 좋아.",
+            chunks: "I used to hate flying, / but now I love‿it.",
+            tips: [{ target: "hate flying", ko: "hate의 t는 멈추기만 하고 바로 flying으로." }] },
+          { en: "This coffee shop used to be a bookstore.", ko: "이 카페 예전엔 서점이었어.",
+            chunks: "This coffee shop / used to be‿a bookstore.",
+            tips: [{ target: "coffee", ko: "'커피'보다 '카피'에 가깝게." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "So I ran‿into / my old piano teacher / at the grocery store / yesterday.",
+              ko: "어제 마트에서 옛날 피아노 선생님을 우연히 만났어.",
+              tips: [{ target: "ran into", ko: "'우연히 만났다'. n이 into에 붙어 '래닌투'." }] },
+            { chunks: "I used to cry / every single lesson / because I hated practicing.",
+              ko: "나 연습하기 싫어서 레슨 때마다 울었었거든.",
+              tips: [{ target: "used to", ko: "'유스터'처럼 빠르게." },
+                     { target: "hated", ko: "t가 굴러 '헤이리드'처럼 들려요." }] },
+            { chunks: "She remembered me right‿away / and asked, / “Are you still playing?”",
+              ko: "선생님이 날 바로 알아보시고 “아직도 피아노 치니?” 하고 물으셨어.",
+              tips: [{ target: "right away", ko: "t가 굴러 '라이러웨이'처럼." }] },
+            { chunks: "I lied‿and said yes, / and now I feel like / I have to buy‿a piano.",
+              ko: "거짓말로 그렇다고 했더니, 이제 피아노를 사야 할 것 같은 기분이야.",
+              tips: [{ target: "lied and", ko: "d가 and에 붙어 '라이댄'처럼." },
+                     { target: "have to", ko: "'해프터'처럼 빠르게." }] }
+          ],
           en: "So I ran into my old piano teacher at the grocery store yesterday. I used to cry every single lesson because I hated practicing. She remembered me right away and asked, “Are you still playing?” I lied and said yes, and now I feel like I have to buy a piano.",
           ko: "어제 마트에서 옛날 피아노 선생님을 딱 마주쳤어. 나 연습하기 싫어서 레슨 때마다 울었었거든. 선생님이 나를 바로 알아보시고 “아직도 피아노 치니?” 하고 물어보셨어. 그래서 거짓말로 그렇다고 했는데, 이제 진짜 피아노를 사야 할 것 같아."
         }
@@ -244,13 +453,41 @@
         phrase: "Small world!",
         ko: "'세상 참 좁네요!'라는 뜻이에요. 우연히 아는 사람이 겹치거나 뜻밖의 인연을 알게 됐을 때 써요. 비슷한 표현: What a coincidence!(이런 우연이!)",
         examples: [
-          { en: "You went to my high school too? Small world!", ko: "너도 우리 고등학교 나왔어? 세상 좁다!" },
-          { en: "My new boss is my neighbor's sister. Small world.", ko: "새로 온 팀장님이 우리 옆집 사람 동생이야. 세상 좁아." },
-          { en: "We met a couple from Busan in Iceland. Small world!", ko: "아이슬란드에서 부산에서 온 커플을 만났어. 세상 좁다!" },
-          { en: "Our waiter turned out to be my old classmate. Talk about a small world.", ko: "우리 테이블 웨이터가 알고 보니 옛날 반 친구였어. 세상 진짜 좁다니까." },
-          { en: "The guy who sold me my car knows my dad. It's a small world.", ko: "나한테 차 판 사람이 우리 아빠를 알더라. 세상 참 좁아." }
+          { en: "You went to my high school too? Small world!", ko: "너도 우리 고등학교 나왔어? 세상 좁다!",
+            chunks: "You went to / my high school too? / Small world!",
+            tips: [{ target: "Small world", ko: "world는 r을 말았다가 l로 끝내요." }] },
+          { en: "My new boss is my neighbor's sister. Small world.", ko: "새로 온 팀장님이 우리 옆집 사람 동생이야. 세상 좁아.",
+            chunks: "My new boss‿is / my neighbor's sister. / Small world.",
+            tips: [{ target: "boss is", ko: "s가 is에 붙어 '바시즈'처럼." }] },
+          { en: "We met a couple from Busan in Iceland. Small world!", ko: "아이슬란드에서 부산에서 온 커플을 만났어. 세상 좁다!",
+            chunks: "We met‿a couple from Busan / in Iceland. / Small world!",
+            tips: [{ target: "met a", ko: "t가 굴러 '메러'처럼 이어져요." },
+                   { target: "Iceland", ko: "첫음절에 힘을 줘서 '아이슬런드'." }] },
+          { en: "Our waiter turned out to be my old classmate. Talk about a small world.", ko: "우리 테이블 웨이터가 알고 보니 옛날 반 친구였어. 세상 진짜 좁다니까.",
+            chunks: "Our waiter turned‿out / to be my old classmate. / Talk‿about‿a small world.",
+            tips: [{ target: "turned out", ko: "'알고 보니 ~였다'. d가 out에 붙어 '턴다웃'." },
+                   { target: "Talk about a", ko: "k가 about에 붙어 '토커바우러'처럼." }] },
+          { en: "The guy who sold me my car knows my dad. It's a small world.", ko: "나한테 차 판 사람이 우리 아빠를 알더라. 세상 참 좁아.",
+            chunks: "The guy / who sold me my car / knows my dad. / It's‿a small world.",
+            tips: [{ target: "sold me", ko: "d는 거의 안 들리고 '솔미'처럼." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "So I was‿on‿a flight / to New York / last month, / and the woman next to me / was from my tiny hometown.",
+              ko: "지난달에 뉴욕 가는 비행기를 탔는데, 옆자리 여자분이 우리 작은 고향 사람이었어.",
+              tips: [{ target: "woman", ko: "첫음절에 힘을 줘서 '우먼'. women(위민)과 달라요." }] },
+            { chunks: "Turns‿out / she went to / the same elementary school / and even had the same teacher.",
+              ko: "알고 보니 같은 초등학교를 나왔고 담임 선생님까지 같았어.",
+              tips: [{ target: "elementary", ko: "'멘'에 힘, '엘러멘트리'처럼." }] },
+            { chunks: "We kept saying, / “Small world!” / like twenty times.",
+              ko: "우리 “세상 좁다!”를 한 스무 번은 말했어.",
+              tips: [{ target: "kept saying", ko: "kept의 t는 거의 빠지고 바로 saying으로." },
+                     { target: "twenty", ko: "빠르게 말하면 t가 빠져 '트웨니'처럼." }] },
+            { chunks: "By the end‿of the flight, / she'd invited me / to her daughter's wedding.",
+              ko: "비행기가 도착할 무렵엔 자기 딸 결혼식에 날 초대했다니까.",
+              tips: [{ target: "end of", ko: "d가 of에 붙어 '엔더브'처럼." },
+                     { target: "daughter's", ko: "gh는 소리 나지 않고 t는 굴러 '도러r즈'." }] }
+          ],
           en: "So I was on a flight to New York last month, and the woman next to me was from my tiny hometown. Turns out she went to the same elementary school and even had the same teacher. We kept saying, “Small world!” like twenty times. By the end of the flight, she'd invited me to her daughter's wedding.",
           ko: "지난달에 뉴욕 가는 비행기를 탔는데, 옆자리 아주머니가 우리 작은 고향 출신이었어. 알고 보니 같은 초등학교를 나왔고 담임 선생님까지 같았어. 우리 둘이 “세상 좁다!”를 한 스무 번은 했어. 비행 끝날 때쯤엔 아주머니가 딸 결혼식에 나를 초대하셨어."
         }
@@ -302,13 +539,39 @@
         phrase: "Are you free ~?",
         ko: "'~에 시간 돼?'라는 뜻이에요. 약속 잡을 때 제일 먼저 꺼내는 말이에요. 뒤에 this weekend, tonight, on Friday처럼 시간을 붙여요. 대답: Yeah, I'm free! / Sorry, I'm busy. 비슷한 표현: Do you have time ~?",
         examples: [
-          { en: "Are you free for a quick call this afternoon?", ko: "오늘 오후에 잠깐 통화할 시간 돼요?" },
-          { en: "Are you free tonight? Let's grab dinner.", ko: "오늘 밤에 시간 돼? 저녁 먹자." },
-          { en: "Are you free on Sunday? Mom wants a family lunch.", ko: "일요일에 시간 돼? 엄마가 가족끼리 점심 먹재." },
-          { en: "Are you free to show me around when I visit Seoul?", ko: "내가 서울 갈 때 구경시켜 줄 시간 돼?" },
-          { en: "Are you free next Tuesday for a fitting?", ko: "다음 주 화요일에 치수 재러 오실 수 있어요?" }
+          { en: "Are you free for a quick call this afternoon?", ko: "오늘 오후에 잠깐 통화할 시간 돼요?",
+            chunks: "Are you free / for‿a quick call / this‿afternoon?",
+            tips: [{ target: "this afternoon", ko: "s가 afternoon에 붙어 '디쌔프터r눈'처럼." }] },
+          { en: "Are you free tonight? Let's grab dinner.", ko: "오늘 밤에 시간 돼? 저녁 먹자.",
+            chunks: "Are you free tonight? / Let's grab dinner.",
+            tips: [{ target: "Are you", ko: "빠르게 말하면 '아유'가 '아야'처럼 약해져요." }] },
+          { en: "Are you free on Sunday? Mom wants a family lunch.", ko: "일요일에 시간 돼? 엄마가 가족끼리 점심 먹재.",
+            chunks: "Are you free on Sunday? / Mom wants‿a family lunch.",
+            tips: [{ target: "wants a", ko: "s가 a에 붙어 '원처'처럼 이어져요." }] },
+          { en: "Are you free to show me around when I visit Seoul?", ko: "내가 서울 갈 때 구경시켜 줄 시간 돼?",
+            chunks: "Are you free / to show me‿around / when I visit Seoul?",
+            tips: [{ target: "show me around", ko: "'구경시켜 주다'. '쇼우미어라운드'처럼 한 번에." }] },
+          { en: "Are you free next Tuesday for a fitting?", ko: "다음 주 화요일에 치수 재러 오실 수 있어요?",
+            chunks: "Are you free next Tuesday / for‿a fitting?",
+            tips: [{ target: "fitting", ko: "tt가 굴러 '피링'처럼 들려요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "My friend texted me, / “Are you free tonight?” / and I got‿excited, / thinking‿it was‿a dinner invite.",
+              ko: "친구가 “오늘 밤에 시간 돼?” 하고 문자해서, 저녁 초대인 줄 알고 신났거든.",
+              tips: [{ target: "got excited", ko: "t가 굴러 '가릭싸이리드'처럼 이어져요." },
+                     { target: "invite", ko: "명사일 땐 앞에 힘을 줘서 '인바잇'." }] },
+            { chunks: "I said yes right‿away / and even put‿on / a nice shirt.",
+              ko: "바로 된다고 하고 괜찮은 셔츠까지 입었지.",
+              tips: [{ target: "put on", ko: "t가 굴러 '푸론'처럼." }] },
+            { chunks: "Turns‿out / she needed help / putting together a bookshelf / from IKEA.",
+              ko: "알고 보니 이케아 책장 조립하는 걸 도와 달라는 거였어.",
+              tips: [{ target: "putting together", ko: "'조립하다'. tt가 굴러 '푸링 터게더r'." },
+                     { target: "IKEA", ko: "영어로는 '아이키아'라고 해요." }] },
+            { chunks: "Three hours / and zero dinner later, / we finally finished‿it.",
+              ko: "세 시간 동안 저녁도 못 먹고 겨우 다 끝냈어.",
+              tips: [{ target: "finished it", ko: "ed가 t 소리로 it에 붙어 '피니쉬팃'처럼." }] }
+          ],
           en: "My friend texted me, “Are you free tonight?” and I got excited, thinking it was a dinner invite. I said yes right away and even put on a nice shirt. Turns out she needed help putting together a bookshelf from IKEA. Three hours and zero dinner later, we finally finished it.",
           ko: "친구가 “오늘 밤에 시간 돼?” 하고 문자를 보냈길래 저녁 먹자는 줄 알고 신났거든. 바로 된다고 하고 예쁜 셔츠까지 입었어. 알고 보니 이케아 책장 조립하는 걸 도와 달라는 거였어. 세 시간 동안 저녁도 못 먹고 겨우 다 만들었어."
         }
@@ -318,13 +581,41 @@
         phrase: "check ~ out",
         ko: "'~를 (가서) 구경하다, 확인해 보다'라는 뜻이에요. 새로 생긴 가게, 영상, 장소를 '한번 가 보자/봐 봐' 할 때 써요. 대상이 it, this처럼 짧으면 check it out처럼 가운데 넣어요. 호텔 '체크아웃'과는 다른 뜻이에요.",
         examples: [
-          { en: "You have to check out this café near my office.", ko: "우리 회사 근처에 있는 이 카페 꼭 가 봐." },
-          { en: "Let's check out the night market tonight.", ko: "오늘 밤에 야시장 구경 가자." },
-          { en: "Check out this video, it's hilarious.", ko: "이 영상 봐 봐, 완전 웃겨." },
-          { en: "Can you check out the new design and tell me what you think?", ko: "새 디자인 한번 보고 어떤지 말해 줄래요?" },
-          { en: "I want to check out the sale at the mall.", ko: "쇼핑몰 세일 구경하러 가고 싶어." }
+          { en: "You have to check out this café near my office.", ko: "우리 회사 근처에 있는 이 카페 꼭 가 봐.",
+            chunks: "You have to check‿out / this café / near my office.",
+            tips: [{ target: "check out", ko: "k가 out에 붙어 '체카웃'처럼." }] },
+          { en: "Let's check out the night market tonight.", ko: "오늘 밤에 야시장 구경 가자.",
+            chunks: "Let's check‿out / the night market tonight.",
+            tips: [{ target: "night market", ko: "night의 t는 멈추기만 하고 바로 market으로." }] },
+          { en: "Check out this video, it's hilarious.", ko: "이 영상 봐 봐, 완전 웃겨.",
+            chunks: "Check‿out this video, / it's hilarious.",
+            tips: [{ target: "hilarious", ko: "'래'에 힘을 줘요. 힐'래'리어스." }] },
+          { en: "Can you check out the new design and tell me what you think?", ko: "새 디자인 한번 보고 어떤지 말해 줄래요?",
+            chunks: "Can you check‿out / the new design / and tell me / what you think?",
+            tips: [{ target: "design", ko: "g는 소리 나지 않고 '자인'에 힘을 줘요." },
+                   { target: "what you", ko: "t와 y가 만나 '왓츄'처럼." }] },
+          { en: "I want to check out the sale at the mall.", ko: "쇼핑몰 세일 구경하러 가고 싶어.",
+            chunks: "I want to check‿out / the sale at the mall.",
+            tips: [{ target: "want to", ko: "'워너'처럼 줄어들어요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "Last weekend / my friend dragged me / to check‿out‿an escape room / everyone was talking‿about.",
+              ko: "지난 주말에 친구가 요즘 다들 얘기하는 방탈출 카페에 날 끌고 갔어.",
+              tips: [{ target: "dragged me", ko: "ed는 d 소리로 '드래그드', me로 바로." },
+                     { target: "check out an", ko: "'체카우런'처럼 한 번에 이어져요." }] },
+            { chunks: "We were supposed to escape / in sixty minutes, / but we got stuck / in the first room / for forty.",
+              ko: "60분 안에 나가야 했는데, 첫 번째 방에서만 40분을 갇혀 있었어.",
+              tips: [{ target: "got stuck", ko: "got의 t는 멈추기만 하고 바로 stuck으로." },
+                     { target: "forty", ko: "t가 굴러 '포r리'처럼." }] },
+            { chunks: "The staff gave‿us / so many hints / that‿it felt like / they solved‿it for us.",
+              ko: "직원이 힌트를 너무 많이 줘서 거의 직원이 대신 푼 느낌이었어.",
+              tips: [{ target: "gave us", ko: "v가 us에 붙어 '게이버스'처럼." },
+                     { target: "solved it", ko: "d가 it에 붙어 '살브딧'처럼." }] },
+            { chunks: "We still took‿a victory photo, / though.",
+              ko: "그래도 우승 사진은 찍었어.",
+              tips: [{ target: "victory", ko: "첫음절 '빅'에 힘, '빅터리'." }] }
+          ],
           en: "Last weekend my friend dragged me to check out an escape room everyone was talking about. We were supposed to escape in sixty minutes, but we got stuck in the first room for forty. The staff gave us so many hints that it felt like they solved it for us. We still took a victory photo, though.",
           ko: "지난 주말에 친구가 요즘 다들 얘기하는 방탈출 카페에 가 보자고 나를 끌고 갔어. 60분 안에 탈출해야 하는데, 첫 번째 방에서만 40분을 갇혀 있었어. 직원이 힌트를 너무 많이 줘서 거의 직원이 대신 푼 느낌이었어. 그래도 승리 기념사진은 찍었지."
         }
@@ -334,13 +625,39 @@
         phrase: "How about ~?",
         ko: "'~ 어때?'라는 뜻이에요. 시간, 장소, 아이디어를 제안할 때 쓰는 만능 패턴이에요. 뒤에 명사나 -ing를 붙여요: How about Friday? / How about getting pizza? 비슷한 표현: What about ~? / Why don't we ~?",
         examples: [
-          { en: "How about Italian tonight?", ko: "오늘 저녁 이탈리아 음식 어때?" },
-          { en: "How about we push the meeting to three?", ko: "회의를 3시로 미루는 거 어때요?" },
-          { en: "How about taking the train instead of driving?", ko: "운전 말고 기차 타는 거 어때?" },
-          { en: "How about this one in blue?", ko: "이거 파란색은 어떠세요?" },
-          { en: "How about a movie night at my place?", ko: "우리 집에서 영화 보는 거 어때?" }
+          { en: "How about Italian tonight?", ko: "오늘 저녁 이탈리아 음식 어때?",
+            chunks: "How‿about Italian tonight?",
+            tips: [{ target: "Italian", ko: "'이태리안'이 아니라 '이탤리언', '탤'에 힘." }] },
+          { en: "How about we push the meeting to three?", ko: "회의를 3시로 미루는 거 어때요?",
+            chunks: "How‿about we push the meeting / to three?",
+            tips: [{ target: "How about", ko: "w 소리로 이어져 '하워바웃'처럼." }] },
+          { en: "How about taking the train instead of driving?", ko: "운전 말고 기차 타는 거 어때?",
+            chunks: "How‿about taking the train / instead‿of driving?",
+            tips: [{ target: "instead of", ko: "d가 of에 붙어 '인스테더브'처럼." }] },
+          { en: "How about this one in blue?", ko: "이거 파란색은 어떠세요?",
+            chunks: "How‿about this one / in blue?",
+            tips: [{ target: "this one", ko: "s 다음 one을 이어 '디스원'." }] },
+          { en: "How about a movie night at my place?", ko: "우리 집에서 영화 보는 거 어때?",
+            chunks: "How‿about‿a movie night / at my place?",
+            tips: [{ target: "about a", ko: "t가 굴러 '어바우러'처럼." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "My sister and I / spent forty minutes / deciding what‿to eat / last night.",
+              ko: "어젯밤에 언니랑 뭐 먹을지 정하는 데 40분이 걸렸어.",
+              tips: [{ target: "what to", ko: "t가 겹쳐 '와러'처럼 빠르게." }] },
+            { chunks: "Every time I said, / “How‿about sushi?” / she said / she wasn't‿in the mood.",
+              ko: "내가 “초밥 어때?” 할 때마다 언니는 땡기지 않는대.",
+              tips: [{ target: "wasn't in", ko: "t가 약해져 '워즌인'처럼." },
+                     { target: "in the mood", ko: "'~할 기분'. mood에 힘을 줘요." }] },
+            { chunks: "Every time she suggested something, / I said no too.",
+              ko: "언니가 뭘 말하면 나도 다 싫다고 했고.",
+              tips: [{ target: "suggested", ko: "'제'에 힘을 줘요. 써'제'스티드." }] },
+            { chunks: "We ended‿up eating cereal / at 10 p.m., / and honestly, / it was perfect.",
+              ko: "결국 밤 10시에 시리얼을 먹었는데, 솔직히 완벽했어.",
+              tips: [{ target: "ended up", ko: "d가 up에 붙어 '엔디덥'처럼." },
+                     { target: "cereal", ko: "첫음절에 힘을 줘서 '시리얼'." }] }
+          ],
           en: "My sister and I spent forty minutes deciding what to eat last night. Every time I said, “How about sushi?” she said she wasn't in the mood. Every time she suggested something, I said no too. We ended up eating cereal at 10 p.m., and honestly, it was perfect.",
           ko: "어젯밤에 언니랑 뭘 먹을지 정하는 데만 40분을 썼어. 내가 “초밥 어때?” 할 때마다 언니는 별로 안 당긴대. 언니가 뭘 제안하면 나도 싫다고 했고. 결국 밤 10시에 시리얼을 먹었는데, 솔직히 완벽했어."
         }
@@ -350,13 +667,38 @@
         phrase: "Let me know if ~.",
         ko: "'~하면 알려 줘'라는 뜻이에요. 약속, 일, 부탁을 마무리할 때 자주 붙이는 말이에요. if 대신 when(~하면 그때)도 많이 써요. 비슷한 표현: Keep me posted.(계속 소식 알려 줘)",
         examples: [
-          { en: "Let me know if you need anything else.", ko: "더 필요한 거 있으면 말씀하세요." },
-          { en: "Let me know if you're running late.", ko: "늦을 것 같으면 알려 줘." },
-          { en: "Let me know if you have any questions about the report.", ko: "보고서 관련해서 궁금한 점 있으면 알려 주세요." },
-          { en: "Let me know if the food is too spicy.", ko: "음식이 너무 매우면 말씀해 주세요." },
-          { en: "Let me know if you want to share a cab to the airport.", ko: "공항까지 택시 같이 탈 거면 알려 줘." }
+          { en: "Let me know if you need anything else.", ko: "더 필요한 거 있으면 말씀하세요.",
+            chunks: "Let me know / if you need‿anything‿else.",
+            tips: [{ target: "anything else", ko: "g가 else에 붙어 '애니띵엘스'처럼." }] },
+          { en: "Let me know if you're running late.", ko: "늦을 것 같으면 알려 줘.",
+            chunks: "Let me know / if you're running late.",
+            tips: [{ target: "Let me", ko: "'레미'처럼 줄어들어요." }] },
+          { en: "Let me know if you have any questions about the report.", ko: "보고서 관련해서 궁금한 점 있으면 알려 주세요.",
+            chunks: "Let me know / if you have‿any questions / about the report.",
+            tips: [{ target: "have any", ko: "v가 any에 붙어 '해베니'처럼." }] },
+          { en: "Let me know if the food is too spicy.", ko: "음식이 너무 매우면 말씀해 주세요.",
+            chunks: "Let me know / if the food‿is too spicy.",
+            tips: [{ target: "food is", ko: "d가 굴러 '푸리즈'처럼 들려요." }] },
+          { en: "Let me know if you want to share a cab to the airport.", ko: "공항까지 택시 같이 탈 거면 알려 줘.",
+            chunks: "Let me know / if you want to / share‿a cab / to the‿airport.",
+            tips: [{ target: "share a cab", ko: "'택시를 같이 타다'. r이 a에 붙어 '셰어러 캡'." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "I told my new neighbor, / “Let me know / if you ever need anything!” / just to be nice.",
+              ko: "새로 온 이웃한테 그냥 예의상 “필요한 거 있으면 언제든 말해요!” 했거든.",
+              tips: [{ target: "neighbor", ko: "gh는 소리 나지 않아 '네이버r'." }] },
+            { chunks: "The next day, / she knocked‿on my door / and asked to borrow my vacuum, / my ladder, / and some sugar.",
+              ko: "다음 날 그 이웃이 문을 두드리더니 청소기랑 사다리랑 설탕을 빌려 달래.",
+              tips: [{ target: "knocked on", ko: "k는 소리 나지 않고, ed가 on에 붙어 '낙톤'처럼." },
+                     { target: "ladder", ko: "dd가 굴러 '래러r'처럼 들려요." }] },
+            { chunks: "Now we bake cookies together / every Sunday.",
+              ko: "지금은 일요일마다 같이 쿠키를 구워.",
+              tips: [{ target: "bake cookies", ko: "k가 겹쳐 '베이쿠키즈'처럼 한 번에." }] },
+            { chunks: "Best neighbor‿ever, / honestly.",
+              ko: "솔직히 최고의 이웃이야.",
+              tips: [{ target: "neighbor ever", ko: "r이 ever에 붙어 '네이버레버r'처럼." }] }
+          ],
           en: "I told my new neighbor, “Let me know if you ever need anything!” just to be nice. The next day, she knocked on my door and asked to borrow my vacuum, my ladder, and some sugar. Now we bake cookies together every Sunday. Best neighbor ever, honestly.",
           ko: "새로 이사 온 이웃한테 그냥 예의상 “필요한 거 있으면 언제든 말해요!” 했거든. 다음 날 그 이웃이 문을 두드리더니 청소기, 사다리, 설탕을 빌려 달래. 지금은 일요일마다 같이 쿠키를 구워. 솔직히 최고의 이웃이야."
         }
@@ -367,13 +709,39 @@
         forms: ["catching up"],
         ko: "'(오랜만에) 근황을 나누다, 밀린 얘기를 하다'라는 뜻이에요. 오래 못 본 친구에게 We should catch up!(얼굴 한번 보자/얘기 좀 하자)처럼 정말 자주 써요. '밀린 걸 따라잡다'라는 뜻도 있어요: catch up on work.",
         examples: [
-          { en: "Let's grab coffee and catch up soon!", ko: "조만간 커피 마시면서 근황 얘기하자!" },
-          { en: "I need to catch up on emails after my vacation.", ko: "휴가 다녀와서 밀린 메일 처리해야 해." },
-          { en: "We spent the whole dinner trying to catch up.", ko: "저녁 내내 밀린 얘기 하느라 바빴어." },
-          { en: "I want to catch up on sleep this weekend.", ko: "이번 주말엔 밀린 잠 좀 자고 싶어." },
-          { en: "Go ahead, I'll catch up with you at the gate.", ko: "먼저 가, 게이트에서 따라갈게." }
+          { en: "Let's grab coffee and catch up soon!", ko: "조만간 커피 마시면서 근황 얘기하자!",
+            chunks: "Let's grab coffee / and catch‿up soon!",
+            tips: [{ target: "catch up", ko: "ch가 up에 붙어 '캐첩'처럼." }] },
+          { en: "I need to catch up on emails after my vacation.", ko: "휴가 다녀와서 밀린 메일 처리해야 해.",
+            chunks: "I need to / catch‿up‿on emails / after my vacation.",
+            tips: [{ target: "catch up on", ko: "'밀린 걸 처리하다'. '캐처펀'처럼 한 번에." }] },
+          { en: "We spent the whole dinner trying to catch up.", ko: "저녁 내내 밀린 얘기 하느라 바빴어.",
+            chunks: "We spent the whole dinner / trying to catch‿up.",
+            tips: [{ target: "whole", ko: "w는 소리 나지 않아요. '호울'." }] },
+          { en: "I want to catch up on sleep this weekend.", ko: "이번 주말엔 밀린 잠 좀 자고 싶어.",
+            chunks: "I want to / catch‿up‿on sleep / this weekend.",
+            tips: [{ target: "want to", ko: "'워너'처럼 줄어들어요." }] },
+          { en: "Go ahead, I'll catch up with you at the gate.", ko: "먼저 가, 게이트에서 따라갈게.",
+            chunks: "Go ahead, / I'll catch‿up with you / at the gate.",
+            tips: [{ target: "catch up with", ko: "'뒤따라가다'. '캐첩 위드'처럼 이어 말해요." }] }
         ],
         story: {
+          sentences: [
+            { chunks: "I ran‿into / my high school best friend / at the‿airport last month, / totally by‿accident.",
+              ko: "지난달에 공항에서 고등학교 때 베프를 완전 우연히 만났어.",
+              tips: [{ target: "ran into", ko: "'우연히 만났다'. n이 into에 붙어 '래닌투'." },
+                     { target: "by accident", ko: "'우연히'. '바이액씨던트'처럼 이어 말해요." }] },
+            { chunks: "We both had two hours / before‿our flights, / so we sat down / to catch‿up.",
+              ko: "둘 다 비행기까지 두 시간이 남아서, 앉아서 그동안 못 한 얘기를 했지.",
+              tips: [{ target: "before our", ko: "r이 our에 붙어 '비포r라워r'처럼." }] },
+            { chunks: "We talked so much / that I almost missed / my boarding call.",
+              ko: "얘기를 너무 많이 해서 탑승 안내를 놓칠 뻔했어.",
+              tips: [{ target: "talked", ko: "l은 소리 나지 않고 ed는 t 소리로 '톡트'." },
+                     { target: "boarding", ko: "d가 굴러 '보r링'처럼 들려요." }] },
+            { chunks: "Now we video chat / every Sunday.",
+              ko: "이제 일요일마다 영상 통화해.",
+              tips: [{ target: "video chat", ko: "'비디오우 챗', 끝 t는 멈추기만 해요." }] }
+          ],
           en: "I ran into my high school best friend at the airport last month, totally by accident. We both had two hours before our flights, so we sat down to catch up. We talked so much that I almost missed my boarding call. Now we video chat every Sunday.",
           ko: "지난달에 공항에서 고등학교 때 단짝을 완전 우연히 만났어. 둘 다 비행기 타기까지 두 시간이 남아서 앉아서 그동안 못 한 얘기를 했지. 얘기를 너무 많이 해서 탑승 안내를 놓칠 뻔했어. 지금은 일요일마다 영상 통화해."
         }
