@@ -7,6 +7,10 @@
     category: "이동·쇼핑",
     title: "길 물어보기",
     situation: "처음 와 본 동네에서 지하철역을 찾고 있어요. 지나가던 사람에게 길을 물었는데, 말이 빨라서 한 번 더 들어야 해요.",
+    hooks: [
+      { ko: "지나가는 사람에게 지하철역이 어디냐고 물을 때, 뭐라고 하지?", line: 3 },
+      { ko: "말이 너무 빨라서 다시 말해 달라고 할 때, 뭐라고 하지?", line: 5 }
+    ],
     dialogue: [
       { who: "me", en: "Excuse me, sorry!", ko: "실례합니다, 죄송해요!",
         chunks: "Excuse me, sorry!",
@@ -175,6 +179,11 @@
     category: "이동·쇼핑",
     title: "택시·우버에서 목적지 말하기",
     situation: "우버를 탔어요. 기사님이 목적지를 확인하면, 시간이 얼마나 걸리는지 묻고 호텔 정문 앞에 내려 달라고 하고 싶어요.",
+    hooks: [
+      { ko: "우버 기사님께 얼마나 걸리는지 물을 때, 뭐라고 하지?", line: 2 },
+      { ko: "택시에서 정문 앞에 내려 달라고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "내리면서 기사님께 좋은 하루 보내시라고 할 때, 뭐라고 하지?", line: 6 }
+    ],
     dialogue: [
       { who: "driver", en: "Hey, Minji? Heading to the Hilton downtown?", ko: "안녕하세요, 민지 님? 시내 힐튼 호텔 가시는 거죠?",
         chunks: "Hey, Minji? / Heading to the Hilton downtown?",
@@ -337,6 +346,11 @@
     category: "이동·쇼핑",
     title: "옷 가게에서 사이즈 묻기",
     situation: "옷 가게에서 마음에 드는 셔츠를 찾았는데 내 사이즈가 안 보여요. 직원에게 물어보고 입어 보고 싶어요.",
+    hooks: [
+      { ko: "옷 가게에서 이거 미디엄 사이즈 있냐고 물을 때, 뭐라고 하지?", line: 2 },
+      { ko: "탈의실이 어디냐고 물을 때, 뭐라고 하지?", line: 4 },
+      { ko: "입어 봤더니 어깨가 좀 낄 때, 뭐라고 하지?", line: 6 }
+    ],
     dialogue: [
       { who: "clerk", en: "Hey there! Let me know if you need any help.", ko: "안녕하세요! 도움 필요하시면 말씀하세요.",
         chunks: "Hey there! / Let me know / if you need‿any help.",
@@ -512,6 +526,11 @@
     category: "이동·쇼핑",
     title: "버스 타고 목적지 확인하기",
     situation: "처음 가는 도시에서 버스를 타요. 이 버스가 미술관에 가는지 확인하고, 어디서 내려야 하는지 기사님께 알려 달라고 하고 싶어요.",
+    hooks: [
+      { ko: "이 버스가 미술관에 가는지 물을 때, 뭐라고 하지?", line: 1 },
+      { ko: "버스에서 카드로 내도 되냐고 물을 때, 뭐라고 하지?", line: 3 },
+      { ko: "어디서 내려야 하는지 기사님께 알려 달라고 할 때, 뭐라고 하지?", line: 5 }
+    ],
     dialogue: [
       { who: "me", en: "Hi, does this bus go to the art museum?", ko: "안녕하세요, 이 버스 미술관 가요?",
         chunks: "Hi, does this bus / go to the art museum?",
@@ -728,6 +747,11 @@
     category: "이동·쇼핑",
     title: "옷 교환·환불하기",
     situation: "지난주에 산 바지가 작아요. 영수증을 들고 가게에 다시 와서, 더 큰 사이즈로 바꾸고 싶어요.",
+    hooks: [
+      { ko: "산 옷이 조금 작다고 할 때, 뭐라고 하지?", line: 3 },
+      { ko: "더 큰 사이즈로 바꿀 수 있냐고 물을 때, 뭐라고 하지?", line: 7 },
+      { ko: "번거롭게 해서 죄송하다고 할 때, 뭐라고 하지?", line: 9 }
+    ],
     dialogue: [
       { who: "clerk", en: "Hi there! What can I help you with?", ko: "안녕하세요! 뭘 도와드릴까요?",
         chunks: "Hi there! / What can‿I help‿you with?",

@@ -7,6 +7,11 @@
     category: "공항·숙소",
     title: "입국심사 통과하기",
     situation: "미국 공항 입국심사대 앞이에요. 심사관이 방문 목적, 머무는 기간, 지낼 곳을 물어봐요.",
+    hooks: [
+      { ko: "입국심사에서 휴가 왔다고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "얼마나 머무냐는 질문에 '열흘 정도요'는 뭐라고 하지?", line: 4 },
+      { ko: "어디서 지내냐는 질문에 시내 호텔이라고 할 때, 뭐라고 하지?", line: 7 }
+    ],
     dialogue: [
       { who: "officer", en: "Hi. Passport, please. What brings you to the States?", ko: "안녕하세요. 여권 주세요. 미국엔 무슨 일로 오셨어요?",
         chunks: "Hi. Passport, please. / What brings you to the States?",
@@ -172,6 +177,10 @@
     category: "공항·숙소",
     title: "호텔 체크인하기",
     situation: "호텔 프런트에 도착했어요. 예약한 이름을 말하고 체크인한 다음, 조식이 몇 시인지도 물어보려고 해요.",
+    hooks: [
+      { ko: "호텔 프런트에서 내 이름으로 예약했다고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "호텔 조식이 몇 시인지 물을 때, 뭐라고 하지?", line: 6 }
+    ],
     dialogue: [
       { who: "staff", en: "Hi, welcome in! Checking in?", ko: "안녕하세요, 어서 오세요! 체크인하시나요?",
         chunks: "Hi, welcome‿in! / Checking‿in?",
@@ -333,6 +342,11 @@
     category: "공항·숙소",
     title: "방에 문제가 있을 때",
     situation: "호텔 방에 들어왔더니 에어컨이 안 되고, 와이파이도 안 잡히고, 수건도 부족해요. 프런트에 전화했어요.",
+    hooks: [
+      { ko: "호텔 방 에어컨이 안 될 때, 뭐라고 하지?", line: 2 },
+      { ko: "호텔 방 와이파이가 안 될 때, 뭐라고 하지?", line: 4 },
+      { ko: "수건을 더 달라고 할 때, 뭐라고 하지?", line: 6 }
+    ],
     dialogue: [
       { who: "staff", en: "Front desk, this is Mike. How can I help?", ko: "프런트 데스크 마이크입니다. 무엇을 도와드릴까요?",
         chunks: "Front desk, / this‿is Mike. / How can‿I help?",
@@ -499,6 +513,11 @@
     category: "공항·숙소",
     title: "공항 카운터에서 짐 부치기",
     situation: "공항 항공사 카운터에서 체크인해요. 짐을 부치고 창가 자리를 부탁한 다음, 보조배터리를 기내에 들고 타도 되는지 물어보려고 해요.",
+    hooks: [
+      { ko: "공항 카운터에서 캐리어를 부치고 싶다고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "창가 자리로 받을 수 있냐고 물을 때, 뭐라고 하지?", line: 6 },
+      { ko: "보조배터리를 기내에 가지고 타도 되냐고 물을 때, 뭐라고 하지?", line: 8 }
+    ],
     dialogue: [
       { who: "staff", en: "Next, please! Where are you flying today?", ko: "다음 분이요! 오늘 어디로 가세요?",
         chunks: "Next, please! / Where‿are you flying today?",

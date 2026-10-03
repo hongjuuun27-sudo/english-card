@@ -7,6 +7,11 @@
     category: "생활·건강",
     title: "약국에서 증상 말하기",
     situation: "여행 중에 감기 기운이 있어요. 약국에서 약사에게 증상을 말하고 기침약을 추천받으려고 해요.",
+    hooks: [
+      { ko: "약국에서 감기에 걸린 것 같다고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "목이 아프고 콧물이 난다고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "약을 먹으면 졸리냐고 물을 때, 뭐라고 하지?", line: 9 }
+    ],
     dialogue: [
       { who: "pharmacist", en: "Hi there. What can I help you find?", ko: "안녕하세요. 뭘 찾으세요?",
         chunks: "Hi there. / What can‿I help‿you find?",

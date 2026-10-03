@@ -7,6 +7,10 @@
     category: "카페·식당",
     title: "카페에서 주문하기",
     situation: "동네 카페에서 따뜻한 아메리카노를 주문하려고 해요. 가져갈 거고, 직원이 이름도 물어볼 거예요.",
+    hooks: [
+      { ko: "카페에서 따뜻한 아메리카노 미디엄을 주문할 때, 뭐라고 하지?", line: 2 },
+      { ko: "포장해서 가져간다고 할 때, 뭐라고 하지?", line: 4 }
+    ],
     dialogue: [
       { who: "staff", en: "Hi there! What are we having today?", ko: "안녕하세요! 오늘은 뭘로 드릴까요?",
         chunks: "Hi there! / What‿are we having today?",
@@ -175,6 +179,10 @@
     category: "카페·식당",
     title: "음료가 잘못 나왔을 때",
     situation: "분명 아이스 라떼를 시켰는데, 직원이 내 이름을 부르며 따뜻한 라떼를 내밀어요. 기분 상하지 않게 말하고 싶어요.",
+    hooks: [
+      { ko: "음료가 잘못 나왔을 때, 기분 상하지 않게 뭐라고 하지?", line: 2 },
+      { ko: "직원이 미안해할 때, '괜찮아요, 천천히 하세요'는 뭐라고 하지?", line: 4 }
+    ],
     dialogue: [
       { who: "staff", en: "Medium hot latte for Jin?", ko: "따뜻한 라떼 미디엄, 진 님?",
         chunks: "Medium hot latte / for Jin?",
@@ -342,6 +350,10 @@
     category: "카페·식당",
     title: "식당에서 계산서 요청하기",
     situation: "친구와 식당에서 밥을 다 먹었어요. 직원에게 계산서를 달라고 하고, 각자 카드로 따로 계산하고 싶어요.",
+    hooks: [
+      { ko: "식당에서 계산서를 달라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "친구랑 따로따로 계산하겠다고 할 때, 뭐라고 하지?", line: 4 }
+    ],
     dialogue: [
       { who: "server", en: "How's everything tasting? Can I get you guys anything else?", ko: "음식은 괜찮으세요? 더 필요한 거 있으세요?",
         chunks: "How's everything tasting? / Can‿I get‿you guys / anything‿else?",
@@ -502,6 +514,11 @@
     category: "카페·식당",
     title: "인기 맛집에서 웨이팅하기",
     situation: "주말 아침, 줄이 긴 브런치집에 왔어요. 기다려야 하는지 묻고 대기 명단에 이름을 올린 뒤, 바깥 자리를 부탁하고 싶어요.",
+    hooks: [
+      { ko: "맛집에서 지금 기다려야 하냐고 물을 때, 뭐라고 하지?", line: 2 },
+      { ko: "대기 명단에 내 이름으로 올려 달라고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "바깥 자리에 앉아도 되냐고 물을 때, 뭐라고 하지?", line: 6 }
+    ],
     dialogue: [
       { who: "staff", en: "Hi, welcome in! How many in your party?", ko: "안녕하세요, 어서 오세요! 몇 분이세요?",
         chunks: "Hi, welcome‿in! / How many‿in your party?",

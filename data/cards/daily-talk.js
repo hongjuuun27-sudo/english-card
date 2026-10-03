@@ -7,6 +7,11 @@
     category: "일상 대화",
     title: "날씨로 스몰토크하기",
     situation: "아침에 엘리베이터에서 같은 층 이웃을 만났어요. 어색하지 않게 날씨 얘기로 가볍게 대화해요.",
+    hooks: [
+      { ko: "이웃이 날씨 얘기를 꺼낼 때, '그러니까요!'는 뭐라고 하지?", line: 2 },
+      { ko: "이따 비 온다고 했는지 물을 때, 뭐라고 하지?", line: 4 },
+      { ko: "우산 챙기라는 말에 '좋은 생각이에요'는 뭐라고 하지?", line: 6 }
+    ],
     dialogue: [
       { who: "neighbor", en: "Morning! Crazy weather we're having, huh?", ko: "좋은 아침이에요! 날씨 진짜 이상하죠?",
         chunks: "Morning! / Crazy weather we're having, / huh?",
@@ -170,6 +175,10 @@
     category: "일상 대화",
     title: "주말에 뭐 했는지 말하기",
     situation: "월요일 아침, 회사 동료가 주말 잘 보냈냐고 물어봐요. 주말에 한 일을 가볍게 이야기해요.",
+    hooks: [
+      { ko: "주말에 친구들이랑 등산 갔다고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "정상에서 본 경치가 끝내줬다고 할 때, 뭐라고 하지?", line: 5 }
+    ],
     dialogue: [
       { who: "coworker", en: "Hey! How was your weekend? Do anything fun?", ko: "안녕! 주말 어땠어? 재밌는 거 했어?",
         chunks: "Hey! How was‿your weekend? / Do anything fun?",
@@ -337,6 +346,10 @@
     category: "일상 대화",
     title: "처음 만난 사람과 인사하기",
     situation: "친구 에밀리의 생일 파티에서 처음 보는 사람이 말을 걸어왔어요. 자연스럽게 인사하고 나를 소개해요.",
+    hooks: [
+      { ko: "파티 주인공과 예전에 같이 일했다고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "처음 만난 사람에게 무슨 일 하냐고 물을 때, 뭐라고 하지?", line: 7 }
+    ],
     dialogue: [
       { who: "stranger", en: "Hey, I don't think we've met. I'm Jake.", ko: "안녕하세요, 처음 뵙는 것 같네요. 저는 제이크예요.",
         chunks: "Hey, / I don't think we've met. / I'm Jake.",
@@ -500,6 +513,11 @@
     category: "일상 대화",
     title: "친구와 주말 약속 잡기",
     situation: "오랜만에 친구한테서 연락이 왔어요. 이번 주말에 만날 날짜와 갈 곳을 정하려고 해요.",
+    hooks: [
+      { ko: "친구에게 뭐 생각해 둔 거 있냐고 물을 때, 뭐라고 하지?", line: 2 },
+      { ko: "좋다며 토요일 6시쯤 어떠냐고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "혹시 뭐 바뀌면 알려 달라고 할 때, 뭐라고 하지?", line: 7 }
+    ],
     dialogue: [
       { who: "friend", en: "Hey! It's been forever. Are you free this weekend?", ko: "야! 진짜 오랜만이다. 이번 주말에 시간 돼?",
         chunks: "Hey! It's been forever. / Are you free this weekend?",
