@@ -196,7 +196,8 @@
       { who: "driver", en: "You got it. … Alright, here we are!", ko: "알겠습니다. … 자, 도착했습니다!",
         chunks: "You got‿it. … / Alright, here we are!",
         tips: [{ target: "got it", ko: "t가 굴러 '가릿'처럼 이어져요." },
-               { target: "here we are", ko: "'다 왔어요'라는 뜻. are에 힘을 줘요." }] },
+               { target: "here we are", ko: "'다 왔어요'라는 뜻. are에 힘을 줘요." }],
+        soloChunks: [1, 2] },   // "…" 옆 경계 — 음성의 단어 시간이 "…" 근처에서 밀려 잘라 쓰면 Alright이 앞 청크로 감(2026-10-03 신고)
       { who: "me", en: "Thanks, have a good one!", ko: "감사해요, 좋은 하루 보내세요!",
         chunks: "Thanks, / have‿a good‿one!",
         tips: [{ target: "good one", ko: "d가 one에 붙어 '구던'처럼 이어져요." }] }
@@ -350,7 +351,8 @@
       { who: "clerk", en: "Let me check in the back. … Yep, here's a medium!", ko: "창고에 확인해 볼게요. … 네, 미디엄 여기 있어요!",
         chunks: "Let me check‿in the back. … / Yep, here's‿a medium!",
         tips: [{ target: "check in", ko: "k가 in에 붙어 '체킨'처럼 이어져요." },
-               { target: "here's a", ko: "s가 a에 붙어 '히어저'처럼 이어져요." }] },
+               { target: "here's a", ko: "s가 a에 붙어 '히어저'처럼 이어져요." }],
+        soloChunks: [1, 2] },   // "…" 옆 경계(카드 8 대사 5와 같은 문제)
       { who: "me", en: "Awesome. Where are the fitting rooms?", ko: "좋아요. 탈의실은 어디예요?",
         chunks: "Awesome. / Where‿are the fitting rooms?",
         tips: [{ target: "Where are", ko: "r로 이어져 '웨어라'처럼 붙어요." },

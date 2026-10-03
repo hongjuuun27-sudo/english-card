@@ -67,7 +67,8 @@
                      { target: "went totally", ko: "t가 겹쳐 '웬토럴리'처럼 이어져요." }] },
             { chunks: "The officer asked / why I was there, / and I just said, / “Uh… America?”",
               ko: "심사관이 왜 왔냐고 물었는데, 나는 그냥 “어… 미국이요?” 했어.",
-              tips: [{ target: "officer", ko: "'오'보다 '아'에 가깝게 '아피서r', 첫음절에 힘." }] },
+              tips: [{ target: "officer", ko: "'오'보다 '아'에 가깝게 '아피서r', 첫음절에 힘." }],
+              soloChunks: [4] },   // "Uh…" 때문에 음성의 단어 시간이 밀릴 수 있어서 마지막 청크는 따로
             { chunks: "He laughed‿and asked again, / so I finally / pulled myself together / and said, / “I'm here‿on vacation.”",
               ko: "심사관이 웃으면서 다시 물어서, 겨우 정신 차리고 “휴가 왔어요.” 했지.",
               tips: [{ target: "laughed and", ko: "ed가 t 소리로 and에 붙어 '래프탠'처럼." },
