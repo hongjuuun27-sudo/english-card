@@ -126,7 +126,9 @@
               tips: [{ target: "embarrassing", ko: "'배'에 힘을 줘요. 임'배'러싱." }] }
           ]
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c1-e3",
         phrase: "Sure thing.",
@@ -174,8 +176,7 @@
           ]
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 2,
@@ -262,6 +263,52 @@
         }
       },
       {
+        id: "c2-e3",
+        phrase: "No worries, take your time.",
+        teaser: "상대가 늦거나 헤매서 미안해할 때, '괜찮아요, 천천히 하세요'를 한 문장으로?",
+        ko: "'괜찮아요, 천천히 하세요'라는 뜻이에요. 상대가 늦거나 뭔가 찾느라 헤매서 미안해할 때, 재촉하지 않고 여유를 주는 한 문장이에요. No worries만 따로 쓰면 사과·고마움 둘 다에 '괜찮아요', take your time만 쓰면 '천천히 해요'. 비슷한 표현: No rush. / Take all the time you need.",
+        examples: [
+          { en: "No worries, take your time. We're not in a rush.", ko: "괜찮아요, 천천히 하세요. 저희 급하지 않아요.",
+            chunks: "No worries, / take‿your time. / We're not‿in‿a rush.",
+            tips: [{ target: "take your", ko: "k가 your에 붙어 '테이큐어r'처럼 이어져요." }] },
+          { en: "No worries, take your time with the report.", ko: "괜찮아요, 보고서는 천천히 해요.",
+            chunks: "No worries, / take‿your time / with the report.",
+            tips: [{ target: "report", ko: "두 번째 음절 port에 힘을 줘서 '리포r트'처럼." }] },
+          { en: "No worries, take your time. I'll grab us a table.", ko: "괜찮아, 천천히 와. 내가 자리 잡아 둘게.",
+            chunks: "No worries, / take‿your time. / I'll grab‿us‿a table.",
+            tips: [{ target: "grab us a", ko: "세 단어를 한 번에 '그래버서'처럼 이어요." }] },
+          { en: "No worries, take your time. I'm just browsing anyway.", ko: "괜찮아요, 천천히 찾아보세요. 어차피 그냥 구경 중이에요.",
+            chunks: "No worries, / take‿your time. / I'm just browsing anyway.",
+            tips: [{ target: "browsing", ko: "'구경하다'. br은 입술을 모았다가 '브라우징'처럼." }] },
+          { en: "No worries, take your time. There's no one behind me.", ko: "괜찮아요, 천천히 하세요. 뒤에 아무도 없어요.",
+            chunks: "No worries, / take‿your time. / There's no one behind me.",
+            tips: [{ target: "There's", ko: "th는 혀끝을 이 사이에 살짝 대고 '데어r즈'처럼." }] }
+        ],
+        story: {
+          en: "Yesterday my friend texted me that she was gonna be forty minutes late to dinner. She kept saying sorry, so I just wrote back, “No worries, take your time.” Then I ordered appetizers and ate, like, all of them before she got there. So honestly, her being late worked out great for me.",
+          ko: "어제 친구가 저녁 약속에 40분 늦을 것 같다고 문자를 보냈어. 계속 미안하다고 하길래 그냥 “괜찮아, 천천히 와.” 하고 답장했지. 그러고 애피타이저를 시켜서 친구 오기 전에 거의 다 먹어 버렸어. 솔직히 친구가 늦은 게 나한텐 완전 잘된 일이었지.",
+          sentences: [
+            { chunks: "Yesterday my friend texted me / that she was gonna be / forty minutes late to dinner.",
+              ko: "어제 친구가 저녁 약속에 40분 늦을 것 같다고 문자를 보냈어.",
+              tips: [{ target: "texted", ko: "xt 뒤 ed는 '텍스티드'처럼 짧게." },
+                     { target: "forty", ko: "t가 굴러 '포r리'처럼 들려요." }] },
+            { chunks: "She kept saying sorry, / so I just wrote back, / “No worries, / take‿your time.”",
+              ko: "계속 미안하다고 하길래 그냥 “괜찮아, 천천히 와.” 하고 답장했지.",
+              tips: [{ target: "wrote back", ko: "wrote의 t는 멈추기만 하고 바로 back으로." }] },
+            { chunks: "Then I ordered‿appetizers / and ate, like, / all of them / before she got there.",
+              ko: "그러고 애피타이저를 시켜서 친구 오기 전에 거의 다 먹어 버렸어.",
+              tips: [{ target: "appetizers", ko: "'애'에 힘을 주고 t는 굴러 '애퍼라이저r즈'." },
+                     { target: "got there", ko: "got의 t는 멈추듯 짧게, 바로 there로." }] },
+            { chunks: "So honestly, / her being late / worked‿out great for me.",
+              ko: "솔직히 친구가 늦은 게 나한텐 완전 잘된 일이었지.",
+              tips: [{ target: "honestly", ko: "h는 소리 나지 않아요. '아니스틀리'." },
+                     { target: "worked out", ko: "ed가 t 소리로 out에 붙어 '웍타웃'처럼." }] }
+          ]
+        }
+      }
+    ],
+    extraExpressions: [
+      {
         id: "c2-e2",
         phrase: "My bad.",
         teaser: "친구한테 '아, 내 실수!' 하고 가볍게 사과할 때, 딱 두 단어?",
@@ -305,51 +352,8 @@
                      { target: "grab them", ko: "them은 약하게 '덤'처럼 짧게." }] }
           ]
         }
-      },
-      {
-        id: "c2-e3",
-        phrase: "No worries.",
-        teaser: "누가 미안하다고 할 때 '괜찮아요, 신경 쓰지 마세요'를 쿨하게 한마디로?",
-        ko: "'괜찮아요, 신경 쓰지 마세요'라는 뜻이에요. 상대가 사과할 때도, 고마워할 때도 둘 다 쓸 수 있어서 정말 편해요. 캐주얼하고 아주 흔해요. 비슷한 표현: No problem. / All good.",
-        examples: [
-          { en: "No worries, we can push the meeting to tomorrow.", ko: "괜찮아요, 회의는 내일로 미루면 돼요.",
-            chunks: "No worries, / we can push the meeting / to tomorrow.",
-            tips: [{ target: "push the meeting", ko: "'회의를 미루다'. push의 sh는 짧게 끊어요." }] },
-          { en: "No worries, I'll just catch the next bus.", ko: "괜찮아요, 다음 버스 타면 돼요.",
-            chunks: "No worries, / I'll just catch the next bus.",
-            tips: [{ target: "next bus", ko: "next의 t는 거의 빠지고 '넥스버스'처럼." }] },
-          { en: "No worries, you can pay me back later.", ko: "괜찮아, 나중에 갚아.",
-            chunks: "No worries, / you can pay me back later.",
-            tips: [{ target: "pay me back", ko: "'갚다'. back에 힘을 줘요." },
-                   { target: "later", ko: "t가 굴러 '레이러r'처럼 들려요." }] },
-          { en: "No worries, the food was still really good.", ko: "괜찮아요, 음식은 그래도 정말 맛있었어요.",
-            chunks: "No worries, / the food was still really good.",
-            tips: [{ target: "really", ko: "r로 시작해 l로 이어져요. 혀를 말았다가 윗니 뒤로." }] },
-          { en: "No worries, I found my room key in my bag.", ko: "괜찮아요, 방 키 가방에서 찾았어요.",
-            chunks: "No worries, / I found my room key / in my bag.",
-            tips: [{ target: "found my", ko: "d는 거의 안 들리고 바로 my로 '파운마이'처럼." }] }
-        ],
-        story: {
-          en: "Yesterday my friend showed up forty minutes late to dinner, and she looked super stressed. I just told her, “No worries, I already ordered appetizers!” We ended up talking for, like, three hours, so the late start didn't even matter.",
-          ko: "어제 친구가 저녁 약속에 40분이나 늦게 왔는데, 엄청 스트레스받은 얼굴이더라. 그래서 그냥 “괜찮아, 애피타이저 벌써 시켜놨어!” 했지. 결국 한 세 시간은 수다 떨었으니까, 늦게 시작한 건 아무 상관도 없었어.",
-          sentences: [
-            { chunks: "Yesterday my friend showed‿up / forty minutes late to dinner, / and she looked super stressed.",
-              ko: "어제 친구가 저녁 약속에 40분이나 늦게 왔는데, 엄청 스트레스받은 얼굴이더라.",
-              tips: [{ target: "showed up", ko: "'나타났다'. d가 up에 붙어 '쇼우덥'처럼." },
-                     { target: "forty", ko: "t가 굴러 '포r리'처럼 들려요." }] },
-            { chunks: "I just told‿her, / “No worries, / I already ordered‿appetizers!”",
-              ko: "그래서 그냥 “괜찮아, 애피타이저 벌써 시켜놨어!” 했지.",
-              tips: [{ target: "told her", ko: "h가 약해져 '톨더r'처럼 이어져요." },
-                     { target: "appetizers", ko: "'애'에 힘을 주고 t는 굴러 '애퍼라이저r즈'." }] },
-            { chunks: "We ended‿up talking for, / like, three hours, / so the late start / didn't‿even matter.",
-              ko: "결국 한 세 시간은 수다 떨었으니까, 늦게 시작한 건 아무 상관도 없었어.",
-              tips: [{ target: "ended up", ko: "'결국 ~하게 됐다'. d가 up에 붙어 '엔디덥'처럼." },
-                     { target: "didn't even", ko: "t가 약해져 '디든이븐'처럼 이어져요." }] }
-          ]
-        }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 3,
@@ -390,46 +394,93 @@
     expressions: [
       {
         id: "c3-e1",
-        phrase: "the check",
-        teaser: "식당에서 '계산서 주세요' 할 때, 미국에선 이 단어를 더 많이 써요. 뭘까?",
-        ko: "식당의 '계산서'는 미국에서 보통 the check라고 해요. bill도 통하지만 미국에선 check가 훨씬 흔해요. 멀리 있는 직원에게 허공에 사인하는 손짓만 해도 알아들어요. 비슷한 표현: Check, please. / Can we get the bill?",
+        phrase: "Could we get the check?",
+        teaser: "식당에서 다 먹고 '계산서 좀 주시겠어요?'를 정중하게 한 문장으로?",
+        forms: ["Could I get the check?"],
+        ko: "'계산서 좀 주시겠어요?'라는 뜻이에요. 식당에서 다 먹고 계산서를 달라고 할 때 가장 무난한 한 문장이에요. 미국에선 계산서를 bill보다 check라고 많이 하고, 혼자면 Could I get the check?라고 해요. 멀리 있는 직원에게는 허공에 사인하는 손짓만 해도 알아들어요. 비슷한 표현: Check, please. / Can we get the bill?",
         examples: [
           { en: "Excuse me, could we get the check, please?", ko: "저기요, 계산서 좀 주시겠어요?",
             chunks: "Excuse me, / could we get the check, / please?",
             tips: [{ target: "could we", ko: "could의 l은 소리 나지 않아요. '쿳위'처럼." }] },
-          { en: "Let's grab the check and head to the movie.", ko: "계산하고 영화 보러 가자.",
-            chunks: "Let's grab the check / and head to the movie.",
-            tips: [{ target: "grab the", ko: "b는 멈추듯 짧게, 바로 the로 넘어가요." }] },
-          { en: "My boss always picks up the check at team dinners.", ko: "우리 팀장님은 회식 때 항상 계산하셔.",
-            chunks: "My boss always / picks‿up the check / at team dinners.",
-            tips: [{ target: "picks up", ko: "s가 up에 붙어 '픽썹'처럼 이어져요." }] },
-          { en: "The check came, and it was way more than we expected.", ko: "계산서가 나왔는데 생각보다 훨씬 많이 나왔어.",
-            chunks: "The check came, / and‿it was way more / than we expected.",
-            tips: [{ target: "way more", ko: "'훨씬 더'. way에 힘을 줘요." }] },
-          { en: "Can you split the check three ways?", ko: "계산서를 세 명으로 나눠 주실 수 있어요?",
-            chunks: "Can you split the check / three ways?",
-            tips: [{ target: "three", ko: "th는 혀끝을 이 사이에 물고 바람을 내요. '쓰리'와 달라요." }] }
+          { en: "Could we get the check? We have to catch a movie.", ko: "계산서 좀 주시겠어요? 영화 시간이 다 돼서요.",
+            chunks: "Could we get the check? / We have to / catch‿a movie.",
+            tips: [{ target: "have to", ko: "빠르게 말하면 '해프터'처럼 붙어요." }] },
+          { en: "Could we get the check when you have a sec?", ko: "시간 되실 때 계산서 좀 주시겠어요?",
+            chunks: "Could we get the check / when you have‿a sec?",
+            tips: [{ target: "sec", ko: "second를 줄인 말로 '잠깐'. '쎅'처럼 짧게." }] },
+          { en: "Last round for us. Could we get the check?", ko: "이게 마지막 잔이에요. 계산서 주시겠어요?",
+            chunks: "Last round for us. / Could we get the check?",
+            tips: [{ target: "Last round", ko: "last의 t는 거의 빠지고 '래스라운'처럼." }] },
+          { en: "Could I get the check? My lunch break is almost over.", ko: "계산서 좀 주시겠어요? 점심시간이 거의 끝나서요.",
+            chunks: "Could‿I get the check? / My lunch break / is‿almost‿over.",
+            tips: [{ target: "Could I", ko: "d가 I에 붙어 '쿠다이'처럼 이어져요." }] }
         ],
         story: {
           sentences: [
             { chunks: "So last Friday / I took my parents / to this fancy steak place / for their anniversary.",
               ko: "지난 금요일에 부모님 결혼기념일이라 고급 스테이크집에 모시고 갔어.",
               tips: [{ target: "anniversary", ko: "'버'에 힘을 줘요. 애니'버r'써리." }] },
-            { chunks: "When the check came, / my dad grabbed‿it super fast / and refused to let me pay.",
-              ko: "계산서가 나오자 아빠가 엄청 빨리 낚아채더니 내가 못 내게 하셨어.",
-              tips: [{ target: "grabbed it", ko: "d가 it에 붙어 '그랩딧'처럼 이어져요." }] },
-            { chunks: "We literally fought‿over it / at the table / like we were / in‿a comedy show.",
-              ko: "우리 진짜 무슨 코미디 쇼처럼 테이블에서 서로 내겠다고 싸웠다니까.",
-              tips: [{ target: "literally", ko: "t가 굴러 '리러럴리'처럼 들려요." },
-                     { target: "fought over", ko: "t가 굴러 '퍼러버r'처럼 이어져요." }] },
-            { chunks: "In the end, / I snuck‿up to the counter / and paid / while he was‿in the bathroom.",
-              ko: "결국 아빠가 화장실 간 사이에 몰래 카운터에 가서 계산했지.",
-              tips: [{ target: "snuck up", ko: "'몰래 갔다'. k가 up에 붙어 '스너컵'처럼." }] }
+            { chunks: "After dessert, / I waved‿at the server / and said, / “Could we get the check?”",
+              ko: "디저트까지 먹고 직원한테 손을 흔들면서 “계산서 좀 주시겠어요?” 했지.",
+              tips: [{ target: "waved at", ko: "d가 at에 붙어 '웨이브댓'처럼 이어져요." }] },
+            { chunks: "Before she even came back, / my dad snuck‿up / to the counter / and paid.",
+              ko: "근데 직원이 오기도 전에 아빠가 몰래 카운터에 가서 계산해 버리셨어.",
+              tips: [{ target: "snuck up", ko: "'몰래 갔다'. k가 up에 붙어 '스너컵'처럼." }] },
+            { chunks: "I was supposed to / treat them, / but he totally / beat me to‿it!",
+              ko: "내가 사 드리기로 했는데, 아빠가 완전 선수 치셨다니까!",
+              tips: [{ target: "supposed to", ko: "d는 거의 빠지고 '써포즈투'처럼 이어져요." },
+                     { target: "beat me to it", ko: "'선수를 치다'. beat의 t는 멈추듯 짧게." }] }
           ],
-          en: "So last Friday I took my parents to this fancy steak place for their anniversary. When the check came, my dad grabbed it super fast and refused to let me pay. We literally fought over it at the table like we were in a comedy show. In the end, I snuck up to the counter and paid while he was in the bathroom.",
-          ko: "지난 금요일에 부모님 결혼기념일이라 고급 스테이크집에 모시고 갔거든. 계산서가 나오자마자 아빠가 엄청 빨리 낚아채더니 나보고 절대 못 내게 하시는 거야. 진짜 무슨 코미디 쇼처럼 테이블에서 계산서 가지고 싸웠어. 결국 아빠 화장실 가신 사이에 몰래 카운터 가서 계산했지."
+          en: "So last Friday I took my parents to this fancy steak place for their anniversary. After dessert, I waved at the server and said, “Could we get the check?” Before she even came back, my dad snuck up to the counter and paid. I was supposed to treat them, but he totally beat me to it!",
+          ko: "지난 금요일에 부모님 결혼기념일이라 고급 스테이크집에 모시고 갔거든. 디저트까지 먹고 직원한테 손 흔들면서 “계산서 좀 주시겠어요?” 했지. 근데 직원이 오기도 전에 아빠가 몰래 카운터 가서 계산해 버리신 거야. 내가 사 드리기로 했는데, 완전 선수 치셨다니까!"
         }
       },
+      {
+        id: "c3-e3",
+        phrase: "I'll be right back.",
+        teaser: "잠깐 자리를 비우면서 '금방 올게요'라고 할 때, 뭐라고 하지?",
+        ko: "'금방 올게요'라는 뜻이에요. 잠깐 자리를 비울 때 거의 매번 하는 말이에요(식당 직원이 뭔가 가지러 갈 때도 자주 들어요). 뒤에 with ~를 붙이면 '~ 가지고 금방 올게요'. 문자에선 brb로 줄여 쓰기도 해요. 비슷한 표현: Give me a sec. / Back in a minute.",
+        examples: [
+          { en: "Sorry, I need to take this call. I'll be right back.", ko: "죄송해요, 이 전화 좀 받아야 해서요. 금방 올게요.",
+            chunks: "Sorry, I need to / take this call. / I'll be right back.",
+            tips: [{ target: "take this call", ko: "'이 전화 받다'. this의 th는 혀끝을 살짝 물고." },
+                   { target: "right back", ko: "right의 t는 멈추기만 하고 바로 back으로." }] },
+          { en: "Hold on, I'll be right back. I left my phone in the car.", ko: "잠깐만, 금방 올게. 폰을 차에 두고 왔어.",
+            chunks: "Hold‿on, I'll be right back. / I left my phone / in the car.",
+            tips: [{ target: "Hold on", ko: "d가 on에 붙어 '홀돈'처럼 이어져요." }] },
+          { en: "Save my seat? I'll be right back.", ko: "자리 좀 맡아 줄래? 금방 올게.",
+            chunks: "Save my seat? / I'll be right back.",
+            tips: [{ target: "Save my seat?", ko: "'자리 맡아 줘'. 끝을 올려서 부탁하듯." }] },
+          { en: "I'll be right back. I just need to grab my charger.", ko: "금방 올게. 충전기만 좀 가져올게.",
+            chunks: "I'll be right back. / I just need to / grab my charger.",
+            tips: [{ target: "charger", ko: "ch는 입술을 내밀고 '차r저'처럼." }] },
+          { en: "Could you watch my bag? I'll be right back.", ko: "제 가방 좀 봐 주실래요? 금방 올게요.",
+            chunks: "Could you watch my bag? / I'll be right back.",
+            tips: [{ target: "Could you", ko: "d와 y가 만나 '쿠쥬'처럼 소리 나요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "So yesterday / I was working‿on my laptop / at‿a café, / and I asked the guy / next to me, / “Can you watch my stuff? / I'll be right back.”",
+              ko: "어제 카페에서 노트북으로 일하다가 옆 사람한테 “제 짐 좀 봐 주실래요? 금방 올게요.” 했거든.",
+              tips: [{ target: "working on", ko: "g가 on에 붙어 '워r킹온'처럼." },
+                     { target: "watch my stuff", ko: "'내 짐 좀 봐 줘'. stuff에 힘을 줘요." }] },
+            { chunks: "Then I / ran‿into‿an old friend outside / and ended‿up chatting / for, like, thirty minutes.",
+              ko: "그러고 밖에서 옛날 친구를 우연히 만나서 한 30분이나 수다를 떨게 됐어.",
+              tips: [{ target: "ran into an", ko: "'우연히 만났다'. '래닌투언'처럼 한 번에." },
+                     { target: "ended up", ko: "d가 up에 붙어 '엔디덥'처럼." }] },
+            { chunks: "When I finally came back, / he was still sitting there / guarding my laptop / like‿a bodyguard.",
+              ko: "드디어 돌아왔더니, 그 사람이 아직도 경호원처럼 내 노트북을 지키고 앉아 있더라.",
+              tips: [{ target: "sitting there", ko: "tt가 굴러 '씨링 데어r'처럼." }] },
+            { chunks: "I felt so bad / that I bought‿him a coffee.",
+              ko: "너무 미안해서 커피 한 잔 사 줬어.",
+              tips: [{ target: "bought him", ko: "h가 약해져 '바림'처럼 이어져요." }] }
+          ],
+          en: "So yesterday I was working on my laptop at a café, and I asked the guy next to me, “Can you watch my stuff? I'll be right back.” Then I ran into an old friend outside and ended up chatting for, like, thirty minutes. When I finally came back, he was still sitting there guarding my laptop like a bodyguard. I felt so bad that I bought him a coffee.",
+          ko: "어제 카페에서 노트북으로 일하다가 옆에 있던 남자한테 “제 물건 좀 봐 주실래요? 금방 올게요.” 했거든. 그러고 밖에서 옛날 친구를 만나서 한 30분을 수다 떨어 버린 거야. 겨우 돌아왔더니 그 사람이 경호원처럼 내 노트북을 아직도 지키고 있더라. 너무 미안해서 커피 한 잔 사 드렸어."
+        }
+      }
+    ],
+    extraExpressions: [
       {
         id: "c3-e2",
         phrase: "separate",
@@ -471,52 +522,8 @@
           en: "Okay, so I went out for dinner with, like, eight coworkers last week. When the server asked if we wanted separate checks, everyone said yes at the same time. The poor guy spent twenty minutes figuring out who ordered what. Next time, I'm just gonna suggest we split it evenly.",
           ko: "지난주에 동료 한 여덟 명이랑 저녁 먹으러 갔거든. 직원이 계산서 따로 드릴까요 하니까 다들 동시에 네! 한 거야. 그 불쌍한 직원은 누가 뭘 시켰는지 알아내느라 20분을 썼어. 다음엔 그냥 똑같이 나눠 내자고 해야겠어."
         }
-      },
-      {
-        id: "c3-e3",
-        phrase: "be right back",
-        teaser: "직원이 뭔가 가지러 가면서 '금방 올게요' 할 때 꼭 하는 말은?",
-        ko: "'금방 올게요'라는 뜻이에요. 직원이 뭔가 가지러 갈 때 거의 매번 하는 말이에요. 문자에선 brb로 줄여 쓰기도 해요. 비슷한 표현: Give me a sec. / Back in a minute.",
-        examples: [
-          { en: "I'll be right back with your drinks.", ko: "음료 금방 가져다 드릴게요.",
-            chunks: "I'll be right back / with your drinks.",
-            tips: [{ target: "right back", ko: "right의 t는 멈추기만 하고 바로 back으로." }] },
-          { en: "Hold on, I'll be right back. I left my phone in the car.", ko: "잠깐만, 금방 올게. 폰을 차에 두고 왔어.",
-            chunks: "Hold‿on, I'll be right back. / I left my phone / in the car.",
-            tips: [{ target: "Hold on", ko: "d가 on에 붙어 '홀돈'처럼 이어져요." }] },
-          { en: "I'm grabbing a coffee, be right back!", ko: "커피 좀 가지러 가요, 금방 올게요!",
-            chunks: "I'm grabbing‿a coffee, / be right back!",
-            tips: [{ target: "grabbing a", ko: "g가 a에 붙어 '그래빙어'처럼 이어져요." }] },
-          { en: "The manager will be right back to help you.", ko: "매니저가 곧 돌아와서 도와드릴 거예요.",
-            chunks: "The manager will be right back / to help‿you.",
-            tips: [{ target: "help you", ko: "p가 you에 붙어 '헬퓨'처럼 이어져요." }] },
-          { en: "Could you watch my bag? I'll be right back.", ko: "제 가방 좀 봐 주실래요? 금방 올게요.",
-            chunks: "Could you watch my bag? / I'll be right back.",
-            tips: [{ target: "Could you", ko: "d와 y가 만나 '쿠쥬'처럼 소리 나요." }] }
-        ],
-        story: {
-          sentences: [
-            { chunks: "So yesterday / I was working‿on my laptop / at‿a café, / and I asked the guy / next to me, / “Can you watch my stuff? / I'll be right back.”",
-              ko: "어제 카페에서 노트북으로 일하다가 옆 사람한테 “제 짐 좀 봐 주실래요? 금방 올게요.” 했거든.",
-              tips: [{ target: "working on", ko: "g가 on에 붙어 '워r킹온'처럼." },
-                     { target: "watch my stuff", ko: "'내 짐 좀 봐 줘'. stuff에 힘을 줘요." }] },
-            { chunks: "Then I / ran‿into‿an old friend outside / and ended‿up chatting / for, like, thirty minutes.",
-              ko: "그러고 밖에서 옛날 친구를 우연히 만나서 한 30분이나 수다를 떨게 됐어.",
-              tips: [{ target: "ran into an", ko: "'우연히 만났다'. '래닌투언'처럼 한 번에." },
-                     { target: "ended up", ko: "d가 up에 붙어 '엔디덥'처럼." }] },
-            { chunks: "When I finally came back, / he was still sitting there / guarding my laptop / like‿a bodyguard.",
-              ko: "드디어 돌아왔더니, 그 사람이 아직도 경호원처럼 내 노트북을 지키고 앉아 있더라.",
-              tips: [{ target: "sitting there", ko: "tt가 굴러 '씨링 데어r'처럼." }] },
-            { chunks: "I felt so bad / that I bought‿him a coffee.",
-              ko: "너무 미안해서 커피 한 잔 사 줬어.",
-              tips: [{ target: "bought him", ko: "h가 약해져 '바림'처럼 이어져요." }] }
-          ],
-          en: "So yesterday I was working on my laptop at a café, and I asked the guy next to me, “Can you watch my stuff? I'll be right back.” Then I ran into an old friend outside and ended up chatting for, like, thirty minutes. When I finally came back, he was still sitting there guarding my laptop like a bodyguard. I felt so bad that I bought him a coffee.",
-          ko: "어제 카페에서 노트북으로 일하다가 옆에 있던 남자한테 “제 물건 좀 봐 주실래요? 금방 올게요.” 했거든. 그러고 밖에서 옛날 친구를 만나서 한 30분을 수다 떨어 버린 거야. 겨우 돌아왔더니 그 사람이 경호원처럼 내 노트북을 아직도 지키고 있더라. 너무 미안해서 커피 한 잔 사 드렸어."
-        }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 13,
@@ -651,7 +658,9 @@
           en: "On the subway yesterday, an older lady asked me, “Do you mind if I sit here?” and pointed at the seat my bag was on. I was so embarrassed that I grabbed my bag and almost spilled my coffee on her. She just laughed and offered me a piece of candy. Honestly, she was way cooler than me.",
           ko: "어제 지하철에서 어떤 할머니가 내 가방이 놓인 자리를 가리키면서 “여기 앉아도 될까요?” 하셨어. 너무 민망해서 가방을 홱 치우다가 할머니한테 커피를 쏟을 뻔했지. 할머니는 그냥 웃으시면서 사탕 하나를 주셨어. 솔직히 나보다 훨씬 멋있으셨어."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c13-e3",
         phrase: "make a note of ~",
@@ -697,8 +706,7 @@
           ko: "동료가 땅콩 알레르기가 있다고 해서 팀 점심 때 기억해 두겠다고 했거든. 그러고는 완전 까먹고 다 같이 팟타이를 시켜 버렸어. 다행히 동료가 바로 알아채서 스프링롤만 먹었어. 이제 내 모니터엔 커다란 글씨로 “땅콩 금지”라고 쓴 포스트잇이 붙어 있어."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 20,
@@ -822,34 +830,35 @@
       },
       {
         id: "c20-e3",
-        phrase: "on the side",
-        teaser: "'소스는 따로 주세요'의 '따로', 세 단어로?",
-        ko: "'따로(곁들여서)'라는 뜻이에요. 소스·드레싱을 음식 위에 붓지 말고 옆에 따로 달라고 할 때 써요. 'a side of fries'처럼 side만 쓰면 '곁들이 메뉴'. 비슷한 표현: separately / in a separate cup",
+        phrase: "Could I get ~ on the side?",
+        teaser: "소스를 음식 위에 붓지 말고 '따로 주세요'라고 할 때, 뭐라고 하지?",
+        ko: "'~는 따로 주시겠어요?'라는 뜻이에요. 소스·드레싱·토핑을 음식 위에 붓지 말고 옆에 따로 달라고 할 때 통째로 쓰는 문장이에요. on the side가 '따로(곁들여서)'이고, 'a side of fries'처럼 side만 쓰면 '곁들이 메뉴'예요. 비슷한 표현: Can I have ~ separately? / Could you put ~ on the side?",
         examples: [
-          { en: "Can I get the dressing on the side?", ko: "드레싱은 따로 주실 수 있어요?",
-            chunks: "Can‿I get the dressing / on the side?",
+          { en: "Could I get the dressing on the side?", ko: "드레싱은 따로 주실 수 있어요?",
+            chunks: "Could‿I get the dressing / on the side?",
             tips: [{ target: "dressing", ko: "'드레싱', 첫음절에 힘." }] },
-          { en: "I'd like gravy on the side, please.", ko: "그레이비는 따로 주세요.",
-            chunks: "I'd like gravy / on the side, please.",
-            tips: [{ target: "gravy", ko: "'그레이비', 첫음절에 힘." }] },
-          { en: "She wants the syrup on the side.", ko: "그녀는 시럽을 따로 원해요.",
-            chunks: "She wants the syrup / on the side.",
+          { en: "Could I get the syrup on the side, please?", ko: "시럽은 따로 주실 수 있어요?",
+            chunks: "Could‿I get the syrup / on the side, please?",
             tips: [{ target: "syrup", ko: "'시럽'보다 '써럽'에 가깝게." }] },
-          { en: "No butter on top, just on the side.", ko: "버터는 위에 말고 따로 주세요.",
-            chunks: "No butter on top, / just on the side.",
-            tips: [{ target: "butter on", ko: "tt가 굴러 '버러론'처럼." }] },
-          { en: "Is it okay to get the hot sauce on the side?", ko: "핫소스는 따로 받아도 될까요?",
-            chunks: "Is‿it okay / to get the hot sauce / on the side?",
-            tips: [{ target: "Is it okay", ko: "s가 it에 붙어 '이짓 오케이'처럼." }] }
+          { en: "Could I get some extra salsa on the side?", ko: "살사를 좀 더 따로 주실 수 있어요?",
+            chunks: "Could‿I get some extra salsa / on the side?",
+            tips: [{ target: "salsa", ko: "l을 살려서 '쌀사'처럼." }] },
+          { en: "Could I get the gravy on the side? I'm trying to eat lighter.", ko: "그레이비는 따로 주실래요? 좀 가볍게 먹으려고요.",
+            chunks: "Could‿I get the gravy / on the side? / I'm trying to eat lighter.",
+            tips: [{ target: "gravy", ko: "'그레이비', 첫음절에 힘." },
+                   { target: "lighter", ko: "gh는 소리 나지 않고 t가 굴러 '라이러r'처럼." }] },
+          { en: "Could I get a little whipped cream on the side?", ko: "휘핑크림은 조금만 따로 주실 수 있어요?",
+            chunks: "Could‿I get‿a little / whipped cream / on the side?",
+            tips: [{ target: "whipped", ko: "wh는 w 소리, ed는 t 소리로 '윕트'." }] }
         ],
         story: {
           sentences: [
             { chunks: "My friend Jess / is the pickiest‿eater I know.",
               ko: "내 친구 제스는 내가 아는 사람 중에 제일 입맛이 까다로워.",
               tips: [{ target: "pickiest eater", ko: "t가 eater에 붙어 '피키에스티러r'처럼." }] },
-            { chunks: "At every restaurant, / she orders everything on the side, / even the cheese on her burger.",
-              ko: "식당에 가면 뭐든 따로 달라고 해, 버거 치즈까지.",
-              tips: [{ target: "orders everything", ko: "s가 everything에 붙어 '오r더r제브리띵'처럼." }] },
+            { chunks: "At every restaurant, / her first question is, / “Could‿I get that / on the side?”",
+              ko: "식당에 가면 첫마디가 항상 “그거 따로 주실 수 있어요?”야.",
+              tips: [{ target: "first question", ko: "first의 t는 거의 빠지고 '퍼r스퀘스천'처럼." }] },
             { chunks: "Last night / the server brought her plate / with like eight tiny bowls / around‿it.",
               ko: "어젯밤엔 직원이 접시 주위에 작은 그릇을 한 여덟 개쯤 둘러서 가져왔어.",
               tips: [{ target: "brought her", ko: "her의 h가 약해 '브로러r'처럼." }] },
@@ -857,8 +866,8 @@
               ko: "저녁밥이라기보다 과학 실험 같았어.",
               tips: [{ target: "experiment", ko: "두 번째 음절에 힘, '익스페리먼트'." }] }
           ],
-          en: "My friend Jess is the pickiest eater I know. At every restaurant, she orders everything on the side, even the cheese on her burger. Last night the server brought her plate with like eight tiny bowls around it. It looked less like dinner and more like a science experiment.",
-          ko: "내 친구 제스는 내가 아는 사람 중에 제일 입맛이 까다로워. 식당에 가면 뭐든 따로 달라고 하는데, 버거 치즈까지 따로야. 어젯밤엔 직원이 접시 주위에 조그만 그릇을 한 여덟 개 둘러서 가져왔어. 저녁밥이라기보다 과학 실험 같더라."
+          en: "My friend Jess is the pickiest eater I know. At every restaurant, her first question is, “Could I get that on the side?” Last night the server brought her plate with like eight tiny bowls around it. It looked less like dinner and more like a science experiment.",
+          ko: "내 친구 제스는 내가 아는 사람 중에 제일 입맛이 까다로워. 식당에 가면 첫마디가 항상 “그거 따로 주실 수 있어요?”야. 어젯밤엔 직원이 접시 주위에 조그만 그릇을 한 여덟 개 둘러서 가져왔어. 저녁밥이라기보다 과학 실험 같더라."
         }
       }
     ],
@@ -984,7 +993,9 @@
           en: "My dad always tells waiters to go light on the spice. Last night at a Thai place, he said it again, very seriously. The waiter nodded, and then brought out the spiciest curry I've ever seen. Dad ate the whole thing, sweating and smiling like nothing happened.",
           ko: "우리 아빠는 늘 웨이터한테 덜 맵게 해 달라고 해. 어젯밤 태국 음식점에서도 아주 진지하게 또 그 말을 했지. 웨이터는 고개를 끄덕이더니, 내가 본 것 중 제일 매운 카레를 들고 왔어. 아빠는 땀을 뻘뻘 흘리면서도 아무렇지 않은 척 웃으며 다 먹었어."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c21-e3",
         phrase: "That's it.",
@@ -1026,8 +1037,7 @@
           ko: "카페에서 줄을 서 있는데, 앞사람이 사무실 사람들 걸 전부 주문하더라. 음료를 한 열다섯 잔 부르는데 우유랑 시럽이 다 달랐어. 드디어 계산원이 “더 필요하신 거 있으세요?” 묻자 그 사람이 “그게 다예요.” 하니까 줄 선 사람들이 박수를 쳤어. 난 그냥 블랙커피 한 잔 마시고 싶었을 뿐인데."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 22,

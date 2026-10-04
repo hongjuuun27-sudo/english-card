@@ -128,7 +128,9 @@
           en: "My cousin came to visit me last month, and I asked how long she was planning on staying. She said, “Like, a week?” She ended up staying for almost a month and totally took over my couch. Honestly, it was kind of fun, though, so I'm not even mad.",
           ko: "지난달에 사촌이 우리 집에 놀러 와서, 얼마나 있을 거냐고 물어봤거든. “음, 일주일?” 이러더라. 결국 거의 한 달을 있었고 우리 집 소파를 완전히 점령했어. 근데 솔직히 꽤 재밌어서 화도 안 나."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c4-e3",
         phrase: "About ~",
@@ -172,8 +174,7 @@
           ko: "어제 요즘 다들 난리 난 라멘집에 가 봤거든. 줄이 한 시간쯤 돼서 거의 포기할 뻔했어. 근데 버텼더니 국물이 너무 맛있어서, 솔직히 다음엔 두 시간도 기다릴 수 있을 것 같아. 내 다이어트한텐 비밀이야."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 5,
@@ -253,7 +254,9 @@
           en: "So last weekend I showed up at this super popular brunch spot and confidently said, “Hi, I have a reservation under Kim.” The host checked the list and said there were, like, five Kims, but none of them were me. Turns out I'd booked it for the next weekend, not that day. We ended up eating hot dogs from a stand across the street, and it was weirdly perfect.",
           ko: "지난 주말에 엄청 유명한 브런치집에 가서 자신 있게 “김으로 예약했어요.” 했거든. 직원이 명단을 보더니 김 씨가 한 다섯 명인데 다 내가 아니래. 알고 보니 그날이 아니라 다음 주말로 예약했더라고. 결국 길 건너 노점에서 핫도그 먹었는데, 이상하게 그게 완벽했어."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c5-e2",
         phrase: "Here you go.",
@@ -340,8 +343,7 @@
           ko: "드디어 운전면허 갱신하러 갔는데, 하루 종일 고생할 각오를 하고 갔거든. 근데 창구 직원이 한 2분 타자 치더니 “다 됐어요!” 하는 거야. 진짜로 “잠깐, 이게 끝이에요?” 하고 물어봤어. 너무 기분 좋아서 집에 오는 길에 나한테 밀크셰이크 하나 사 줬지."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 6,
@@ -469,7 +471,9 @@
           en: "Last week I had a job interview on Zoom, and right before it started, nothing worked. I was panicking and emailed the recruiter, “I'm so sorry, I can't connect to the meeting!” Then I realized my laptop was still in airplane mode from my trip. I joined two minutes late and still got the job, so it all worked out.",
           ko: "지난주에 줌으로 면접이 있었는데, 시작 직전에 아무것도 안 되는 거야. 완전 패닉 와서 채용 담당자한테 “정말 죄송해요, 회의 연결이 안 돼요!” 하고 메일 보냈지. 그러고 보니 여행 갔다 와서 노트북이 아직 비행기 모드였더라고. 2분 늦게 들어갔는데 그래도 합격했으니, 결과적으로 다 잘 풀렸어."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c6-e3",
         phrase: "right away",
@@ -514,8 +518,7 @@
           ko: "어젯밤에 윗집 욕조가 넘쳐서 우리 집 천장에서 물이 뚝뚝 떨어지기 시작했어. 관리인한테 전화했더니 “바로 갈게요.” 하더라. 5분 뒤에 잠옷에 슬리퍼 차림으로 커다란 양동이를 들고 나타났어. 그렇게 존경스러운 사람은 처음 봤어."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 14,
@@ -611,51 +614,6 @@
         }
       },
       {
-        id: "c14-e2",
-        phrase: "Go ahead and ~.",
-        teaser: "직원이 '저울에 올려 주세요' 할 때 앞에 붙이는 말은?",
-        ko: "'(그럼) ~하세요'라는 뜻이에요. 직원이 다음 할 일을 안내할 때 정말 자주 쓰는 말이에요. 명령처럼 딱딱하지 않고 '편하게 ~하시면 돼요' 느낌이에요. 그냥 Go ahead.는 '그러세요/먼저 하세요'예요.",
-        examples: [
-          { en: "Go ahead and have a seat. The doctor will be right with you.", ko: "앉아 계세요. 의사 선생님이 곧 오실 거예요.",
-            chunks: "Go ahead‿and have‿a seat. / The doctor will be / right with you.",
-            tips: [{ target: "have a seat", ko: "'해버 씻'처럼 이어져요." },
-                   { target: "right with you", ko: "'곧 갈게요'. right의 t는 멈추기만 해요." }] },
-          { en: "Go ahead and start without me. I'm running late.", ko: "나 없이 먼저 시작해. 나 좀 늦어.",
-            chunks: "Go ahead‿and start / without me. / I'm running late.",
-            tips: [{ target: "ahead and", ko: "d가 and에 붙어 '어헤댄'처럼." }] },
-          { en: "Go ahead and order. I'm still deciding.", ko: "먼저 시켜. 난 아직 고르는 중이야.",
-            chunks: "Go ahead‿and‿order. / I'm still deciding.",
-            tips: [{ target: "and order", ko: "d가 order에 붙어 '언도r더r'처럼." }] },
-          { en: "Go ahead and send me the draft when it's ready.", ko: "초안 준비되면 보내 주세요.",
-            chunks: "Go ahead‿and send me / the draft / when‿it's ready.",
-            tips: [{ target: "draft", ko: "'드래프트', 끝 t는 약하게." }] },
-          { en: "Go ahead and tap your card on the reader.", ko: "카드 리더기에 카드 대 주세요.",
-            chunks: "Go ahead‿and tap your card / on the reader.",
-            tips: [{ target: "reader", ko: "d가 굴러 '리러r'처럼 들려요." }] }
-        ],
-        story: {
-          sentences: [
-            { chunks: "So I was getting / my new ID photo taken, / and the lady said, / “Go ahead‿and look‿at / the camera.”",
-              ko: "새 신분증 사진을 찍는데, 직원이 “카메라 보세요.” 했어.",
-              tips: [{ target: "getting", ko: "tt가 굴러 '게링'처럼 들려요." },
-                     { target: "look at", ko: "k가 at에 붙어 '루캣'처럼." }] },
-            { chunks: "I wasn't ready‿at‿all, / and the flash went‿off / mid-blink.",
-              ko: "준비가 하나도 안 됐는데, 눈 깜빡이는 순간 플래시가 터졌어.",
-              tips: [{ target: "ready at all", ko: "'레디애롤'처럼 이어져요." },
-                     { target: "went off", ko: "t가 off에 붙어 '웬토프'처럼." }] },
-            { chunks: "Now my ID photo looks like / I just woke‿up / from‿a hundred-year nap.",
-              ko: "지금 내 신분증 사진은 백 년 자다 깬 사람 같아.",
-              tips: [{ target: "woke up", ko: "k가 up에 붙어 '워우컵'처럼." }] },
-            { chunks: "I have to live with‿it / for ten years.",
-              ko: "앞으로 10년이나 이걸로 살아야 해.",
-              tips: [{ target: "have to", ko: "'해프터'처럼 빠르게." },
-                     { target: "with it", ko: "th가 it에 붙어 '위딧'처럼." }] }
-          ],
-          en: "So I was getting my new ID photo taken, and the lady said, “Go ahead and look at the camera.” I wasn't ready at all, and the flash went off mid-blink. Now my ID photo looks like I just woke up from a hundred-year nap. I have to live with it for ten years.",
-          ko: "새 신분증 사진을 찍는데 직원이 “카메라 보세요.” 하더라. 나는 전혀 준비가 안 됐는데, 눈 깜빡이는 순간에 플래시가 터졌어. 이제 내 신분증 사진은 백 년 잠에서 막 깬 사람 같아. 이걸 10년 동안 들고 다녀야 해."
-        }
-      },
-      {
         id: "c14-e3",
         phrase: "Is it possible to ~?",
         teaser: "'창가 자리로 받을 수 있을까요?' 정중하게 가능한지 묻는 틀은?",
@@ -741,7 +699,53 @@
         }
       }
     ],
-    extraExpressions: []
+    extraExpressions: [
+      {
+        id: "c14-e2",
+        phrase: "Go ahead and ~.",
+        teaser: "직원이 '저울에 올려 주세요' 할 때 앞에 붙이는 말은?",
+        ko: "'(그럼) ~하세요'라는 뜻이에요. 직원이 다음 할 일을 안내할 때 정말 자주 쓰는 말이에요. 명령처럼 딱딱하지 않고 '편하게 ~하시면 돼요' 느낌이에요. 그냥 Go ahead.는 '그러세요/먼저 하세요'예요.",
+        examples: [
+          { en: "Go ahead and have a seat. The doctor will be right with you.", ko: "앉아 계세요. 의사 선생님이 곧 오실 거예요.",
+            chunks: "Go ahead‿and have‿a seat. / The doctor will be / right with you.",
+            tips: [{ target: "have a seat", ko: "'해버 씻'처럼 이어져요." },
+                   { target: "right with you", ko: "'곧 갈게요'. right의 t는 멈추기만 해요." }] },
+          { en: "Go ahead and start without me. I'm running late.", ko: "나 없이 먼저 시작해. 나 좀 늦어.",
+            chunks: "Go ahead‿and start / without me. / I'm running late.",
+            tips: [{ target: "ahead and", ko: "d가 and에 붙어 '어헤댄'처럼." }] },
+          { en: "Go ahead and order. I'm still deciding.", ko: "먼저 시켜. 난 아직 고르는 중이야.",
+            chunks: "Go ahead‿and‿order. / I'm still deciding.",
+            tips: [{ target: "and order", ko: "d가 order에 붙어 '언도r더r'처럼." }] },
+          { en: "Go ahead and send me the draft when it's ready.", ko: "초안 준비되면 보내 주세요.",
+            chunks: "Go ahead‿and send me / the draft / when‿it's ready.",
+            tips: [{ target: "draft", ko: "'드래프트', 끝 t는 약하게." }] },
+          { en: "Go ahead and tap your card on the reader.", ko: "카드 리더기에 카드 대 주세요.",
+            chunks: "Go ahead‿and tap your card / on the reader.",
+            tips: [{ target: "reader", ko: "d가 굴러 '리러r'처럼 들려요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "So I was getting / my new ID photo taken, / and the lady said, / “Go ahead‿and look‿at / the camera.”",
+              ko: "새 신분증 사진을 찍는데, 직원이 “카메라 보세요.” 했어.",
+              tips: [{ target: "getting", ko: "tt가 굴러 '게링'처럼 들려요." },
+                     { target: "look at", ko: "k가 at에 붙어 '루캣'처럼." }] },
+            { chunks: "I wasn't ready‿at‿all, / and the flash went‿off / mid-blink.",
+              ko: "준비가 하나도 안 됐는데, 눈 깜빡이는 순간 플래시가 터졌어.",
+              tips: [{ target: "ready at all", ko: "'레디애롤'처럼 이어져요." },
+                     { target: "went off", ko: "t가 off에 붙어 '웬토프'처럼." }] },
+            { chunks: "Now my ID photo looks like / I just woke‿up / from‿a hundred-year nap.",
+              ko: "지금 내 신분증 사진은 백 년 자다 깬 사람 같아.",
+              tips: [{ target: "woke up", ko: "k가 up에 붙어 '워우컵'처럼." }] },
+            { chunks: "I have to live with‿it / for ten years.",
+              ko: "앞으로 10년이나 이걸로 살아야 해.",
+              tips: [{ target: "have to", ko: "'해프터'처럼 빠르게." },
+                     { target: "with it", ko: "th가 it에 붙어 '위딧'처럼." }] }
+          ],
+          en: "So I was getting my new ID photo taken, and the lady said, “Go ahead and look at the camera.” I wasn't ready at all, and the flash went off mid-blink. Now my ID photo looks like I just woke up from a hundred-year nap. I have to live with it for ten years.",
+          ko: "새 신분증 사진을 찍는데 직원이 “카메라 보세요.” 하더라. 나는 전혀 준비가 안 됐는데, 눈 깜빡이는 순간에 플래시가 터졌어. 이제 내 신분증 사진은 백 년 잠에서 막 깬 사람 같아. 이걸 10년 동안 들고 다녀야 해."
+        }
+      }
+    ]
   },
   {
     id: 19,
@@ -858,7 +862,9 @@
           en: "At the movies last night, the guy behind me kept kicking my seat. After twenty minutes, I turned around and said, “Would you mind not kicking my seat?” He looked totally shocked and said he had no idea. Then his little kid popped up next to him, and I realized it wasn't him at all.",
           ko: "어젯밤 영화관에서 뒷사람이 계속 내 의자를 발로 차는 거야. 20분쯤 참다가 뒤돌아서 “의자 좀 안 차 주실래요?” 했지. 그 사람은 완전 놀라서 전혀 몰랐다고 하더라. 그때 옆에서 꼬마가 쏙 고개를 내미는데, 차던 범인은 그 사람이 아니었어."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c19-e3",
         phrase: "I appreciate it.",
@@ -901,7 +907,6 @@
           ko: "어제 이웃이 내가 커다란 상자를 들고 계단 올라가는 걸 봤어. 아무 말 없이 반대쪽을 잡더니 4층까지 같이 들어 주더라. “정말 고마워요.” 하고 음료수를 하나 건넸지. 그랬더니 “괜찮아요, 그냥 상자에 뭐가 들었는지 궁금했어요.” 하는 거야."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   }
 );

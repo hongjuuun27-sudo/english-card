@@ -42,6 +42,49 @@
     ],
     expressions: [
       {
+        id: "c10-e2",
+        phrase: "supposed to ~",
+        teaser: "'이따 비 온대요?'에서 '온대요', 뭐라고 할까?",
+        ko: "'~하기로 되어 있다', '~라던데'라는 뜻이에요. 날씨 예보나 소문처럼 '그렇다더라'를 말할 때 딱이에요. 약속이나 규칙을 말할 때도 써요. 빨리 말하면 '서포즈투'처럼 붙어서 들려요.",
+        examples: [
+          { en: "It's supposed to snow this weekend.", ko: "이번 주말에 눈 온대.",
+            chunks: "It's supposed to snow / this weekend.",
+            tips: [{ target: "supposed to", ko: "d와 t가 겹쳐 '써포스투'처럼 한 번에." }] },
+          { en: "We're supposed to submit the report by Friday.", ko: "보고서는 금요일까지 내야 해요.",
+            chunks: "We're supposed to submit the report / by Friday.",
+            tips: [{ target: "submit the", ko: "t는 멈추기만 하고 바로 the로." }] },
+          { en: "This place is supposed to have the best tacos in LA.", ko: "여기가 LA에서 타코 제일 맛있는 집이래.",
+            chunks: "This place‿is supposed to have / the best tacos in LA.",
+            tips: [{ target: "place is", ko: "s가 is에 붙어 '플레이시즈'처럼." }] },
+          { en: "You were supposed to call me last night!", ko: "너 어젯밤에 나한테 전화하기로 했잖아!",
+            chunks: "You were supposed to call me / last night!",
+            tips: [{ target: "supposed", ko: "따지는 말이라 supposed에 힘을 줘요." }] },
+          { en: "The train was supposed to leave ten minutes ago.", ko: "기차가 10분 전에 출발했어야 하는데.",
+            chunks: "The train was supposed to leave / ten minutes‿ago.",
+            tips: [{ target: "minutes ago", ko: "s가 ago에 붙어 '미닛서고우'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "So the weather‿app said / it was supposed to be sunny / all day, / so I wore / my brand-new white sneakers.",
+              ko: "날씨 앱에서 하루 종일 맑을 거라고 해서, 새로 산 흰 운동화를 신고 나갔거든.",
+              tips: [{ target: "weather app", ko: "r이 app에 붙어 '웨더r랩'처럼." }] },
+            { chunks: "Guess what happened?",
+              ko: "무슨 일 났게?",
+              tips: [{ target: "Guess what", ko: "s와 w를 이어 '게스왓', t는 약하게." }] },
+            { chunks: "Ten minutes after / I left the house, / it started pouring.",
+              ko: "집 나선 지 10분 만에 비가 쏟아지기 시작했어.",
+              tips: [{ target: "started", ko: "t가 굴러 '스타r리드'처럼 들려요." }] },
+            { chunks: "My sneakers are now / a lovely shade‿of gray.",
+              ko: "지금 내 운동화는 아주 예쁜 회색이 됐어.",
+              tips: [{ target: "shade of", ko: "d가 of에 붙어 '셰이더브'처럼." }] }
+          ],
+          en: "So the weather app said it was supposed to be sunny all day, so I wore my brand-new white sneakers. Guess what happened? Ten minutes after I left the house, it started pouring. My sneakers are now a lovely shade of gray.",
+          ko: "날씨 앱에서 하루 종일 맑을 거라길래 새로 산 흰 운동화를 신고 나갔거든. 어떻게 됐게? 집 나서고 10분 만에 비가 쏟아지기 시작했어. 내 운동화는 이제 아주 예쁜 회색이 됐어."
+        }
+      }
+    ],
+    extraExpressions: [
+      {
         id: "c10-e1",
         phrase: "I know, right?",
         teaser: "'그러니까요! 내 말이!' 맞장구칠 때 원어민이 쓰는 한마디는?",
@@ -83,47 +126,6 @@
           ],
           en: "My roommate came home yesterday and said, “Why is rent so expensive?” I just yelled, “I know, right?” from the kitchen. Then we spent two hours looking at apartments in other cities that we'll never actually move to. It was weirdly fun, though.",
           ko: "어제 룸메이트가 집에 오자마자 “월세가 왜 이렇게 비싸?” 하는 거야. 나는 부엌에서 “내 말이!” 하고 소리쳤지. 그러고는 절대 이사 갈 일 없는 다른 도시 집들을 두 시간 동안 구경했어. 근데 이상하게 재밌더라."
-        }
-      },
-      {
-        id: "c10-e2",
-        phrase: "supposed to ~",
-        teaser: "'이따 비 온대요?'에서 '온대요', 뭐라고 할까?",
-        ko: "'~하기로 되어 있다', '~라던데'라는 뜻이에요. 날씨 예보나 소문처럼 '그렇다더라'를 말할 때 딱이에요. 약속이나 규칙을 말할 때도 써요. 빨리 말하면 '서포즈투'처럼 붙어서 들려요.",
-        examples: [
-          { en: "It's supposed to snow this weekend.", ko: "이번 주말에 눈 온대.",
-            chunks: "It's supposed to snow / this weekend.",
-            tips: [{ target: "supposed to", ko: "d와 t가 겹쳐 '써포스투'처럼 한 번에." }] },
-          { en: "We're supposed to submit the report by Friday.", ko: "보고서는 금요일까지 내야 해요.",
-            chunks: "We're supposed to submit the report / by Friday.",
-            tips: [{ target: "submit the", ko: "t는 멈추기만 하고 바로 the로." }] },
-          { en: "This place is supposed to have the best tacos in LA.", ko: "여기가 LA에서 타코 제일 맛있는 집이래.",
-            chunks: "This place‿is supposed to have / the best tacos in LA.",
-            tips: [{ target: "place is", ko: "s가 is에 붙어 '플레이시즈'처럼." }] },
-          { en: "You were supposed to call me last night!", ko: "너 어젯밤에 나한테 전화하기로 했잖아!",
-            chunks: "You were supposed to call me / last night!",
-            tips: [{ target: "supposed", ko: "따지는 말이라 supposed에 힘을 줘요." }] },
-          { en: "The train was supposed to leave ten minutes ago.", ko: "기차가 10분 전에 출발했어야 하는데.",
-            chunks: "The train was supposed to leave / ten minutes‿ago.",
-            tips: [{ target: "minutes ago", ko: "s가 ago에 붙어 '미닛서고우'처럼." }] }
-        ],
-        story: {
-          sentences: [
-            { chunks: "So the weather‿app said / it was supposed to be sunny / all day, / so I wore / my brand-new white sneakers.",
-              ko: "날씨 앱에서 하루 종일 맑을 거라고 해서, 새로 산 흰 운동화를 신고 나갔거든.",
-              tips: [{ target: "weather app", ko: "r이 app에 붙어 '웨더r랩'처럼." }] },
-            { chunks: "Guess what happened?",
-              ko: "무슨 일 났게?",
-              tips: [{ target: "Guess what", ko: "s와 w를 이어 '게스왓', t는 약하게." }] },
-            { chunks: "Ten minutes after / I left the house, / it started pouring.",
-              ko: "집 나선 지 10분 만에 비가 쏟아지기 시작했어.",
-              tips: [{ target: "started", ko: "t가 굴러 '스타r리드'처럼 들려요." }] },
-            { chunks: "My sneakers are now / a lovely shade‿of gray.",
-              ko: "지금 내 운동화는 아주 예쁜 회색이 됐어.",
-              tips: [{ target: "shade of", ko: "d가 of에 붙어 '셰이더브'처럼." }] }
-          ],
-          en: "So the weather app said it was supposed to be sunny all day, so I wore my brand-new white sneakers. Guess what happened? Ten minutes after I left the house, it started pouring. My sneakers are now a lovely shade of gray.",
-          ko: "날씨 앱에서 하루 종일 맑을 거라길래 새로 산 흰 운동화를 신고 나갔거든. 어떻게 됐게? 집 나서고 10분 만에 비가 쏟아지기 시작했어. 내 운동화는 이제 아주 예쁜 회색이 됐어."
         }
       },
       {
@@ -170,8 +172,7 @@
           ko: "지난 주말에 친구가 새벽 6시에 바다로 출발하자고 해서 진짜 한 대 칠 뻔했거든. 근데 도착하니까 주차장은 텅 비어 있고 일출은 너무 예쁜 거야. 10시쯤엔 주차만 하는 데 진짜 두 시간을 기다려야 했어. 그래, 인정. 그건 잘한 판단이었어."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 11,
@@ -468,7 +469,9 @@
           en: "So I ran into my old piano teacher at the grocery store yesterday. I used to cry every single lesson because I hated practicing. She remembered me right away and asked, “Are you still playing?” I lied and said yes, and now I feel like I have to buy a piano.",
           ko: "어제 마트에서 옛날 피아노 선생님을 딱 마주쳤어. 나 연습하기 싫어서 레슨 때마다 울었었거든. 선생님이 나를 바로 알아보시고 “아직도 피아노 치니?” 하고 물어보셨어. 그래서 거짓말로 그렇다고 했는데, 이제 진짜 피아노를 사야 할 것 같아."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c12-e3",
         phrase: "Small world!",
@@ -514,8 +517,7 @@
           ko: "지난달에 뉴욕 가는 비행기를 탔는데, 옆자리 아주머니가 우리 작은 고향 출신이었어. 알고 보니 같은 초등학교를 나왔고 담임 선생님까지 같았어. 우리 둘이 “세상 좁다!”를 한 스무 번은 했어. 비행 끝날 때쯤엔 아주머니가 딸 결혼식에 나를 초대하셨어."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 17,
@@ -820,34 +822,33 @@
     expressions: [
       {
         id: "c24-e1",
-        phrase: "hold the door",
+        phrase: "Hold the door, please!",
         teaser: "닫히는 엘리베이터 앞에서 '문 좀 잡아 주세요!'는?",
-        forms: ["holding the door", "held the door"],
-        ko: "'문을 잡아 주다'라는 뜻이에요. 엘리베이터나 출입문이 닫히기 전에 누가 오면 자주 들어요. 'Can you hold the door?'처럼 부탁할 때도, 'I'll hold the door.'처럼 내가 잡아 줄 때도 써요. 비슷한 표현: Keep the door open. / Hold the elevator!",
+        ko: "'문 좀 잡아 주세요!'라는 뜻이에요. 엘리베이터나 출입문이 닫히기 전에 급하게 부탁할 때 통째로 써요. 더 공손하게는 Could you hold the door, please?, 내가 잡아 줄 땐 I'll hold the door.라고 해요. 비슷한 표현: Hold the elevator! / Keep the door open.",
         examples: [
-          { en: "Can you hold the door for a second?", ko: "잠깐만 문 좀 잡아 줄래요?",
-            chunks: "Can you hold the door / for‿a second?",
-            tips: [{ target: "for a second", ko: "'잠깐만'. '포러 세컨드'처럼." }] },
-          { en: "I'll hold the door, go ahead.", ko: "제가 문 잡고 있을게요, 먼저 가세요.",
-            chunks: "I'll hold the door, / go‿ahead.",
-            tips: [{ target: "go ahead", ko: "'고어헤드'처럼 이어져요." }] },
-          { en: "Thanks for holding the door!", ko: "문 잡아 줘서 고마워요!",
-            chunks: "Thanks for holding the door!",
-            tips: [{ target: "holding", ko: "'홀딩', d는 약하게." }] },
-          { en: "Someone hold the door, the delivery guy is coming!", ko: "누가 문 좀 잡아 줘요, 택배 기사님 오세요!",
-            chunks: "Someone hold the door, / the delivery guy is coming!",
-            tips: [{ target: "delivery guy", ko: "'딜리버리 가이', 두 번째 음절에 힘." }] },
-          { en: "He held the door for me at the café.", ko: "그 사람이 카페에서 나를 위해 문을 잡아 줬어.",
-            chunks: "He held the door for me / at the café.",
-            tips: [{ target: "held the", ko: "d와 th가 이어져 '헬더'처럼." }] }
+          { en: "Hold the door, please! I'm right behind you.", ko: "문 좀 잡아 주세요! 바로 뒤에 있어요.",
+            chunks: "Hold the door, please! / I'm right behind you.",
+            tips: [{ target: "right behind", ko: "right의 t는 멈추기만 하고 바로 behind로." }] },
+          { en: "Could you hold the door, please? My hands are full.", ko: "문 좀 잡아 주시겠어요? 손이 꽉 찼어요.",
+            chunks: "Could you / hold the door, please? / My hands‿are full.",
+            tips: [{ target: "Could you", ko: "d와 y가 만나 '쿠쥬'처럼 소리 나요." }] },
+          { en: "Excuse me, hold the door, please! I'm pushing a stroller.", ko: "저기요, 문 좀 잡아 주세요! 유모차를 밀고 있어서요.",
+            chunks: "Excuse me, / hold the door, please! / I'm pushing‿a stroller.",
+            tips: [{ target: "stroller", ko: "'유모차'. str을 한 번에 '스트롤러r'." }] },
+          { en: "Wait, hold the door, please! I'm going up too.", ko: "잠깐만요, 문 좀 잡아 주세요! 저도 올라가요.",
+            chunks: "Wait, hold the door, please! / I'm going‿up too.",
+            tips: [{ target: "going up", ko: "g가 up에 붙어 '고잉업'처럼 이어져요." }] },
+          { en: "Hold the door, please! I forgot my badge.", ko: "문 좀 잡아 주세요! 출입증을 깜빡했어요.",
+            chunks: "Hold the door, please! / I forgot my badge.",
+            tips: [{ target: "forgot my", ko: "t는 멈추듯 짧게, 바로 my로 '퍼r갓마이'." }] }
         ],
         story: {
           sentences: [
-            { chunks: "This morning / I saw my neighbor / running toward the elevator / with‿a giant coffee.",
-              ko: "오늘 아침에 이웃이 커다란 커피를 들고 엘리베이터 쪽으로 뛰어오는 걸 봤어.",
+            { chunks: "This morning / my neighbor came running / toward the elevator / with‿a giant coffee.",
+              ko: "오늘 아침에 이웃이 커다란 커피를 들고 엘리베이터 쪽으로 뛰어왔어.",
               tips: [{ target: "elevator", ko: "'엘러베이러r', 첫음절에 힘." }] },
-            { chunks: "I yelled, / “I'll hold the door!” / and stuck my arm‿out.",
-              ko: "“문 잡을게요!” 하고 소리치면서 팔을 쭉 내밀었지.",
+            { chunks: "She yelled, / “Hold the door, please!” / so I stuck my arm‿out.",
+              ko: "“문 좀 잡아 주세요!” 하고 소리쳐서 내가 팔을 쭉 내밀었지.",
               tips: [{ target: "stuck my arm out", ko: "arm이 out에 붙어 '아r마웃'처럼." }] },
             { chunks: "The door closed anyway, / right‿on my arm, / and I screamed louder / than she did.",
               ko: "근데 문이 그냥 닫혀서 내 팔이 끼었고, 내가 그분보다 더 크게 소리 질렀어.",
@@ -856,49 +857,8 @@
               ko: "그래도 그분은 무사히 탔고, 고맙다며 머핀 반쪽을 줬어.",
               tips: [{ target: "made it in", ko: "'제때 들어왔다'. '메이딧 인'처럼." }] }
           ],
-          en: "This morning I saw my neighbor running toward the elevator with a giant coffee. I yelled, “I'll hold the door!” and stuck my arm out. The door closed anyway, right on my arm, and I screamed louder than she did. She made it in, though, and gave me half her muffin as a thank-you.",
-          ko: "오늘 아침에 이웃이 커다란 커피를 들고 엘리베이터로 뛰어오는 걸 봤어. “문 잡을게요!” 하고 소리치면서 팔을 쭉 내밀었지. 근데 문이 그냥 닫히면서 내 팔이 끼었고, 내가 그분보다 더 크게 소리를 질렀어. 그래도 그분은 무사히 탔고, 고맙다고 머핀 반쪽을 주더라."
-        }
-      },
-      {
-        id: "c24-e2",
-        phrase: "What floor?",
-        teaser: "엘리베이터에서 짐 든 사람에게 '몇 층 가세요?'를 두 단어로?",
-        ko: "'몇 층 가세요?'라는 뜻이에요. 엘리베이터에서 버튼 앞에 선 사람이 다른 사람 대신 눌러 줄 때 짧게 물어요. 좀 더 공손하게는 'What floor are you going to?'. 비슷한 표현: Which floor? / Where to?",
-        examples: [
-          { en: "What floor are you going to?", ko: "몇 층 가세요?",
-            chunks: "What floor are you going to?",
-            tips: [{ target: "going to", ko: "'고잉 투'를 빠르게, 질문 끝을 올려요." }] },
-          { en: "Excuse me, what floor is the gym on?", ko: "실례지만, 헬스장은 몇 층이에요?",
-            chunks: "Excuse me, / what floor‿is the gym on?",
-            tips: [{ target: "gym on", ko: "m이 on에 붙어 '지먼'처럼." }] },
-          { en: "What floor do you live on?", ko: "몇 층 사세요?",
-            chunks: "What floor do‿you live on?",
-            tips: [{ target: "live on", ko: "v가 on에 붙어 '리번'처럼." }] },
-          { en: "Sorry, what floor did you say?", ko: "죄송해요, 몇 층이라고 하셨죠?",
-            chunks: "Sorry, / what floor did‿you say?",
-            tips: [{ target: "did you", ko: "'디쥬'처럼 붙어요." }] },
-          { en: "What floor is the meeting room on?", ko: "회의실이 몇 층이에요?",
-            chunks: "What floor‿is / the meeting room on?",
-            tips: [{ target: "meeting room", ko: "t가 굴러 '미링 룸'처럼." }] }
-        ],
-        story: {
-          sentences: [
-            { chunks: "I got‿into‿a hotel elevator / with‿a guy carrying three suitcases.",
-              ko: "호텔 엘리베이터에 탔는데, 여행 가방을 세 개나 든 남자가 같이 탔어.",
-              tips: [{ target: "suitcases", ko: "'숫케이시즈', 첫음절에 힘." }] },
-            { chunks: "I asked, / “What floor?” / and he said, / “Thirty-two, thank you!”",
-              ko: "“몇 층 가세요?” 물었더니 “32층이요, 고마워요!” 하더라.",
-              tips: [{ target: "Thirty-two", ko: "th는 혀를 물고, '써r리 투'." }] },
-            { chunks: "I hit the button, / but the elevator went straight down / to the basement instead.",
-              ko: "버튼을 눌렀는데 엘리베이터가 오히려 지하로 쭉 내려가 버렸어.",
-              tips: [{ target: "button", ko: "tt는 멈추듯 '벗은'처럼." }] },
-            { chunks: "We both just / stared‿at each other / and laughed / the whole way back‿up.",
-              ko: "우리 둘 다 서로 쳐다보다가 다시 올라가는 내내 웃었어.",
-              tips: [{ target: "stared at", ko: "d가 at에 붙어 '스테어r댓'처럼." }] }
-          ],
-          en: "I got into a hotel elevator with a guy carrying three suitcases. I asked, “What floor?” and he said, “Thirty-two, thank you!” I hit the button, but the elevator went straight down to the basement instead. We both just stared at each other and laughed the whole way back up.",
-          ko: "호텔 엘리베이터에 탔는데 여행 가방을 세 개나 든 남자가 같이 탔어. “몇 층 가세요?” 물었더니 “32층이요, 고마워요!” 하더라. 버튼을 눌렀는데 엘리베이터가 오히려 지하까지 쭉 내려가 버렸어. 우리 둘 다 서로 멍하니 보다가 다시 올라가는 내내 웃었어."
+          en: "This morning my neighbor came running toward the elevator with a giant coffee. She yelled, “Hold the door, please!” so I stuck my arm out. The door closed anyway, right on my arm, and I screamed louder than she did. She made it in, though, and gave me half her muffin as a thank-you.",
+          ko: "오늘 아침에 이웃이 커다란 커피를 들고 엘리베이터로 뛰어왔어. “문 좀 잡아 주세요!” 하고 소리쳐서 내가 팔을 쭉 내밀었지. 근데 문이 그냥 닫히면서 내 팔이 끼었고, 내가 그분보다 더 크게 소리를 질렀어. 그래도 그분은 무사히 탔고, 고맙다고 머핀 반쪽을 주더라."
         }
       },
       {
@@ -943,6 +903,48 @@
         }
       }
     ],
-    extraExpressions: []
+    extraExpressions: [
+      {
+        id: "c24-e2",
+        phrase: "What floor?",
+        teaser: "엘리베이터에서 짐 든 사람에게 '몇 층 가세요?'를 두 단어로?",
+        ko: "'몇 층 가세요?'라는 뜻이에요. 엘리베이터에서 버튼 앞에 선 사람이 다른 사람 대신 눌러 줄 때 짧게 물어요. 좀 더 공손하게는 'What floor are you going to?'. 비슷한 표현: Which floor? / Where to?",
+        examples: [
+          { en: "What floor are you going to?", ko: "몇 층 가세요?",
+            chunks: "What floor are you going to?",
+            tips: [{ target: "going to", ko: "'고잉 투'를 빠르게, 질문 끝을 올려요." }] },
+          { en: "Excuse me, what floor is the gym on?", ko: "실례지만, 헬스장은 몇 층이에요?",
+            chunks: "Excuse me, / what floor‿is the gym on?",
+            tips: [{ target: "gym on", ko: "m이 on에 붙어 '지먼'처럼." }] },
+          { en: "What floor do you live on?", ko: "몇 층 사세요?",
+            chunks: "What floor do‿you live on?",
+            tips: [{ target: "live on", ko: "v가 on에 붙어 '리번'처럼." }] },
+          { en: "Sorry, what floor did you say?", ko: "죄송해요, 몇 층이라고 하셨죠?",
+            chunks: "Sorry, / what floor did‿you say?",
+            tips: [{ target: "did you", ko: "'디쥬'처럼 붙어요." }] },
+          { en: "What floor is the meeting room on?", ko: "회의실이 몇 층이에요?",
+            chunks: "What floor‿is / the meeting room on?",
+            tips: [{ target: "meeting room", ko: "t가 굴러 '미링 룸'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I got‿into‿a hotel elevator / with‿a guy carrying three suitcases.",
+              ko: "호텔 엘리베이터에 탔는데, 여행 가방을 세 개나 든 남자가 같이 탔어.",
+              tips: [{ target: "suitcases", ko: "'숫케이시즈', 첫음절에 힘." }] },
+            { chunks: "I asked, / “What floor?” / and he said, / “Thirty-two, thank you!”",
+              ko: "“몇 층 가세요?” 물었더니 “32층이요, 고마워요!” 하더라.",
+              tips: [{ target: "Thirty-two", ko: "th는 혀를 물고, '써r리 투'." }] },
+            { chunks: "I hit the button, / but the elevator went straight down / to the basement instead.",
+              ko: "버튼을 눌렀는데 엘리베이터가 오히려 지하로 쭉 내려가 버렸어.",
+              tips: [{ target: "button", ko: "tt는 멈추듯 '벗은'처럼." }] },
+            { chunks: "We both just / stared‿at each other / and laughed / the whole way back‿up.",
+              ko: "우리 둘 다 서로 쳐다보다가 다시 올라가는 내내 웃었어.",
+              tips: [{ target: "stared at", ko: "d가 at에 붙어 '스테어r댓'처럼." }] }
+          ],
+          en: "I got into a hotel elevator with a guy carrying three suitcases. I asked, “What floor?” and he said, “Thirty-two, thank you!” I hit the button, but the elevator went straight down to the basement instead. We both just stared at each other and laughed the whole way back up.",
+          ko: "호텔 엘리베이터에 탔는데 여행 가방을 세 개나 든 남자가 같이 탔어. “몇 층 가세요?” 물었더니 “32층이요, 고마워요!” 하더라. 버튼을 눌렀는데 엘리베이터가 오히려 지하까지 쭉 내려가 버렸어. 우리 둘 다 서로 멍하니 보다가 다시 올라가는 내내 웃었어."
+        }
+      }
+    ]
   }
 );

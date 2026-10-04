@@ -89,25 +89,25 @@
       },
       {
         id: "c7-e2",
-        phrase: "say that again",
-        teaser: "상대 말이 너무 빨라서 못 알아들었을 때, 다시 말해 달라는 표현은?",
-        ko: "'다시 한번 말해 주시겠어요?'라는 뜻이에요. 못 알아들었을 때 당황하지 말고 Sorry, could you say that again?으로 다시 들으면 돼요. a little slower(조금 천천히)를 붙이면 더 좋아요. 친구 사이에선 놀랐을 때 '뭐라고?' 느낌으로도 써요. 비슷한 표현: Sorry? / Come again?",
+        phrase: "Could you say that again?",
+        teaser: "상대 말이 너무 빨라서 못 알아들었을 때, '다시 말해 주시겠어요?'를 한 문장으로?",
+        ko: "'다시 한번 말해 주시겠어요?'라는 뜻이에요. 못 알아들었을 때 당황하지 말고 Sorry, could you say that again?으로 다시 들으면 돼요. 뒤에 a little slower(조금 천천히)를 붙여도 좋아요. 친구 사이에선 Can you say that again?이나 Say that again?처럼 더 가볍게도 말해요. 비슷한 표현: Sorry? / Come again?",
         examples: [
           { en: "Sorry, could you say that again? It's really loud in here.", ko: "죄송한데 다시 말해 주실래요? 여기 너무 시끄러워서요.",
             chunks: "Sorry, / could you say that‿again? / It's really loud‿in here.",
             tips: [{ target: "that again", ko: "t가 굴러 '대러겐'처럼 이어져요." },
                    { target: "loud in", ko: "d가 in에 붙어 '라우딘'처럼." }] },
-          { en: "Can you say that again? You cut out for a second.", ko: "다시 말해 줄래? 잠깐 끊겼어.",
-            chunks: "Can you say that‿again? / You cut‿out / for‿a second.",
+          { en: "Could you say that again? You cut out for a second.", ko: "다시 말해 줄래요? 잠깐 끊겼어요.",
+            chunks: "Could you say that‿again? / You cut‿out / for‿a second.",
             tips: [{ target: "cut out", ko: "'끊겼다'. t가 굴러 '커라웃'처럼." }] },
-          { en: "Wait, say that again? You're moving to Canada?", ko: "잠깐, 뭐라고? 너 캐나다로 이사 간다고?",
-            chunks: "Wait, say that‿again? / You're moving to Canada?",
-            tips: [{ target: "Canada?", ko: "'캐'에 힘을 주고, 놀라서 끝을 올려요." }] },
+          { en: "Could you say that again? I didn't catch your name.", ko: "다시 말씀해 주시겠어요? 성함을 못 들었어요.",
+            chunks: "Could you say that‿again? / I didn't catch your name.",
+            tips: [{ target: "catch your", ko: "ch와 y가 만나 '캐츄어r'처럼 이어져요." }] },
           { en: "Could you say that again a little slower?", ko: "조금만 천천히 다시 말해 주시겠어요?",
             chunks: "Could you say that‿again / a little slower?",
             tips: [{ target: "little", ko: "tt가 굴러 '리를'처럼 들려요." }] },
-          { en: "Sorry, can you say that again? I missed the last part.", ko: "죄송한데 다시 말씀해 주실래요? 마지막 부분을 놓쳤어요.",
-            chunks: "Sorry, / can you say that‿again? / I missed the last part.",
+          { en: "Sorry, could you say that again? I missed the last part.", ko: "죄송한데 다시 말씀해 주시겠어요? 마지막 부분을 놓쳤어요.",
+            chunks: "Sorry, / could you say that‿again? / I missed the last part.",
             tips: [{ target: "missed the", ko: "ed는 t 소리로 '미스트', 바로 the로." }] }
         ],
         story: {
@@ -116,8 +116,8 @@
               ko: "어제 회사 동료가 완전 아무렇지 않게, 1년 동안 세계 여행 가려고 회사를 그만둔대.",
               tips: [{ target: "casually", ko: "s는 '쥐'에 가깝게 '캐쥬얼리'처럼 짧게." },
                      { target: "quitting", ko: "tt가 굴러 '퀴링'처럼 들려요." }] },
-            { chunks: "I almost choked‿on my coffee / and said, / “Wait, say that‿again?”",
-              ko: "나는 커피 마시다 사레들릴 뻔해서 “잠깐, 다시 말해 봐?” 했어.",
+            { chunks: "I almost choked‿on my coffee / and said, / “Wait, could you say that‿again?”",
+              ko: "나는 커피 마시다 사레들릴 뻔해서 “잠깐, 다시 말해 줄래?” 했어.",
               tips: [{ target: "choked on", ko: "ed가 t 소리로 on에 붙어 '초욱톤'처럼." }] },
             { chunks: "She just smiled / and showed me / her one-way ticket to Lisbon.",
               ko: "동료는 그냥 웃으면서 리스본 가는 편도 티켓을 보여 줬어.",
@@ -127,10 +127,12 @@
               ko: "지금 나는 책상에 앉아서 내 인생 뭐 하고 있나 생각 중이야.",
               tips: [{ target: "sitting at", ko: "g가 at에 붙어 '씨링앳'처럼." }] }
           ],
-          en: "My coworker told me yesterday, totally casually, that she's quitting to travel the world for a year. I almost choked on my coffee and said, “Wait, say that again?” She just smiled and showed me her one-way ticket to Lisbon. Now I'm sitting at my desk wondering what I'm doing with my life.",
-          ko: "어제 동료가 아무렇지 않게 1년 동안 세계 여행 가려고 회사를 그만둔다고 하는 거야. 커피 마시다 사레들릴 뻔해서 “잠깐, 다시 말해 봐?” 했지. 걔는 그냥 웃으면서 리스본행 편도 티켓을 보여 주더라. 그래서 지금 나는 책상에 앉아서 내 인생 뭐 하고 있나 생각 중이야."
+          en: "My coworker told me yesterday, totally casually, that she's quitting to travel the world for a year. I almost choked on my coffee and said, “Wait, could you say that again?” She just smiled and showed me her one-way ticket to Lisbon. Now I'm sitting at my desk wondering what I'm doing with my life.",
+          ko: "어제 동료가 아무렇지 않게 1년 동안 세계 여행 가려고 회사를 그만둔다고 하는 거야. 커피 마시다 사레들릴 뻔해서 “잠깐, 다시 말해 줄래?” 했지. 걔는 그냥 웃으면서 리스본행 편도 티켓을 보여 주더라. 그래서 지금 나는 책상에 앉아서 내 인생 뭐 하고 있나 생각 중이야."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c7-e3",
         phrase: "You can't miss it.",
@@ -174,8 +176,7 @@
           ko: "친구가 새 집 가는 길을 알려 주면서 “큰 개 있는 파란 집이야. 못 찾을 수가 없어.” 했거든. 근데 그 길에 큰 개 있는 파란 집이 세 채나 있더라. 엉뚱한 집 문을 두드렸는데, 엄청 당황한 할아버지가 차 한잔하고 가라고 하셨어. 진짜로 들어가서 마셨는데, 할아버지 완전 멋있으셨어."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 8,
@@ -299,7 +300,9 @@
           en: "Last night my friend offered to drop me off at home after dinner. She's the worst driver I know, but I said yes because it was pouring. She missed my street twice and then parked halfway on the sidewalk. Next time, I'm walking, rain or not.",
           ko: "어젯밤에 친구가 저녁 먹고 집까지 태워 준다고 했거든. 내가 아는 사람 중에 운전을 제일 못하는 애인데, 비가 쏟아져서 그냥 타겠다고 했지. 우리 집 골목을 두 번이나 지나치더니 인도에 반쯤 걸쳐서 차를 세우더라. 다음엔 비가 오든 말든 걸어갈 거야."
         }
-      },
+      }
+    ],
+    extraExpressions: [
       {
         id: "c8-e3",
         phrase: "You got it.",
@@ -344,8 +347,7 @@
           ko: "남동생이 이번 주말에 이사 좀 도와줄 수 있냐길래 생각도 안 하고 “당연하지!” 했거든. 알고 보니 엘리베이터 없는 5층에 살고, 책이 한 200권은 있더라. 아직도 다리가 후들거려. 걔는 평생 나한테 피자 사야 돼."
         }
       }
-    ],
-    extraExpressions: []
+    ]
   },
   {
     id: 9,
