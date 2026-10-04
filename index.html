@@ -653,11 +653,13 @@
   .xt-more{ flex:none; height:34px; padding:0 14px; border-radius:999px; font-size:14px; font-weight:600; color:var(--accent); background:var(--accent-soft); }
   .xt-list{ display:flex; flex-direction:column; gap:10px; }
   .xt-card{
-    width:100%; text-align:left; padding:15px 16px; border-radius:18px;
+    display:block; width:100%; text-align:left; padding:15px 16px; border-radius:18px;
     background:hsl(var(--h) 50% 55% / var(--tag-a)); border:1.5px solid hsl(var(--h) 52% var(--tag-l) / .3);
-    transition:transform .12s ease;
+    transition:transform .12s ease; cursor:pointer; -webkit-user-select:none; user-select:none;
   }
-  .xt-card:active{ transform:scale(.985); }
+  .xt-card:active:not(:has(.xt-detail:active)){ transform:scale(.985); }
+  .xt-card:focus{ outline:none; }
+  .xt-card:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
   .xt-q{ display:block; font-size:17px; line-height:1.45; font-weight:650; color:var(--text); word-break:keep-all; }
   .xt-tap{ display:block; margin-top:8px; font-size:13px; font-weight:600; color:hsl(var(--h) 52% var(--tag-l)); }
   .xt-card.open .xt-tap{ display:none; }
@@ -665,7 +667,18 @@
   .xt-card.open .xt-a{ display:block; }
   .xt-phrase{ display:block; font-size:20px; font-weight:700; color:var(--accent); }
   .xt-mean{ display:block; margin-top:2px; font-size:14.5px; color:var(--text-2); }
-  .xt-detail{ display:inline-block; margin-top:8px; font-size:13.5px; font-weight:600; color:var(--accent); }
+  .xt-detail{
+    display:inline-flex; align-items:center; gap:2px; height:36px; margin-top:10px; padding:0 10px 0 14px; border-radius:999px;
+    font-size:14px; font-weight:650; color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line);
+  }
+  .xt-detail svg{ width:15px; height:15px; }
+  .xt-detail:active{ transform:scale(.97); }
+  /* 질문 카드 자동 넘김(홈·표현 탭 공통): 카드 아래 얇은 막대 = 다음 질문까지 남은 시간, 넘어갈 때 살짝 사라졌다 떠오름 */
+  .qa-track{ height:3px; margin-top:10px; border-radius:2px; background:var(--line); overflow:hidden; }
+  .qa-track i{ display:block; height:100%; border-radius:2px; background:var(--qa-c, var(--accent)); opacity:.75; transform-origin:left center; transition:transform .2s linear; }
+  .qa-out{ opacity:0 !important; transform:translateY(-6px) !important; transition:opacity .18s ease, transform .18s ease !important; }
+  .qa-in{ animation:qaIn .34s cubic-bezier(.2,.7,.3,1) both; }
+  @keyframes qaIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
   /* 표현 목록: 카테고리 접기(머리를 누르면 펼치기·접기, 위쪽 [전체 펼치기/접기]). 검색 중엔 모두 펼침 */
   .x-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:22px; }
   .x-bar .set-label{ margin:0; }
@@ -3639,6 +3652,55 @@ X.list.addEventListener("click", e => {
     buzz(); renderExprList();
   }
 });
+/* ---- 질문 카드 자동 넘김(홈 '이럴 땐 어떻게?' · 표현 탭 궁금증 카드 공통) ----
+   가만히 두면 ROTATE_MS(10초)마다 다음 질문으로(수동 버튼 [다른 질문]/[다른 3개]는 그대로). 카드 아래 얇은 막대([data-qa-bar])가 남은 시간,
+   수동으로 넘기면 막대도 처음부터. 멈춤: 카드를 누르고 있는 동안 · o.ok()가 false(그 탭이 아님, 정답 펼침, 시트·드라이브·연습이 덮음)
+   · 앱이 백그라운드 · 카드가 화면 밖(스크롤해서 안 보임 — 안 보는 사이 질문이 지나가 버리지 않게). 풀리면 남은 시간부터 이어서.
+   넘어갈 때 o.parts()(카드 등)가 살짝 위로 사라졌다(qa-out) 새 질문이 아래에서 떠오름(qa-in).
+   시간은 200ms마다 셈(막대는 CSS transition으로 부드럽게), 한 번에 더하는 시간은 최대 400ms(백그라운드에서 돌아온 직후 건너뛰지 않게). */
+const ROTATE_MS = 10000, ROTATE_TICK = 200;
+function makeRotator(o) {      // o = { view: 그 탭 화면(스크롤), parts: () => [움직일 요소], ok: () => 넘겨도 되는지, next: () => 새 질문을 고르고 그림 }
+  const r = { t: 0, press: false, busy: false, last: performance.now() };
+  r.frac = () => Math.min(1, r.t / ROTATE_MS);
+  function paint(snap) {
+    const b = o.view.querySelector("[data-qa-bar]");
+    if (!b) return;
+    if (snap) { b.style.transition = "none"; b.style.transform = "scaleX(0)"; void b.offsetWidth; b.style.transition = ""; }
+    b.style.transform = "scaleX(" + r.frac() + ")";
+  }
+  function visible() {
+    const el = o.parts()[0];
+    if (!el) return false;
+    const a = el.getBoundingClientRect(), v = o.view.getBoundingClientRect();
+    return a.height > 0 && a.bottom > v.top + 24 && a.top < v.bottom - 24;
+  }
+  r.running = () => !r.press && !r.busy && document.visibilityState === "visible" && o.ok() && visible();
+  r.swap = () => {                                  // 다음 질문으로(자동·수동 공통) — 막대는 처음부터
+    if (r.busy) return;
+    r.busy = true; r.t = 0;
+    o.parts().forEach(el => el.classList.add("qa-out"));
+    setTimeout(() => {
+      o.next();
+      const now = o.parts();
+      now.forEach(el => el.classList.add("qa-in"));
+      setTimeout(() => now.forEach(el => el.classList.remove("qa-in")), 400);
+      r.busy = false; r.last = performance.now();
+      paint(true);
+    }, 180);
+  };
+  setInterval(() => {
+    const now = performance.now(), dt = Math.min(400, now - r.last);
+    r.last = now;
+    if (!r.running()) return;
+    r.t += dt;
+    if (r.t >= ROTATE_MS) r.swap(); else paint();
+  }, ROTATE_TICK);
+  o.view.addEventListener("pointerdown", e => { if (e.target.closest("[data-qa-card]")) r.press = true; });
+  ["pointerup", "pointercancel"].forEach(n => document.addEventListener(n, () => { r.press = false; }, true));
+  return r;
+}
+const qaBar = r => '<div class="qa-track" aria-hidden="true"><i data-qa-bar style="transform:scaleX(' + r.frac() + ')"></i></div>';
+
 /* ---- 궁금증 카드 3개: 핵심 표현의 teaser("~할 때, 뭐라고 하지?") — 누르면 뒤집혀 정답 표현·짧은 뜻·[자세히 보기] ----
    고르기(pickTeasers): 앱을 켤 때 한 번 · [다른 3개]마다(표현 탭을 다시 그려도 그대로). 미학습 표현 먼저(모자라면 학습 중·익힘), 그중 무작위.
    최근에 나온 9개(3번 분량)는 빼고. 기록 engcards.teaser.v1 { recent: [표현id, …] } */
@@ -3670,23 +3732,42 @@ function renderTeasers() {
   if (!items.length) { X.teasers.innerHTML = ""; return; }
   X.teasers.innerHTML = '<div class="xt-head"><h3 class="xt-title">이 말, 영어로 뭐라고 할까?</h3>' +
       '<button class="xt-more" type="button" data-xt-more>다른 3개</button></div>' +
-    '<div class="xt-list">' + items.map(it =>
-      '<button class="xt-card' + (teaserOpen.has(it.id) ? " open" : "") + '" type="button" data-xt="' + esc(it.id) + '" style="--h:' + hueOf(it.card.category) + '">' +
+    '<div class="xt-list">' + items.map(it => {
+      const open = teaserOpen.has(it.id);
+      return '<div class="xt-card' + (open ? " open" : "") + '" role="button" tabindex="0" aria-expanded="' + open + '" data-xt="' + esc(it.id) + '" data-qa-card style="--h:' + hueOf(it.card.category) + '">' +
         '<span class="xt-q">' + esc(it.ex.teaser) + '</span>' +
         '<span class="xt-tap">눌러서 정답 보기</span>' +
         '<span class="xt-a"><span class="xt-phrase" lang="en">' + esc(it.ex.phrase) + '</span>' +
           '<span class="xt-mean">' + esc(shortMeaning(it.ex)) + '</span>' +
-          '<span class="xt-detail">예문·썰 자세히 보기 ›</span></span>' +
-      '</button>').join("") + '</div>';
+          '<button class="xt-detail" type="button" data-xt-detail tabindex="' + (open ? 0 : -1) + '">예문·썰 자세히 보기' + ICON_ARROW + '</button></span>' +
+      '</div>';
+    }).join("") + '</div>' + qaBar(teaserRot);
+}
+/* 카드를 누르면 정답 펼치기 ↔ 접기. 표현 상세는 펼친 카드의 [자세히 보기] 버튼으로만 */
+function toggleTeaser(c) {
+  const id = c.dataset.xt, open = !teaserOpen.has(id);
+  if (open) teaserOpen.add(id); else teaserOpen.delete(id);
+  c.classList.toggle("open", open);
+  c.setAttribute("aria-expanded", String(open));
+  const d = c.querySelector("[data-xt-detail]");
+  if (d) d.tabIndex = open ? 0 : -1;
 }
 X.teasers.addEventListener("click", e => {
-  if (e.target.closest("[data-xt-more]")) { buzz(); teaserPick = pickTeasers(); renderTeasers(); return; }
+  if (e.target.closest("[data-xt-more]")) { buzz(); teaserRot.swap(); return; }
+  const d = e.target.closest("[data-xt-detail]");
+  if (d) { buzz(); openExprDetail(d.closest("[data-xt]").dataset.xt, {}); return; }
   const c = e.target.closest("[data-xt]");
-  if (!c) return;
-  buzz();
-  const id = c.dataset.xt;
-  if (!teaserOpen.has(id)) { teaserOpen.add(id); c.classList.add("open"); }   // 처음 누르면 정답
-  else openExprDetail(id, {});                                                // 정답이 보인 뒤 누르면 자세히(예문·썰·학습하기)
+  if (c) { buzz(); toggleTeaser(c); }
+});
+X.teasers.addEventListener("keydown", e => {
+  const c = e.target.closest("[data-xt]");
+  if (c && e.target === c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleTeaser(c); }
+});
+const teaserRot = makeRotator({
+  view: X.view,
+  parts: () => Array.from(X.teasers.querySelectorAll(".xt-list")),
+  ok: () => currentTab === "expr" && !teaserOpen.size && !sheetOpen && !D.open && !PC.open,
+  next: () => { teaserPick = pickTeasers(); renderTeasers(); }
 });
 X.rv.addEventListener("click", e => {
   const one = e.target.closest("[data-review]");
@@ -3980,9 +4061,10 @@ function renderHome() {
   homeEl.innerHTML =
     '<header class="w-top"><div><div class="w-date">' + esc(koDate(dateKey(), true)) + '</div><h2 class="w-title">한 장 영어</h2></div></header>' +
     '<div class="hq">' + (x ?
-      '<button class="hq-card" type="button" data-hq-go style="--h:' + hueOf(card.category) + '">' +
+      '<button class="hq-card" type="button" data-hq-go data-qa-card style="--h:' + hueOf(card.category) + '">' +
         '<span class="hq-label">이럴 땐 어떻게?</span><span class="hq-text">' + esc(x.h.ko) + '</span>' +
         '<span class="hq-go">눌러서 떠올려 보기' + ICON_ARROW + '</span></button>' +
+      '<div style="--qa-c:hsl(' + hueOf(card.category) + ' 52% var(--tag-l))">' + qaBar(homeRot) + '</div>' +
       '<div class="hq-meta"><span class="hq-src">' + (CATEGORY_EMOJI[card.category] || "") + " " + esc(card.category) + " · " + esc(card.title) + '</span>' +
         '<button class="hq-next" type="button" data-hq-next>다른 질문</button></div>' :
       '<p class="hq-empty">아직 질문이 없어요</p>') + '</div>' +
@@ -4017,11 +4099,18 @@ function openHook(x) {
   clearTimeout(row._hook);
   row._hook = setTimeout(() => row.classList.remove("hook-hi"), 2400);
 }
+/* 10초마다 다음 질문(위 makeRotator). 홈 탭에 있고 시트·드라이브·연습이 덮지 않을 때만 */
+const homeRot = makeRotator({
+  view: homeEl,
+  parts: () => Array.from(homeEl.querySelectorAll(".hq-card, .hq-src")),
+  ok: () => currentTab === "home" && homeReady && !!homeHook && !sheetOpen && !D.open && !PC.open,
+  next: () => { homeHook = pickHook(); renderHome(); }
+});
 homeEl.addEventListener("click", e => {
   const t = e.target;
   let el;
   if ((el = t.closest("[data-hq-go]"))) { buzz(); if (homeHook) openHook(homeHook); return; }
-  if ((el = t.closest("[data-hq-next]"))) { buzz(); homeHook = pickHook(); renderHome(); return; }
+  if ((el = t.closest("[data-hq-next]"))) { buzz(); homeRot.swap(); return; }
   if ((el = t.closest("[data-home-go]"))) {
     const to = el.dataset.homeGo;
     if (to === "drive") openDrive(); else switchTab(to);
@@ -5528,7 +5617,9 @@ function runChecks() {
     };
     d.forEach((x, li) => { if (!unitCheck(tag + " 대사 " + (li + 1), stripGloss(x.en), x)) miss.dlg++; });
     const ex = c.expressions || [];
-    if (ex.length < 2 || ex.length > 5) issues.push(tag + ": 표현 " + ex.length + "개 (2~5개)");
+    /* 핵심 표현은 활용도 높은 것만(2026-10-04) — 카드마다 최소 1개, 많아야 5개. 단어 하나·외워 쓰는 짧은 반응은 넓히거나 추가 표현으로 */
+    if (!ex.length) issues.push(tag + ": 핵심 표현 0개 — 카드마다 최소 1개");
+    else if (ex.length > 5) issues.push(tag + ": 핵심 표현 " + ex.length + "개 (1~5개)");
     if (!Array.isArray(c.extraExpressions)) issues.push(tag + ": extraExpressions 칸 없음 (비어 있어도 [] 로)");
 
     /* 밑줄 시뮬레이션: 화면과 똑같은 규칙으로 어떤 표현이 실제로 밑줄이 생기는지 */
@@ -5542,7 +5633,7 @@ function runChecks() {
     const checkExpr = (e, kind, idx) => {
       stats.expressions++;
       const p = "\"" + e.phrase + "\"";
-      const want = kind === "core" ? "e" : "x";
+      const want = kind === "core" ? "e" : "[xe]";   // 핵심에서 추가로 내린 표현은 원래 e id 그대로(학습 기록 유지)
       keyCheck(e, "expr", tag + " " + p);
       if (e.phrase != null && typeof e.phrase !== "string") issues.push(tag + " " + p + ": phrase는 글(문자열)이어야 함");
       if (e.forms != null && !(Array.isArray(e.forms) && e.forms.every(f => typeof f === "string" && f))) issues.push(tag + " " + p + ": forms는 글 목록이어야 함");
@@ -5559,10 +5650,14 @@ function runChecks() {
       else {
         if (allExprIds.has(e.id)) issues.push(tag + " " + p + ": 표현 id 중복 — " + e.id);
         allExprIds.add(e.id);
-        if (!new RegExp("^c" + c.id + "-" + want + "\\d+$").test(e.id)) issues.push(tag + " " + p + ": 표현 id 형식 (c" + c.id + "-" + want + "숫자) — " + e.id);
+        if (!new RegExp("^c" + c.id + "-" + want + "\\d+$").test(e.id)) issues.push(tag + " " + p + ": 표현 id 형식 (c" + c.id + "-" + (kind === "core" ? "e" : "x") + "숫자) — " + e.id);
       }
       if (!e.phrase || !e.ko) issues.push(tag + ": 표현 phrase/ko 누락");
       if (kind === "core") {
+        /* 활용도: 바뀌는 자리(~)가 없는데 단어 하나, the/a로 시작하는 두 단어(the check), 3단어 이하 짧은 문장(My bad. / Good call.)이면 권장 */
+        const ph = String(e.phrase || "").trim(), nw = ph.split(/\s+/).filter(Boolean).length;
+        if (ph && !ph.includes("~") && (nw === 1 || (nw === 2 && /^(the|a|an)\s/i.test(ph)) || (nw <= 3 && /[.!?]$/.test(ph))))
+          warnings.push(tag + " " + p + ": 단어 하나·외워 쓰는 짧은 반응 같음 — 통째로 쓰는 문장으로 넓히거나 추가 표현(extraExpressions)으로");
         const k = normPhrase(e.phrase);
         if (EXPR_OWNER[k] !== i) issues.push(tag + " " + p + ": 앞 카드(" + (EXPR_OWNER[k] + 1) + "번)와 같은 표현이라 밑줄이 안 생김");
         else if (!usedSim.has(idx)) issues.push(tag + " " + p + ": 대화에 없거나, 다른 밑줄과 겹치거나 붙어 있어서 밑줄이 안 생김");
