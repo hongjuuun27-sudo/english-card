@@ -697,6 +697,8 @@
   .rv-due{ flex:none; font-size:12.5px; color:var(--faint); }
   .rv-more{ margin:8px 2px 0; font-size:13px; color:var(--faint); }
   .rv-start{ width:100%; margin-top:12px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .rv-free{ width:100%; height:48px; margin-top:8px; font-size:15.5px; color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .rv-free-note{ margin:6px 2px 0; font-size:13px; text-align:center; color:var(--faint); }
 
   /* 궁금증 카드 3개: 문구(teaser) → 누르면 뒤집혀 정답 표현 + 짧은 뜻 + [자세히 보기] */
   .x-teasers{ margin-top:22px; }
@@ -926,6 +928,7 @@
   .fc-note{ margin:18px 0 0; font-size:15px; line-height:1.6; color:var(--text-2); }
   .fc-note b{ color:var(--accent); }
   .fc-count + .fc-gear{ margin-left:2px; }
+  .fc-more{ width:100%; margin-top:10px; color:var(--accent); border-color:var(--accent-line); background:var(--accent-soft); }
   .fc-retry{ width:100%; margin-top:20px; color:var(--again); border-color:color-mix(in srgb, var(--again) 45%, transparent); }
 
   /* ---------- 글쓰기 ---------- */
@@ -4257,11 +4260,14 @@ function renderReviewCard() {
   const picked = picksToday();
   const head = '<div class="rv-head"><span class="rv-title">오늘의 복습</span>' +
     '<span class="rv-picks">오늘 새로 고른 표현 <b>' + picked + '</b> / ' + DAILY_PICKS + '</span></div>';
+  /* 자유 복습(복습 날짜와 상관없이 언제든): 오늘 복습할 차례가 없으면 큰 버튼, 있으면 아래 작은 버튼 */
+  const learned = EXPR_LIST.filter(it => statusOf(it.id) !== "new").length;
+  const freeBtn = main => '<button class="btn ' + (main ? "rv-start" : "rv-free") + '" type="button" data-review-free>자유 복습 · 지금 연습하기</button>' +
+    '<p class="rv-free-note">' + (learned ? "학습한 표현 " + Math.min(FREE_N, learned) : "전체 표현 중 " + FREE_N) + '개로 · 복습 날짜는 그대로예요</p>';
   if (!due.length) {
-    const learning = Object.keys(study.items).filter(id => statusOf(id) === "learning" && EXPR_BY_ID[id]).length;
-    X.rv.innerHTML = head + '<p class="rv-empty">' + (learning ?
-      "오늘 복습할 표현이 없어요. 다음 복습일에 다시 알려 드릴게요." :
-      "아직 학습 중인 표현이 없어요. 아래 목록에서 표현을 눌러 '학습하기'를 시작해 보세요.") + '</p>';
+    X.rv.innerHTML = head + '<p class="rv-empty">' + (learned ?
+      "오늘 복습할 표현이 없어요. 다음 복습일에 다시 알려 드릴게요. 지금 연습하고 싶으면 자유 복습을 해 보세요." :
+      "아직 학습 중인 표현이 없어요. 아래 목록에서 표현을 눌러 '학습하기'를 시작해 보세요. 자유 복습은 지금 바로 할 수 있어요.") + '</p>' + freeBtn(true);
     return;
   }
   const rp = reviewProgress();       // 같은 날 하던 복습 덱이 있으면 [이어서 복습]
@@ -4274,7 +4280,7 @@ function renderReviewCard() {
     }).join("") + '</ul>' +
     (due.length > 6 ? '<p class="rv-more">외 ' + (due.length - 6) + '개</p>' : "") +
     (rp ? '<p class="rv-more">카드 ' + rp.i + ' / ' + rp.n + '장까지 했어요</p>' : "") +
-    '<button class="btn rv-start" type="button" data-review-start>' + (rp ? "이어서 복습" : "복습 시작 · 카드 약 " + due.length * DECK_PER + "장") + '</button>';
+    '<button class="btn rv-start" type="button" data-review-start>' + (rp ? "이어서 복습" : "복습 시작 · 카드 약 " + due.length * DECK_PER + "장") + '</button>' + freeBtn(false);
 }
 
 function renderExprList() {
@@ -4502,6 +4508,7 @@ const teaserRot = makeRotator({
 });
 X.rv.addEventListener("click", e => {
   const one = e.target.closest("[data-review]");
+  if (e.target.closest("[data-review-free]")) { buzz(); startFreeReview(); return; }
   if (one || e.target.closest("[data-review-start]")) { buzz(); startReview(); }   // 목록의 표현을 눌러도 같은 덱(오늘 복습할 표현 전부를 섞음)
 });
 
@@ -4871,7 +4878,7 @@ function rvLoad() {
 }
 function rvSave() {
   const s = RV.s;
-  if (!s || s.extra) return;          // '틀린 카드만 한 번 더'는 저장하지 않음
+  if (!s || s.extra || s.free) return;   // '틀린 카드만 한 번 더'·자유 복습은 저장하지 않음
   try { localStorage.setItem(REVIEW_KEY, JSON.stringify(s)); } catch (e) {}
 }
 /* 이어서 할 덱이 있으면 { i, n } (오늘 탭·표현 탭 버튼 이름) */
@@ -5053,7 +5060,29 @@ function rvWrong() {
   return out;
 }
 function rvSummary(s) {
-  return s.extra ? s.base : { seen: s.log.length, again: s.log.filter(l => !l.ok).length, res: s.res, ids: s.ids.length };
+  return s.extra ? s.base : { seen: s.log.length, again: s.log.filter(l => !l.ok).length, res: s.res, free: !!s.free,
+    nx: s.free ? s.ids.length : Object.keys(s.res).filter(id => s.res[id]).length };
+}
+/* 자유 복습(2026-10-06 사용자 요청 — 복습할 차례가 아니어도 원할 때 연습): 같은 덱·같은 카드 동작, 복습 날짜·기록은 그대로, 저장 안 함.
+   표현 FREE_N개: 학습 중(다음 복습이 가까운 것 먼저) → 익힘(무작위). 학습한 표현이 하나도 없으면 전체 표현에서 무작위.
+   바로 전 자유 복습에 나온 표현은 다른 표현이 충분하면 뺌([다른 표현으로 한 번 더]) */
+const FREE_N = 5;
+let freeLast = [];
+function startFreeReview() {
+  const learned = EXPR_LIST.filter(it => statusOf(it.id) !== "new").map(it => it.id);
+  let pool = dvShuffled(learned.length ? learned : EXPR_LIST.map(it => it.id));
+  const rank = id => statusOf(id) === "learning" ? 0 : 1, due = id => (study.items[id] && study.items[id].due) || "9999";
+  pool.sort((a, b) => rank(a) - rank(b) || (rank(a) ? 0 : due(a).localeCompare(due(b))));
+  const fresh = pool.filter(id => !freeLast.includes(id));
+  if (fresh.length >= Math.min(FREE_N, pool.length)) pool = fresh.concat(pool.filter(id => freeLast.includes(id)));
+  const ids = pool.slice(0, FREE_N);
+  if (!ids.length) { toast("연습할 표현이 없어요"); return; }
+  freeLast = ids;
+  const s = rvNew(ids);
+  s.free = true;
+  RV.s = s;
+  RV.flipped = false;
+  if (RV.open) { buzz(); rvRender(); } else rvShow();
 }
 function rvEndHtml() {
   const s = RV.s, m = rvSummary(s), t = studyToday(), tm = addDays(t, 1);
@@ -5074,14 +5103,16 @@ function rvEndHtml() {
   const wrong = rvWrong().length;
   const stat = (n, label) => '<div class="fc-stat"><b>' + n + '</b><span>' + label + '</span></div>';
   return '<div class="fc-end">' +
-    '<h3>' + (s.extra ? "한 번 더 끝!" : "오늘 복습 끝! 👏") + '</h3>' +
-    (s.extra ? '<p class="fc-note">틀린 카드 <b>' + s.q.filter(c => c.rep === 0).length + '장</b>을 한 번 더 봤어요 · 다시 ' + s.log.filter(l => !l.ok).length + '번 (복습 날짜는 그대로)</p>' : "") +
-    '<div class="fc-stats">' + stat(m.seen, "본 카드") + stat(m.again, "다시") + stat(ids.length, "표현") + '</div>' +
+    '<h3>' + (s.extra ? "한 번 더 끝!" : s.free ? "자유 복습 끝! 👏" : "오늘 복습 끝! 👏") + '</h3>' +
+    (s.extra ? '<p class="fc-note">틀린 카드 <b>' + s.q.filter(c => c.rep === 0).length + '장</b>을 한 번 더 봤어요 · 다시 ' + s.log.filter(l => !l.ok).length + '번 (복습 날짜는 그대로)</p>' :
+      s.free ? '<p class="fc-note">자유 복습이라 복습 날짜는 그대로예요.</p>' : "") +
+    '<div class="fc-stats">' + stat(m.seen, "본 카드") + stat(m.again, "다시") + stat(m.nx, "표현") + '</div>' +
     grp("next", "다음 간격으로", ["next", "mastered"]) +
     grp("same", "같은 간격 한 번 더", ["same"]) +
     grp("reset", "처음부터 다시", ["reset"]) +
     '<p class="fc-note">' + (tomorrow ? '내일 복습 예정 <b>' + tomorrow + '개</b>' : "내일 복습할 표현은 없어요") + '</p>' +
     (wrong ? '<button class="btn fc-retry" type="button" data-rv="retry">틀린 카드만 한 번 더 · ' + wrong + '장</button>' : "") +
+    (m.free ? '<button class="btn fc-more" type="button" data-rv="free">다른 표현으로 자유 복습</button>' : "") +
   '</div>';
 }
 function rvRender() {
@@ -5092,7 +5123,7 @@ function rvRender() {
   rvEl.innerHTML =
     '<header class="dv-head">' +
       '<button class="dv-x" type="button" data-rv="close" aria-label="복습 닫기">' + ICON_X + '</button>' +
-      '<h2 class="dv-title">' + (s.extra ? "틀린 카드 한 번 더" : "복습") + '</h2>' +
+      '<h2 class="dv-title">' + (s.extra ? "틀린 카드 한 번 더" : s.free ? "자유 복습" : "복습") + '</h2>' +
       (done ? "" : '<span class="fc-count" aria-label="' + s.q.length + '장 중 ' + (s.i + 1) + '번째"><b>' + (s.i + 1) + '</b> / ' + s.q.length + '</span>') +
       '<button class="fc-gear" type="button" data-rv="settings" aria-label="복습 설정">' + ICON_SLIDERS + '</button>' +
     '</header>' +
@@ -5170,7 +5201,7 @@ function rvApply(ok) {
     s.q.push(copy);
     L.add = copy.n;
   }
-  if (!s.extra && c.rep === 0 && !s.res[c.x]) {        // 그 표현의 처음 카드를 다 봤으면 다음 복습 날짜
+  if (!s.extra && !s.free && c.rep === 0 && !s.res[c.x]) {   // 그 표현의 처음 카드를 다 봤으면 다음 복습 날짜(자유 복습은 날짜 그대로)
     const firsts = s.q.filter(e => e.x === c.x && e.rep === 0), st = study.items[c.x];
     if (firsts.every(e => e.ok != null) && st && st.status === "learning") {
       L.snap = { x: c.x, item: JSON.stringify(st) };
@@ -5271,6 +5302,7 @@ rvEl.addEventListener("click", e => {
     else if (a === "undo") rvUndo();
     else if (a === "say") { buzz(); rvSay(true); }
     else if (a === "retry") rvRetry();
+    else if (a === "free") startFreeReview();
     return;
   }
   if (!t.closest("#fcCard")) return;
