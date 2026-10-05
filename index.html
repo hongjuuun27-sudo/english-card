@@ -492,6 +492,15 @@
   .ex .spk{ position:absolute; right:0; top:10px; width:34px; height:34px; }
   .ex-en{ font-size:17px; line-height:1.5; }
   .ex-ko{ margin-top:3px; font-size:16px; line-height:1.55; color:var(--muted); }
+  /* 표현 상세 '직접 말해 보기' 10문장(접어 둠): 한국어 위, 영어 아래 */
+  .dr-sec{ margin-top:22px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .dr-sec > summary{ list-style:none; cursor:pointer; min-height:48px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:16px; font-weight:700; }
+  .dr-sec > summary::-webkit-details-marker{ display:none; }
+  .dr-sec > summary small{ margin-left:4px; font-size:13px; font-weight:600; color:var(--muted); }
+  .dr-sec[open] > summary .h-chev{ transform:rotate(180deg); }
+  .dr-sec .sec-row{ margin-top:6px; }
+  .dr-sec .sec-row .sec-h{ visibility:hidden; }
+  .dr-ko{ font-size:15px; line-height:1.55; color:var(--muted); margin-bottom:3px; }
   mark{
     color:inherit; font-weight:650;
     background:linear-gradient(transparent 58%, var(--mark) 58%);
@@ -1508,6 +1517,7 @@
 <script src="data/cards/daily-talk.js"></script>
 <script src="data/cards/life-health.js"></script>
 <script src="data/questions.js"></script>
+<script src="data/drills.js"></script>
 
 <script>
 /* ================= 데이터 받기 ================= */
@@ -4750,7 +4760,22 @@ function detailHtml(it) {
   return (it.kind === "extra" ? '<p class="x-extra-note">대화에 연한 점선 밑줄로 나오는 추가 표현</p>' : "") +
     (it.ex.ko ? '<p class="xp-ko">' + esc(it.ex.ko) + '</p>' : "") +
     studyBox + pcExprBtn(it) +
-    examplesHtml(it.ex) + storyHtml(it.ex) + practice + goCard;
+    examplesHtml(it.ex) + storyHtml(it.ex) + drillsHtml(it) + practice + goCard;
+}
+/* 직접 말해 보기 10문장(data/drills.js, 2026-10-06): 표현 상세 아래쪽에 접어서. 펼치면 (누구에게) 한국어 + 영어(내 목소리, 노래방식·단어 탭)·전체 듣기.
+   복습 덱(오늘 복습·자유 복습)에도 예문과 함께 섞여 나옴(deckCards) */
+const DRILLS = window.DRILL_DATA && typeof window.DRILL_DATA === "object" ? window.DRILL_DATA : {};
+const drillsOf = id => (Array.isArray(DRILLS[id]) ? DRILLS[id] : []).filter(d => d && d.ko && d.en);
+function drillsHtml(it) {
+  const list = drillsOf(it.id);
+  if (!list.length) return "";
+  const items = list.map((d, i) =>
+    '<li><div class="dr-ko">' + drillKoHtml(d.ko) + '</div><div class="ex-en">' + scriptHtml(d.en, markRanges(d.en, it.ex)) + '</div>' +
+    '<button class="spk" type="button" aria-label="문장 듣기" data-rd-one="' + i + '">' + ICON_SPEAKER + '</button></li>').join("");
+  return '<details class="dr-sec"><summary><span>직접 말해 보기 <small>' + list.length + '문장</small></span><span class="h-chev">' + ICON_CHEVRON + '</span></summary>' +
+    '<p class="note">한국어를 보고 영어로 말해 본 뒤 확인하세요. 복습 카드에도 섞여 나와요.</p>' +
+    '<section class="rd" data-who="me" data-tap="one"><div class="sec-row"><h4 class="sec-h">직접 말해 보기</h4>' + rdPlayBtn("전체 듣기") + '</div>' +
+    '<ol class="ex dr-list">' + items + '</ol></section></details>';
 }
 /* "이 표현 연습하기": 시작 화면 없이 연습 모드(예문 5개 → 썰). 표현 상세(복습 덱에는 없음) */
 function pcExprBtn(it) {
@@ -4915,17 +4940,19 @@ function deckCards(id, now) {
     c.rv = now;
     out.push({ x: id, t: "m", ref: c.id, ko: c.ko, en: c.en, me: c.me || "", tip: c.tip || "", who: "me" });
   });
-  const exs = it.ex.examples || [];
-  /* 예문이 나온 시각: 학습 기록이 있으면 study.items[id].exRv, 없으면(자유 복습의 안 배운 표현) freeLog.ex[id] */
-  let seen;
-  if (st) seen = st.exRv = st.exRv && typeof st.exRv === "object" ? st.exRv : {};
-  else seen = freeLog.ex[id] = freeLog.ex[id] && typeof freeLog.ex[id] === "object" ? freeLog.ex[id] : {};
-  exs.map((e, k) => k).filter(k => exs[k] && exs[k].en)
-    .sort((a, b) => (seen[a] || 0) - (seen[b] || 0) || a - b)
+  const exs = it.ex.examples || [], drs = drillsOf(id);
+  /* ③ 채우기: 예문 5개 + 직접 말해 보기(drills) 10문장 중에서 가장 오래전에 나온 것부터(같으면 무작위 — 처음엔 예문·말해 보기가 섞여 나옴).
+     나온 시각: 학습 기록이 있으면 study.items[id].exRv(예문)·drRv(말해 보기), 없으면(자유 복습의 안 배운 표현) freeLog.ex[id]·freeLog.dr[id] */
+  const mapOf = (holder, key) => (holder[key] = holder[key] && typeof holder[key] === "object" ? holder[key] : {});
+  const seenEx = st ? mapOf(st, "exRv") : mapOf(freeLog.ex, id), seenDr = st ? mapOf(st, "drRv") : mapOf(freeLog.dr, id);
+  const pool = exs.map((e, k) => ({ t: "e", k, m: seenEx })).filter(p => exs[p.k] && exs[p.k].en)
+    .concat(drs.map((d, k) => ({ t: "d", k, m: seenDr })));
+  dvShuffled(pool).sort((a, b) => (a.m[a.k] || 0) - (b.m[b.k] || 0))
     .slice(0, Math.max(0, DECK_PER - out.length))
-    .forEach(k => {
-      seen[k] = now;
-      out.push({ x: id, t: "e", ref: k, ko: exs[k].ko || "", en: exs[k].en, who: "them" });
+    .forEach(p => {
+      p.m[p.k] = now;
+      if (p.t === "e") out.push({ x: id, t: "e", ref: p.k, ko: exs[p.k].ko || "", en: exs[p.k].en, who: "them" });
+      else out.push({ x: id, t: "d", ref: p.k, ko: drs[p.k].ko, en: drs[p.k].en, who: "me" });
     });
   return out;
 }
@@ -5051,16 +5078,16 @@ window.addEventListener("popstate", () => {
 const rvCur = () => RV.s && RV.s.q[RV.s.i];
 function rvCardHtml(c) {
   const it = EXPR_BY_ID[c.x], ex = it ? it.ex : null;
-  const chip = '<span class="fc-kind' + (c.t === "m" ? " mine" : "") + '">' + (c.t === "p" ? "표현" : c.t === "m" ? "내 문장" : "예문") +
+  const chip = '<span class="fc-kind' + (c.t === "m" ? " mine" : "") + '">' + (c.t === "p" ? "표현" : c.t === "m" ? "내 문장" : c.t === "d" ? "말해 보기" : "예문") +
     (c.rep ? ' <span class="rep">· 다시 ' + c.rep + '</span>' : "") + '</span>';
-  const front = '<div class="fc-mid"><p class="fc-q">' + (c.t === "m" ? drillKoHtml(c.ko) : esc(c.ko)) + '</p>' +
+  const front = '<div class="fc-mid"><p class="fc-q">' + (c.t === "m" || c.t === "d" ? drillKoHtml(c.ko) : esc(c.ko)) + '</p>' +
       (c.t === "p" && it ? '<p class="fc-sit"><b>' + esc(((CATEGORY_EMOJI[it.card.category] || "") + " " + it.card.title).trim()) + '</b> — ' + esc(it.card.situation) + '</p>' : "") +
     '</div><p class="fc-hint">영어로 말해 본 뒤 탭해서 뒤집기</p>';
   const back = '<div class="fc-mid">' +
       (c.t === "p" && c.line && ex ? '<p class="fc-phrase">' + esc(ex.phrase) + '</p>' : "") +
       '<div class="fc-en-row"><div class="fc-en' + (c.t === "p" && c.line ? " small" : "") + '">' + scriptHtml(c.en, ex ? markRanges(c.en, ex) : []) + '</div>' +
         '<button class="spk" type="button" aria-label="다시 듣기" data-rv="say">' + ICON_SPEAKER + '</button></div>' +
-      ((c.t === "p" ? c.lko : c.ko) ? '<p class="fc-ko">' + (c.t === "m" ? drillKoHtml(c.ko) : esc(c.t === "p" ? c.lko : c.ko)) + '</p>' : "") +
+      ((c.t === "p" ? c.lko : c.ko) ? '<p class="fc-ko">' + (c.t === "m" || c.t === "d" ? drillKoHtml(c.ko) : esc(c.t === "p" ? c.lko : c.ko)) + '</p>' : "") +
       (c.t === "m" && drillWrong(c) ? '<p class="fc-extra"><span class="dc-lab">내 답</span>' + drillDiffHtml(c.me, c.en) + '</p>' : "") +
       (c.t === "m" && c.tip ? '<p class="fc-extra"><span class="dc-lab">팁</span>' + esc(c.tip) + '</p>' : "") +
       (c.t !== "p" && ex ? '<p class="fc-tag">' + esc(ex.phrase) + ' · ' + esc(shortMeaning(ex)) + '</p>' : "") +
@@ -5092,16 +5119,16 @@ function rvSummary(s) {
    · 학습한 표현이 FREE_N개 이하면 그 표현 전부 + 모자란 만큼 아직 안 배운 표현(가장 오래전에 본 것부터 — 미리 보기).
    · 표현 안 카드도 돌아감: 예문은 가장 오래전에 나온 것부터(exRv), 내 문장은 틀린 것 → 오래전에 나온 것(rv).
    · 바퀴는 번호로 셈: 이번 바퀴(r)에서 남은 표현이 FREE_N개보다 적으면 모자란 만큼 다음 바퀴(r + 1) 표현으로 채우고, 그 표현은 다음 바퀴에서 본 것으로 침(새 바퀴에서 또 안 나오게).
-   기록 engcards.free.v1 { r: 이번 바퀴 번호(1부터), rd: { 표현id: 마지막으로 본 바퀴 번호 }, seen: { 표현id: 자유 복습에서 마지막으로 평가한 시각 ms }, ex: { 표현id: { 예문 번호: ms } }(학습 기록이 없는 표현의 예문 순환) } */
+   기록 engcards.free.v1 { r: 이번 바퀴 번호(1부터), rd: { 표현id: 마지막으로 본 바퀴 번호 }, seen: { 표현id: 자유 복습에서 마지막으로 평가한 시각 ms }, ex·dr: { 표현id: { 예문·말해 보기 번호: ms } }(학습 기록이 없는 표현의 순환) } */
 const FREE_N = 5;
 const FREE_KEY = "engcards.free.v1";
 const freeLog = (() => {
   const obj = v => v && typeof v === "object" ? v : {};
   try {
     const s = JSON.parse(localStorage.getItem(FREE_KEY) || "null");
-    if (s && typeof s === "object") return { r: Math.max(1, +s.r || 1), rd: obj(s.rd), seen: obj(s.seen), ex: obj(s.ex) };
+    if (s && typeof s === "object") return { r: Math.max(1, +s.r || 1), rd: obj(s.rd), seen: obj(s.seen), ex: obj(s.ex), dr: obj(s.dr) };
   } catch (e) {}
-  return { r: 1, rd: {}, seen: {}, ex: {} };
+  return { r: 1, rd: {}, seen: {}, ex: {}, dr: {} };
 })();
 function saveFree() { try { localStorage.setItem(FREE_KEY, JSON.stringify(freeLog)); } catch (e) {} }
 function freeLastSeen(id) {
@@ -7191,6 +7218,7 @@ function audioNeeded(cards) {
       add("phrase", "me", sayPhrase(x.phrase), X + " 표현 읽기");
       (x.examples || []).forEach((e, n) => { if (e && e.en) add("ex", "them", sp(e.en), X + " 예문 " + (n + 1)); });
       if (x.story && x.story.en) add("story", "me", sp(x.story.en), X + " 썰");
+      drillsOf(it.id).forEach((d, n) => add("drill", "me", sp(d.en), X + " 말해 보기 " + (n + 1)));   // data/drills.js(내가 하는 말 — 내 목소리)
     });
     const tag = it => C + (it.kind === "dlg" ? " 대사 " + it.n : " " + it.ex.phrase + (it.kind === "ex" ? " 예문 " + it.n : " 썰 문장 " + it.n));
     const o = { cats: [], content: "story", method: "chunk", rate: 1 };
@@ -7442,6 +7470,37 @@ function runChecks() {
   /* 카드 id는 1부터 빈칸 없이 이어지는 게 원칙(카드를 지웠으면 빈칸이 정상일 수 있음) */
   const nums = Array.from(ids).filter(Number.isInteger).sort((a, b) => a - b);
   nums.forEach((n, k) => { const want = k ? nums[k - 1] + 1 : 1; if (n !== want) warnings.push("카드 id: " + want + (n - 1 > want ? "~" + (n - 1) : "") + "번이 비어 있음 (새 카드는 가장 큰 id 다음 번호로)"); });
+  /* 직접 말해 보기(data/drills.js, 2026-10-06): 핵심 표현마다 정확히 10문장 { ko: "(누구에게) 한국어", en }. 표현이 문장에 그대로(밑줄 찾기와 같은 방식),
+     영어에 한글 없음·15단어 이하, 같은 표현 안·예문과 같은 문장 금지. 모르는 표현 id·모르는 칸은 문제 */
+  const D = window.DRILL_DATA;
+  stats.drills = 0;
+  if (!D || typeof D !== "object") issues.push("data/drills.js: window.DRILL_DATA 없음 — index.html <script>·sw.js CORE 등록 확인");
+  else {
+    Object.keys(D).forEach(id => { if (!EXPR_BY_ID[id]) issues.push("말해 보기 \"" + id + "\": 그런 표현 id가 없음"); });
+    EXPR_LIST.forEach(it => {
+      const list = D[it.id], tag = "카드 " + it.card.id + " \"" + it.ex.phrase + "\" 말해 보기";
+      if (list == null) { if (it.kind === "core") issues.push(tag + ": 없음 — 핵심 표현은 10문장 필요(data/drills.js)"); return; }
+      if (!Array.isArray(list)) { issues.push(tag + ": 목록(배열)이어야 함"); return; }
+      if (list.length !== 10) issues.push(tag + ": " + list.length + "문장 (정확히 10개)");
+      const exSet = new Set((it.ex.examples || []).map(e => drillNorm(e.en))), seen = new Set();
+      list.forEach((d, n) => {
+        const w = tag + " " + (n + 1);
+        stats.drills++;
+        if (!d || typeof d !== "object") { issues.push(w + ": { ko, en } 형식이 아님"); return; }
+        Object.keys(d).forEach(k => { if (k !== "ko" && k !== "en") issues.push(w + ": 모르는 칸 \"" + k + "\""); });
+        if (!d.ko || !d.en) { issues.push(w + ": ko/en 누락"); return; }
+        if (!/^\s*[(（][^)）]{1,24}[)）]/.test(d.ko)) warnings.push(w + ": ko 앞에 (누구에게)가 없음 — " + d.ko);
+        if (/[가-힣]/.test(d.en)) issues.push(w + ": 영어에 한글 — " + d.en);
+        if (d.en.trim().split(/\s+/).length > 15) warnings.push(w + ": 15단어 넘음 — " + d.en);
+        if (!exprFound(it.ex, d.en)) issues.push(w + ": 표현이 문장에 안 보임(밑줄 찾기 기준) — " + d.en);
+        const k = drillNorm(d.en);
+        if (seen.has(k)) issues.push(w + ": 같은 표현 안에서 중복 — " + d.en);
+        if (exSet.has(k)) issues.push(w + ": 예문과 같은 문장 — " + d.en);
+        seen.add(k);
+        curly(d.en, w);
+      });
+    });
+  }
   return { stats, issues, warnings };
 }
 window.runChecks = runChecks;
