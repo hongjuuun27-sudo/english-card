@@ -60,17 +60,17 @@
       --line:rgba(0,0,0,.08);
       --bubble:#FFFFFF;
       --bubble-text:#24272B;
-      --accent:#2C7A63;
-      --accent-soft:rgba(44,122,99,.07);
-      --accent-line:rgba(44,122,99,.36);
-      --mark:rgba(44,122,99,.16);
-      --me:#2C7A63;
+      --accent:#256A55;   /* 2026-10-06 #2C7A63 → 회색 칸(--bg-2·accent-soft) 위 글자 대비 4.25 → 5.3:1 */
+      --accent-soft:rgba(37,106,85,.07);
+      --accent-line:rgba(37,106,85,.36);
+      --mark:rgba(37,106,85,.16);
+      --me:#256A55;
       --me-text:#FFFFFF;
       --sheet:#FBFAF7;
       --scrim:rgba(20,22,25,.34);
       --shadow:0 -12px 40px rgba(0,0,0,.12);
       --toast:#2B3036;
-      --tag-l:34%;
+      --tag-l:28%;        /* 카테고리 색 글자(2026-10-06 34% → 28%: 연한 카테고리 배경 위 대비 3.9 → 4.5:1 이상) */
       --tag-a:.12;
       --glow-a:.09;
       --on-accent:#FFFFFF;
@@ -173,13 +173,14 @@
     color:hsl(var(--h) 52% var(--tag-l));
     background:hsl(var(--h) 50% 55% / var(--tag-a));
   }
-  .tag-btn{ display:flex; align-items:center; gap:1px; padding:6px 6px 6px 10px; }   /* 누르면 그 카테고리 상황 목록(작은 아래 화살표로 눌리는 요소임을 보여 줌). 384px 위쪽 줄에 들어가게 좁게 */
+  .top .tag{ height:34px; display:flex; align-items:center; }   /* 위쪽 줄(2026-10-06 정리): 카테고리·연습 알약 둘 다 34px·13.5px, 목록·설정은 44px 누르는 자리 */
+  .tag-btn{ gap:2px; padding:0 8px 0 12px; }   /* 누르면 그 카테고리 상황 목록(작은 아래 화살표로 눌리는 요소임을 보여 줌) */
   .tag-btn svg{ width:13px; height:13px; opacity:.8; }
   .tag-btn:active{ transform:scale(.96); }
-  .top-r{ display:flex; align-items:center; gap:2px; }
+  .top-r{ display:flex; align-items:center; gap:2px; }   /* [연습] 8px [목록 n/32] [설정] */
   .jump{
     display:flex; align-items:center; gap:4px;
-    height:44px; padding:0 5px 0 6px; border-radius:999px; white-space:nowrap;
+    height:44px; padding:0 6px; border-radius:999px; white-space:nowrap;
     font-size:14px; color:var(--faint); font-variant-numeric:tabular-nums;
   }
   .jump:active{ background:var(--line); }
@@ -1011,6 +1012,7 @@
   }
   .w-area:focus{ outline:2px solid var(--accent-line); outline-offset:0; }
   .w-area::placeholder{ color:var(--faint); }
+  input::placeholder, textarea::placeholder{ color:var(--faint); opacity:1; }   /* 모든 입력칸 안내 문구 = 보조 글자색(브라우저 기본 회색은 대비가 낮음) */
   .w-main{ font-size:18.5px; line-height:1.7; min-height:190px; }
   #wFix{ min-height:140px; }
   .w-meta{ display:flex; justify-content:space-between; margin:8px 4px 0; font-size:13px; color:var(--faint); font-variant-numeric:tabular-nums; }
@@ -1101,9 +1103,9 @@
   /* ---------- 드라이브 모드: 상황 카드 위쪽 버튼 → 전체 화면(시작 화면 → 재생 화면) ---------- */
   /* 드라이브·연습 버튼(상황 카드 위쪽, 나란히). 좁은 화면(360px)에선 아이콘만 */
   .drive-btn{
-    display:flex; align-items:center; gap:3px; flex:none;
-    height:34px; padding:0 8px 0 6px; margin-right:3px; border-radius:999px; white-space:nowrap;
-    font-size:13px; font-weight:600; color:var(--accent); background:var(--accent-soft);
+    display:flex; align-items:center; gap:4px; flex:none;
+    height:34px; padding:0 12px 0 9px; margin-right:6px; border-radius:999px; white-space:nowrap;
+    font-size:13.5px; font-weight:600; color:var(--accent); background:var(--accent-soft);
   }
   .drive-btn svg{ width:17px; height:17px; }
   .drive-btn:active{ transform:scale(.96); }
@@ -5815,12 +5817,29 @@ function contentToggle(c, i) {
   if (!k) { toast("하나 이상 골라 주세요"); return c; }
   return k;
 }
-/* 설명: 드라이브는 표현 읽기까지, 연습은 예문·썰만 */
-function contentNote(c, drive) {
-  const f = contentFlags(c);
-  if (f[0] && !f[1] && !f[2]) return drive ? "대화만 이어서 들어요." : "대화문만 연습해요.";
-  const parts = [drive ? "표현 읽기" : "", f[1] ? "예문 5개" : "", f[2] ? "썰" : ""].filter(Boolean);
-  return (f[0] ? "대화 → " : "대화 없이 ") + "핵심 표현마다 " + parts.join(drive ? " + " : " → ");
+
+/* 체크박스 아래 한 줄: 지금 선택으로 재생(연습)되는 순서(2026-10-06 사용자 요청 — buildDrive·buildPractice와 같은 순서).
+   드라이브: 대화가 있으면 [새 카드 효과음] 대화 → 핵심 표현마다 [표현 효과음] 표현 읽기 → 예문 5개 → 썰 / 대화가 없으면 카드의 첫 표현에서 새 카드 효과음.
+   연습: 효과음·표현 읽기 없이 대화 줄 → 표현마다 예문 5개 → 썰 문장. expr = 표현 범위(학습 중·오늘 복습 — 내용과 상관없이 전부) */
+function contentNote(c, drive, expr) {
+  const f = expr ? [0, 1, 1] : contentFlags(c), seq = [];
+  if (drive) {
+    if (expr) seq.push("표현마다 효과음");
+    else if (f[0]) seq.push("카드마다 효과음", "대화");
+    else seq.push("카드·표현마다 효과음");
+    if (f[1] || f[2]) {
+      if (!expr && f[0]) seq.push("표현마다 효과음");
+      seq.push("표현 읽기");
+    }
+  } else {
+    if (f[0]) seq.push("카드마다 대화 줄");
+    if ((f[1] || f[2]) && !expr) seq.push("표현마다");
+    if (expr) seq.push("표현마다");
+  }
+  if (f[1]) seq.push("예문 5개");
+  if (f[2]) seq.push(drive ? "썰" : "썰 문장");
+  let s = seq.join(" → ").replace(/표현마다 → /g, "표현마다 ");
+  return '<b>' + (drive ? "재생 순서" : "연습 순서") + '</b> · ' + s;
 }
 const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", shadow: false, rate: 1, diaryRange: "30" };   // order: seq 차례대로 / random 랜덤(카드·표현 순서를 섞음)
 
@@ -6308,7 +6327,7 @@ function dvSetupHtml() {
       '</div>' +
       (diaryScope ? "" : '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용 (여러 개 선택)</span>' +
         contentChecksHtml(o.content, "data-dv-cbx") +
-        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 표현 → 예문 5개 → 썰 순서로 들어요." : contentNote(o.content, true)) + '</p>' +
+        '<p class="note">' + contentNote(o.content, true, exprScope) + '</p>' +
       '</div>') +
       '<div class="set-group"><span class="set-label">순서</span>' +
         seg("order", [["seq", "차례대로"], ["random", "랜덤"]]) +
@@ -6867,7 +6886,7 @@ function pcSetupHtml() {
       '</div>' +
       '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용 (여러 개 선택)</span>' +
         contentChecksHtml(o.content, "data-pc-cbx") +
-        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 예문 5개 → 썰 순서로 연습해요." : contentNote(o.content, false)) + '</p>' +
+        '<p class="note">' + contentNote(o.content, false, exprScope) + '</p>' +
       '</div>' +
       '<div class="set-group"><span class="set-label">연습 방식</span>' +
         seg("method", [["chunk", "청크 단계 포함"], ["whole", "전체 문장만"]]) +
