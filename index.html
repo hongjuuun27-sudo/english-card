@@ -45,6 +45,7 @@
     --tabbar-h:58px;
     --modebar-h:46px;
     --on-accent:#10201B;
+    --again:#E8A57A;      /* 복습 '다시'(배경 대비 7:1 이상) */
   }
   @media (prefers-color-scheme: light){
     :root{
@@ -73,6 +74,7 @@
       --tag-a:.12;
       --glow-a:.09;
       --on-accent:#FFFFFF;
+      --again:#9A4A15;    /* 복습 '다시'(배경 대비 5:1 이상) */
     }
   }
   @media (max-width:370px){ :root{ --pad:18px; } }
@@ -830,8 +832,6 @@
   .dg-memo[open] .h-chev{ transform:rotate(180deg); }
   .dg-mtext{ padding:0 12px 10px; font-size:14px; line-height:1.6; color:var(--text-2); white-space:pre-wrap; word-break:break-word; }
   .dg-memo .dc-act{ margin:0 12px 10px; }
-  .rv-mine{ margin-top:10px; }
-  .rv-mine .dc-ko{ font-size:17px; }
   .note-past{ margin-top:14px; }
   .note-past details{ border-bottom:1px solid var(--line); }
   .note-past summary{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:12px; padding:12px 2px; }
@@ -839,31 +839,94 @@
   .note-past details[open] .h-chev{ transform:rotate(180deg); }
   .note-past .h-text{ margin-bottom:12px; }
   .go-card{ width:100%; margin-top:26px; }
-  /* "이 표현 연습하기"(표현 상세·복습 화면): 시작 화면 없이 연습 모드로 */
+  /* "이 표현 연습하기"(표현 상세): 시작 화면 없이 연습 모드로 */
   .pc-expr{ width:100%; margin-top:14px; gap:8px; color:var(--accent); border-color:color-mix(in srgb, var(--accent) 45%, transparent); }
   .pc-expr svg{ width:19px; height:19px; flex:none; }
   .pc-expr small{ font-size:12.5px; font-weight:500; color:var(--muted); }
 
-  /* 복습 */
-  .rv-cue{ margin-top:10px; padding:18px 16px; border-radius:18px; background:var(--bg-2); }
-  .rv-cue-label{ font-size:12.5px; font-weight:700; letter-spacing:.06em; color:var(--accent); }
-  .rv-cue-mean{ margin:8px 0 0; font-size:24px; font-weight:700; line-height:1.35; }
-  .rv-cue-sit{ margin:10px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted); }
-  .rv-cue-line{ margin:10px 0 0; font-size:16px; line-height:1.6; color:var(--text-2); }
-  .rv-reveal{
-    width:100%; margin-top:14px; padding:26px 16px; border-radius:18px;
-    font-size:16px; font-weight:600; color:var(--accent);
-    border:1.5px dashed var(--accent-line); background:var(--accent-soft);
+  /* ---------- 복습 덱(플래시카드, 2026-10-06) — 전체 화면 #review ----------
+     위 = ✕ + "복습" + 진행 "12 / 30" + 설정 아이콘, 진행 막대 / 가운데 = 카드 한 장(앞면 한국어 → 탭하면 뒷면 영어) /
+     아래(엄지 자리) = [↶ 되돌리기] [뒤집기] 또는 [↶] [다시] [알았음]. 뒷면에서 오른쪽으로 밀기 = 알았음, 왼쪽 = 다시 */
+  .fc-mode{ position:fixed; inset:0; z-index:30; display:flex; flex-direction:column; background:var(--bg); color:var(--text); }
+  .fc-mode[hidden]{ display:none; }
+  body.reviewing .toast{ bottom:calc(env(safe-area-inset-bottom, 0px) + 120px); }
+  .fc-count{ margin-left:auto; margin-right:2px; font-size:15px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .fc-count b{ color:var(--text); }
+  .fc-gear{ flex:none; width:44px; height:44px; margin:0 -8px 0 auto; border-radius:50%; display:grid; place-items:center; color:var(--muted); }
+  .fc-gear svg{ width:21px; height:21px; }
+  .fc-gear:active{ background:var(--line); }
+  .fc-bar{ flex:none; height:4px; margin:4px max(var(--pad), env(safe-area-inset-right)) 0 max(var(--pad), env(safe-area-inset-left)); border-radius:2px; background:var(--bg-3); overflow:hidden; }
+  .fc-bar i{ display:block; height:100%; width:100%; background:var(--accent); transform-origin:left; transition:transform .3s ease; }
+  .fc-stage{
+    flex:1; min-height:0; display:flex; flex-direction:column;
+    padding:14px max(var(--pad), env(safe-area-inset-right)) 6px max(var(--pad), env(safe-area-inset-left));
   }
-  .rv-answer{ margin-top:14px; padding:16px; border-radius:18px; border:1px solid var(--accent-line); background:var(--accent-soft); animation:fadeIn .3s ease both; }
-  .rv-phrase{ margin:0; font-size:24px; font-weight:750; color:var(--accent); }
-  .rv-line{ margin:8px 0 0; font-size:16.5px; line-height:1.6; }
-  .rv-more-sec{ margin-top:10px; border-bottom:1px solid var(--line); }
-  .rv-more-sec > summary{ cursor:pointer; padding:12px 2px; font-size:15px; font-weight:600; color:var(--text-2); }
-  .rv-btn-main{ width:100%; color:var(--on-accent); background:var(--accent); border-color:transparent; }
-  .grade-row .btn{ height:52px; font-size:16.5px; }
-  .grade-no{ color:var(--text-2); }
-  .grade-yes{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .fc-card{
+    position:relative; flex:1; min-height:0; display:flex; flex-direction:column;
+    border-radius:24px; background:var(--bg-2); border:1px solid var(--line);
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+    touch-action:pan-y; cursor:pointer;
+    animation:dvIn .3s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .fc-card.dragging{ transition:none; animation:none; cursor:grabbing; }
+  .fc-card.snap{ transition:transform .22s ease; }
+  .fc-card.fly{ transition:transform .22s ease-in, opacity .22s ease-in; opacity:0; animation:none; }
+  .fc-face{ flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; display:flex; flex-direction:column; padding:18px 20px 20px; }
+  .fc-face::-webkit-scrollbar{ display:none; }
+  .fc-face[hidden]{ display:none; }
+  .fc-back{ animation:fcFlip .28s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes fcFlip{ from{ opacity:0; transform:perspective(900px) rotateY(-70deg); } to{ opacity:1; transform:none; } }
+  .fc-kind{ align-self:flex-start; display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 10px; border-radius:999px; font-size:12.5px; font-weight:700; letter-spacing:.02em; color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line); }
+  .fc-kind.mine{ color:var(--text-2); background:var(--bg-3); border-color:var(--line); }
+  .fc-kind .rep{ font-weight:600; color:var(--muted); }
+  .fc-mid{ margin:auto 0; padding:14px 0; }
+  .fc-q{ margin:0; font-size:25px; font-weight:700; line-height:1.45; letter-spacing:-.01em; }
+  .fc-q .dc-who{ vertical-align:4px; }
+  .fc-sit{ margin:14px 0 0; font-size:14.5px; line-height:1.6; color:var(--muted); }
+  .fc-sit b{ font-weight:650; color:var(--text-2); }
+  .fc-hint{ flex:none; text-align:center; font-size:14px; color:var(--faint); }
+  .fc-phrase{ margin:0 0 14px; font-size:26px; font-weight:750; line-height:1.35; color:var(--accent); }
+  .fc-en-row{ display:flex; align-items:flex-start; gap:10px; }
+  .fc-en{ flex:1; min-width:0; font-size:24px; line-height:1.5; font-weight:600; -webkit-user-select:none; user-select:none; }
+  .fc-en.small{ font-size:19px; }
+  .fc-en .sc .w{ cursor:pointer; }
+  .fc-en-row .spk{ flex:none; margin-top:4px; }
+  .fc-ko{ margin:10px 0 0; font-size:16px; line-height:1.6; color:var(--muted); }
+  .fc-extra{ margin:14px 0 0; font-size:14.5px; line-height:1.6; color:var(--text-2); }
+  .fc-extra .dc-lab{ margin-right:6px; }
+  .fc-tag{ margin-top:16px; font-size:13px; color:var(--faint); }
+  /* 밀 때 위에 뜨는 표시(글자 + 색 — 색만으로 구분하지 않게) */
+  .fc-stamp{
+    position:absolute; top:18px; z-index:2; padding:6px 14px; border-radius:12px; font-size:19px; font-weight:800; letter-spacing:.02em;
+    border:2.5px solid currentColor; background:var(--bg-2); opacity:0; pointer-events:none;
+  }
+  .fc-stamp.yes{ left:18px; color:var(--accent); transform:rotate(-8deg); }
+  .fc-stamp.no{ right:18px; color:var(--again); transform:rotate(8deg); }
+  .fc-swipe{ flex:none; min-height:24px; padding:6px var(--pad) 0; text-align:center; font-size:14px; color:var(--faint); }
+  .fc-bottom{ flex:none; padding:8px max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 14px) max(var(--pad), env(safe-area-inset-left)); }
+  .fc-bottom .actions .btn{ height:56px; }
+  .fc-bottom .undo{ width:52px; padding:0; color:var(--muted); }
+  .fc-bottom .again-btn{ flex:.75; color:var(--again); border-color:color-mix(in srgb, var(--again) 45%, transparent); }
+  .fc-bottom .main{ flex:1; }
+  /* 끝 화면 */
+  .fc-end{ flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:10px max(var(--pad), env(safe-area-inset-right)) 18px max(var(--pad), env(safe-area-inset-left)); animation:dvIn .35s cubic-bezier(.2,.8,.2,1) both; }
+  .fc-end h3{ margin:10px 0 0; font-size:24px; font-weight:750; letter-spacing:-.01em; }
+  .fc-stats{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-top:16px; }
+  .fc-stat{ padding:12px 8px; border-radius:16px; background:var(--bg-2); border:1px solid var(--line); text-align:center; }
+  .fc-stat b{ display:block; font-size:24px; font-weight:750; font-variant-numeric:tabular-nums; }
+  .fc-stat span{ font-size:13px; color:var(--muted); }
+  .fc-grp{ margin-top:20px; }
+  .fc-grp h4{ margin:0 0 6px; font-size:13px; font-weight:750; letter-spacing:.04em; color:var(--accent); }
+  .fc-grp.same h4{ color:var(--text-2); }
+  .fc-grp.reset h4{ color:var(--again); }
+  .fc-grp ul{ list-style:none; margin:0; padding:0; }
+  .fc-grp li{ display:flex; align-items:baseline; gap:10px; padding:10px 2px; border-bottom:1px solid var(--line); }
+  .fc-grp .p{ flex:1; min-width:0; font-size:16px; font-weight:600; }
+  .fc-grp .r{ flex:none; font-size:13.5px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .fc-note{ margin:18px 0 0; font-size:15px; line-height:1.6; color:var(--text-2); }
+  .fc-note b{ color:var(--accent); }
+  .fc-count + .fc-gear{ margin-left:2px; }
+  .fc-retry{ width:100%; margin-top:20px; color:var(--again); border-color:color-mix(in srgb, var(--again) 45%, transparent); }
 
   /* ---------- 글쓰기 ---------- */
   .write{
@@ -1419,6 +1482,8 @@
 </div>
 <!-- 설정(전체 화면): 음성 · 자동 넘김 · 글쓰기 · 기록. 5개 탭 오른쪽 위 같은 아이콘에서 열림. 내용은 스크립트(설정 부분)가 채움 -->
 <div class="settings" id="settings" role="dialog" aria-modal="true" aria-label="설정" hidden></div>
+<!-- 복습 덱(플래시카드, 전체 화면): 오늘 탭 '지금 할 일'·표현 탭 '오늘의 복습'에서 열림. 내용은 스크립트(복습 덱 부분)가 채움 -->
+<div class="fc-mode" id="review" role="dialog" aria-modal="true" aria-label="복습" hidden></div>
 <!-- 연습 모드(청크·연음·발음): 시작 화면(옵션) → 연습 화면. 내용은 스크립트(연습 모드 부분)가 채움 -->
 <div class="pc-mode" id="practice" role="dialog" aria-modal="true" aria-label="연습 모드" hidden>
   <section class="dv-screen" id="pcSetup"></section>
@@ -1496,7 +1561,8 @@ const DEFAULTS = {
   voiceWrite: "iP95p4xoKVk53GoZ742B",   // 글쓰기 탭에서 첨삭을 읽어 줄 목소리
   writeRate: 1,                          // 글쓰기 탭 재생 속도 (0.8 / 1)
   rotate: true,                          // 표현 탭 궁금증 카드 자동 넘김 (설정 › 자동 넘김)
-  rotateSec: 10                          // 자동 넘김 시간(초): 5 / 10 / 20
+  rotateSec: 10,                         // 자동 넘김 시간(초): 5 / 10 / 20
+  fcAuto: true                           // 복습 덱: 카드를 뒤집으면 영어 자동 재생 (설정 › 복습)
 };
 function loadSettings() {
   try {
@@ -1506,6 +1572,7 @@ function loadSettings() {
     if (merged.drillRate !== 0.8) merged.drillRate = 1;
     merged.rotate = merged.rotate !== false;
     if (![5, 10, 20].includes(merged.rotateSec)) merged.rotateSec = 10;
+    merged.fcAuto = merged.fcAuto !== false;
     delete merged.autoplay;                // 예전 '자동 재생' 설정 (모드 개편으로 없어짐)
     return merged;
   } catch (e) { return Object.assign({}, DEFAULTS); }
@@ -4137,24 +4204,7 @@ function dueList() {
     .filter(id => EXPR_BY_ID[id] && study.items[id].status === "learning" && study.items[id].due && study.items[id].due <= t)
     .sort((a, b) => study.items[a].due.localeCompare(study.items[b].due) || a.localeCompare(b));
 }
-/* 기억남 → 다음 간격, 헷갈림 → 처음(1일 뒤)부터 */
-function grade(id, remembered) {
-  const s = study.items[id];
-  if (!s) return;
-  const t = studyToday();
-  s.history = s.history || [];
-  s.history.push({ date: t, ok: remembered, step: s.step || 0 });
-  logDay(t, "r");
-  if (remembered) {
-    s.step = (s.step || 0) + 1;
-    if (s.step >= INTERVALS.length) { s.status = "mastered"; s.masteredOn = t; delete s.due; }
-    else s.due = addDays(t, INTERVALS[s.step]);
-  } else {
-    s.step = 0;
-    s.due = addDays(t, INTERVALS[0]);
-  }
-  saveStudy();
-}
+/* 복습 평가(다음 복습 날짜)는 복습 덱의 gradeRate — 표현 카드들을 처음 봤을 때의 '알았음' 비율로 (2026-10-06, 예전 grade(기억남/헷갈림)를 바꿈) */
 function dueText(id) {
   const s = study.items[id];
   if (!s || !s.due) return "";
@@ -4214,6 +4264,7 @@ function renderReviewCard() {
       "아직 학습 중인 표현이 없어요. 아래 목록에서 표현을 눌러 '학습하기'를 시작해 보세요.") + '</p>';
     return;
   }
+  const rp = reviewProgress();       // 같은 날 하던 복습 덱이 있으면 [이어서 복습]
   X.rv.innerHTML = head +
     '<div class="rv-count"><b>' + due.length + '</b>개 복습할 차례예요</div>' +
     '<ul class="rv-list">' + due.slice(0, 6).map(id => {
@@ -4222,7 +4273,8 @@ function renderReviewCard() {
         '<span class="rv-due">' + esc(dueText(id)) + '</span></button></li>';
     }).join("") + '</ul>' +
     (due.length > 6 ? '<p class="rv-more">외 ' + (due.length - 6) + '개</p>' : "") +
-    '<button class="btn rv-start" type="button" data-review-start>복습 시작</button>';
+    (rp ? '<p class="rv-more">카드 ' + rp.i + ' / ' + rp.n + '장까지 했어요</p>' : "") +
+    '<button class="btn rv-start" type="button" data-review-start>' + (rp ? "이어서 복습" : "복습 시작 · 카드 약 " + due.length * DECK_PER + "장") + '</button>';
 }
 
 function renderExprList() {
@@ -4443,15 +4495,14 @@ X.teasers.addEventListener("keydown", e => {
 const teaserRot = makeRotator({
   view: X.view,
   parts: () => Array.from(X.teasers.querySelectorAll(".xt-list")),
-  ok: () => currentTab === "expr" && !sheetOpen && !D.open && !PC.open && !stOpen,
+  ok: () => currentTab === "expr" && !sheetOpen && !D.open && !PC.open && !stOpen && !RV.open,
   held: () => teaserOpen.size > 0,
   what: "다른 3개",
   next: () => { teaserPick = pickTeasers(); renderTeasers(); }
 });
 X.rv.addEventListener("click", e => {
   const one = e.target.closest("[data-review]");
-  if (one) { buzz(); startReview(one.dataset.review); return; }
-  if (e.target.closest("[data-review-start]")) { buzz(); startReview(null); }
+  if (one || e.target.closest("[data-review-start]")) { buzz(); startReview(); }   // 목록의 표현을 눌러도 같은 덱(오늘 복습할 표현 전부를 섞음)
 });
 
 /* ---- 표현 상세 (상황 카드 시트·표현 탭 공통) ---- */
@@ -4557,20 +4608,20 @@ const dcOpen = new Set();       // 펼친 문장 카드
 const memoOpen = new Set();     // 펼친 메모(날짜)
 let dcEdit = null;              // 수정 중인 카드 id("new" = 새 문장)
 let dcDel = null;               // '정말 삭제' 확인 중인 카드 id / "m:날짜:번호"
-/* 카드 하나. o = { edit: 수정·삭제 버튼, ex: 형광펜용 표현, mine: 복습 '내가 연습한 문장'(고친 영어·팁만) } */
+/* 카드 하나. o = { edit: 수정·삭제 버튼, ex: 형광펜용 표현 } (복습 덱의 내 문장 카드는 rvCardHtml이 따로 그림) */
 function drillCardHtml(c, o) {
   if (o.edit && dcEdit === c.id) return drillFormHtml(c);
   const open = dcOpen.has(c.id), right = drillHasMe(c) && !drillWrong(c);
   return '<div class="dc' + (open ? " open" : "") + '" data-dc="' + esc(c.id) + '">' +
     '<button class="dc-front" type="button" data-dc-toggle aria-expanded="' + open + '">' +
       '<span class="dc-ko">' + drillKoHtml(c.ko) + '</span>' +
-      (right && !o.mine ? '<span class="dc-ok">정답</span>' : "") +
+      (right ? '<span class="dc-ok">정답</span>' : "") +
       '<span class="dc-chev">' + ICON_CHEVRON + '</span></button>' +
     '<div class="dc-body">' +
       '<div class="rd dc-say" data-who="me" data-tap="one"><ul class="dc-ul"><li>' +
         '<div class="dc-en">' + scriptHtml(c.en, o.ex ? markRanges(c.en, o.ex) : []) + '</div>' +
         '<button class="spk" type="button" aria-label="고친 문장 듣기" data-rd-one="0">' + ICON_SPEAKER + '</button></li></ul></div>' +
-      (drillHasMe(c) && !right && !o.mine ? '<p class="dc-me"><span class="dc-lab">내 답</span>' + drillDiffHtml(c.me, c.en) + '</p>' : "") +
+      (drillHasMe(c) && !right ? '<p class="dc-me"><span class="dc-lab">내 답</span>' + drillDiffHtml(c.me, c.en) + '</p>' : "") +
       (c.tip ? '<p class="dc-tip"><span class="dc-lab">팁</span>' + esc(c.tip) + '</p>' : "") +
       (o.edit ? '<div class="dc-act"><button type="button" data-dc-edit>수정</button>' +
         '<button type="button" class="' + (dcDel === c.id ? "danger" : "") + '" data-dc-del>' + (dcDel === c.id ? "정말 삭제" : "삭제") + '</button></div>' : "") +
@@ -4633,7 +4684,7 @@ function drillSave(id, raw) {
   const ok = saveStudy();
   toast(!ok ? "저장이 안 돼요" : r.cards.length ? r.cards.length + "개 문장을 저장했어요" + (r.partial ? " · 원문은 메모로" : "") : "메모로 저장했어요");
 }
-/* 복습 '내가 연습한 문장' 고르기: 틀렸던 문장(ME ≠ EN) 먼저 → 가장 오래전에 복습에 나온 문장(rv, 안 나온 건 0) → 먼저 만든 것 */
+/* 복습 덱 '내 문장' 카드 고르기: 틀렸던 문장(ME ≠ EN) 먼저 → 가장 오래전에 복습에 나온 문장(rv, 안 나온 건 0) → 먼저 만든 것 */
 function pickMine(id, n) {
   return drillCards(id).slice().sort((a, b) =>
     (drillWrong(b) ? 1 : 0) - (drillWrong(a) ? 1 : 0) || (a.rv || 0) - (b.rv || 0) || (a.at || 0) - (b.at || 0)).slice(0, n);
@@ -4676,7 +4727,7 @@ function detailHtml(it) {
     studyBox + pcExprBtn(it) +
     examplesHtml(it.ex) + storyHtml(it.ex) + practice + goCard;
 }
-/* "이 표현 연습하기": 시작 화면 없이 연습 모드(예문 5개 → 썰). 표현 상세·복습 화면 공통 */
+/* "이 표현 연습하기": 시작 화면 없이 연습 모드(예문 5개 → 썰). 표현 상세(복습 덱에는 없음) */
 function pcExprBtn(it) {
   if (!((it.ex.examples || []).length || (it.ex.story && it.ex.story.en))) return "";
   return '<button class="btn pc-expr" type="button" data-pc-expr="' + esc(it.id) + '">' + ICON_MIC +
@@ -4688,7 +4739,6 @@ function openExprDetail(id, opts) {
   if (!it) return;
   detailId = id;
   detailOpts = opts || {};
-  reviewQueue = [];
   dcEdit = null; dcDel = null;
   showSheet((CATEGORY_EMOJI[it.card.category] || "") + " " + (it.ci + 1) + ". " + it.card.title, it.ex.phrase, detailHtml(it));
 }
@@ -4792,108 +4842,454 @@ function saveDraftNow(id, text) {
   saveStudy();
 }
 
-/* ---- 복습: 뜻·상황 보고 떠올리기 → 확인 → 기억남/헷갈림 ---- */
-let reviewQueue = [];
-let reviewIdx = 0;
+/* ================= 복습 덱(플래시카드 — 2026-10-06, 예전 시트 '떠올리기 → 내가 연습한 문장 → 기억남/헷갈림'을 바꿈) =================
+   오늘 복습할 표현들의 카드를 한 덱으로 섞어서 진행(표현별로 따로 하지 않음, 같은 표현 카드가 연달아 나오지 않게 벌려 둠). 표현 하나당 6장 정도(deckCards):
+     ① 표현 카드 1장 — 앞 = 짧은 뜻 + 상황(카드 제목·상황 설명), 뒤 = 표현 + 그 표현이 나온 대사(노래방식) + 그 대사 한글
+     ② 내 문장 카드 최대 3장 — 연습장 문장 카드(pickMine: 틀렸던 문장 먼저 → 오래전에 복습에 나온 것), 앞 = (누구에게) 한국어, 뒤 = 고친 영어(내 목소리) + 내 답 차이 + 팁
+     ③ 예문 카드 — 6장이 될 때까지(최대 5장), 최근 복습에 안 나온 예문 먼저(study.items[id].exRv = { 예문 번호: 나온 시각 ms })
+   카드: 앞면 탭(또는 [뒤집기]) → 뒷면(영어 + 작은 한글). 설정 › 복습 › 자동 재생이 켜져 있으면 뒤집을 때 읽음, 스피커로 다시, 단어 탭 = 그 단어부터.
+   평가: 뒷면에서 오른쪽으로 밀기·[알았음] / 왼쪽으로 밀기·[다시]. '다시' 카드는 덱 끝에 다시 나옴(한 카드가 다시 나오는 건 최대 2번 — REP_MAX).
+   [↶] = 바로 전 평가 되돌리기(여러 번 누르면 계속 앞으로). 그 평가로 표현 날짜가 정해졌으면 날짜도 그 전으로(snap).
+   표현의 다음 복습 날짜(gradeRate): 그 표현 카드들을 '처음' 봤을 때(rep 0)의 '알았음' 비율 — 80% 이상 다음 간격 / 50~80% 같은 간격 한 번 더 / 50% 미만 처음(1일 뒤).
+     그 표현의 처음 카드를 모두 평가한 순간 정함 → 중간에 나가도 끝낸 표현은 반영됨.
+   진행 상황은 engcards.review.v1에 매번 저장, 같은 날 다시 들어오면 이어서(날짜가 바뀌면 새 덱 — 아직 안 끝낸 표현은 계속 복습할 차례).
+   끝 화면: 본 카드·다시·표현 수, 다음 간격으로 / 같은 간격 한 번 더 / 처음부터 다시 표현 목록, 내일 복습 예정 수, [틀린 카드만 한 번 더](저장 안 하는 연습 판, 날짜에 영향 없음) */
+const REVIEW_KEY = "engcards.review.v1";
+const MINE_MAX = 3, DECK_PER = 6, REP_MAX = 2;
+const ICON_UNDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
+const rvEl = document.getElementById("review");
+/* s = 지금 덱 { v, date, ids: [표현id], q: [카드], i: 지금 카드, log: [평가 { q, ok, add, snap }], res: { 표현id: 결과 }, n, fin, extra?, base? }
+   카드 { n, x: 표현id, t: p(표현)|m(내 문장)|e(예문), ref(문장 카드 id / 예문 번호), ko, en, lko(표현 카드: 대사 한글), me, tip, who, rep(몇 번째 다시), ok(null|true|false) } */
+const RV = { open: false, id: 0, s: null, flipped: false, busy: false, rd: null };
 
-function reviewHtml(it, revealed) {
-  const line = sourceLine(it);
-  const cue = '<div class="rv-cue">' +
-      '<div class="rv-cue-label">이 뜻의 영어 표현은?</div>' +
-      '<p class="rv-cue-mean">' + esc(shortMeaning(it.ex)) + '</p>' +
-      '<p class="rv-cue-sit">' + esc(it.card.title) + ' — ' + esc(it.card.situation) + '</p>' +
-      (line && line.ko ? '<p class="rv-cue-line">“' + esc(line.ko) + '”</p>' : "") +
-    '</div>';
-  if (!revealed) {
-    return cue + '<button class="rv-reveal" type="button" data-reveal>머릿속으로 떠올린 뒤 탭해서 확인</button>';
+function rvLoad() {
+  try {
+    const s = JSON.parse(localStorage.getItem(REVIEW_KEY) || "null");
+    if (s && s.v === 1 && s.date === studyToday() && !s.fin && Array.isArray(s.q) && Array.isArray(s.log) && Array.isArray(s.ids) && s.res && typeof s.res === "object") return s;
+  } catch (e) {}
+  return null;
+}
+function rvSave() {
+  const s = RV.s;
+  if (!s || s.extra) return;          // '틀린 카드만 한 번 더'는 저장하지 않음
+  try { localStorage.setItem(REVIEW_KEY, JSON.stringify(s)); } catch (e) {}
+}
+/* 이어서 할 덱이 있으면 { i, n } (오늘 탭·표현 탭 버튼 이름) */
+function reviewProgress() {
+  const s = rvLoad();
+  return s && s.i < s.q.length && dueList().length ? { i: s.i, n: s.q.length } : null;
+}
+/* 표현 하나의 카드들(①②③). 고른 문장 카드·예문에 '복습에 나온 시각'을 남김(다음엔 오래된 것부터) */
+function deckCards(id, now) {
+  const it = EXPR_BY_ID[id], st = study.items[id];
+  if (!it) return [];
+  const line = sourceLine(it), out = [];
+  out.push({ x: id, t: "p", ko: shortMeaning(it.ex), en: line ? line.en : sayPhrase(it.ex.phrase), lko: line ? line.ko || "" : "", line: !!line,
+    who: line && line.who !== "me" ? "them" : "me" });
+  pickMine(id, MINE_MAX).forEach(c => {
+    c.rv = now;
+    out.push({ x: id, t: "m", ref: c.id, ko: c.ko, en: c.en, me: c.me || "", tip: c.tip || "", who: "me" });
+  });
+  const exs = it.ex.examples || [];
+  const seen = st && st.exRv && typeof st.exRv === "object" ? st.exRv : {};
+  exs.map((e, k) => k).filter(k => exs[k] && exs[k].en)
+    .sort((a, b) => (seen[a] || 0) - (seen[b] || 0) || a - b)
+    .slice(0, Math.max(0, DECK_PER - out.length))
+    .forEach(k => {
+      if (st) { st.exRv = st.exRv && typeof st.exRv === "object" ? st.exRv : {}; st.exRv[k] = now; }
+      out.push({ x: id, t: "e", ref: k, ko: exs[k].ko || "", en: exs[k].en, who: "them" });
+    });
+  return out;
+}
+/* 섞기: 바로 앞 카드와 다른 표현 중에서 남은 장수만큼의 확률로 고름(같은 표현 카드가 연달아 나오지 않게).
+   한 표현이 남은 카드의 절반을 넘으면 그 표현을 먼저(끝에 같은 표현만 몰리지 않게) */
+function deckShuffle(a) {
+  const g = {};
+  dvShuffled(a).forEach(c => { (g[c.x] = g[c.x] || []).push(c); });
+  const q = [];
+  let last = null;
+  for (let left = a.length; left > 0; left--) {
+    const keys = Object.keys(g).filter(x => g[x].length);
+    const big = keys.find(x => x !== last && g[x].length * 2 >= left + 1);
+    let pool = big ? [big] : keys.filter(x => x !== last);
+    if (!pool.length) pool = keys;
+    let r = Math.random() * pool.reduce((n, x) => n + g[x].length, 0), pick = pool[0];
+    for (const x of pool) { r -= g[x].length; if (r < 0) { pick = x; break; } }
+    q.push(g[pick].pop());
+    last = pick;
   }
-  const s = study.items[it.id];
-  const notes = drillHtml(it.id, { edit: false, ex: it.ex });
-  return cue +
-    '<div class="rv-answer"><p class="rv-phrase">' + esc(it.ex.phrase) + '</p>' +
-      (line ? '<p class="rv-line">' + decorate(line.en, it.ex) + '</p>' : "") + '</div>' +
-    (it.ex.ko ? '<p class="xp-ko">' + esc(it.ex.ko) + '</p>' : "") + pcExprBtn(it) +
-    '<details class="rv-more-sec"><summary>예문 5개</summary>' + examplesHtml(it.ex) + '</details>' +
-    (it.ex.story ? '<details class="rv-more-sec"><summary>썰</summary>' + storyHtml(it.ex) + '</details>' : "") +
-    (notes ? '<details class="rv-more-sec"><summary>내 연습장 기록</summary>' + notes + '</details>' : "") +
-    '<p class="note">지금 단계: ' + ((s && s.step) || 0) + ' / ' + INTERVALS.length + ' · 기억나면 다음 간격(' +
-      (((s && s.step) || 0) + 1 < INTERVALS.length ? INTERVALS[((s && s.step) || 0) + 1] + "일 뒤" : "익힘") + '), 헷갈리면 1일 뒤</p>';
+  return q;
 }
-/* 복습 '내가 연습한 문장' 단계(떠올리기·확인 다음): 문장 카드 최대 3개를 한국어만 → 영어로 말해 본 뒤 탭하면 고친 영어(듣기·팁).
-   문장 카드가 없는 표현은 건너뜀. 기억남/헷갈림은 이 단계 끝에 표현 단위로 한 번 */
-const MINE_MAX = 3;
-let reviewMine = [];
-function mineHtml(it) {
-  return '<div class="rv-mine"><p class="rv-cue-label">내가 연습한 문장</p>' +
-    '<p class="note">한국어를 보고 영어로 말해 본 뒤, 탭해서 고친 문장을 확인하세요.</p>' +
-    '<div class="drill">' + reviewMine.map(c => drillCardHtml(c, { mine: true, ex: it.ex })).join("") + '</div></div>';
+function deckPush(s, cards) {
+  deckShuffle(cards).forEach(c => { c.n = ++s.n; c.rep = 0; c.ok = null; s.q.push(c); });
 }
-function showMine() {
-  const it = EXPR_BY_ID[reviewQueue[reviewIdx]];
-  if (!it) return;
-  buzz();
-  reviewMine = pickMine(it.id, MINE_MAX);
-  const now = Date.now();
-  reviewMine.forEach(c => { c.rv = now; dcOpen.delete(c.id); });       // 복습에 나온 시각(다음엔 오래된 것부터)
+function rvNew(ids) {
+  const now = Date.now(), all = [];
+  ids.forEach(id => deckCards(id, now).forEach(c => all.push(c)));
   saveStudy();
-  sheetBody.innerHTML = mineHtml(it);
-  sheetBody.scrollTop = 0;
-  sheetFoot.innerHTML = FOOT_GRADE;
+  const s = { v: 1, date: studyToday(), ids: ids.slice(), q: [], i: 0, log: [], res: {}, n: 0, fin: false };
+  deckPush(s, all);
+  return s;
 }
-const footAfterReveal = id => {
-  const n = Math.min(MINE_MAX, drillCards(id).length);
-  return n ? '<button class="btn rv-btn-main" type="button" data-rv-mine>다음: 내가 연습한 문장 ' + n + '개</button>' : FOOT_GRADE;
-};
-const FOOT_REVEAL = '<button class="btn rv-btn-main" type="button" data-reveal>확인하기</button>';
-const FOOT_GRADE = '<div class="btn-row grade-row">' +
-  '<button class="btn grade-no" type="button" data-grade="0">헷갈림</button>' +
-  '<button class="btn grade-yes" type="button" data-grade="1">기억남</button></div>';
-
-function startReview(firstId) {
-  reviewQueue = dueList();
-  if (!reviewQueue.length) { toast("오늘 복습할 표현이 없어요"); return; }
-  reviewIdx = 0;
-  if (firstId && reviewQueue.includes(firstId)) {
-    reviewQueue = [firstId].concat(reviewQueue.filter(x => x !== firstId));
+/* 이어서 할 때: 그사이 학습을 멈춘 표현의 남은 카드는 빼고, 새로 복습할 차례가 된 표현은 덱 끝에 더함 */
+function rvRefresh(s, due) {
+  const live = x => !!(EXPR_BY_ID[x] && study.items[x] && study.items[x].status === "learning");
+  s.q = s.q.filter((c, k) => k < s.i || live(c.x));
+  const fresh = due.filter(x => !s.ids.includes(x));
+  if (!fresh.length) return;
+  const now = Date.now(), add = [];
+  fresh.forEach(x => { s.ids.push(x); deckCards(x, now).forEach(c => add.push(c)); });
+  saveStudy();
+  deckPush(s, add);
+}
+/* 오늘 탭 '지금 할 일'·표현 탭 '오늘의 복습' → 덱(같은 날 하던 덱이 있으면 이어서) */
+function startReview() {
+  const due = dueList();
+  let s = rvLoad();
+  if (s) rvRefresh(s, due);
+  if (!s || s.i >= s.q.length) {
+    if (!due.length) { toast("오늘 복습할 표현이 없어요"); return; }
+    s = rvNew(due);
   }
-  showReview();
+  RV.s = s;
+  RV.flipped = false;
+  rvSave();
+  rvShow();
 }
-function showReview() {
-  const id = reviewQueue[reviewIdx];
-  const it = id && EXPR_BY_ID[id];
-  if (!it) {
-    reviewQueue = [];
-    closeSheet();
-    toast("오늘 복습 끝! 잘했어요 👏");
-    renderExprTab();
+
+/* 표현의 다음 복습 날짜: 처음 본 카드들의 '알았음' 비율(rate 0~1) */
+function gradeRate(id, rate) {
+  const s = study.items[id];
+  if (!s) return null;
+  const t = studyToday(), step = s.step || 0;
+  s.history = s.history || [];
+  s.history.push({ date: t, ok: rate >= 0.8, step, rate: Math.round(rate * 100) / 100 });
+  logDay(t, "r");
+  let out;
+  if (rate >= 0.8) {                                   // 다음 간격으로
+    s.step = step + 1;
+    if (s.step >= INTERVALS.length) { s.status = "mastered"; s.masteredOn = t; delete s.due; out = "mastered"; }
+    else { s.due = addDays(t, INTERVALS[s.step]); out = "next"; }
+  } else if (rate >= 0.5) {                            // 같은 간격 한 번 더(단계 그대로)
+    s.due = addDays(t, INTERVALS[step]); out = "same";
+  } else {                                             // 처음(1일 뒤)부터
+    s.step = 0; s.due = addDays(t, INTERVALS[0]); out = "reset";
+  }
+  saveStudy();
+  return { rate, out, due: s.due || null };
+}
+
+/* ---- 화면 ---- */
+function rvShow() {
+  Player.stop();
+  RV.open = true;
+  rvEl.hidden = false;
+  document.body.classList.add("reviewing");
+  document.querySelector(".app").inert = true;
+  sheet.inert = true;
+  scrim.inert = true;
+  RV.id = Date.now();
+  try { history.pushState({ review: RV.id }, ""); } catch (e) {}
+  rvRender();
+}
+function rvHide() {
+  if (!RV.open) return;
+  RV.open = false;
+  Player.stop();
+  RV.rd = null;
+  RV.busy = false;
+  if (document.activeElement && rvEl.contains(document.activeElement)) document.activeElement.blur();
+  rvEl.hidden = true;
+  rvEl.innerHTML = "";
+  document.body.classList.remove("reviewing");
+  document.querySelector(".app").inert = false;
+  sheet.inert = false;
+  scrim.inert = false;
+  RV.s = null;
+  if (currentTab === "expr") renderExprTab(); else updateBadges();
+  if (currentTab === "today") renderToday();
+}
+function closeReview() {
+  let viaHistory = false;
+  try { viaHistory = !!(history.state && history.state.review === RV.id); } catch (e) {}
+  if (viaHistory) history.back(); else rvHide();
+}
+window.addEventListener("popstate", () => {
+  let st = null;
+  try { st = history.state; } catch (e) {}
+  if (RV.open && !(st && st.review === RV.id)) rvHide();
+});
+
+const rvCur = () => RV.s && RV.s.q[RV.s.i];
+function rvCardHtml(c) {
+  const it = EXPR_BY_ID[c.x], ex = it ? it.ex : null;
+  const chip = '<span class="fc-kind' + (c.t === "m" ? " mine" : "") + '">' + (c.t === "p" ? "표현" : c.t === "m" ? "내 문장" : "예문") +
+    (c.rep ? ' <span class="rep">· 다시 ' + c.rep + '</span>' : "") + '</span>';
+  const front = '<div class="fc-mid"><p class="fc-q">' + (c.t === "m" ? drillKoHtml(c.ko) : esc(c.ko)) + '</p>' +
+      (c.t === "p" && it ? '<p class="fc-sit"><b>' + esc(((CATEGORY_EMOJI[it.card.category] || "") + " " + it.card.title).trim()) + '</b> — ' + esc(it.card.situation) + '</p>' : "") +
+    '</div><p class="fc-hint">영어로 말해 본 뒤 탭해서 뒤집기</p>';
+  const back = '<div class="fc-mid">' +
+      (c.t === "p" && c.line && ex ? '<p class="fc-phrase">' + esc(ex.phrase) + '</p>' : "") +
+      '<div class="fc-en-row"><div class="fc-en' + (c.t === "p" && c.line ? " small" : "") + '">' + scriptHtml(c.en, ex ? markRanges(c.en, ex) : []) + '</div>' +
+        '<button class="spk" type="button" aria-label="다시 듣기" data-rv="say">' + ICON_SPEAKER + '</button></div>' +
+      ((c.t === "p" ? c.lko : c.ko) ? '<p class="fc-ko">' + (c.t === "m" ? drillKoHtml(c.ko) : esc(c.t === "p" ? c.lko : c.ko)) + '</p>' : "") +
+      (c.t === "m" && drillWrong(c) ? '<p class="fc-extra"><span class="dc-lab">내 답</span>' + drillDiffHtml(c.me, c.en) + '</p>' : "") +
+      (c.t === "m" && c.tip ? '<p class="fc-extra"><span class="dc-lab">팁</span>' + esc(c.tip) + '</p>' : "") +
+      (c.t !== "p" && ex ? '<p class="fc-tag">' + esc(ex.phrase) + ' · ' + esc(shortMeaning(ex)) + '</p>' : "") +
+    '</div>';
+  return '<div class="fc-card" id="fcCard">' +
+    '<span class="fc-stamp yes" aria-hidden="true">알았음</span><span class="fc-stamp no" aria-hidden="true">다시</span>' +
+    '<div class="fc-face fc-front"' + (RV.flipped ? " hidden" : "") + '>' + chip + front + '</div>' +
+    '<div class="fc-face fc-back"' + (RV.flipped ? "" : " hidden") + '>' + chip + back + '</div></div>';
+}
+/* 틀린 카드('다시'를 한 번이라도 누른 카드, 같은 카드는 하나로) */
+function rvWrong() {
+  const seen = new Set(), out = [];
+  (RV.s ? RV.s.q : []).forEach(c => {
+    if (c.ok !== false) return;
+    const k = c.t + "|" + c.x + "|" + (c.ref != null ? c.ref : "");
+    if (!seen.has(k)) { seen.add(k); out.push(c); }
+  });
+  return out;
+}
+function rvSummary(s) {
+  return s.extra ? s.base : { seen: s.log.length, again: s.log.filter(l => !l.ok).length, res: s.res, ids: s.ids.length };
+}
+function rvEndHtml() {
+  const s = RV.s, m = rvSummary(s), t = studyToday(), tm = addDays(t, 1);
+  const tomorrow = Object.keys(study.items).filter(id => EXPR_BY_ID[id] && study.items[id].status === "learning" && study.items[id].due && study.items[id].due <= tm).length;
+  const when = r => {
+    if (r.out === "mastered") return "익힘 🎉";
+    const d = r.due ? dayNumber(r.due) - dayNumber(t) : 0;
+    return d === 1 ? "내일" : d + "일 뒤";
+  };
+  const ids = Object.keys(m.res).filter(id => m.res[id]);
+  const grp = (cls, title, outs) => {
+    const list = ids.filter(id => outs.includes(m.res[id].out));
+    return list.length ? '<section class="fc-grp ' + cls + '"><h4>' + title + ' · ' + list.length + '개</h4><ul>' + list.map(id => {
+      const r = m.res[id], it = EXPR_BY_ID[id];
+      return '<li><span class="p">' + esc(it ? it.ex.phrase : id) + '</span><span class="r">알았음 ' + Math.round(r.rate * 100) + '% · ' + when(r) + '</span></li>';
+    }).join("") + '</ul></section>' : "";
+  };
+  const wrong = rvWrong().length;
+  const stat = (n, label) => '<div class="fc-stat"><b>' + n + '</b><span>' + label + '</span></div>';
+  return '<div class="fc-end">' +
+    '<h3>' + (s.extra ? "한 번 더 끝!" : "오늘 복습 끝! 👏") + '</h3>' +
+    (s.extra ? '<p class="fc-note">틀린 카드 <b>' + s.q.filter(c => c.rep === 0).length + '장</b>을 한 번 더 봤어요 · 다시 ' + s.log.filter(l => !l.ok).length + '번 (복습 날짜는 그대로)</p>' : "") +
+    '<div class="fc-stats">' + stat(m.seen, "본 카드") + stat(m.again, "다시") + stat(ids.length, "표현") + '</div>' +
+    grp("next", "다음 간격으로", ["next", "mastered"]) +
+    grp("same", "같은 간격 한 번 더", ["same"]) +
+    grp("reset", "처음부터 다시", ["reset"]) +
+    '<p class="fc-note">' + (tomorrow ? '내일 복습 예정 <b>' + tomorrow + '개</b>' : "내일 복습할 표현은 없어요") + '</p>' +
+    (wrong ? '<button class="btn fc-retry" type="button" data-rv="retry">틀린 카드만 한 번 더 · ' + wrong + '장</button>' : "") +
+  '</div>';
+}
+function rvRender() {
+  const s = RV.s;
+  if (!s || !RV.open) return;
+  RV.rd = null;
+  const done = s.i >= s.q.length;
+  rvEl.innerHTML =
+    '<header class="dv-head">' +
+      '<button class="dv-x" type="button" data-rv="close" aria-label="복습 닫기">' + ICON_X + '</button>' +
+      '<h2 class="dv-title">' + (s.extra ? "틀린 카드 한 번 더" : "복습") + '</h2>' +
+      (done ? "" : '<span class="fc-count" aria-label="' + s.q.length + '장 중 ' + (s.i + 1) + '번째"><b>' + (s.i + 1) + '</b> / ' + s.q.length + '</span>') +
+      '<button class="fc-gear" type="button" data-rv="settings" aria-label="복습 설정">' + ICON_SLIDERS + '</button>' +
+    '</header>' +
+    '<div class="fc-bar" aria-hidden="true"><i style="transform:scaleX(' + (s.q.length ? Math.min(1, s.i / s.q.length) : 1) + ')"></i></div>' +
+    (done ? rvEndHtml() : '<div class="fc-stage">' + rvCardHtml(rvCur()) + '</div><p class="fc-swipe" id="fcSwipe"></p>') +
+    '<div class="fc-bottom"><div class="actions" id="fcAct"></div></div>';
+  rvPaintAct();
+}
+function rvPaintAct() {
+  const a = document.getElementById("fcAct"), sw = document.getElementById("fcSwipe"), s = RV.s;
+  if (!a || !s) return;
+  const undo = '<button class="btn undo" type="button" data-rv="undo" aria-label="바로 전 평가 되돌리기"' + (s.log.length ? "" : " disabled") + '>' + ICON_UNDO + '</button>';
+  if (s.i >= s.q.length) a.innerHTML = undo + '<button class="btn main" type="button" data-rv="close">완료</button>';
+  else if (RV.flipped) a.innerHTML = undo + '<button class="btn again-btn" type="button" data-rv="no">다시</button><button class="btn main" type="button" data-rv="yes">알았음</button>';
+  else a.innerHTML = undo + '<button class="btn main" type="button" data-rv="flip">뒤집기</button>';
+  if (sw) sw.textContent = RV.flipped ? "← 왼쪽으로 밀면 다시 · 오른쪽으로 밀면 알았음 →" : "";
+}
+/* 뒷면 재생기(카드마다 하나): 문장 하나 — 단어 탭 = 그 단어부터, 스피커 = 처음부터 / 멈춤 */
+function rvReader() {
+  const card = document.getElementById("fcCard"), c = rvCur();
+  if (!card || !c) return null;
+  if (!RV.rd || RV.rd.card !== card) {
+    RV.rd = createReader({
+      items: () => {
+        const el = card.querySelector(".fc-back .sc");
+        return el ? [{ el, who: c.who, btn: card.querySelector('[data-rv="say"]') }] : [];
+      },
+      rate: () => settings.speed,
+      tapSingle: true
+    });
+    RV.rd.card = card;
+  }
+  return RV.rd;
+}
+function rvSay(toggle) {
+  const rd = rvReader();
+  if (!rd) return;
+  if (toggle && rd.state().active) { rd.stop(); return; }
+  rd.play(0, 0, true);
+}
+function rvFlip() {
+  const card = document.getElementById("fcCard");
+  if (!card || RV.flipped || RV.busy) return;
+  RV.flipped = true;
+  buzz();
+  card.querySelector(".fc-front").hidden = true;
+  card.querySelector(".fc-back").hidden = false;
+  rvPaintAct();
+  if (settings.fcAuto) rvSay(false);
+}
+/* 평가: 카드를 옆으로 날려 보낸 뒤 기록(버튼·밀기 공통) */
+function rvGrade(ok) {
+  const card = document.getElementById("fcCard");
+  if (!rvCur() || !RV.flipped || RV.busy) return;
+  RV.busy = true;
+  Player.stop();
+  buzz();
+  if (card) {
+    const w = card.offsetWidth + 80;
+    card.classList.remove("dragging", "snap");
+    card.classList.add("fly");
+    card.style.transform = "translateX(" + (ok ? w : -w) + "px) rotate(" + (ok ? 14 : -14) + "deg)";
+    const st = card.querySelector(ok ? ".fc-stamp.yes" : ".fc-stamp.no");
+    if (st) st.style.opacity = "1";
+  }
+  setTimeout(() => { RV.busy = false; rvApply(ok); }, card ? 200 : 0);
+}
+function rvApply(ok) {
+  const s = RV.s, c = s && s.q[s.i];
+  if (!c || !RV.open) return;
+  c.ok = ok;
+  const L = { q: s.i, ok, add: 0, snap: null };
+  if (!ok && c.rep < REP_MAX) {                        // 덱 끝에 다시
+    const copy = Object.assign({}, c, { n: ++s.n, rep: c.rep + 1, ok: null });
+    s.q.push(copy);
+    L.add = copy.n;
+  }
+  if (!s.extra && c.rep === 0 && !s.res[c.x]) {        // 그 표현의 처음 카드를 다 봤으면 다음 복습 날짜
+    const firsts = s.q.filter(e => e.x === c.x && e.rep === 0), st = study.items[c.x];
+    if (firsts.every(e => e.ok != null) && st && st.status === "learning") {
+      L.snap = { x: c.x, item: JSON.stringify(st) };
+      s.res[c.x] = gradeRate(c.x, firsts.filter(e => e.ok).length / firsts.length);
+    }
+  }
+  s.log.push(L);
+  s.i++;
+  s.fin = s.i >= s.q.length;
+  RV.flipped = false;
+  rvSave();
+  updateBadges();
+  rvRender();
+}
+function rvUndo() {
+  const s = RV.s;
+  if (!s || RV.busy || !s.log.length) return;
+  const L = s.log.pop();
+  Player.stop();
+  buzz();
+  if (L.add) { const k = s.q.findIndex(e => e.n === L.add); if (k >= 0) s.q.splice(k, 1); }
+  if (L.snap) {
+    try { study.items[L.snap.x] = JSON.parse(L.snap.item); } catch (e) {}
+    delete s.res[L.snap.x];
+    saveStudy();
+    logDay(studyToday(), "r", -1);
+  }
+  if (s.q[L.q]) s.q[L.q].ok = null;
+  s.i = L.q;
+  s.fin = false;
+  RV.flipped = true;                                   // 평가하던 뒷면으로 돌아감
+  rvSave();
+  updateBadges();
+  rvRender();
+  toast("바로 전 평가를 되돌렸어요");
+}
+/* 틀린 카드만 한 번 더: 저장하지 않는 연습 판(복습 날짜에 영향 없음). 끝 화면에는 원래 복습 결과도 같이 */
+function rvRetry() {
+  const s = RV.s, wrong = rvWrong();
+  if (!s || !wrong.length) return;
+  const ns = { v: 1, extra: true, base: rvSummary(s), date: s.date, ids: s.ids, q: [], i: 0, log: [], res: {}, n: 0, fin: false };
+  deckPush(ns, wrong.map(c => Object.assign({}, c)));
+  RV.s = ns;
+  RV.flipped = false;
+  buzz();
+  rvRender();
+}
+
+/* 밀기: 뒷면에서만. 가로로 10px 넘게 움직이면 끌기 시작(세로면 스크롤에 맡김), 놓을 때 카드 폭 25%(최소 80px) 넘으면 평가 */
+let rvDrag = null, rvDragAt = 0;
+rvEl.addEventListener("pointerdown", e => {
+  const card = e.target.closest("#fcCard");
+  if (!card || !RV.flipped || RV.busy || e.button > 0 || e.target.closest(".spk")) return;
+  rvDrag = { x0: e.clientX, y0: e.clientY, dx: 0, on: false, id: e.pointerId, card };
+});
+rvEl.addEventListener("pointermove", e => {
+  const d = rvDrag;
+  if (!d || e.pointerId !== d.id) return;
+  const dx = e.clientX - d.x0, dy = e.clientY - d.y0;
+  if (!d.on) {
+    if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy)) { if (Math.abs(dy) > 14) rvDrag = null; return; }
+    d.on = true;
+    try { d.card.setPointerCapture(e.pointerId); } catch (err) {}
+    d.card.classList.remove("snap");
+    d.card.classList.add("dragging");
+  }
+  d.dx = dx;
+  d.card.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 22) + "deg)";
+  const k = Math.min(1, Math.abs(dx) / 110);
+  d.card.querySelector(".fc-stamp.yes").style.opacity = dx > 0 ? k : 0;
+  d.card.querySelector(".fc-stamp.no").style.opacity = dx < 0 ? k : 0;
+});
+function rvDragEnd(e) {
+  const d = rvDrag;
+  if (!d || e.pointerId !== d.id) return;
+  rvDrag = null;
+  if (!d.on) return;
+  rvDragAt = performance.now();
+  d.card.classList.remove("dragging");
+  if (e.type === "pointerup" && Math.abs(d.dx) > Math.max(80, d.card.offsetWidth * 0.25)) { rvGrade(d.dx > 0); return; }
+  d.card.classList.add("snap");
+  d.card.style.transform = "";
+  d.card.querySelectorAll(".fc-stamp").forEach(x => { x.style.opacity = ""; });
+}
+rvEl.addEventListener("pointerup", rvDragEnd);
+rvEl.addEventListener("pointercancel", rvDragEnd);
+rvEl.addEventListener("click", e => {
+  if (performance.now() - rvDragAt < 350) return;      // 끌고 난 뒤의 클릭은 무시
+  const t = e.target;
+  let el;
+  if ((el = t.closest("[data-rv]"))) {
+    if (el.disabled) return;
+    const a = el.dataset.rv;
+    if (a === "close") { buzz(); closeReview(); }
+    else if (a === "settings") { buzz(); openSettings("review"); }
+    else if (a === "flip") rvFlip();
+    else if (a === "yes" || a === "no") rvGrade(a === "yes");
+    else if (a === "undo") rvUndo();
+    else if (a === "say") { buzz(); rvSay(true); }
+    else if (a === "retry") rvRetry();
     return;
   }
-  detailId = id;
-  showSheet("복습 " + (reviewIdx + 1) + " / " + reviewQueue.length, "떠올려 보세요", reviewHtml(it, false), FOOT_REVEAL);
-}
-function revealReview() {
-  const it = EXPR_BY_ID[reviewQueue[reviewIdx]];
-  if (!it) return;
-  buzz();
-  sheetTitle.textContent = it.ex.phrase;
-  sheetBody.innerHTML = reviewHtml(it, true);
-  sheetFoot.innerHTML = footAfterReveal(it.id);
-}
-function gradeCurrentReview(ok) {
-  const id = reviewQueue[reviewIdx];
-  if (!id) return;
-  grade(id, ok);
-  buzz();
-  toast(ok ? (statusOf(id) === "mastered" ? "익힘 완료! 🎉" : "다음 복습: " + dueText(id)) : "내일 다시 복습해요");
-  reviewIdx++;
-  updateBadges();
-  showReview();
-}
+  if (!t.closest("#fcCard")) return;
+  if (!RV.flipped) { rvFlip(); return; }
+  const w = t.closest(".fc-back .w");
+  if (w) { const rd = rvReader(); if (rd) rd.seek(0, +w.dataset.w); }
+});
+/* 키보드: Space·Enter 뒤집기, → 알았음, ← 다시, Esc 닫기 */
+document.addEventListener("keydown", e => {
+  if (!RV.open || stOpen) return;
+  if (e.key === "Escape") { closeReview(); return; }
+  if (e.target && e.target.closest && e.target.closest("button")) return;
+  if ((e.key === " " || e.key === "Enter") && !RV.flipped && rvCur()) { e.preventDefault(); rvFlip(); }
+  else if ((e.key === "ArrowRight" || e.key === "ArrowLeft") && RV.flipped) { e.preventDefault(); rvGrade(e.key === "ArrowRight"); }
+});
 
 /* 시트 안: 학습하기·중단·프롬프트 복사·상황 카드로 가기·복습 확인 */
 sheetBody.addEventListener("click", async e => {
   const t = e.target;
-  if (t.closest("[data-reveal]")) { revealReview(); return; }
   if (onDrillClick(t)) return;
   const pe = t.closest("[data-pc-expr]");
   if (pe) { practiceExpr(pe.dataset.pcExpr); return; }
@@ -5042,9 +5438,11 @@ function renderToday() {
   const btn = (act, label, sub) => '<button class="btn td-go' + (sub ? " sub" : "") + '" type="button" data-td="' + act + '">' + esc(label) + '</button>';
   let now;
   if (task.kind === "review") {
+    const rp = reviewProgress();       // 같은 날 하던 덱이 있으면 이어서
     now = '<section class="td-now" aria-label="지금 할 일"><span class="td-label">지금 할 일</span>' +
       '<p class="td-title">복습할 표현 ' + s.due + '개</p>' +
-      '<p class="td-sub">약 ' + Math.max(1, Math.round(s.due * 0.6)) + '분 · 정해진 날에 복습하면 오래 기억해요</p>' + btn("review", "복습 시작") + '</section>';
+      '<p class="td-sub">' + (rp ? '카드 ' + rp.i + ' / ' + rp.n + '장까지 했어요' : '카드 약 ' + s.due * DECK_PER + '장 · 약 ' + Math.max(1, s.due) + '분') + ' · 정해진 날에 복습하면 오래 기억해요</p>' +
+      btn("review", rp ? "이어서 복습" : "복습 시작") + '</section>';
   } else if (task.kind === "new") {
     now = '<section class="td-now" aria-label="지금 할 일"><span class="td-label">지금 할 일</span>' +
       '<p class="td-title">새 표현 고르기</p>' +
@@ -6484,7 +6882,7 @@ function practiceCard(card) {
   PC.curCi = +card.dataset.i;
   pcQuick({ scope: "current" }, it => it.kind === "dlg" && it.n === li + 1);
 }
-/* "이 표현 연습하기"(표현 상세·복습 화면 = 바텀시트): 그 표현의 예문 5개 → 썰 */
+/* "이 표현 연습하기"(표현 상세 = 바텀시트): 그 표현의 예문 5개 → 썰 */
 function practiceExpr(id) {
   if (PC.open || !EXPR_BY_ID[id]) return;
   if (!buildPractice({ scope: "expr", xid: id }, 0).items.length) { toast("연습할 문장이 없어요"); return; }
@@ -6936,7 +7334,7 @@ function showSheet(ctx, title, html, foot) {
   }
 }
 
-/* 예문 5개 / 썰 — 상황 카드 시트, 표현 상세, 복습 화면이 같이 씀 */
+/* 예문 5개 / 썰 — 상황 카드 시트·표현 상세가 같이 씀 */
 /* .rd 묶음 하나(예문 5개 / 썰)를 재생기 하나로 읽음(인터랙티브 스크립트): 단어 탭 → 그 단어부터, 전체 듣기·일시정지·이어 듣기.
    data-who = 목소리(예문은 상대, 썰은 나), data-tap = 재생 중이 아닐 때 단어를 탭하면 그 문장만(one) / 끝까지(all) */
 function rdPlayBtn(label) {
@@ -7094,7 +7492,7 @@ function keyField(note) {
 
 /* ================= 설정(전체 화면, 2026-10-05 한 화면으로 모음) =================
    5개 탭 오른쪽 위 같은 아이콘([data-open-settings]) → 같은 화면. 닫기(X)·안드로이드 뒤로 가기 → 원래 탭(그대로).
-   구역: 음성(예전 상황 카드 아이콘의 음성 설정) · 자동 넘김(표현 탭 궁금증 카드) · 글쓰기(예전 글쓰기 아이콘 — 첨삭 목소리) · 기록(전체 기록 복사).
+   구역: 음성(예전 상황 카드 아이콘의 음성 설정) · 자동 넘김(표현 탭 궁금증 카드) · 복습(덱 자동 재생 — 덱 오른쪽 위 아이콘은 openSettings("review")) · 글쓰기(예전 글쓰기 아이콘 — 첨삭 목소리) · 기록(전체 기록 복사).
    API 키는 하나(음성 구역) — 글쓰기·연습장·드라이브 모두 같은 키. 드라이브 '미리 받아두기'의 [설정 › 음성 열기]는 openSettings("voice") */
 const stEl = document.getElementById("settings");
 let stOpen = false, stId = 0;
@@ -7139,6 +7537,12 @@ function settingsHtml() {
           seg("rotateSec", [["5", "5초"], ["10", "10초"], ["20", "20초"]], !settings.rotate) +
         '</div>' +
       '</section>' +
+      '<section class="st-sec" id="stReview" aria-label="복습"><h3>복습</h3>' +
+        '<div class="set-group"><span class="set-label">카드를 뒤집으면 영어 자동 재생</span>' +
+          seg("fcAuto", [["true", "켜기"], ["false", "끄기"]]) +
+          '<p class="note">복습 카드의 뒷면이 나오면 영어 문장을 바로 읽어 줘요. 꺼도 카드의 스피커 버튼으로 들을 수 있어요.</p>' +
+        '</div>' +
+      '</section>' +
       '<section class="st-sec" aria-label="글쓰기"><h3>글쓰기</h3>' +
         voiceField("voiceWrite", "일기(듣기용 본문)를 읽어 줄 목소리") +
         '<p class="note">ElevenLabs 키와 모델은 위 \'음성\' 설정을 따라요.</p>' +
@@ -7160,7 +7564,7 @@ function openSettings(section) {
   document.querySelector(".app").inert = true;
   stId = Date.now();
   try { history.pushState({ settings: stId }, ""); } catch (e) {}
-  const body = stEl.querySelector(".st-body"), sec = section === "voice" && stEl.querySelector("#stVoice");
+  const body = stEl.querySelector(".st-body"), sec = section && stEl.querySelector({ voice: "#stVoice", review: "#stReview" }[section] || "#none");
   body.scrollTop = 0;
   if (sec) body.scrollTop = Math.max(0, sec.getBoundingClientRect().top - body.getBoundingClientRect().top - 8);
 }
@@ -7171,7 +7575,7 @@ function stHide() {
   if (document.activeElement && stEl.contains(document.activeElement)) document.activeElement.blur();
   stEl.hidden = true;
   stEl.innerHTML = "";
-  document.querySelector(".app").inert = false;
+  document.querySelector(".app").inert = RV.open;     // 복습 덱 위에서 열었으면 덱은 그대로(뒤의 앱은 계속 inert)
   /* 바뀐 설정을 지금 탭에 반영(자동 넘김 줄, 미리 받아두기 안내 등) */
   if (currentTab === "expr") renderTeasers();
   else if (currentTab === "drive") dvRenderSetup();
@@ -7199,7 +7603,7 @@ stEl.addEventListener("click", e => {
   if (t.closest("[data-st-close]")) { buzz(); closeSettings(); return; }
   if ((el = t.closest(".seg button"))) {
     const name = el.parentNode.dataset.set, v = el.dataset.v;
-    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" ? v === "true" : v;
+    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" || name === "fcAuto" ? v === "true" : v;
     saveSettings();
     el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
     if (name === "engine") { const box = stEl.querySelector(".el-only"); if (box) box.hidden = v !== "eleven"; }
@@ -7318,7 +7722,6 @@ function hideSheet() {
   scrim.classList.remove("on");
   sheet.setAttribute("aria-hidden", "true");
   flushNote();
-  reviewQueue = [];
   if (currentTab === "expr") renderExprTab(); else updateBadges();
   if (currentTab === "today") renderToday();
 }
@@ -7344,10 +7747,6 @@ sheetFoot.addEventListener("click", e => {
   if (e.target.closest("[data-close]")) { closeSheet(); return; }
   const fl = e.target.closest("[data-full-list]");
   if (fl) { buzz(); openList(fl.dataset.fullList); return; }   // 카테고리 목록 → 전체 목록(그 카테고리 펼침, 시트는 그대로 바뀜)
-  const g = e.target.closest("[data-grade]");
-  if (g) { gradeCurrentReview(g.dataset.grade === "1"); return; }
-  if (e.target.closest("[data-rv-mine]")) { showMine(); return; }
-  if (e.target.closest("[data-reveal]")) revealReview();
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !PC.open) closeSheet(); });
 
