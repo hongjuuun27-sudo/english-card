@@ -873,6 +873,7 @@
   .fc-card.dragging{ transition:none; animation:none; cursor:grabbing; }
   .fc-card.snap{ transition:transform .22s ease; }
   .fc-card.fly{ transition:transform .22s ease-in, opacity .22s ease-in; opacity:0; animation:none; }
+  .fc-card, .fc-card *{ touch-action:pan-y; }   /* 카드 안 어디서든 가로 움직임은 앱이(밀기), 세로는 스크롤 — 안쪽 .fc-face가 스크롤 영역이라 여기까지 막아야 함 */
   .fc-face{ flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; display:flex; flex-direction:column; padding:18px 20px 20px; }
   .fc-face::-webkit-scrollbar{ display:none; }
   .fc-face[hidden]{ display:none; }
@@ -4263,7 +4264,8 @@ function renderReviewCard() {
   /* 자유 복습(복습 날짜와 상관없이 언제든): 오늘 복습할 차례가 없으면 큰 버튼, 있으면 아래 작은 버튼 */
   const learned = EXPR_LIST.filter(it => statusOf(it.id) !== "new").length;
   const freeBtn = main => '<button class="btn ' + (main ? "rv-start" : "rv-free") + '" type="button" data-review-free>자유 복습 · 지금 연습하기</button>' +
-    '<p class="rv-free-note">' + (learned ? "학습한 표현 " + Math.min(FREE_N, learned) : "전체 표현 중 " + FREE_N) + '개로 · 복습 날짜는 그대로예요</p>';
+    '<p class="rv-free-note">' + (learned > FREE_N ? freeRoundText(false).replace(/<\/?b>/g, "") + " · 오래전에 본 표현부터" :
+      learned ? "학습한 표현 " + learned + "개" + (learned < FREE_N ? " + 안 배운 표현 " + (FREE_N - learned) + "개" : "") : "안 배운 표현 " + FREE_N + "개 미리 보기") + ' · 복습 날짜는 그대로예요</p>';
   if (!due.length) {
     X.rv.innerHTML = head + '<p class="rv-empty">' + (learned ?
       "오늘 복습할 표현이 없어요. 다음 복습일에 다시 알려 드릴게요. 지금 연습하고 싶으면 자유 복습을 해 보세요." :
@@ -4898,12 +4900,15 @@ function deckCards(id, now) {
     out.push({ x: id, t: "m", ref: c.id, ko: c.ko, en: c.en, me: c.me || "", tip: c.tip || "", who: "me" });
   });
   const exs = it.ex.examples || [];
-  const seen = st && st.exRv && typeof st.exRv === "object" ? st.exRv : {};
+  /* 예문이 나온 시각: 학습 기록이 있으면 study.items[id].exRv, 없으면(자유 복습의 안 배운 표현) freeLog.ex[id] */
+  let seen;
+  if (st) seen = st.exRv = st.exRv && typeof st.exRv === "object" ? st.exRv : {};
+  else seen = freeLog.ex[id] = freeLog.ex[id] && typeof freeLog.ex[id] === "object" ? freeLog.ex[id] : {};
   exs.map((e, k) => k).filter(k => exs[k] && exs[k].en)
     .sort((a, b) => (seen[a] || 0) - (seen[b] || 0) || a - b)
     .slice(0, Math.max(0, DECK_PER - out.length))
     .forEach(k => {
-      if (st) { st.exRv = st.exRv && typeof st.exRv === "object" ? st.exRv : {}; st.exRv[k] = now; }
+      seen[k] = now;
       out.push({ x: id, t: "e", ref: k, ko: exs[k].ko || "", en: exs[k].en, who: "them" });
     });
   return out;
@@ -5063,23 +5068,66 @@ function rvSummary(s) {
   return s.extra ? s.base : { seen: s.log.length, again: s.log.filter(l => !l.ok).length, res: s.res, free: !!s.free,
     nx: s.free ? s.ids.length : Object.keys(s.res).filter(id => s.res[id]).length };
 }
-/* 자유 복습(2026-10-06 사용자 요청 — 복습할 차례가 아니어도 원할 때 연습): 같은 덱·같은 카드 동작, 복습 날짜·기록은 그대로, 저장 안 함.
-   표현 FREE_N개: 학습 중(다음 복습이 가까운 것 먼저) → 익힘(무작위). 학습한 표현이 하나도 없으면 전체 표현에서 무작위.
-   바로 전 자유 복습에 나온 표현은 다른 표현이 충분하면 뺌([다른 표현으로 한 번 더]) */
+/* 자유 복습(2026-10-06 사용자 요청 — 복습할 차례가 아니어도 심심할 때 연습): 같은 덱·같은 카드 동작, 복습 날짜·기록은 그대로, 덱 진행은 저장 안 함.
+   한 번에 표현 FREE_N(5)개 = 카드 약 30장. 무작위로 고르면 우연히 같은 표현이 계속 나올 수 있어서 '바퀴(순환)'로 고름(사용자 요청):
+   · 학습한 표현(학습 중·익힘)을 한 바퀴 다 돌 때까지 같은 표현이 다시 안 나옴 — 이번 바퀴에서 아직 안 본 표현 중 '마지막으로 본 때'가 가장 오래된 것부터
+     (마지막으로 본 때 = 자유 복습에서 그 표현 카드를 평가한 시각과 오늘 복습(history 날짜) 중 늦은 것, 같으면 무작위). 다 보면 새 바퀴.
+   · 바퀴 끝에 모자라면 다음 바퀴에서 가장 오래된 것으로 채움.
+   · 학습한 표현이 FREE_N개 이하면 그 표현 전부 + 모자란 만큼 아직 안 배운 표현(가장 오래전에 본 것부터 — 미리 보기).
+   · 표현 안 카드도 돌아감: 예문은 가장 오래전에 나온 것부터(exRv), 내 문장은 틀린 것 → 오래전에 나온 것(rv).
+   · 바퀴는 번호로 셈: 이번 바퀴(r)에서 남은 표현이 FREE_N개보다 적으면 모자란 만큼 다음 바퀴(r + 1) 표현으로 채우고, 그 표현은 다음 바퀴에서 본 것으로 침(새 바퀴에서 또 안 나오게).
+   기록 engcards.free.v1 { r: 이번 바퀴 번호(1부터), rd: { 표현id: 마지막으로 본 바퀴 번호 }, seen: { 표현id: 자유 복습에서 마지막으로 평가한 시각 ms }, ex: { 표현id: { 예문 번호: ms } }(학습 기록이 없는 표현의 예문 순환) } */
 const FREE_N = 5;
-let freeLast = [];
+const FREE_KEY = "engcards.free.v1";
+const freeLog = (() => {
+  const obj = v => v && typeof v === "object" ? v : {};
+  try {
+    const s = JSON.parse(localStorage.getItem(FREE_KEY) || "null");
+    if (s && typeof s === "object") return { r: Math.max(1, +s.r || 1), rd: obj(s.rd), seen: obj(s.seen), ex: obj(s.ex) };
+  } catch (e) {}
+  return { r: 1, rd: {}, seen: {}, ex: {} };
+})();
+function saveFree() { try { localStorage.setItem(FREE_KEY, JSON.stringify(freeLog)); } catch (e) {} }
+function freeLastSeen(id) {
+  const h = (study.items[id] && study.items[id].history) || [], last = h.length ? Date.parse(h[h.length - 1].date + "T12:00:00") || 0 : 0;
+  return Math.max(freeLog.seen[id] || 0, last);
+}
+const freeOrder = ids => dvShuffled(ids).sort((a, b) => freeLastSeen(a) - freeLastSeen(b));   // 정렬은 안정적이라 같은 값끼리는 섞인 순서
+const freeLearned = () => EXPR_LIST.filter(it => statusOf(it.id) !== "new").map(it => it.id);
+/* 이번 바퀴 진행 { done, total } — 학습한 표현이 FREE_N개보다 많을 때만(아니면 매번 전부 나오므로 null) */
+function freeRound() {
+  const L = freeLearned();
+  return L.length > FREE_N ? { done: L.filter(id => (freeLog.rd[id] || 0) >= freeLog.r).length, total: L.length } : null;
+}
+/* → { ids, rounds: { 표현id: 이 덱에서 보면 기록할 바퀴 번호 } } */
+function freePick() {
+  const L = freeLearned(), rounds = {};
+  if (L.length <= FREE_N) {
+    const fill = freeOrder(EXPR_LIST.map(it => it.id).filter(id => !L.includes(id))).slice(0, FREE_N - L.length);
+    return { ids: freeOrder(L).concat(fill), rounds };
+  }
+  let left = L.filter(id => (freeLog.rd[id] || 0) < freeLog.r);
+  if (!left.length) { freeLog.r++; saveFree(); left = L.filter(id => (freeLog.rd[id] || 0) < freeLog.r); }   // 한 바퀴 다 봄 → 새 바퀴
+  const ids = freeOrder(left).slice(0, FREE_N);
+  ids.forEach(id => { rounds[id] = freeLog.r; });
+  freeOrder(L.filter(id => !ids.includes(id) && (freeLog.rd[id] || 0) <= freeLog.r)).slice(0, FREE_N - ids.length)
+    .forEach(id => { ids.push(id); rounds[id] = freeLog.r + 1; });       // 바퀴 끝: 다음 바퀴 표현으로 채움
+  return { ids, rounds };
+}
+/* "이번 바퀴 7 / 12개" (끝 화면은 앞에 줄바꿈 + 다 돌았으면 축하) */
+function freeRoundText(end) {
+  const r = freeRound();
+  if (!r) return "";
+  if (end && r.done >= r.total) return '<br>학습한 표현 <b>' + r.total + '개</b>를 한 바퀴 다 봤어요! 다음부터 새 바퀴예요.';
+  return (end ? "<br>" : "") + '이번 바퀴 <b>' + r.done + ' / ' + r.total + '개</b> 봤어요';
+}
 function startFreeReview() {
-  const learned = EXPR_LIST.filter(it => statusOf(it.id) !== "new").map(it => it.id);
-  let pool = dvShuffled(learned.length ? learned : EXPR_LIST.map(it => it.id));
-  const rank = id => statusOf(id) === "learning" ? 0 : 1, due = id => (study.items[id] && study.items[id].due) || "9999";
-  pool.sort((a, b) => rank(a) - rank(b) || (rank(a) ? 0 : due(a).localeCompare(due(b))));
-  const fresh = pool.filter(id => !freeLast.includes(id));
-  if (fresh.length >= Math.min(FREE_N, pool.length)) pool = fresh.concat(pool.filter(id => freeLast.includes(id)));
-  const ids = pool.slice(0, FREE_N);
+  const { ids, rounds } = freePick();
   if (!ids.length) { toast("연습할 표현이 없어요"); return; }
-  freeLast = ids;
   const s = rvNew(ids);
+  saveFree();                          // 학습 기록이 없는 표현의 예문 순환(freeLog.ex)
   s.free = true;
+  s.rounds = rounds;
   RV.s = s;
   RV.flipped = false;
   if (RV.open) { buzz(); rvRender(); } else rvShow();
@@ -5105,7 +5153,7 @@ function rvEndHtml() {
   return '<div class="fc-end">' +
     '<h3>' + (s.extra ? "한 번 더 끝!" : s.free ? "자유 복습 끝! 👏" : "오늘 복습 끝! 👏") + '</h3>' +
     (s.extra ? '<p class="fc-note">틀린 카드 <b>' + s.q.filter(c => c.rep === 0).length + '장</b>을 한 번 더 봤어요 · 다시 ' + s.log.filter(l => !l.ok).length + '번 (복습 날짜는 그대로)</p>' :
-      s.free ? '<p class="fc-note">자유 복습이라 복습 날짜는 그대로예요.</p>' : "") +
+      s.free ? '<p class="fc-note">자유 복습이라 복습 날짜는 그대로예요.' + freeRoundText(true) + '</p>' : "") +
     '<div class="fc-stats">' + stat(m.seen, "본 카드") + stat(m.again, "다시") + stat(m.nx, "표현") + '</div>' +
     grp("next", "다음 간격으로", ["next", "mastered"]) +
     grp("same", "같은 간격 한 번 더", ["same"]) +
@@ -5201,6 +5249,11 @@ function rvApply(ok) {
     s.q.push(copy);
     L.add = copy.n;
   }
+  if (s.free && c.rep === 0) {                        // 자유 복습 바퀴: 이 표현은 봤음(평가한 카드가 있으면)
+    freeLog.seen[c.x] = Date.now();
+    if (s.rounds && s.rounds[c.x]) freeLog.rd[c.x] = Math.max(freeLog.rd[c.x] || 0, s.rounds[c.x]);
+    saveFree();
+  }
   if (!s.extra && !s.free && c.rep === 0 && !s.res[c.x]) {   // 그 표현의 처음 카드를 다 봤으면 다음 복습 날짜(자유 복습은 날짜 그대로)
     const firsts = s.q.filter(e => e.x === c.x && e.rep === 0), st = study.items[c.x];
     if (firsts.every(e => e.ok != null) && st && st.status === "learning") {
@@ -5250,44 +5303,67 @@ function rvRetry() {
   rvRender();
 }
 
-/* 밀기: 뒷면에서만. 가로로 10px 넘게 움직이면 끌기 시작(세로면 스크롤에 맡김), 놓을 때 카드 폭 25%(최소 80px) 넘으면 평가 */
+/* 밀기: 뒷면에서만. 가로로 10px 넘게 움직이면 끌기 시작(세로면 스크롤에 맡김), 놓을 때 카드 폭 25%(최소 80px) 넘으면 평가.
+   손가락은 touch 이벤트로(2026-10-06 폰에서 안 됨 — 카드 안 .fc-face가 스크롤 영역이라 브라우저가 가로 움직임을 가져가 pointercancel → 제자리로 돌아감.
+   CSS로 카드 안 전체를 touch-action: pan-y로 막고, touch 이벤트는 브라우저가 끼어들어도 끝까지 오므로 손가락은 이걸로). 마우스·펜은 pointer 이벤트.
+   앞면에서 옆으로 밀면 "먼저 탭해서 뒤집기" 안내 */
 let rvDrag = null, rvDragAt = 0;
-rvEl.addEventListener("pointerdown", e => {
-  const card = e.target.closest("#fcCard");
-  if (!card || !RV.flipped || RV.busy || e.button > 0 || e.target.closest(".spk")) return;
-  rvDrag = { x0: e.clientX, y0: e.clientY, dx: 0, on: false, id: e.pointerId, card };
-});
-rvEl.addEventListener("pointermove", e => {
+function rvDragStart(target, x, y, id) {
+  const card = target.closest && target.closest("#fcCard");
+  if (!card || RV.busy || target.closest(".spk")) return;
+  rvDrag = { x0: x, y0: y, dx: 0, on: false, id, card, front: !RV.flipped };
+}
+function rvDragMove(x, y, e) {
   const d = rvDrag;
-  if (!d || e.pointerId !== d.id) return;
-  const dx = e.clientX - d.x0, dy = e.clientY - d.y0;
+  if (!d) return;
+  const dx = x - d.x0, dy = y - d.y0;
   if (!d.on) {
     if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy)) { if (Math.abs(dy) > 14) rvDrag = null; return; }
     d.on = true;
-    try { d.card.setPointerCapture(e.pointerId); } catch (err) {}
+    if (d.front) return;
     d.card.classList.remove("snap");
     d.card.classList.add("dragging");
   }
+  if (e && e.cancelable) e.preventDefault();          // 가로로 끄는 중엔 화면이 따라 움직이지 않게
   d.dx = dx;
+  if (d.front) return;
   d.card.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 22) + "deg)";
   const k = Math.min(1, Math.abs(dx) / 110);
   d.card.querySelector(".fc-stamp.yes").style.opacity = dx > 0 ? k : 0;
   d.card.querySelector(".fc-stamp.no").style.opacity = dx < 0 ? k : 0;
-});
-function rvDragEnd(e) {
+}
+function rvDragEnd(commit) {
   const d = rvDrag;
-  if (!d || e.pointerId !== d.id) return;
   rvDrag = null;
-  if (!d.on) return;
+  if (!d || !d.on) return;
   rvDragAt = performance.now();
+  if (d.front) { if (commit && Math.abs(d.dx) > 60) toast("먼저 탭해서 뒤집은 뒤 옆으로 밀어 주세요"); return; }
   d.card.classList.remove("dragging");
-  if (e.type === "pointerup" && Math.abs(d.dx) > Math.max(80, d.card.offsetWidth * 0.25)) { rvGrade(d.dx > 0); return; }
+  if (commit && Math.abs(d.dx) > Math.max(80, d.card.offsetWidth * 0.25)) { rvGrade(d.dx > 0); return; }
   d.card.classList.add("snap");
   d.card.style.transform = "";
   d.card.querySelectorAll(".fc-stamp").forEach(x => { x.style.opacity = ""; });
 }
-rvEl.addEventListener("pointerup", rvDragEnd);
-rvEl.addEventListener("pointercancel", rvDragEnd);
+const rvTouch = (e, id) => Array.from(e.changedTouches).find(t => t.identifier === id);
+rvEl.addEventListener("touchstart", e => {
+  if (e.touches.length !== 1) { rvDragEnd(false); return; }
+  const t = e.changedTouches[0];
+  rvDragStart(e.target, t.clientX, t.clientY, "t" + t.identifier);
+}, { passive: true });
+rvEl.addEventListener("touchmove", e => {
+  const t = rvDrag && rvTouch(e, +String(rvDrag.id).slice(1));
+  if (t) rvDragMove(t.clientX, t.clientY, e);
+}, { passive: false });
+rvEl.addEventListener("touchend", e => { if (rvDrag && rvTouch(e, +String(rvDrag.id).slice(1))) rvDragEnd(true); });
+rvEl.addEventListener("touchcancel", () => rvDragEnd(false));
+rvEl.addEventListener("pointerdown", e => {
+  if (e.pointerType === "touch" || e.button > 0) return;
+  rvDragStart(e.target, e.clientX, e.clientY, e.pointerId);
+  if (rvDrag) try { rvDrag.card.setPointerCapture(e.pointerId); } catch (err) {}
+});
+rvEl.addEventListener("pointermove", e => { if (rvDrag && e.pointerId === rvDrag.id) rvDragMove(e.clientX, e.clientY, null); });
+rvEl.addEventListener("pointerup", e => { if (rvDrag && e.pointerId === rvDrag.id) rvDragEnd(true); });
+rvEl.addEventListener("pointercancel", e => { if (rvDrag && e.pointerId === rvDrag.id) rvDragEnd(false); });
 rvEl.addEventListener("click", e => {
   if (performance.now() - rvDragAt < 350) return;      // 끌고 난 뒤의 클릭은 무시
   const t = e.target;
