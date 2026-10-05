@@ -921,6 +921,10 @@
   .fc-stamp.yes{ left:18px; color:var(--accent); transform:rotate(-8deg); }
   .fc-stamp.no{ right:18px; color:var(--again); transform:rotate(8deg); }
   .fc-swipe{ flex:none; min-height:24px; padding:6px var(--pad) 0; text-align:center; font-size:14px; color:var(--faint); }
+  /* 따라 말하기: "따라 말해 보세요 · 2 / 5" + 문장 길이만큼 차오르는 막대(드라이브 모드 dvEcho와 같은 움직임) */
+  .fc-echo-t{ display:block; font-weight:650; color:var(--accent); }
+  .fc-echo{ display:block; height:4px; margin:6px auto 0; max-width:240px; border-radius:2px; background:var(--bg-3); overflow:hidden; }
+  .fc-echo i{ display:block; height:100%; background:var(--accent); transform-origin:left; animation:dvEcho linear both; }
   .fc-bottom{ flex:none; padding:8px max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 14px) max(var(--pad), env(safe-area-inset-left)); }
   .fc-bottom .actions .btn{ height:56px; }
   .fc-bottom .undo{ width:52px; padding:0; color:var(--muted); }
@@ -1583,7 +1587,9 @@ const DEFAULTS = {
   writeRate: 1,                          // 글쓰기 탭 재생 속도 (0.8 / 1)
   rotate: true,                          // 표현 탭 궁금증 카드 자동 넘김 (설정 › 자동 넘김)
   rotateSec: 10,                         // 자동 넘김 시간(초): 5 / 10 / 20
-  fcAuto: true                           // 복습 덱: 카드를 뒤집으면 영어 자동 재생 (설정 › 복습)
+  fcAuto: true,                          // 복습 덱: 카드를 뒤집으면 영어 자동 재생 (설정 › 복습)
+  fcRemote: true,                        // 복습 덱: 이어폰·차(블루투스)·잠금화면 버튼 — ⏭ 알았음 · ⏮ 다시 · ▶ 뒤집기
+  fcEcho: 0                              // 복습 덱: 따라 말하기 0(끄기) / 1 / 3 / 5번 — 듣기 → 문장 길이만큼 따라 말할 시간
 };
 function loadSettings() {
   try {
@@ -1594,6 +1600,8 @@ function loadSettings() {
     merged.rotate = merged.rotate !== false;
     if (![5, 10, 20].includes(merged.rotateSec)) merged.rotateSec = 10;
     merged.fcAuto = merged.fcAuto !== false;
+    merged.fcRemote = merged.fcRemote !== false;
+    if (![0, 1, 3, 5].includes(merged.fcEcho)) merged.fcEcho = 0;
     delete merged.autoplay;                // 예전 '자동 재생' 설정 (모드 개편으로 없어짐)
     return merged;
   } catch (e) { return Object.assign({}, DEFAULTS); }
@@ -4912,7 +4920,7 @@ const ICON_UNDO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const rvEl = document.getElementById("review");
 /* s = 지금 덱 { v, date, ids: [표현id], q: [카드], i: 지금 카드, log: [평가 { q, ok, add, snap }], res: { 표현id: 결과 }, n, fin, extra?, base? }
    카드 { n, x: 표현id, t: p(표현)|m(내 문장)|e(예문), ref(문장 카드 id / 예문 번호), ko, en, lko(표현 카드: 대사 한글), me, tip, who, rep(몇 번째 다시), ok(null|true|false) } */
-const RV = { open: false, id: 0, s: null, flipped: false, busy: false, rd: null };
+const RV = { open: false, id: 0, s: null, flipped: false, busy: false, rd: null, echoLeft: 0, echoTok: 0, echoT: null, ka: null };   // echo* = 따라 말하기, ka = 이어폰·차 버튼용 조용한 소리
 
 function rvLoad() {
   try {
@@ -5048,10 +5056,13 @@ function rvShow() {
   RV.id = Date.now();
   try { history.pushState({ review: RV.id }, ""); } catch (e) {}
   rvRender();
+  rvRemote(true);                                     // 이어폰·차 버튼(설정 › 복습)
 }
 function rvHide() {
   if (!RV.open) return;
   RV.open = false;
+  rvEchoStop(false);
+  rvRemote(false);
   Player.stop();
   RV.rd = null;
   RV.busy = false;
@@ -5212,6 +5223,7 @@ function rvRender() {
   const s = RV.s;
   if (!s || !RV.open) return;
   RV.rd = null;
+  rvEchoStop(false);
   const done = s.i >= s.q.length;
   rvEl.innerHTML =
     '<header class="dv-head">' +
@@ -5224,6 +5236,7 @@ function rvRender() {
     (done ? rvEndHtml() : '<div class="fc-stage">' + rvCardHtml(rvCur()) + '</div><p class="fc-swipe" id="fcSwipe"></p>') +
     '<div class="fc-bottom"><div class="actions" id="fcAct"></div></div>';
   rvPaintAct();
+  rvMedia();
 }
 function rvPaintAct() {
   const a = document.getElementById("fcAct"), sw = document.getElementById("fcSwipe"), s = RV.s;
@@ -5245,17 +5258,86 @@ function rvReader() {
         return el ? [{ el, who: c.who, btn: card.querySelector('[data-rv="say"]') }] : [];
       },
       rate: () => settings.speed,
-      tapSingle: true
+      tapSingle: true,
+      onEnd: complete => rvEchoEnd(complete)
     });
     RV.rd.card = card;
   }
   return RV.rd;
 }
+/* 뒷면 영어 듣기(뒤집을 때 자동·스피커·▶ 버튼). 따라 말하기(설정 fcEcho 1·3·5번)가 켜져 있으면 그 횟수만큼 '듣기 → 따라 말할 시간'을 되풀이 */
 function rvSay(toggle) {
   const rd = rvReader();
   if (!rd) return;
-  if (toggle && rd.state().active) { rd.stop(); return; }
+  if (toggle && rd.state().active) { rvEchoStop(true); rd.stop(); return; }
+  rvEchoStop(true);
+  RV.echoLeft = settings.fcEcho || 0;
   rd.play(0, 0, true);
+}
+/* 따라 말하기(2026-10-06 사용자 요청 — 드라이브 모드의 '따라 말할 시간'과 같은 방식): 문장이 끝까지 나오면 그 문장 길이만큼(1.2~12초) "따라 말해 보세요" 막대 →
+   남은 횟수가 있으면 다시 듣기. 카드가 바뀌거나 평가·되돌리기·닫기·스피커로 멈추면 그만둠(echoTok) */
+function rvEchoStop(paint) {
+  RV.echoTok = (RV.echoTok || 0) + 1;
+  clearTimeout(RV.echoT);
+  RV.echoLeft = 0;
+  if (paint) rvPaintAct();
+}
+function rvEchoEnd(complete) {
+  if (!complete || !RV.open || !RV.echoLeft) return;
+  const tok = RV.echoTok, n = settings.fcEcho || 1, round = n - RV.echoLeft + 1, c = rvCur();
+  RV.echoLeft--;
+  let len = Player.lastLength();
+  if (!len) len = (c ? getScript(c.en).words.length : 5) * 0.38 / (settings.speed || 1);
+  const ms = Math.round(Math.min(12, Math.max(1.2, len)) * 1000) + 250;
+  const sw = document.getElementById("fcSwipe");
+  if (sw) sw.innerHTML = '<span class="fc-echo-t">따라 말해 보세요' + (n > 1 ? ' · ' + round + ' / ' + n : "") + '</span>' +
+    '<span class="fc-echo" aria-hidden="true"><i style="animation-duration:' + ms + 'ms"></i></span>';
+  RV.echoT = setTimeout(() => {
+    if (tok !== RV.echoTok || !RV.open) return;
+    if (RV.echoLeft > 0) {
+      const rd = rvReader(), el = document.getElementById("fcSwipe");
+      if (el) el.innerHTML = '<span class="fc-echo-t">다시 듣기 · ' + (round + 1) + ' / ' + n + '</span>';
+      if (rd) rd.play(0, 0, true);
+    } else rvPaintAct();
+  }, ms);
+}
+/* 이어폰·차(블루투스)·잠금화면 버튼(2026-10-06 사용자 요청, 설정 fcRemote): ⏭ = 알았음, ⏮ = 다시(앞면에서도 바로), ▶/⏸ = 앞면이면 뒤집기·뒷면이면 다시 듣기.
+   잠금화면·차 화면엔 지금 카드 글(앞면 = 한국어, 뒷면 = 영어)과 "복습 3 / 30". 짧은 문장 소리만으로는 폰이 버튼을 붙여 주지 않아서
+   덱이 열려 있는 동안 조용한 소리를 반복(드라이브 모드와 같은 방법 — silentWav) */
+function rvRemote(on) {
+  on = !!(on && RV.open && settings.fcRemote);
+  if (on) {
+    if (!RV.ka) { try { RV.ka = new Audio(URL.createObjectURL(silentWav(6))); RV.ka.loop = true; } catch (e) {} }
+    try { if (RV.ka && RV.ka.paused) { const p = RV.ka.play(); if (p && p.catch) p.catch(() => {}); } } catch (e) {}
+  } else if (RV.ka) { try { RV.ka.pause(); } catch (e) {} }
+  const ms = navigator.mediaSession;
+  if (!ms) return;
+  const set = (a, f) => { try { ms.setActionHandler(a, on ? f : null); } catch (e) {} };
+  const playBtn = () => { if (!RV.open || RV.busy || !rvCur()) return; if (!RV.flipped) rvFlip(); else rvSay(false); };
+  set("play", playBtn);
+  set("pause", playBtn);
+  set("nexttrack", () => rvRemoteGrade(true));
+  set("previoustrack", () => rvRemoteGrade(false));
+  if (on) rvMedia();
+  else try { ms.metadata = null; ms.playbackState = "none"; } catch (e) {}
+}
+function rvRemoteGrade(ok) {
+  if (!RV.open || RV.busy || !rvCur()) return;
+  RV.flipped = true;                                   // 앞면에서 눌러도 바로 평가(차에서 뒤집지 않고 넘길 때)
+  rvGrade(ok);
+}
+function rvMedia() {
+  const ms = navigator.mediaSession, s = RV.s, c = rvCur();
+  if (!ms || !RV.open || !settings.fcRemote || !s) return;
+  try {
+    ms.metadata = new MediaMetadata({
+      title: c ? (RV.flipped ? getScript(c.en).speech : String(c.ko)) : "복습 끝",
+      artist: c ? "복습 " + (s.i + 1) + " / " + s.q.length + (RV.flipped ? " · ⏭ 알았음 · ⏮ 다시" : " · ▶ 뒤집기") : "",
+      album: "한 장 영어 · 복습",
+      artwork: [{ src: "icon-192.png", sizes: "192x192", type: "image/png" }, { src: "icon-512.png", sizes: "512x512", type: "image/png" }]
+    });
+    ms.playbackState = "playing";
+  } catch (e) {}
 }
 function rvFlip() {
   const card = document.getElementById("fcCard");
@@ -5265,6 +5347,7 @@ function rvFlip() {
   card.querySelector(".fc-front").hidden = true;
   card.querySelector(".fc-back").hidden = false;
   rvPaintAct();
+  rvMedia();
   if (settings.fcAuto) rvSay(false);
 }
 /* 평가: 카드를 옆으로 날려 보낸 뒤 기록(버튼·밀기 공통) */
@@ -5272,6 +5355,7 @@ function rvGrade(ok) {
   const card = document.getElementById("fcCard");
   if (!rvCur() || !RV.flipped || RV.busy) return;
   RV.busy = true;
+  rvEchoStop(false);
   Player.stop();
   buzz();
   if (card) {
@@ -5318,6 +5402,7 @@ function rvUndo() {
   const s = RV.s;
   if (!s || RV.busy || !s.log.length) return;
   const L = s.log.pop();
+  rvEchoStop(false);
   Player.stop();
   buzz();
   if (L.add) { const k = s.q.findIndex(e => e.n === L.add); if (k >= 0) s.q.splice(k, 1); }
@@ -7767,6 +7852,14 @@ function settingsHtml() {
           seg("fcAuto", [["true", "켜기"], ["false", "끄기"]]) +
           '<p class="note">복습 카드의 뒷면이 나오면 영어 문장을 바로 읽어 줘요. 꺼도 카드의 스피커 버튼으로 들을 수 있어요.</p>' +
         '</div>' +
+        '<div class="set-group"><span class="set-label">따라 말하기</span>' +
+          seg("fcEcho", [["0", "끄기"], ["1", "1번"], ["3", "3번"], ["5", "5번"]]) +
+          '<p class="note">영어를 들은 뒤 그 문장 길이만큼 따라 말할 시간을 줘요. 3번·5번이면 \'듣기 → 따라 말하기\'를 그만큼 되풀이해요(드라이브 모드의 따라 말할 시간과 같은 방식).</p>' +
+        '</div>' +
+        '<div class="set-group"><span class="set-label">이어폰·차 버튼으로 넘기기</span>' +
+          seg("fcRemote", [["true", "켜기"], ["false", "끄기"]]) +
+          '<p class="note">블루투스 이어폰·차·잠금화면 버튼으로 복습해요. ⏭ 다음 = 알았음, ⏮ 이전 = 다시, ▶ 재생 = 카드 뒤집기(뒷면에선 다시 듣기). 잠금화면에 지금 카드 글이 보여요. 버튼이 하나뿐인 이어폰은 뒤집기만 돼요.</p>' +
+        '</div>' +
       '</section>' +
       '<section class="st-sec" aria-label="글쓰기"><h3>글쓰기</h3>' +
         voiceField("voiceWrite", "일기(듣기용 본문)를 읽어 줄 목소리") +
@@ -7801,6 +7894,7 @@ function stHide() {
   stEl.hidden = true;
   stEl.innerHTML = "";
   document.querySelector(".app").inert = RV.open;     // 복습 덱 위에서 열었으면 덱은 그대로(뒤의 앱은 계속 inert)
+  if (RV.open) rvRemote(true);                        // 이어폰·차 버튼 켜기/끄기를 바로 반영
   /* 바뀐 설정을 지금 탭에 반영(자동 넘김 줄, 미리 받아두기 안내 등) */
   if (currentTab === "expr") renderTeasers();
   else if (currentTab === "drive") dvRenderSetup();
@@ -7828,7 +7922,7 @@ stEl.addEventListener("click", e => {
   if (t.closest("[data-st-close]")) { buzz(); closeSettings(); return; }
   if ((el = t.closest(".seg button"))) {
     const name = el.parentNode.dataset.set, v = el.dataset.v;
-    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" || name === "fcAuto" ? v === "true" : v;
+    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" || name === "fcAuto" || name === "fcRemote" ? v === "true" : name === "fcEcho" ? parseInt(v, 10) : v;
     saveSettings();
     el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
     if (name === "engine") { const box = stEl.querySelector(".el-only"); if (box) box.hidden = v !== "eleven"; }

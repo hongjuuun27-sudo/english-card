@@ -1559,5 +1559,215 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 34,
+    category: "카페·식당",
+    title: "처음 보는 메뉴 맛 물어보기",
+    situation: "태국 음식점에 처음 왔어요. 메뉴에 처음 보는 요리가 있어서, 직원에게 무슨 맛인지와 얼마나 매운지 물어보고 주문하려고 해요.",
+    hooks: [
+      { ko: "처음 보는 메뉴가 '무슨 맛이에요?'라고 물어볼 때, 뭐라고 하지?", line: 2 },
+      { ko: "'얼마나 매워요?'라고 물어볼 때, 뭐라고 하지?", line: 4 },
+      { ko: "'순한 맛으로 해 주실 수 있어요?'라고 부탁할 때, 뭐라고 하지?", line: 6 }
+    ],
+    dialogue: [
+      { who: "server", en: "Hi! Are you ready to order, or do you need a minute?", ko: "안녕하세요! 주문하시겠어요, 아니면 조금 더 보실래요?",
+        chunks: "Hi! / Are you ready to order, / or do‿you need‿a minute?",
+        tips: [{ target: "need a minute", ko: "'니더 미닛'처럼 이어져요." }] },
+      { who: "me", en: "Quick question. What does the khao soi taste like?", ko: "하나만 여쭤볼게요. 카오 소이는 무슨 맛이에요?",
+        chunks: "Quick question. / What does the khao soi / taste like?",
+        tips: [{ target: "taste like", ko: "'테이슷 라익', 끝을 살짝 올려 물어요." }] },
+      { who: "server", en: "It's a coconut curry noodle soup. It's rich, a little sweet, and savory.", ko: "코코넛 커리 국수예요. 진하고, 살짝 달고, 감칠맛이 나요.",
+        chunks: "It's‿a coconut curry noodle soup. / It's rich, / a little sweet, / and savory.",
+        tips: [{ target: "savory", ko: "'세이버리', 짭짤하고 감칠맛 나는 맛." }] },
+      { who: "me", en: "Sounds good. How spicy is it?", ko: "맛있겠네요. 얼마나 매워요?",
+        chunks: "Sounds good. / How spicy is‿it?",
+        tips: [{ target: "is it", ko: "'이짓'처럼 이어서, 끝을 올려요." }] },
+      { who: "server", en: "It's got a little kick. How spicy do you want it? Mild, medium, or hot?", ko: "살짝 매운맛이 있어요. 맵기는 어떻게 해 드릴까요? 순한 맛, 중간, 매운맛이요?",
+        chunks: "It's got‿a little kick. / How spicy do you want‿it? / Mild, medium, / or hot?",
+        tips: [{ target: "kick", ko: "음식에선 '톡 쏘는 매운맛'이라는 뜻." }] },
+      { who: "me", en: "Can you make it mild? I can't handle spicy food.", ko: "순한 맛으로 해 주실 수 있어요? 매운 걸 잘 못 먹어서요.",
+        chunks: "Can you make‿it mild? / I can't handle spicy food.",
+        tips: [{ target: "can't handle", ko: "can't의 t는 거의 안 들려요. '캔 핸들'처럼." }] },
+      { who: "server", en: "Sure thing. Anything else? It comes with cilantro on top.", ko: "그럼요. 더 필요한 건요? 위에 고수가 올라가요.",
+        chunks: "Sure thing. / Anything else? / It comes with cilantro‿on top.",
+        tips: [{ target: "cilantro", ko: "'실란트로', 고수." }] },
+      { who: "me", en: "Oh, I'm not a big fan of cilantro.", ko: "아, 고수는 별로 안 좋아해요.",
+        chunks: "Oh, / I'm not‿a big fan / of cilantro.",
+        tips: [{ target: "big fan", ko: "'빅 팬', not a big fan = '별로 안 좋아해요'." }] },
+      { who: "me", en: "Could you leave it off?", ko: "빼 주실 수 있어요?",
+        chunks: "Could you leave‿it off?",
+        tips: [{ target: "leave it off", ko: "'리비로프'처럼 이어져요. '빼 주세요'라는 뜻." }] },
+      { who: "server", en: "No problem. One mild khao soi, no cilantro!", ko: "알겠습니다. 카오 소이 순한 맛, 고수 빼고요!",
+        chunks: "No problem. / One mild khao soi, / no cilantro!",
+        tips: [] }
+    ],
+    expressions: [
+      {
+        id: "c34-e1",
+        phrase: "What does ~ taste like?",
+        teaser: "처음 보는 음식이 '무슨 맛이에요?'라고 물을 때, 뭐라고 하지?",
+        ko: "'~는 무슨 맛이에요?'라는 뜻이에요. 처음 보는 메뉴·과일·음료 맛을 물을 때 써요. 대답은 보통 It tastes like ~.(~ 같은 맛이에요)나 It's sweet and sour.처럼 맛을 바로 말해요. 비슷한 표현: How does it taste? / What's it like?",
+        examples: [
+          { en: "What does durian taste like? I've never tried it.", ko: "두리안은 무슨 맛이에요? 한 번도 안 먹어 봤어요.",
+            chunks: "What does durian taste like? / I've never tried‿it.",
+            tips: [{ target: "durian", ko: "'두리언', 첫음절에 힘." }] },
+          { en: "What does this tea taste like? Is it sweet?", ko: "이 차는 무슨 맛이에요? 달아요?",
+            chunks: "What does this tea / taste like? / Is‿it sweet?",
+            tips: [] },
+          { en: "What does the house special taste like?", ko: "이 집 대표 메뉴는 무슨 맛이에요?",
+            chunks: "What does the house special / taste like?",
+            tips: [{ target: "house special", ko: "그 가게의 대표 메뉴예요." }] },
+          { en: "So what does matcha actually taste like?", ko: "그래서 말차는 실제로 무슨 맛이야?",
+            chunks: "So what does matcha / actually taste like?",
+            tips: [{ target: "matcha", ko: "'마차', 말차." }] },
+          { en: "What does it taste like when it's cold?", ko: "차갑게 먹으면 무슨 맛이에요?",
+            chunks: "What does‿it taste like / when it's cold?",
+            tips: [{ target: "does it", ko: "'더짓'처럼 이어져요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "In Bangkok, / I saw‿a stall / selling fried insects.",
+              ko: "방콕에서 튀긴 곤충을 파는 노점을 봤어.",
+              tips: [{ target: "insects", ko: "'인섹츠', 첫음절에 힘." }] },
+            { chunks: "I asked the guy, / “What does the cricket / taste like?”",
+              ko: "아저씨한테 “귀뚜라미는 무슨 맛이에요?” 하고 물었지.",
+              tips: [{ target: "cricket", ko: "'크리킷', 귀뚜라미." }] },
+            { chunks: "He just handed me one / and said, / “Try‿it.”",
+              ko: "아저씨가 그냥 하나 건네주면서 “먹어 봐.” 하더라.",
+              tips: [] },
+            { chunks: "It was crunchy, salty, / and honestly kind‿of amazing.",
+              ko: "바삭하고 짭짤한 게, 솔직히 좀 대박이었어.",
+              tips: [{ target: "crunchy", ko: "'크런치', 와삭와삭한." }] }
+          ],
+          en: "In Bangkok, I saw a stall selling fried insects. I asked the guy, “What does the cricket taste like?” He just handed me one and said, “Try it.” It was crunchy, salty, and honestly kind of amazing.",
+          ko: "방콕에서 튀긴 곤충을 파는 노점을 봤어. 아저씨한테 “귀뚜라미는 무슨 맛이에요?” 하고 물었지. 아저씨가 그냥 하나 건네주면서 “먹어 봐.” 하더라. 바삭하고 짭짤한 게, 솔직히 좀 대박이었어."
+        }
+      },
+      {
+        id: "c34-e2",
+        phrase: "How ~ is it?",
+        teaser: "'얼마나 매워요?'처럼 정도를 물을 때, 뭐라고 하지?",
+        ko: "'얼마나 ~해요?'라는 뜻이에요. 가운데에 형용사를 넣어 정도를 물어요(How spicy is it? / How far is it? / How big is it?). 음식이면 맵기·단맛, 길이면 거리, 물건이면 크기까지 두루 써요. 비슷한 표현: Is it very ~? / Is it too ~?",
+        examples: [
+          { en: "How sweet is it? I don't like sugary drinks.", ko: "얼마나 달아요? 단 음료를 안 좋아해서요.",
+            chunks: "How sweet is‿it? / I don't like sugary drinks.",
+            tips: [{ target: "sugary", ko: "'슈거리', 설탕이 많이 든." }] },
+          { en: "The hotel looks nice. How far is it from the station?", ko: "호텔 좋아 보이네요. 역에서 얼마나 멀어요?",
+            chunks: "The hotel looks nice. / How far is‿it / from the station?",
+            tips: [{ target: "far", ko: "'파r', r을 살짝 굴려요." }] },
+          { en: "How hot is it outside right now?", ko: "지금 밖에 얼마나 더워요?",
+            chunks: "How hot is‿it outside / right now?",
+            tips: [] },
+          { en: "How big is it? Will it fit in my suitcase?", ko: "얼마나 커요? 제 캐리어에 들어갈까요?",
+            chunks: "How big is‿it? / Will‿it fit in my suitcase?",
+            tips: [{ target: "suitcase", ko: "'숫케이스', 첫음절에 힘." }] },
+          { en: "How spicy is it compared to kimchi?", ko: "김치랑 비교하면 얼마나 매워요?",
+            chunks: "How spicy is‿it / compared to kimchi?",
+            tips: [{ target: "compared", ko: "'컴페어r드', 둘째 음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend made her famous chili / for game night.",
+              ko: "친구가 게임하는 날이라고 자기 특제 칠리를 만들었어.",
+              tips: [{ target: "chili", ko: "'칠리', 매운 고기 스튜." }] },
+            { chunks: "I asked, / “How spicy is‿it?”",
+              ko: "내가 “얼마나 매워?” 하고 물었지.",
+              tips: [] },
+            { chunks: "She said, “Barely,” / so I took‿a huge spoonful.",
+              ko: "“거의 안 매워.” 그러길래 한 숟가락 크게 떠먹었거든.",
+              tips: [{ target: "Barely", ko: "'베어r리', '거의 ~않게'." }] },
+            { chunks: "I spent / the rest‿of the night / drinking milk.",
+              ko: "그날 밤 내내 우유만 마셨어.",
+              tips: [] }
+          ],
+          en: "My friend made her famous chili for game night. I asked, “How spicy is it?” She said, “Barely,” so I took a huge spoonful. I spent the rest of the night drinking milk.",
+          ko: "친구가 게임하는 날이라고 자기 특제 칠리를 만들었어. 내가 “얼마나 매워?” 하고 물었지. “거의 안 매워.” 그러길래 한 숟가락 크게 떠먹었거든. 그날 밤 내내 우유만 마셨어."
+        }
+      },
+      {
+        id: "c34-e3",
+        phrase: "I'm not a big fan of ~.",
+        teaser: "'저는 ~를 별로 안 좋아해요'라고 부드럽게 말할 때, 뭐라고 하지?",
+        ko: "'~는 별로 안 좋아해요'라는 뜻이에요. I don't like ~보다 부드럽고 공손해서 식당이나 초대받은 자리에서 쓰기 좋아요. 음식뿐 아니라 날씨·영화·장소에도 써요. 비슷한 표현: ~ isn't really my thing. / I'm not into ~.",
+        examples: [
+          { en: "I'm not a big fan of spicy food, actually.", ko: "사실 매운 음식은 별로 안 좋아해요.",
+            chunks: "I'm not‿a big fan / of spicy food, / actually.",
+            tips: [] },
+          { en: "Honestly, I'm not a big fan of horror movies.", ko: "솔직히 공포 영화는 별로야.",
+            chunks: "Honestly, / I'm not‿a big fan / of horror movies.",
+            tips: [{ target: "horror", ko: "'호러r', 첫음절에 힘." }] },
+          { en: "I'm not a big fan of olives. Can I swap them?", ko: "올리브는 별로 안 좋아해요. 다른 걸로 바꿀 수 있어요?",
+            chunks: "I'm not‿a big fan / of olives. / Can‿I swap them?",
+            tips: [{ target: "swap", ko: "'스왑', 바꾸다." }] },
+          { en: "I'm not a big fan of cold weather.", ko: "추운 날씨는 별로야.",
+            chunks: "I'm not‿a big fan / of cold weather.",
+            tips: [] },
+          { en: "Thanks, but I'm not a big fan of sweet drinks.", ko: "고마운데, 단 음료는 별로 안 좋아해서.",
+            chunks: "Thanks, / but I'm not‿a big fan / of sweet drinks.",
+            tips: [] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On my first date with Jake, / he cooked dinner.",
+              ko: "제이크랑 첫 데이트 때, 제이크가 저녁을 해 줬어.",
+              tips: [] },
+            { chunks: "He proudly served / a giant mushroom risotto.",
+              ko: "뿌듯한 얼굴로 엄청 큰 버섯 리조또를 내오더라.",
+              tips: [{ target: "risotto", ko: "'리조토', 둘째 음절에 힘." }] },
+            { chunks: "I'm not‿a big fan / of mushrooms, / but I ate every bite.",
+              ko: "나 버섯 별로 안 좋아하는데, 한 입도 안 남기고 다 먹었지.",
+              tips: [] },
+            { chunks: "Now we're married, / and he still makes‿it / every year.",
+              ko: "지금은 결혼했는데, 아직도 매년 그걸 만들어 줘.",
+              tips: [{ target: "married", ko: "'매리드', 첫음절에 힘." }] }
+          ],
+          en: "On my first date with Jake, he cooked dinner. He proudly served a giant mushroom risotto. I'm not a big fan of mushrooms, but I ate every bite. Now we're married, and he still makes it every year.",
+          ko: "제이크랑 첫 데이트 때, 제이크가 저녁을 해 줬어. 뿌듯한 얼굴로 엄청 큰 버섯 리조또를 내오더라. 나 버섯 별로 안 좋아하는데, 한 입도 안 남기고 다 먹었지. 지금은 결혼했는데, 아직도 매년 그걸 만들어 줘."
+        }
+      },
+      {
+        id: "c34-e4",
+        phrase: "Can you make it ~?",
+        teaser: "'순한 맛으로 해 주세요'처럼 맛을 조절해 달라고 할 때, 뭐라고 하지?",
+        ko: "'~하게 해 주실 수 있어요?'라는 뜻이에요. 뒤에 형용사를 넣어 맵기·단맛·온도·크기를 조절해 달라고 할 때 써요(Can you make it mild? / Can you make it extra spicy? / Can you make it less sweet?). 약속 시간에 올 수 있냐고 물을 때도 써요(Can you make it by seven?). 비슷한 표현: Could I get it ~?",
+        examples: [
+          { en: "Can you make it extra spicy? I love heat.", ko: "아주 맵게 해 주실 수 있어요? 매운 걸 좋아해서요.",
+            chunks: "Can you make‿it extra spicy? / I love heat.",
+            tips: [{ target: "heat", ko: "음식에선 '매운맛'이라는 뜻." }] },
+          { en: "Can you make it less sweet, please?", ko: "덜 달게 해 주실 수 있어요?",
+            chunks: "Can you make‿it less sweet, / please?",
+            tips: [] },
+          { en: "Can you make it a large instead?", ko: "대신 라지로 해 주실 수 있어요?",
+            chunks: "Can you make‿it a large / instead?",
+            tips: [{ target: "instead", ko: "'인스테드', 뒤에 힘." }] },
+          { en: "Can you make it to go? I'm running late.", ko: "포장으로 해 주실 수 있어요? 좀 늦어서요.",
+            chunks: "Can you make‿it to go? / I'm running late.",
+            tips: [] },
+          { en: "Can you make it medium-rare?", ko: "미디엄 레어로 해 주실 수 있어요?",
+            chunks: "Can you make‿it medium-rare?",
+            tips: [{ target: "medium-rare", ko: "'미디엄 레어r', 속이 붉게 익힌 정도." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At a Korean place in LA, / I ordered tteokbokki.",
+              ko: "LA에 있는 한식집에서 떡볶이를 시켰어.",
+              tips: [] },
+            { chunks: "My American friend asked, / “Can you make‿it mild?”",
+              ko: "미국인 친구가 “순한 맛으로 해 주실 수 있어요?” 하고 물었지.",
+              tips: [] },
+            { chunks: "The owner laughed‿and said, / “This is the mild one.”",
+              ko: "사장님이 웃으면서 “이게 순한 맛이에요.” 하시더라.",
+              tips: [{ target: "laughed", ko: "ed는 t 소리로 '래프트'." }] },
+            { chunks: "My friend still finished / the whole plate, / crying.",
+              ko: "친구는 울면서도 한 접시를 다 먹었어.",
+              tips: [] }
+          ],
+          en: "At a Korean place in LA, I ordered tteokbokki. My American friend asked, “Can you make it mild?” The owner laughed and said, “This is the mild one.” My friend still finished the whole plate, crying.",
+          ko: "LA에 있는 한식집에서 떡볶이를 시켰어. 미국인 친구가 “순한 맛으로 해 주실 수 있어요?” 하고 물었지. 사장님이 웃으면서 “이게 순한 맛이에요.” 하시더라. 친구는 울면서도 한 접시를 다 먹었어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

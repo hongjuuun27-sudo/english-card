@@ -1110,5 +1110,335 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 33,
+    category: "일상 대화",
+    title: "친구가 해 준 요리 맛보고 칭찬하기",
+    situation: "친구 집에 저녁 초대를 받았어요. 친구가 직접 만든 파스타를 먹으면서 맛을 칭찬하고, 뭐가 들어갔는지 물어보려고 해요.",
+    scene: "free",
+    hooks: [
+      { ko: "친구 요리가 '식당에서 파는 맛 같다'고 칭찬할 때, 뭐라고 하지?", line: 2 },
+      { ko: "소스에 뭐가 들어갔는지 물어볼 때, 뭐라고 하지?", line: 4 },
+      { ko: "'레시피 꼭 알려 줘'라고 할 때, 뭐라고 하지?", line: 8 }
+    ],
+    dialogue: [
+      { who: "friend", en: "Okay, dinner's ready! Dig in before it gets cold.", ko: "자, 저녁 다 됐어! 식기 전에 어서 먹어.",
+        chunks: "Okay, / dinner's ready! / Dig‿in / before it gets cold.",
+        tips: [{ target: "Dig in", ko: "'어서 먹어'라는 뜻. '디긴'처럼 이어져요." }] },
+      { who: "me", en: "Wow, this is so good. It tastes like something from a restaurant.", ko: "와, 진짜 맛있다. 식당에서 파는 맛이야.",
+        chunks: "Wow, / this is so good. / It tastes like something / from‿a restaurant.",
+        tips: [{ target: "tastes like", ko: "'테이슷츠 라익', tastes의 s 소리를 살려요." }] },
+      { who: "friend", en: "Aw, thanks! It's just my mom's recipe.", ko: "아, 고마워! 그냥 우리 엄마 레시피야.",
+        chunks: "Aw, thanks! / It's just my mom's recipe.",
+        tips: [{ target: "recipe", ko: "'레서피', 첫음절에 힘." }] },
+      { who: "me", en: "What's in this sauce? It's so rich and creamy.", ko: "이 소스에 뭐 들어갔어? 엄청 진하고 크리미하다.",
+        chunks: "What's‿in this sauce? / It's so rich‿and creamy.",
+        tips: [{ target: "rich", ko: "음식에선 '진하다, 풍부하다'는 뜻이에요." }] },
+      { who: "friend", en: "Garlic, parmesan, and a little bit of lemon.", ko: "마늘이랑 파르메산 치즈, 그리고 레몬 조금.",
+        chunks: "Garlic, parmesan, / and‿a little bit‿of lemon.",
+        tips: [{ target: "parmesan", ko: "'파r머잔', 첫음절에 힘." }] },
+      { who: "me", en: "That's why it's a little tangy. I love it.", ko: "그래서 살짝 새콤했구나. 완전 좋아.",
+        chunks: "That's why / it's‿a little tangy. / I love‿it.",
+        tips: [{ target: "tangy", ko: "'탱이', 새콤하고 상큼한 맛이에요." }] },
+      { who: "friend", en: "Have some more. There's plenty.", ko: "더 먹어. 많이 있어.",
+        chunks: "Have some more. / There's plenty.",
+        tips: [{ target: "plenty", ko: "'플렌티', '넉넉히 많다'는 뜻." }] },
+      { who: "me", en: "Seriously, you have to give me the recipe.", ko: "진짜로, 레시피 꼭 알려 줘.",
+        chunks: "Seriously, / you have to give me / the recipe.",
+        tips: [{ target: "have to", ko: "'해브 투'보다 '해프터'처럼 빠르게." }] }
+    ],
+    expressions: [
+      {
+        id: "c33-e1",
+        phrase: "It tastes like ~.",
+        forms: ["tastes like ~"],
+        teaser: "음식이 '~ 같은 맛이 나'라고 할 때, 뭐라고 하지?",
+        ko: "'맛이 ~ 같아'라는 뜻이에요. 뒤에 명사를 넣어 비슷한 맛을 말해요(It tastes like chicken.). 형용사로 말할 땐 like 없이 It tastes great. / It tastes salty.처럼 써요. 냄새는 It smells like ~. 비슷한 표현: It reminds me of ~.",
+        examples: [
+          { en: "This tea tastes like honey and flowers.", ko: "이 차는 꿀이랑 꽃 맛이 나요.",
+            chunks: "This tea / tastes like honey‿and flowers.",
+            tips: [{ target: "honey", ko: "'허니', 첫음절에 힘." }] },
+          { en: "It tastes like chicken, but it's actually tofu.", ko: "닭고기 맛인데, 사실 두부예요.",
+            chunks: "It tastes like chicken, / but it's actually tofu.",
+            tips: [{ target: "actually", ko: "'액츄얼리', 첫음절에 힘." }] },
+          { en: "Ugh, this coffee tastes like it's been sitting out all day.", ko: "윽, 이 커피 하루 종일 놔둔 맛이야.",
+            chunks: "Ugh, / this coffee tastes like / it's been sitting‿out all day.",
+            tips: [{ target: "sitting out", ko: "'시딩 아웃', '밖에 내놓은 채로'라는 뜻." }] },
+          { en: "Your soup tastes like the one my grandma used to make.", ko: "네 수프, 우리 할머니가 해 주시던 맛이야.",
+            chunks: "Your soup tastes like the one / my grandma used to make.",
+            tips: [{ target: "used to", ko: "'유스투', s 소리로 빠르게." }] },
+          { en: "This candy tastes like toothpaste. No thanks.", ko: "이 사탕 치약 맛 나. 난 됐어.",
+            chunks: "This candy tastes like toothpaste. / No thanks.",
+            tips: [{ target: "toothpaste", ko: "'투스페이스트', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My roommate baked cookies last night / and made me try‿one.",
+              ko: "룸메이트가 어젯밤에 쿠키를 굽더니 나한테 하나 먹어 보라는 거야.",
+              tips: [{ target: "baked", ko: "ed는 t 소리로 '베익트'." }] },
+            { chunks: "I took‿a bite‿and thought, / “It tastes like cardboard.”",
+              ko: "한 입 먹고 ‘골판지 맛이네’ 싶었지.",
+              tips: [{ target: "cardboard", ko: "'카r드보r드', 골판지." }] },
+            { chunks: "But I smiled‿and said, / “Wow, these are great!”",
+              ko: "근데 웃으면서 “와, 맛있다!” 했거든.",
+              tips: [] },
+            { chunks: "Then she tried one / and realized she'd used salt / instead‿of sugar.",
+              ko: "그러다 걔가 하나 먹어 보고는 설탕 대신 소금을 넣었다는 걸 알았어.",
+              tips: [{ target: "instead of", ko: "'인스테더브'처럼 이어져요." }] }
+          ],
+          en: "My roommate baked cookies last night and made me try one. I took a bite and thought, “It tastes like cardboard.” But I smiled and said, “Wow, these are great!” Then she tried one and realized she'd used salt instead of sugar.",
+          ko: "룸메이트가 어젯밤에 쿠키를 굽더니 나한테 하나 먹어 보라는 거야. 한 입 먹고 ‘골판지 맛이네’ 싶었지. 근데 웃으면서 “와, 맛있다!” 했거든. 그러다 걔가 하나 먹어 보고는 설탕 대신 소금을 넣었다는 걸 알았어."
+        }
+      },
+      {
+        id: "c33-e2",
+        phrase: "What's in ~?",
+        teaser: "음식에 '뭐가 들어갔어?'라고 재료를 물을 때, 뭐라고 하지?",
+        ko: "'~에 뭐가 들어갔어?'라는 뜻이에요. 음식·음료 재료를 물을 때 가장 흔히 써요(What's in this sauce? / What's in the smoothie?). 알레르기 때문에 확인할 때도 좋아요. 비슷한 표현: What did you put in ~? / What's this made with?",
+        examples: [
+          { en: "What's in this smoothie? It's so refreshing.", ko: "이 스무디에 뭐 들어갔어요? 엄청 상큼하네요.",
+            chunks: "What's‿in this smoothie? / It's so refreshing.",
+            tips: [{ target: "refreshing", ko: "'리프레싱', 둘째 음절에 힘." }] },
+          { en: "Excuse me, what's in the house salad?", ko: "저기요, 하우스 샐러드엔 뭐가 들어가요?",
+            chunks: "Excuse me, / what's‿in the house salad?",
+            tips: [{ target: "house salad", ko: "그 식당의 기본 샐러드예요." }] },
+          { en: "What's in the dumplings? Pork or chicken?", ko: "만두 속에 뭐 들었어요? 돼지고기예요, 닭고기예요?",
+            chunks: "What's‿in the dumplings? / Pork‿or chicken?",
+            tips: [{ target: "dumplings", ko: "'덤플링즈', 끝 s는 z 소리." }] },
+          { en: "This cocktail is strong. What's in it?", ko: "이 칵테일 세다. 뭐 들어간 거야?",
+            chunks: "This cocktail is strong. / What's‿in‿it?",
+            tips: [{ target: "What's in it", ko: "'왓츠 이닛'처럼 이어져요." }] },
+          { en: "What's in the sauce? I'm allergic to peanuts.", ko: "소스에 뭐 들어갔어요? 저 땅콩 알레르기가 있어서요.",
+            chunks: "What's‿in the sauce? / I'm allergic to peanuts.",
+            tips: [{ target: "peanuts", ko: "'피넛츠', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At my friend's wedding, / I had this amazing little appetizer.",
+              ko: "친구 결혼식에서 엄청 맛있는 작은 전채 요리를 먹었어.",
+              tips: [{ target: "appetizer", ko: "'애피타이저r', 첫음절에 힘." }] },
+            { chunks: "I asked the waiter, / “What's‿in this?”",
+              ko: "웨이터한테 “이거 뭐 들어간 거예요?” 하고 물어봤지.",
+              tips: [] },
+            { chunks: "He smiled‿and said, / “Snails.”",
+              ko: "웨이터가 웃으면서 “달팽이요.” 하더라.",
+              tips: [{ target: "Snails", ko: "'스네일즈', 달팽이." }] },
+            { chunks: "I had three more anyway.",
+              ko: "그래도 세 개 더 먹었어.",
+              tips: [] }
+          ],
+          en: "At my friend's wedding, I had this amazing little appetizer. I asked the waiter, “What's in this?” He smiled and said, “Snails.” I had three more anyway.",
+          ko: "친구 결혼식에서 엄청 맛있는 작은 전채 요리를 먹었어. 웨이터한테 “이거 뭐 들어간 거예요?” 하고 물어봤지. 웨이터가 웃으면서 “달팽이요.” 하더라. 그래도 세 개 더 먹었어."
+        }
+      },
+      {
+        id: "c33-e3",
+        phrase: "You have to give me ~.",
+        teaser: "'레시피 꼭 알려 줘'처럼 꼭 알려 달라고 조를 때, 뭐라고 하지?",
+        ko: "'~ 꼭 알려 줘(줘야 해)'라는 뜻이에요. 친구 요리가 맛있을 때 the recipe를 넣어 가장 많이 써요. 가게 이름·링크처럼 꼭 알고 싶은 게 있을 때도 써요(You have to give me the name of that place.). have to로 '꼭'이라는 느낌이 강해요. 비슷한 표현: Can you send me the recipe?",
+        examples: [
+          { en: "These brownies are amazing. You have to give me the recipe.", ko: "이 브라우니 진짜 맛있다. 레시피 꼭 알려 줘.",
+            chunks: "These brownies are amazing. / You have to give me / the recipe.",
+            tips: [{ target: "brownies", ko: "'브라우니즈', 끝 s는 z 소리." }] },
+          { en: "You have to give me the name of that café.", ko: "그 카페 이름 꼭 알려 줘.",
+            chunks: "You have to give me / the name‿of that café.",
+            tips: [{ target: "café", ko: "'캐페이', 뒤에 힘." }] },
+          { en: "Your hair looks great. You have to give me your stylist's number.", ko: "머리 진짜 예쁘다. 미용사 번호 꼭 줘.",
+            chunks: "Your hair looks great. / You have to give me / your stylist's number.",
+            tips: [{ target: "stylist's", ko: "'스타일리스츠', 첫음절에 힘." }] },
+          { en: "You have to give me the link to that dress.", ko: "그 원피스 링크 꼭 줘.",
+            chunks: "You have to give me / the link to that dress.",
+            tips: [] },
+          { en: "Okay, you have to give me your secret. How is this so crispy?", ko: "좋아, 비법 꼭 알려 줘. 어떻게 이렇게 바삭해?",
+            chunks: "Okay, / you have to give me / your secret. / How is this so crispy?",
+            tips: [{ target: "crispy", ko: "'크리스피', 바삭한." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My coworker brought / homemade kimchi fried rice / to the office.",
+              ko: "회사 동료가 집에서 만든 김치볶음밥을 사무실에 가져왔어.",
+              tips: [{ target: "homemade", ko: "'홈메이드', 집에서 만든." }] },
+            { chunks: "Everyone kept saying, / “You have to give me / the recipe!”",
+              ko: "다들 “레시피 꼭 알려 줘!” 하고 난리였지.",
+              tips: [] },
+            { chunks: "She finally admitted / it was from‿a frozen bag.",
+              ko: "결국 그 동료가 냉동식품이었다고 털어놨어.",
+              tips: [{ target: "admitted", ko: "'어드미티드', 둘째 음절에 힘." }] },
+            { chunks: "Now the whole team / buys the same brand.",
+              ko: "이제 팀 전체가 같은 브랜드를 사 먹어.",
+              tips: [] }
+          ],
+          en: "My coworker brought homemade kimchi fried rice to the office. Everyone kept saying, “You have to give me the recipe!” She finally admitted it was from a frozen bag. Now the whole team buys the same brand.",
+          ko: "회사 동료가 집에서 만든 김치볶음밥을 사무실에 가져왔어. 다들 “레시피 꼭 알려 줘!” 하고 난리였지. 결국 그 동료가 냉동식품이었다고 털어놨어. 이제 팀 전체가 같은 브랜드를 사 먹어."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 35,
+    category: "일상 대화",
+    title: "동료와 점심 먹으며 맛 평가하기",
+    situation: "회사 근처에 새로 생긴 식당에서 동료와 점심을 먹고 있어요. 각자 시킨 음식이 어떤지 맛 이야기를 나눠요.",
+    scene: "free",
+    hooks: [
+      { ko: "싱거운 음식에 '소금이 좀 더 있어야겠다'고 할 때, 뭐라고 하지?", line: 4 },
+      { ko: "'내가 먹어 본 교자 중에 최고야'라고 할 때, 뭐라고 하지?", line: 6 },
+      { ko: "동료에게 '하나 먹어 볼래?'라고 권할 때, 뭐라고 하지?", line: 7 }
+    ],
+    dialogue: [
+      { who: "coworker", en: "So? How's your ramen? Is it as good as the reviews said?", ko: "그래서? 라멘 어때? 리뷰만큼 맛있어?",
+        chunks: "So? / How's your ramen? / Is‿it as good / as the reviews said?",
+        tips: [{ target: "reviews", ko: "'리뷰즈', 둘째 음절에 힘." }] },
+      { who: "me", en: "The broth is great, but the noodles are a little soggy.", ko: "국물은 끝내주는데, 면이 좀 퍼졌어.",
+        chunks: "The broth is great, / but the noodles / are‿a little soggy.",
+        tips: [{ target: "soggy", ko: "'소기', 눅눅하게 불은." }] },
+      { who: "coworker", en: "Mine's pretty bland. I don't know what it's missing.", ko: "내 건 좀 싱거워. 뭐가 빠졌는지 모르겠네.",
+        chunks: "Mine's pretty bland. / I don't know / what it's missing.",
+        tips: [{ target: "bland", ko: "'블랜드', 싱겁고 밋밋한 맛." }] },
+      { who: "me", en: "Let me taste it. Yeah, it needs more salt.", ko: "나 맛 좀 볼게. 응, 소금이 좀 더 있어야겠다.",
+        chunks: "Let me taste‿it. / Yeah, / it needs more salt.",
+        tips: [{ target: "needs more", ko: "'니즈 모어r', needs의 s는 z 소리." }] },
+      { who: "coworker", en: "Right? And the fries are kind of greasy too.", ko: "그치? 감자튀김도 좀 기름지고.",
+        chunks: "Right? / And the fries / are kind‿of greasy too.",
+        tips: [{ target: "greasy", ko: "'그리시', 기름진." }] },
+      { who: "me", en: "But these dumplings? This is the best gyoza I've ever had.", ko: "근데 이 만두는? 내가 먹어 본 교자 중에 최고야.",
+        chunks: "But these dumplings? / This is the best gyoza / I've ever had.",
+        tips: [{ target: "I've ever had", ko: "'아이브 에버r 해드', 한 덩어리로." }] },
+      { who: "me", en: "They're so crispy and juicy. Do you want to try one?", ko: "엄청 바삭하고 육즙이 가득해. 하나 먹어 볼래?",
+        chunks: "They're so crispy‿and juicy. / Do‿you want to try‿one?",
+        tips: [{ target: "juicy", ko: "'쥬시', 육즙이 많은." }] },
+      { who: "coworker", en: "Sure! Wow, okay. We're definitely coming back for these.", ko: "좋아! 와, 진짜네. 이거 먹으러 꼭 다시 오자.",
+        chunks: "Sure! / Wow, okay. / We're definitely coming back / for these.",
+        tips: [{ target: "definitely", ko: "'데피닛리', 첫음절에 힘." }] }
+    ],
+    expressions: [
+      {
+        id: "c35-e1",
+        phrase: "It needs more ~.",
+        forms: ["needs more ~"],
+        teaser: "싱거운 음식에 '~가 좀 더 있어야겠다'고 할 때, 뭐라고 하지?",
+        ko: "'~가 좀 더 있어야겠어(부족해)'라는 뜻이에요. 맛볼 때 소금·간·소스가 부족하다고 말하는 가장 쉬운 표현이에요(It needs more salt.). 음식 말고 발표·그림 같은 데도 써요(It needs more color.). 살짝만 부족하면 a little more. 비슷한 표현: It could use more ~.",
+        examples: [
+          { en: "Taste this. I think it needs more garlic.", ko: "맛 좀 봐. 마늘이 좀 더 있어야 할 것 같아.",
+            chunks: "Taste this. / I think it needs more garlic.",
+            tips: [{ target: "garlic", ko: "'갈릭', 첫음절에 힘." }] },
+          { en: "It needs more sauce. It's a little dry.", ko: "소스가 좀 더 있어야겠어. 좀 퍽퍽해.",
+            chunks: "It needs more sauce. / It's‿a little dry.",
+            tips: [] },
+          { en: "The soup is good, but it needs more pepper.", ko: "수프 맛있는데, 후추가 좀 더 있어야겠어.",
+            chunks: "The soup is good, / but it needs more pepper.",
+            tips: [{ target: "pepper", ko: "'페퍼r', 첫음절에 힘." }] },
+          { en: "Your slide looks empty. It needs more pictures.", ko: "슬라이드가 좀 비어 보여. 사진이 더 있어야겠어.",
+            chunks: "Your slide looks empty. / It needs more pictures.",
+            tips: [] },
+          { en: "This lemonade needs more ice. It's warm.", ko: "이 레모네이드 얼음이 더 있어야겠어. 미지근해.",
+            chunks: "This lemonade needs more ice. / It's warm.",
+            tips: [{ target: "lemonade", ko: "'레머네이드', 끝에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I made my first kimchi stew / for my roommates.",
+              ko: "룸메이트들한테 처음으로 김치찌개를 끓여 줬어.",
+              tips: [{ target: "stew", ko: "'스튜', 찌개." }] },
+            { chunks: "Everyone tasted‿it politely / and said, / “It needs more salt.”",
+              ko: "다들 예의 바르게 맛보더니 “소금이 좀 더 있어야겠다.” 하더라.",
+              tips: [{ target: "politely", ko: "'펄라잇리', 둘째 음절에 힘." }] },
+            { chunks: "So I added‿a whole spoonful.",
+              ko: "그래서 한 숟가락을 통째로 넣었지.",
+              tips: [] },
+            { chunks: "Turns‿out / it was sugar, / not salt.",
+              ko: "알고 보니 그게 소금이 아니라 설탕이었어.",
+              tips: [{ target: "Turns out", ko: "'턴자웃', '알고 보니'." }] }
+          ],
+          en: "I made my first kimchi stew for my roommates. Everyone tasted it politely and said, “It needs more salt.” So I added a whole spoonful. Turns out it was sugar, not salt.",
+          ko: "룸메이트들한테 처음으로 김치찌개를 끓여 줬어. 다들 예의 바르게 맛보더니 “소금이 좀 더 있어야겠다.” 하더라. 그래서 한 숟가락을 통째로 넣었지. 알고 보니 그게 소금이 아니라 설탕이었어."
+        }
+      },
+      {
+        id: "c35-e2",
+        phrase: "This is the best ~ I've ever had.",
+        teaser: "'내가 먹어 본 ~ 중에 최고야'라고 할 때, 뭐라고 하지?",
+        ko: "'내가 먹어 본 ~ 중에 최고야'라는 뜻이에요. 맛있는 음식을 크게 칭찬할 때 가장 자주 써요(This is the best pizza I've ever had.). had 대신 seen, been to를 쓰면 영화·장소에도 써요(This is the best beach I've ever been to.). 비슷한 표현: I've never had a better ~.",
+        examples: [
+          { en: "Oh my gosh, this is the best taco I've ever had.", ko: "세상에, 내가 먹어 본 타코 중에 최고야.",
+            chunks: "Oh my gosh, / this is the best taco / I've ever had.",
+            tips: [{ target: "taco", ko: "'타코', 첫음절에 힘." }] },
+          { en: "This is the best coffee I've ever had. Seriously.", ko: "내가 마셔 본 커피 중에 최고야. 진짜로.",
+            chunks: "This is the best coffee / I've ever had. / Seriously.",
+            tips: [] },
+          { en: "This is the best sleep I've ever had on a plane.", ko: "비행기에서 이렇게 푹 잔 건 처음이야.",
+            chunks: "This is the best sleep / I've ever had / on‿a plane.",
+            tips: [] },
+          { en: "Happy birthday! This is the best cake I've ever had.", ko: "생일 축하해! 내가 먹어 본 케이크 중에 최고야.",
+            chunks: "Happy birthday! / This is the best cake / I've ever had.",
+            tips: [] },
+          { en: "This is the best fried chicken I've ever had in America.", ko: "미국에서 먹어 본 치킨 중에 최고야.",
+            chunks: "This is the best fried chicken / I've ever had / in America.",
+            tips: [{ target: "fried chicken", ko: "'프라이드 치킨', d는 거의 안 들려요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "Last summer, / I waited two hours / for‿a famous burger.",
+              ko: "지난여름에 유명한 버거 하나 먹으려고 두 시간을 기다렸어.",
+              tips: [] },
+            { chunks: "I took‿one bite‿and yelled, / “This is the best burger / I've ever had!”",
+              ko: "한 입 먹자마자 “내가 먹어 본 버거 중에 최고야!” 하고 소리쳤지.",
+              tips: [{ target: "yelled", ko: "ed는 d 소리로 '옐드'." }] },
+            { chunks: "The guy next to me laughed, / “First time here?”",
+              ko: "옆에 있던 사람이 웃으면서 “여기 처음이에요?” 하더라.",
+              tips: [] },
+            { chunks: "Yeah, / and definitely not my last.",
+              ko: "응, 그리고 절대 마지막도 아니고.",
+              tips: [] }
+          ],
+          en: "Last summer, I waited two hours for a famous burger. I took one bite and yelled, “This is the best burger I've ever had!” The guy next to me laughed, “First time here?” Yeah, and definitely not my last.",
+          ko: "지난여름에 유명한 버거 하나 먹으려고 두 시간을 기다렸어. 한 입 먹자마자 “내가 먹어 본 버거 중에 최고야!” 하고 소리쳤지. 옆에 있던 사람이 웃으면서 “여기 처음이에요?” 하더라. 응, 그리고 절대 마지막도 아니고."
+        }
+      },
+      {
+        id: "c35-e3",
+        phrase: "Do you want to try ~?",
+        teaser: "친구에게 '이거 한 입 먹어 볼래?'라고 권할 때, 뭐라고 하지?",
+        ko: "'~ 먹어(해) 볼래?'라는 뜻이에요. 음식을 나눠 줄 때 Do you want to try some?처럼 가장 자주 쓰고, 새로운 걸 같이 해 보자고 할 때도 써요(Do you want to try yoga with me?). 친한 사이엔 Want to try some?으로 줄여 말해요. 비슷한 표현: Here, try this.",
+        examples: [
+          { en: "Do you want to try some? It's really good.", ko: "좀 먹어 볼래? 진짜 맛있어.",
+            chunks: "Do‿you want to try some? / It's really good.",
+            tips: [{ target: "Do you", ko: "'두유'보다 '쥬'처럼 빠르게." }] },
+          { en: "Do you want to try my pasta? I can't finish it.", ko: "내 파스타 먹어 볼래? 다 못 먹겠어.",
+            chunks: "Do‿you want to try / my pasta? / I can't finish‿it.",
+            tips: [] },
+          { en: "Do you want to try that new Mexican place tonight?", ko: "오늘 밤에 새로 생긴 멕시코 음식점 가 볼래?",
+            chunks: "Do‿you want to try / that new Mexican place tonight?",
+            tips: [{ target: "Mexican", ko: "'멕시컨', 첫음절에 힘." }] },
+          { en: "Do you want to try rock climbing this weekend?", ko: "이번 주말에 암벽 등반 해 볼래?",
+            chunks: "Do‿you want to try / rock climbing this weekend?",
+            tips: [{ target: "climbing", ko: "b는 소리 안 나요. '클라이밍'." }] },
+          { en: "Do you want to try this lipstick? The color's cute.", ko: "이 립스틱 발라 볼래? 색이 예뻐.",
+            chunks: "Do‿you want to try / this lipstick? / The color's cute.",
+            tips: [] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At lunch, / my coworker kept staring / at my bibimbap.",
+              ko: "점심때 동료가 계속 내 비빔밥을 쳐다보는 거야.",
+              tips: [{ target: "staring", ko: "'스테어링', 빤히 쳐다보다." }] },
+            { chunks: "So I asked, / “Do‿you want to try some?”",
+              ko: "그래서 “좀 먹어 볼래?” 하고 물었지.",
+              tips: [] },
+            { chunks: "She said, / “Just‿a little,” / and ate half‿of‿it.",
+              ko: "“조금만.” 하더니 반을 먹어 버렸어.",
+              tips: [{ target: "half of it", ko: "'해퍼빗'처럼 이어져요." }] },
+            { chunks: "Now I order two / every time.",
+              ko: "이제 나는 매번 두 개를 시켜.",
+              tips: [] }
+          ],
+          en: "At lunch, my coworker kept staring at my bibimbap. So I asked, “Do you want to try some?” She said, “Just a little,” and ate half of it. Now I order two every time.",
+          ko: "점심때 동료가 계속 내 비빔밥을 쳐다보는 거야. 그래서 “좀 먹어 볼래?” 하고 물었지. “조금만.” 하더니 반을 먹어 버렸어. 이제 나는 매번 두 개를 시켜."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );
