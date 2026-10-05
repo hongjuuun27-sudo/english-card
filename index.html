@@ -24,7 +24,7 @@
     --text:#ECE9E4;
     --text-2:#C9CBCF;
     --muted:#A1A7B0;
-    --faint:#6E747D;
+    --faint:#8C939C;      /* 회색 글자(대비 5.9:1 — 2026-10-05 예전 #6E747D 3.9:1) */
     --line:rgba(255,255,255,.08);
     --bubble:#1F2328;
     --bubble-text:#E9E7E3;
@@ -55,7 +55,7 @@
       --text:#1F2226;
       --text-2:#3B3F45;
       --muted:#5E646C;
-      --faint:#979DA5;
+      --faint:#5F646B;    /* 회색 글자(대비 5.4:1 — 2026-10-05 예전 #979DA5 2.5:1) */
       --line:rgba(0,0,0,.08);
       --bubble:#FFFFFF;
       --bubble-text:#24272B;
@@ -118,13 +118,21 @@
     background:var(--bg);
     border-top:1px solid var(--line);
   }
+  /* 탭 5개 [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 선택된 탭 = 아이콘 뒤 알약 모양 배경 + 진한 글자(색만으로 구분하지 않게) */
   .tab{
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-    font-size:12.5px; font-weight:600; color:var(--faint);
+    flex:1; min-width:0; min-height:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    font-size:12px; font-weight:600; color:var(--faint);
     transition:color .2s ease;
   }
   .tab svg{ width:23px; height:23px; }
-  .tab[aria-selected="true"]{ color:var(--accent); }
+  .tab-ico{ position:relative; z-index:0; display:block; width:23px; height:23px; }
+  .tab-ico::before{
+    content:""; position:absolute; z-index:-1; top:-4px; bottom:-4px; left:-17px; right:-17px; border-radius:999px;
+    background:var(--accent); opacity:0; transform:scaleX(.6); transition:opacity .2s ease, transform .2s ease;
+  }
+  .tab[aria-selected="true"]{ color:var(--text); font-weight:750; }
+  .tab[aria-selected="true"] .tab-ico{ color:var(--accent); }
+  .tab[aria-selected="true"] .tab-ico::before{ opacity:.2; transform:none; }
   .tab:active svg{ transform:scale(.92); }
   body.typing .tabbar{ display:none; }   /* 키보드가 올라와 있을 땐 입력칸을 넓게 */
 
@@ -169,13 +177,13 @@
   .top-r{ display:flex; align-items:center; gap:2px; }
   .jump{
     display:flex; align-items:center; gap:4px;
-    height:36px; padding:0 5px 0 6px; border-radius:999px; white-space:nowrap;
+    height:44px; padding:0 5px 0 6px; border-radius:999px; white-space:nowrap;
     font-size:14px; color:var(--faint); font-variant-numeric:tabular-nums;
   }
   .jump:active{ background:var(--line); }
   .jump svg{ width:17px; height:17px; }
   .gear{
-    width:40px; height:40px; margin-right:-10px;
+    width:44px; height:44px; margin-right:-12px;
     flex:none;
     display:grid; place-items:center; border-radius:50%;
     color:var(--faint);
@@ -582,7 +590,6 @@
   .toc-item.current .toc-n{ color:var(--accent); background:var(--bg-2); }
 
   /* ---------- 하단 탭 배지 ---------- */
-  .tab-ico{ position:relative; display:block; width:23px; height:23px; }
   .badge{
     position:absolute; top:-5px; left:15px;
     min-width:18px; height:18px; padding:0 5px; border-radius:999px;
@@ -591,41 +598,73 @@
     box-shadow:0 0 0 2px var(--bg);
   }
   .badge[hidden]{ display:none; }
+  .badge.dot{ top:-3px; left:18px; min-width:0; width:9px; height:9px; padding:0; }   /* 글쓰기: 오늘 안 썼으면 점 */
 
   /* ---------- 표현 탭 ---------- */
-  /* ---------- 홈: 위 = 질문 카드 "이럴 땐 어떻게?"(크게, 누르면 그 카드의 그 줄로), 아래 = 바로가기 2×2(엄지 자리) ---------- */
-  .home{
-    display:flex; flex-direction:column;
+  /* ---------- 오늘 탭(대시보드): ① 지금 할 일(유일한 큰 버튼) ② 오늘 진행 ③ 최근 7일 ④ 표현 실력 ⑤ 이어 듣기(드라이브를 멈췄을 때만) ----------
+     누를 수 있는 것만 버튼 모양, 상태 표시(②·③)는 테두리 없는 아이콘과 숫자. 완료는 색 + 체크 아이콘 + 숫자. 저절로 바뀌는 것 없음 */
+  .today{
     overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain;
-    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) 18px max(var(--pad), env(safe-area-inset-left));
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) 36px max(var(--pad), env(safe-area-inset-left));
   }
-  .hq{ flex:1; display:flex; flex-direction:column; justify-content:center; min-height:240px; padding:18px 0 14px; }
-  .hq-card{
-    position:relative; width:100%; text-align:left;
-    padding:22px 20px 20px; border-radius:24px;
-    background:hsl(var(--h) 50% 55% / var(--tag-a)); border:1.5px solid hsl(var(--h) 52% var(--tag-l) / .35);
-    transition:transform .12s ease;
+  .td-now{
+    margin-top:18px; padding:18px 18px 16px; border-radius:22px;
+    background:radial-gradient(120% 120% at 100% 0%, var(--accent-soft), transparent 70%), var(--bg-2);
+    border:1.5px solid var(--accent-line);
   }
-  .hq-card:active{ transform:scale(.985); }
-  .hq-label{ display:block; font-size:13px; font-weight:700; letter-spacing:.04em; color:hsl(var(--h) 52% var(--tag-l)); }
-  .hq-text{ display:block; margin-top:12px; font-size:24px; line-height:1.42; font-weight:700; letter-spacing:-.02em; color:var(--text); word-break:keep-all; }
-  .hq-go{ display:flex; align-items:center; gap:4px; margin-top:16px; font-size:14px; font-weight:600; color:var(--muted); }
-  .hq-go svg{ width:16px; height:16px; }
-  .hq-meta{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
-  .hq-src{ min-width:0; font-size:13.5px; color:var(--faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .hq-next{ flex:none; height:34px; padding:0 14px; border-radius:999px; font-size:14px; font-weight:600; color:var(--accent); background:var(--accent-soft); }
-  .hq-empty{ font-size:15px; color:var(--muted); }
-  .h-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:auto; }
-  .h-go{
-    display:flex; flex-direction:column; align-items:flex-start; gap:6px; min-height:104px;
-    padding:14px 14px 13px; border-radius:20px; text-align:left;
-    background:var(--bg-2); border:1px solid var(--line);
-    transition:transform .12s ease;
+  .td-now.hook{ background:hsl(var(--h) 50% 55% / var(--tag-a)); border-color:hsl(var(--h) 52% var(--tag-l) / .4); }
+  .td-label{ font-size:13px; font-weight:700; letter-spacing:.04em; color:var(--accent); }
+  .td-now.hook .td-label{ color:hsl(var(--h) 52% var(--tag-l)); }
+  .td-title{ margin:8px 0 0; font-size:23px; line-height:1.38; font-weight:750; letter-spacing:-.02em; color:var(--text); word-break:keep-all; }
+  .td-now.hook .td-title{ font-size:24px; }
+  .td-sub{ margin:6px 0 0; font-size:14.5px; line-height:1.55; color:var(--muted); }
+  .td-go{ width:100%; margin-top:16px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .td-go.sub{ color:var(--text); background:var(--bg); border-color:var(--line); }
+  .td-sec{ margin-top:30px; }
+  .td-h{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:12px; }
+  .td-h h3{ margin:0; font-size:16px; font-weight:750; color:var(--text); }
+  .td-h small{ font-size:13.5px; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
+  /* ② 오늘 진행: 4칸(복습 · 새 표현 · 상황 카드 · 일기) */
+  .td-prog{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin:0; padding:0; list-style:none; }
+  .td-prog li{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
+  .td-dot{ width:34px; height:34px; border-radius:50%; display:grid; place-items:center; border:2px solid var(--line); color:var(--on-accent); }
+  .td-dot svg{ width:17px; height:17px; }
+  .td-prog .done .td-dot, .td-week .on .td-dot{ background:var(--accent); border-color:transparent; }
+  .td-num{ font-size:16px; font-weight:750; font-variant-numeric:tabular-nums; color:var(--text); }
+  .td-prog .done .td-num{ color:var(--accent); }
+  .td-cap{ font-size:12.5px; color:var(--muted); }
+  /* ③ 최근 7일 */
+  .td-week{ display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; margin:0; padding:0; list-style:none; }
+  .td-week li{ display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .td-week .td-dot{ width:32px; height:32px; }
+  .td-week .is-today:not(.on) .td-dot{ border-color:var(--accent); }
+  .td-week .is-today .td-cap{ font-weight:750; color:var(--text); }
+  /* ④ 표현 실력: 막대(익힘 · 학습 중 · 미학습) + 누르면 그 필터로 표현 탭 */
+  .td-bar{ display:flex; height:10px; border-radius:5px; overflow:hidden; background:var(--bg-3); }
+  .td-bar i{ display:block; height:100%; }
+  .td-bar .m{ background:var(--accent); }
+  .td-bar .l{ background:color-mix(in srgb, var(--accent) 45%, transparent); }
+  .td-legend{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-top:10px; }
+  .td-lg{
+    min-height:48px; display:flex; align-items:center; gap:7px; padding:0 8px 0 10px; border-radius:14px; text-align:left;
+    background:var(--bg-2); border:1px solid var(--line); font-size:13.5px; color:var(--text-2);
   }
-  .h-go:active{ transform:scale(.97); }
-  .h-go svg{ width:24px; height:24px; color:var(--accent); }
-  .h-go b{ font-size:17px; font-weight:700; color:var(--text); }
-  .h-go small{ font-size:13px; line-height:1.4; color:var(--muted); }
+  .td-lg:active{ transform:scale(.97); }
+  .td-lg i{ flex:none; width:10px; height:10px; border-radius:3px; }
+  .td-lg .m{ background:var(--accent); }
+  .td-lg .l{ background:color-mix(in srgb, var(--accent) 45%, transparent); }
+  .td-lg .n{ background:var(--bg-3); border:1px solid var(--faint); }
+  .td-lg span{ flex:1; min-width:0; line-height:1.3; }
+  .td-lg b{ display:block; font-size:16px; font-weight:750; color:var(--text); font-variant-numeric:tabular-nums; }
+  .td-lg svg{ flex:none; width:15px; height:15px; color:var(--faint); }
+  /* ⑤ 이어 듣기(드라이브를 중간에 멈췄을 때만) */
+  .td-resume{ display:flex; align-items:center; gap:12px; padding:14px 14px 14px 16px; border-radius:18px; background:var(--bg-2); border:1px solid var(--line); }
+  .td-resume > svg{ flex:none; width:26px; height:26px; color:var(--accent); }
+  .td-rtext{ flex:1; min-width:0; }
+  .td-rtext b{ display:block; font-size:15.5px; font-weight:700; color:var(--text); }
+  .td-rtext small{ display:block; margin-top:2px; font-size:13px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .td-rgo{ flex:none; min-height:44px; padding:0 16px; border-radius:999px; font-size:15px; font-weight:700; color:var(--accent); border:1.5px solid var(--accent); }
+  .td-rgo:active{ transform:scale(.97); }
   /* 질문 카드에서 열린 내 대사 줄: 잠깐 강조(답을 떠올린 뒤 탭해서 영어로 확인) */
   .row.hook-hi .bubble{ animation:hookHi 1.1s ease 2; }
   @keyframes hookHi{ 0%,100%{ box-shadow:0 0 0 0 transparent; } 40%{ box-shadow:0 0 0 4px var(--accent); } }
@@ -685,7 +724,14 @@
   .xt-detail svg{ width:15px; height:15px; }
   .xt-detail:active{ transform:scale(.97); }
   /* 질문 카드 자동 넘김(홈·표현 탭 공통): 카드 아래 얇은 막대 = 다음 질문까지 남은 시간, 넘어갈 때 살짝 사라졌다 떠오름 */
-  .qa-track{ height:3px; margin-top:10px; border-radius:2px; background:var(--line); overflow:hidden; }
+  /* 자동 넘김 줄: [일시정지/재생 버튼] 막대 + 상태 라벨("8초 후 다른 3개" / "일시정지됨" / "정답을 보는 동안 멈춤"). 설정 › 자동 넘김에서 끄면 줄 전체가 없음 */
+  .qa-row{ display:flex; align-items:center; gap:8px; margin-top:6px; }
+  .qa-pause{ flex:none; width:44px; height:44px; margin-left:-6px; border-radius:50%; display:grid; place-items:center; color:var(--accent); }
+  .qa-pause svg{ width:20px; height:20px; padding:6px; box-sizing:content-box; border-radius:50%; border:1.5px solid var(--accent-line); }
+  .qa-pause:active{ transform:scale(.94); }
+  .qa-main{ flex:1; min-width:0; }
+  .qa-label{ display:block; margin-top:5px; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .qa-track{ height:3px; border-radius:2px; background:var(--line); overflow:hidden; }
   .qa-track i{ display:block; height:100%; border-radius:2px; background:var(--qa-c, var(--accent)); opacity:.75; transform-origin:left center; transition:transform .2s linear; }
   .qa-out{ opacity:0 !important; transform:translateY(-6px) !important; transition:opacity .18s ease, transform .18s ease !important; }
   .qa-in{ animation:qaIn .34s cubic-bezier(.2,.7,.3,1) both; }
@@ -828,7 +874,7 @@
   .w-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
   .w-date{ font-size:13.5px; color:var(--faint); font-weight:600; letter-spacing:.02em; }
   .w-title{ margin:4px 0 0; font-size:24px; line-height:1.3; font-weight:700; letter-spacing:-.015em; }
-  .w-top .gear{ margin-top:2px; }
+  .w-top .gear{ margin-top:-2px; }   /* 상황 카드 위쪽 설정 아이콘과 같은 높이(5개 탭 같은 자리) */
   .q-card{
     margin-top:20px; padding:18px 18px 16px;
     border-radius:20px;
@@ -980,7 +1026,7 @@
   }
   .drive-btn svg{ width:17px; height:17px; }
   .drive-btn:active{ transform:scale(.96); }
-  @media (max-width:370px){
+  @media (max-width:330px){   /* 드라이브 버튼이 빠져서(2026-10-05) 360px에서도 [🎤 연습] 글자까지 들어감 */
     .drive-btn{ width:34px; padding:0; justify-content:center; }
     .drive-btn span{ display:none; }
   }
@@ -1174,6 +1220,44 @@
   .pc-note.go{ color:var(--accent); font-weight:600; }
   .pc-bottom{ flex:none; padding:8px max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 14px) max(var(--pad), env(safe-area-inset-left)); }
 
+  /* ---------- 드라이브 탭: 시작 화면(옵션)이 탭 첫 화면. 재생 화면만 탭바를 덮는 전체 화면(#drive) ---------- */
+  .dview{ display:flex; flex-direction:column; }
+  .dview .dv-top{ flex:none; padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) 2px max(var(--pad), env(safe-area-inset-left)); }
+  .dview .dv-sfoot{ padding-bottom:14px; }
+  /* 내용(드라이브·연습 공통): 체크박스 3개 [대화문] [예문] [썰] — 하나 이상 */
+  .cbx3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .cbx{
+    min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0 8px; border-radius:14px;
+    font-size:15px; font-weight:600; color:var(--muted); background:var(--bg-2); border:1.5px solid var(--line);
+  }
+  .cbx .box{ flex:none; width:20px; height:20px; border-radius:6px; display:grid; place-items:center; border:2px solid var(--faint); color:var(--on-accent); }
+  .cbx .box svg{ width:13px; height:13px; opacity:0; }
+  .cbx[aria-checked="true"]{ color:var(--text); border-color:var(--accent); background:var(--accent-soft); }
+  .cbx[aria-checked="true"] .box{ background:var(--accent); border-color:var(--accent); }
+  .cbx[aria-checked="true"] .box svg{ opacity:1; }
+  .dv-pre-row .link{ color:var(--accent); border-color:var(--accent-line); background:var(--accent-soft); }
+
+  /* ---------- 설정(전체 화면): 5개 탭 오른쪽 위 같은 아이콘 → 같은 화면. 닫기(X)·뒤로 가기 → 원래 탭 ---------- */
+  .settings{ position:fixed; inset:0; z-index:35; display:flex; flex-direction:column; background:var(--bg); color:var(--text); }
+  .settings[hidden]{ display:none; }
+  .st-body{
+    flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain;
+    padding:0 max(var(--pad), env(safe-area-inset-right)) calc(env(safe-area-inset-bottom, 0px) + 32px) max(var(--pad), env(safe-area-inset-left));
+  }
+  .st-sec{ margin-top:22px; }
+  .st-sec > h3{ margin:0 0 2px; font-size:13px; font-weight:750; letter-spacing:.06em; color:var(--accent); }
+  .st-sec .set-group:first-of-type{ padding-top:10px; }
+  .st-lead{ margin:6px 0 0; padding:11px 13px; border-radius:12px; font-size:14.5px; line-height:1.6; color:var(--text-2); background:var(--accent-soft); border:1px solid var(--accent-line); }
+
+  /* ---------- 터치 영역 44px 이상: 보이는 크기는 그대로, 누르는 자리만 넓힘 ---------- */
+  .tag-btn, .drive-btn, .toc-all, .xt-more, .xt-detail, .q-change, .w-tab, .w-tab .x, .w-paste, .lb-edit, .lb-act button, .dc-act button,
+  .pill, .spk, .pc-opt, .pc-st, .study-stop, .var-link, .dv-cat, .dv-x, .h-listen, .seg button, .al-fav{ position:relative; }
+  .tag-btn::after, .drive-btn::after, .toc-all::after, .xt-more::after, .xt-detail::after, .q-change::after, .w-tab::after, .w-tab .x::after, .w-paste::after,
+  .lb-edit::after, .lb-act button::after, .dc-act button::after, .pill::after, .spk::after, .pc-opt::after, .pc-st::after, .study-stop::after,
+  .var-link::after, .dv-cat::after, .dv-x::after, .h-listen::after, .seg button::after, .al-fav::after{
+    content:""; position:absolute; left:50%; top:50%; width:max(100%, 44px); height:max(100%, 44px); transform:translate(-50%, -50%);
+  }
+
   /* ---------- 토스트 ---------- */
   .toast{
     position:fixed; left:50%; z-index:40;
@@ -1198,8 +1282,8 @@
 
 <div class="app">
   <div class="views">
-    <!-- 홈: 질문 카드 "이럴 땐 어떻게?" + 바로가기 4칸. 내용은 스크립트(홈 부분)가 채움. 앱을 켜면 항상 여기서 시작 -->
-    <section class="view home off" id="viewHome" aria-label="홈" inert></section>
+    <!-- 오늘(대시보드): 지금 할 일 · 오늘 진행 · 최근 7일 · 표현 실력 · 이어 듣기. 내용은 스크립트(오늘 탭 부분)가 채움. 앱을 켜면 항상 여기서 시작 -->
+    <section class="view today off" id="viewToday" aria-label="오늘" inert></section>
     <main class="view feed" id="feed" aria-label="영어 회화 카드"></main>
 
     <!-- 상황 탭 모드 선택: 탭 바 바로 위, 모든 카드에 공통 적용 -->
@@ -1217,6 +1301,7 @@
           <div class="w-date" id="xDate"></div>
           <h2 class="w-title">표현 모음</h2>
         </div>
+        <button class="gear" type="button" data-open-settings aria-label="설정"></button>
       </header>
 
       <div class="rv-card" id="rvCard"></div>
@@ -1242,7 +1327,7 @@
           <div class="w-date" id="wDate"></div>
           <h2 class="w-title">오늘의 영어 일기</h2>
         </div>
-        <button class="gear" id="wGear" type="button" aria-label="글쓰기 설정"></button>
+        <button class="gear" type="button" data-open-settings aria-label="설정"></button>
       </header>
 
       <div class="w-tabs" id="wTabs" role="tablist" aria-label="오늘 쓴 글"></div>
@@ -1281,15 +1366,20 @@
       <h3 class="w-h">지난 기록</h3>
       <div class="w-history" id="wHistory"></div>
     </section>
+
+    <!-- 드라이브 탭: 시작 화면(옵션)이 첫 화면. [시작]·[이어 듣기] → 재생 화면(#drive, 탭바를 덮는 전체 화면) -->
+    <section class="view dview off" id="viewDrive" aria-label="드라이브" inert>
+      <section class="dv-screen" id="dvSetup"></section>
+    </section>
   </div>
 
   <nav class="tabbar" role="tablist" aria-label="화면 전환">
-    <button class="tab" id="tabHome" type="button" role="tab" data-tab="home" aria-selected="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z"/></svg>
-      <span>홈</span>
+    <button class="tab" id="tabToday" type="button" role="tab" data-tab="today" aria-selected="true">
+      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15.5" rx="2.5"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/><path d="M9 14.5l2 2 4-4"/></svg></span>
+      <span>오늘</span>
     </button>
     <button class="tab" id="tabCards" type="button" role="tab" data-tab="cards" aria-selected="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.4a8 8 0 1 1 15.1-4.1z"/><path d="M9 11.5h.01M12.5 11.5h.01M16 11.5h.01"/></svg>
+      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.4a8 8 0 1 1 15.1-4.1z"/><path d="M9 11.5h.01M12.5 11.5h.01M16 11.5h.01"/></svg></span>
       <span>상황</span>
     </button>
     <button class="tab" id="tabExpr" type="button" role="tab" data-tab="expr" aria-selected="false">
@@ -1300,8 +1390,15 @@
       <span>표현</span>
     </button>
     <button class="tab" id="tabWrite" type="button" role="tab" data-tab="write" aria-selected="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>
+      <span class="tab-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>
+        <span class="badge dot" id="writeBadge" hidden></span>
+      </span>
       <span>글쓰기</span>
+    </button>
+    <button class="tab" id="tabDrive" type="button" role="tab" data-tab="drive" aria-selected="false">
+      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v-4.5L6.2 7a2 2 0 0 1 1.9-1.4h7.8A2 2 0 0 1 17.8 7l2.2 5.5V17"/><path d="M3.5 17h17M4 12.5h16M6 17v2M18 17v2"/><circle cx="7.6" cy="14.8" r=".6" fill="currentColor"/><circle cx="16.4" cy="14.8" r=".6" fill="currentColor"/></svg></span>
+      <span>드라이브</span>
     </button>
   </nav>
 </div>
@@ -1316,11 +1413,12 @@
   <div class="sheet-body" id="sheetBody"></div>
   <div class="sheet-foot" id="sheetFoot"></div>
 </section>
-<!-- 드라이브 모드: 시작 화면(옵션) → 재생 화면. 내용은 스크립트(드라이브 모드 부분)가 채움 -->
+<!-- 드라이브 재생 화면(탭바를 덮는 전체 화면, 닫기 X · 뒤로 가기 → 드라이브 탭). 시작 화면은 드라이브 탭(#viewDrive) -->
 <div class="drive" id="drive" role="dialog" aria-modal="true" aria-label="드라이브 모드" hidden>
-  <section class="dv-screen" id="dvSetup"></section>
-  <section class="dv-screen" id="dvPlay" hidden></section>
+  <section class="dv-screen" id="dvPlay"></section>
 </div>
+<!-- 설정(전체 화면): 음성 · 자동 넘김 · 글쓰기 · 기록. 5개 탭 오른쪽 위 같은 아이콘에서 열림. 내용은 스크립트(설정 부분)가 채움 -->
+<div class="settings" id="settings" role="dialog" aria-modal="true" aria-label="설정" hidden></div>
 <!-- 연습 모드(청크·연음·발음): 시작 화면(옵션) → 연습 화면. 내용은 스크립트(연습 모드 부분)가 채움 -->
 <div class="pc-mode" id="practice" role="dialog" aria-modal="true" aria-label="연습 모드" hidden>
   <section class="dv-screen" id="pcSetup"></section>
@@ -1396,7 +1494,9 @@ const DEFAULTS = {
   speed: 1,
   drillRate: 1,                          // 듣기·쉐도잉 모드 재생 속도 (0.8 / 1), 두 모드가 같이 씀
   voiceWrite: "iP95p4xoKVk53GoZ742B",   // 글쓰기 탭에서 첨삭을 읽어 줄 목소리
-  writeRate: 1                           // 글쓰기 탭 재생 속도 (0.8 / 1)
+  writeRate: 1,                          // 글쓰기 탭 재생 속도 (0.8 / 1)
+  rotate: true,                          // 표현 탭 궁금증 카드 자동 넘김 (설정 › 자동 넘김)
+  rotateSec: 10                          // 자동 넘김 시간(초): 5 / 10 / 20
 };
 function loadSettings() {
   try {
@@ -1404,6 +1504,8 @@ function loadSettings() {
     const merged = Object.assign({}, DEFAULTS, s && typeof s === "object" ? s : {});
     if (!EL_MODELS.some(m => m.id === merged.model)) merged.model = DEFAULTS.model;
     if (merged.drillRate !== 0.8) merged.drillRate = 1;
+    merged.rotate = merged.rotate !== false;
+    if (![5, 10, 20].includes(merged.rotateSec)) merged.rotateSec = 10;
     delete merged.autoplay;                // 예전 '자동 재생' 설정 (모드 개편으로 없어짐)
     return merged;
   } catch (e) { return Object.assign({}, DEFAULTS); }
@@ -1412,6 +1514,56 @@ function saveSettings() {
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) { /* 저장 못 해도 동작은 함 */ }
 }
 const settings = loadSettings();
+
+/* ---------- 앱의 '지금'과 '오늘' (하루는 자정 기준 — 폰 현지 시각) ----------
+   모든 '오늘' 계산(복습 날짜·하루 새 표현 3개·글쓰기 오늘의 질문·"오늘 작성"·오늘 탭 집계·연속 학습일)은 dateKey()(= 오늘 날짜 "YYYY-MM-DD") 하나로.
+   테스트용: 주소에 ?debugDate=2026-10-20 (그 날 낮 12시) 또는 ?debugDate=2026-10-20T23:59 (시각까지) — 그 시각에서 시작해 실제 시간만큼 흘러감.
+   화면에는 안 보임. 예) 23:59로 열고 1~2분 기다리면 날짜가 바뀜 */
+const DEBUG_T0 = (() => {
+  try {
+    const v = new URLSearchParams(location.search).get("debugDate") || "";
+    const m = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{1,2}):(\d{2})(?::(\d{2}))?)?$/.exec(v.trim());
+    if (!m) return null;
+    const t = new Date(+m[1], +m[2] - 1, +m[3], m[4] != null ? +m[4] : 12, m[5] != null ? +m[5] : 0, m[6] != null ? +m[6] : 0);
+    return isNaN(t) ? null : { at: t.getTime(), real: Date.now() };
+  } catch (e) { return null; }
+})();
+function appNow() { return DEBUG_T0 ? new Date(DEBUG_T0.at + (Date.now() - DEBUG_T0.real)) : new Date(); }
+
+/* ---------- 날짜별 학습 기록(오늘 탭 '오늘 진행'·최근 7일·연속 학습일, 2026-10-05) ----------
+   engcards.days.v1 { v: 1, days: { "YYYY-MM-DD": { c: [그날 본 상황 카드 id], r: 복습한 수, n: 새로 고른 표현 수, w: 1(일기 씀) } }, filled: 1 }
+   학습한 날 = c·r·n·w 중 하나라도 있는 날. 예전 기록(복습 history·picks·startedOn·일기·카드 본 시각)에서 복원할 수 있는 건 앱을 열 때 채움(fillDays) */
+const DAYS_KEY = "engcards.days.v1";
+const dayLog = (() => {
+  try {
+    const s = JSON.parse(localStorage.getItem(DAYS_KEY) || "null");
+    if (s && typeof s === "object" && s.days && typeof s.days === "object") return s;
+  } catch (e) {}
+  return { v: 1, days: {} };
+})();
+function saveDays() { try { localStorage.setItem(DAYS_KEY, JSON.stringify(dayLog)); } catch (e) {} }
+function dayRec(d) {
+  const r = dayLog.days[d] = dayLog.days[d] && typeof dayLog.days[d] === "object" ? dayLog.days[d] : {};
+  if (!Array.isArray(r.c)) r.c = [];
+  return r;
+}
+/* kind: "w" 일기 / "r" 복습 1개 / "n" 새 표현(add = +1 또는 -1 — 오늘 고른 걸 오늘 중단하면 -1) */
+function logDay(d, kind, add) {
+  const r = dayRec(d);
+  if (kind === "w") { if (r.w) return; r.w = 1; }
+  else r[kind] = Math.max(0, (r[kind] || 0) + (add == null ? 1 : add));
+  saveDays();
+}
+function logCardSeen(cardEl) {
+  const c = cardEl && cardEl.dataset.i != null && CARDS[+cardEl.dataset.i];
+  if (!c) return;
+  const r = dayRec(dateKey());
+  if (r.c.includes(c.id)) return;
+  r.c.push(c.id);
+  saveDays();
+  if (typeof renderToday === "function" && currentTab === "today") renderToday();
+}
+const dayLearned = d => { const r = dayLog.days[d]; return !!(r && ((r.c && r.c.length) || r.r || r.n || r.w)); };
 
 const feed = document.getElementById("feed");
 const scrim = document.getElementById("scrim");
@@ -1441,8 +1593,8 @@ const ICON_NEXT = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="tru
 const ICON_SKIP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 7v10a1 1 0 0 0 1.6.8L11 13a1.2 1.2 0 0 0 0-2L4.6 6.2A1 1 0 0 0 3 7zM12 7v10a1 1 0 0 0 1.6.8L20 13a1.2 1.2 0 0 0 0-2l-6.4-4.8A1 1 0 0 0 12 7z"/></svg>';
 const ICON_MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
 const ICON_BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
-const DRIVE_BTN = '<button class="drive-btn" type="button" aria-label="드라이브 모드">' + ICON_CAR + '<span>드라이브</span></button>' +
-  '<button class="drive-btn practice-btn" type="button" aria-label="연습 모드 (청크·연음·발음)">' + ICON_MIC + '<span>연습</span></button>';
+/* 상황 카드 위쪽 [🎤 연습] (드라이브 버튼은 2026-10-05 드라이브 탭으로 옮기며 없앰) */
+const PRACTICE_BTN = '<button class="drive-btn practice-btn" type="button" aria-label="연습 모드 (청크·연음·발음)">' + ICON_MIC + '<span>연습</span></button>';
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -1750,8 +1902,8 @@ function renderCard(card, i) {
   const swipe = i === 0 ? '<div class="swipe-hint">밑줄 친 표현을 누르면 예문·썰 · 위로 넘기면 다음 상황</div>' : "";
   return '<section class="card" style="--h:' + hueOf(card.category) + '" data-i="' + i + '">' +
     '<header class="top"><button class="tag tag-btn" type="button" data-cat-list aria-label="' + esc(card.category) + ' 상황 모아 보기">' + esc(card.category) + ICON_CHEVRON + '</button>' +
-      '<span class="top-r">' + DRIVE_BTN + '<button class="jump" type="button" aria-label="카드 목록">' + (i + 1) + '/' + CARDS.length + ICON_LIST + '</button>' +
-      '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
+      '<span class="top-r">' + PRACTICE_BTN + '<button class="jump" type="button" aria-label="카드 목록">' + (i + 1) + '/' + CARDS.length + ICON_LIST + '</button>' +
+      '<button class="gear" type="button" data-open-settings aria-label="설정">' + ICON_SLIDERS + '</button></span></header>' +
     '<div class="body"><div class="inner">' +
       '<h2 class="title">' + esc(card.title) + '</h2>' +
       '<p class="situation">' + esc(card.situation) + '</p>' +
@@ -1771,8 +1923,8 @@ function renderCard(card, i) {
 function renderEnd() {
   return '<section class="card end" style="--h:150">' +
     '<header class="top"><span class="tag">끝</span>' +
-      '<span class="top-r">' + DRIVE_BTN + '<button class="jump" type="button" aria-label="카드 목록">목록' + ICON_LIST + '</button>' +
-      '<button class="gear" type="button" aria-label="음성 설정">' + ICON_SLIDERS + '</button></span></header>' +
+      '<span class="top-r">' + PRACTICE_BTN + '<button class="jump" type="button" aria-label="카드 목록">목록' + ICON_LIST + '</button>' +
+      '<button class="gear" type="button" data-open-settings aria-label="설정">' + ICON_SLIDERS + '</button></span></header>' +
     '<div class="body"><div class="inner">' +
       '<div class="end-emoji" aria-hidden="true">🎉</div>' +
       '<h2 class="end-title">여기까지!</h2>' +
@@ -1896,7 +2048,7 @@ const Prebuilt = (() => {
     }
     return clips.get(id).catch(() => null);
   }
-  return { ready, has: (text, voice) => !!idOf(text, voice), get };
+  return { ready, has: (text, voice) => !!idOf(text, voice), get, count: () => (man ? Object.keys(man.clips).length : 0) };   // count: 앱에 들어 있는 음성 수(설정 안내 문구)
 })();
 
 /* ---------- 음성 재생 ---------- */
@@ -3062,9 +3214,7 @@ feed.addEventListener("click", e => {
   if ((el = t.closest("[data-cat-list]"))) { buzz(); openCatList(CARDS[+el.closest(".card").dataset.i].category); return; }   // 카테고리 태그 → 그 카테고리 상황만
   if ((el = t.closest("[data-var-go]"))) { buzz(); jumpTo(+el.dataset.varGo); return; }      // 다른 선택 ↔ 원래 선택
   if ((el = t.closest("[data-var-list]"))) { buzz(); openVarList(+el.dataset.varList); return; }
-  if ((el = t.closest(".gear"))) { openSettings(); return; }
   if ((el = t.closest(".practice-btn"))) { const c = el.closest(".card"); if (c && c.dataset.i != null) practiceCard(c); else openPractice(); return; }   // 카드: 이 카드 바로 연습 / 끝 화면: 시작 화면
-  if ((el = t.closest(".drive-btn"))) { openDrive(); return; }
   if ((el = t.closest("[data-sh]"))) { setShadowLevel(el.dataset.sh); return; }
   if ((el = t.closest(".jump"))) { openList(); return; }
   if ((el = t.closest(".restart"))) { feed.scrollTo({ top: 0, behavior: "smooth" }); return; }
@@ -3159,6 +3309,7 @@ function onCardActive(card, prev) {
     seenSet.add(key);
     progress.at[key] = Date.now();
     saveProgress();
+    if (currentTab === "cards") logCardSeen(card);   // 오늘 본 상황 카드(오늘 탭) — 다른 탭에 있을 때(앱을 켤 때 지난 카드로 옮겨 두는 것 등)는 세지 않음
   }
 }
 
@@ -3212,7 +3363,7 @@ const hasContent = it => !!(it && ((it.text || "").trim() || (it.fix || "").trim
 
 const pad2 = n => String(n).padStart(2, "0");
 function dateKey(d) {
-  d = d || new Date();
+  d = d || appNow();
   return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
 }
 function dayNumber(key) {
@@ -3239,14 +3390,13 @@ function candidatesFor(key) {
 function koDate(key, withDay) {
   const p = key.split("-").map(Number);
   const d = new Date(p[0], p[1] - 1, p[2]);
-  const year = p[0] !== new Date().getFullYear() ? p[0] + "년 " : "";
+  const year = p[0] !== appNow().getFullYear() ? p[0] + "년 " : "";
   return year + p[1] + "월 " + p[2] + "일" + (withDay ? " " + "일월화수목금토"[d.getDay()] + "요일" : "");
 }
 
 const W = {
   view: document.getElementById("viewWrite"),
   date: document.getElementById("wDate"),
-  gear: document.getElementById("wGear"),
   qEn: document.getElementById("qEn"),
   qKo: document.getElementById("qKo"),
   text: document.getElementById("wText"),
@@ -3263,7 +3413,6 @@ const W = {
   change: document.getElementById("qChange"),
   pick: document.getElementById("qPick")
 };
-W.gear.innerHTML = ICON_SLIDERS;
 W.copy.innerHTML = '<span class="w-ico when-off">' + ICON_COPY + '</span><span class="w-ico when-on">' + ICON_CHECK + '</span>' +
   '<span class="when-off">AI 첨삭용으로 복사</span><span class="when-on">복사됨</span>';
 W.listen.innerHTML = '<span class="w-ico when-off">' + ICON_SPEAKER + '</span><span class="w-ico when-on">' + ICON_STOP + '</span>' +
@@ -3358,6 +3507,8 @@ function saveToday() {
   }
   syncFinal(it);
   const ok = saveDiary();
+  if (hasContent(it)) logDay(todayKey, "w");          // 오늘 탭 '일기' · 학습한 날
+  updateBadges();
   if (fixChanged) onListenDataChanged();
   W.saved.textContent = !hasContent(it) ? "" : ok ? "저장됨" : "이 방식으로 연 파일에선 저장이 안 돼요";
 }
@@ -3524,19 +3675,6 @@ function backupText() {
   return out.join("\n\n----------\n\n");
 }
 
-function openWriteSettings() {
-  const model = EL_MODELS.find(m => m.id === settings.model);
-  const html =
-    keyField("표현 탭과 같은 키를 써요. 키는 이 폰의 이 브라우저 안에만 저장돼요.") +
-    voiceField("voiceWrite", "첨삭을 읽어 줄 목소리") +
-    '<p class="note">모델은 표현 탭 설정을 따라요. 지금: ' + esc(model ? model.name : settings.model) + '</p>' +
-    '<div class="set-group"><span class="set-label">백업</span>' +
-      '<div class="btn-row"><button class="btn" type="button" id="backupAll">전체 기록 복사</button></div>' +
-      '<p class="note">지금까지 쓴 모든 글과 첨삭을 텍스트로 복사해요. 메모 앱 등에 붙여넣어 보관하세요.</p>' +
-    '</div>';
-  showSheet("글쓰기", "설정", html);
-}
-
 /* 내용이 비었다/생겼다 바뀔 때만 탭(빈 글 지우기 ✕)을 다시 그림 */
 let lastFilled = null;
 function onWriteInput() {
@@ -3552,7 +3690,6 @@ function onWriteInput() {
 }
 W.text.addEventListener("input", () => { autoGrow(W.text); updateCount(); onWriteInput(); });
 W.fix.addEventListener("input", () => { autoGrow(W.fix); onWriteInput(); });
-W.gear.addEventListener("click", openWriteSettings);
 
 /* 글 1·2·3 탭: 바꾸기 / 새 글(하루 최대 3편) / 빈 글 지우기 */
 W.tabs.addEventListener("click", e => {
@@ -3879,14 +4016,8 @@ const STUDY_KEY = "engcards.study.v1";
 const DAILY_PICKS = 3;                       // 하루에 새로 고를 수 있는 표현 수
 const INTERVALS = [1, 3, 7, 14, 30];         // 복습 간격(일). 30일 복습까지 통과하면 '익힘'
 
-/* 테스트용: 주소에 ?debugDate=2026-10-20 을 붙이면 그 날짜로 계산 (화면에는 안 보임) */
-const DEBUG_DATE = (() => {
-  try {
-    const v = new URLSearchParams(location.search).get("debugDate");
-    return /^\d{4}-\d{2}-\d{2}$/.test(v || "") ? v : null;
-  } catch (e) { return null; }
-})();
-function studyToday() { return DEBUG_DATE || dateKey(); }
+/* 오늘 = dateKey()(앱 시계 appNow — 테스트용 ?debugDate=2026-10-20 / 2026-10-20T23:59도 여기 반영). 하루는 자정 기준 */
+function studyToday() { return dateKey(); }
 function addDays(key, n) {
   const p = key.split("-").map(Number);
   return dateKey(new Date(p[0], p[1] - 1, p[2] + n));
@@ -3985,7 +4116,7 @@ function startLearning(id) {
   s.history = s.history || [];
   study.items[id] = s;
   const list = study.picks[t] = study.picks[t] || [];
-  if (!list.includes(id)) list.push(id);
+  if (!list.includes(id)) { list.push(id); logDay(t, "n"); }
   saveStudy();
   return true;
 }
@@ -3996,7 +4127,7 @@ function stopLearning(id) {
   delete s.due;
   /* 오늘 고른 표현을 오늘 중단하면 오늘 목록에서 빼서 그 자리를 다시 비움. 어제 이전에 시작한 표현은 오늘 개수와 상관없으니 그대로 */
   const t = studyToday(), list = study.picks[t];
-  if (list && list.includes(id)) study.picks[t] = list.filter(x => x !== id);
+  if (list && list.includes(id)) { study.picks[t] = list.filter(x => x !== id); logDay(t, "n", -1); }
   saveStudy();
 }
 /* 오늘 복습할 표현: 날짜가 지난(밀린) 것까지 모두, 오래된 것부터 */
@@ -4013,6 +4144,7 @@ function grade(id, remembered) {
   const t = studyToday();
   s.history = s.history || [];
   s.history.push({ date: t, ok: remembered, step: s.step || 0 });
+  logDay(t, "r");
   if (remembered) {
     s.step = (s.step || 0) + 1;
     if (s.step >= INTERVALS.length) { s.status = "mastered"; s.masteredOn = t; delete s.due; }
@@ -4031,12 +4163,20 @@ function dueText(id) {
   if (d === 0) return "오늘 복습";
   return koDate(s.due) + " 복습 (" + d + "일 뒤)";
 }
-function updateExprBadge() {
+/* 탭 배지: 표현 = 오늘 복습할 표현 수, 글쓰기 = 오늘 아직 안 썼으면 점 */
+function wroteToday() {
+  const e = diary.entries[dateKey()];
+  return !!(e && e.items.some(hasContent));
+}
+function updateBadges() {
   const n = dueList().length;
   const b = document.getElementById("exprBadge");
   b.hidden = n === 0;
   b.textContent = n > 99 ? "99+" : String(n);
   document.getElementById("tabExpr").setAttribute("aria-label", "표현" + (n ? ", 복습 " + n + "개" : ""));
+  const w = !wroteToday();
+  document.getElementById("writeBadge").hidden = !w;
+  document.getElementById("tabWrite").setAttribute("aria-label", "글쓰기" + (w ? ", 오늘 아직 안 씀" : ""));
 }
 
 /* 표현이 나온 대사(복습 힌트·상세에서 씀) */
@@ -4130,18 +4270,30 @@ function renderExprTab() {
   renderReviewCard();
   renderTeasers();
   renderExprList();
-  updateExprBadge();
+  updateBadges();
 }
 
 X.search.addEventListener("input", renderExprList);
+function setXFilter(f) {
+  xFilter = STATUS_LABEL[f] ? f : "all";
+  X.filter.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.f === xFilter ? "true" : "false"));
+  renderExprList();
+}
 X.filter.addEventListener("click", e => {
   const b = e.target.closest("button");
   if (!b) return;
-  xFilter = b.dataset.f;
-  X.filter.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-  renderExprList();
+  setXFilter(b.dataset.f);
   buzz();
 });
+/* 오늘 탭에서: 표현 탭을 그 상태 필터(미학습·학습 중·익힘)가 선택된 채로 열고 목록(모든 카테고리 펼침)이 보이게 */
+function openExprFiltered(f) {
+  switchTab("expr", true);
+  X.search.value = "";
+  EXPR_LIST.forEach(it => xOpen.add(it.card.category));
+  setXFilter(f);
+  const tools = X.view.querySelector(".x-tools");
+  if (tools) X.view.scrollTop = Math.max(0, tools.getBoundingClientRect().top - X.view.getBoundingClientRect().top + X.view.scrollTop - 12);
+}
 X.list.addEventListener("click", e => {
   const b = e.target.closest("[data-xid]");
   if (b) { buzz(); openExprDetail(b.dataset.xid, {}); return; }
@@ -4158,29 +4310,43 @@ X.list.addEventListener("click", e => {
     buzz(); renderExprList();
   }
 });
-/* ---- 질문 카드 자동 넘김(홈 '이럴 땐 어떻게?' · 표현 탭 궁금증 카드 공통) ----
-   가만히 두면 ROTATE_MS(10초)마다 다음 질문으로(수동 버튼 [다른 질문]/[다른 3개]는 그대로). 카드 아래 얇은 막대([data-qa-bar])가 남은 시간,
-   수동으로 넘기면 막대도 처음부터. 멈춤: 카드를 누르고 있는 동안 · o.ok()가 false(그 탭이 아님, 정답 펼침, 시트·드라이브·연습이 덮음)
-   · 앱이 백그라운드 · 카드가 화면 밖(스크롤해서 안 보임 — 안 보는 사이 질문이 지나가 버리지 않게). 풀리면 남은 시간부터 이어서.
+/* ---- 궁금증 카드 자동 넘김(표현 탭) ----
+   가만히 두면 설정 › 자동 넘김의 시간(5/10/20초, 기본 10초)마다 다음 3개로([다른 3개]는 그대로). 설정에서 끄면 막대·버튼·라벨 모두 없음.
+   카드 아래 줄: [일시정지 / 다시 넘기기 버튼] + 막대(남은 시간) + 라벨("8초 후 다른 3개" / "일시정지됨" / "정답을 보는 동안 멈춤") — WCAG 2.2.2(멈추기·끄기·시간 조절).
+   수동으로 넘기면 막대도 처음부터. 멈춤: 일시정지 버튼 · 카드를 누르고 있는 동안 · o.held()(정답 펼침) · o.ok()가 false(그 탭이 아님, 시트·드라이브·연습·설정이 덮음)
+   · 앱이 백그라운드 · 카드가 화면 밖(스크롤해서 안 보임). 풀리면 남은 시간부터 이어서.
    넘어갈 때 o.parts()(카드 등)가 살짝 위로 사라졌다(qa-out) 새 질문이 아래에서 떠오름(qa-in).
-   시간은 200ms마다 셈(막대는 CSS transition으로 부드럽게), 한 번에 더하는 시간은 최대 400ms(백그라운드에서 돌아온 직후 건너뛰지 않게). */
-const ROTATE_MS = 10000, ROTATE_TICK = 200;
-function makeRotator(o) {      // o = { view: 그 탭 화면(스크롤), parts: () => [움직일 요소], ok: () => 넘겨도 되는지, next: () => 새 질문을 고르고 그림 }
-  const r = { t: 0, press: false, busy: false, last: performance.now() };
-  r.frac = () => Math.min(1, r.t / ROTATE_MS);
+   시간은 200ms마다 셈(막대는 CSS transition으로 부드럽게), 한 번에 더하는 시간은 최대 400ms(백그라운드에서 돌아온 직후 건너뛰지 않게).
+   (2026-10-05 홈 질문 카드가 없어져서 지금은 표현 탭 하나만 씀) */
+const ROTATE_TICK = 200;
+const rotateMs = () => (settings.rotateSec || 10) * 1000;
+function makeRotator(o) {      // o = { view, parts, ok, held: () => 정답을 보는 중인지, next, what: "다른 3개" }
+  const r = { t: 0, press: false, busy: false, user: false, last: performance.now() };
+  r.frac = () => Math.min(1, r.t / rotateMs());
+  r.label = () => r.user ? "일시정지됨 · ▶를 누르면 다시 넘어가요" : o.held() ? "정답을 보는 동안 멈춤" :
+    Math.max(1, Math.ceil((rotateMs() - r.t) / 1000)) + "초 후 " + o.what;
   function paint(snap) {
     const b = o.view.querySelector("[data-qa-bar]");
     if (!b) return;
     if (snap) { b.style.transition = "none"; b.style.transform = "scaleX(0)"; void b.offsetWidth; b.style.transition = ""; }
     b.style.transform = "scaleX(" + r.frac() + ")";
+    const l = o.view.querySelector("[data-qa-label]");
+    if (l) { const s = r.label(); if (l.textContent !== s) l.textContent = s; }
   }
+  r.paint = paint;
   function visible() {
     const el = o.parts()[0];
     if (!el) return false;
     const a = el.getBoundingClientRect(), v = o.view.getBoundingClientRect();
     return a.height > 0 && a.bottom > v.top + 24 && a.top < v.bottom - 24;
   }
-  r.running = () => !r.press && !r.busy && document.visibilityState === "visible" && o.ok() && visible();
+  r.running = () => settings.rotate && !r.user && !r.press && !r.busy && document.visibilityState === "visible" && o.ok() && !o.held() && visible();
+  r.toggleUser = () => {                            // 일시정지 버튼 ↔ 다시 넘기기
+    r.user = !r.user;
+    const b = o.view.querySelector("[data-qa-pause]");
+    if (b) { b.innerHTML = r.user ? ICON_PLAY : ICON_PAUSE; b.setAttribute("aria-label", r.user ? "자동 넘김 다시 켜기" : "자동 넘김 일시정지"); b.setAttribute("aria-pressed", String(r.user)); }
+    paint();
+  };
   r.swap = () => {                                  // 다음 질문으로(자동·수동 공통) — 막대는 처음부터
     if (r.busy) return;
     r.busy = true; r.t = 0;
@@ -4197,15 +4363,19 @@ function makeRotator(o) {      // o = { view: 그 탭 화면(스크롤), parts: 
   setInterval(() => {
     const now = performance.now(), dt = Math.min(400, now - r.last);
     r.last = now;
-    if (!r.running()) return;
+    if (!r.running()) { paint(); return; }
     r.t += dt;
-    if (r.t >= ROTATE_MS) r.swap(); else paint();
+    if (r.t >= rotateMs()) r.swap(); else paint();
   }, ROTATE_TICK);
   o.view.addEventListener("pointerdown", e => { if (e.target.closest("[data-qa-card]")) r.press = true; });
   ["pointerup", "pointercancel"].forEach(n => document.addEventListener(n, () => { r.press = false; }, true));
   return r;
 }
-const qaBar = r => '<div class="qa-track" aria-hidden="true"><i data-qa-bar style="transform:scaleX(' + r.frac() + ')"></i></div>';
+/* 카드 아래 자동 넘김 줄(설정에서 끄면 없음) */
+const qaBar = r => !settings.rotate ? "" :
+  '<div class="qa-row"><button class="qa-pause" type="button" data-qa-pause aria-pressed="' + r.user + '" aria-label="' + (r.user ? "자동 넘김 다시 켜기" : "자동 넘김 일시정지") + '">' + (r.user ? ICON_PLAY : ICON_PAUSE) + '</button>' +
+  '<div class="qa-main"><div class="qa-track" aria-hidden="true"><i data-qa-bar style="transform:scaleX(' + r.frac() + ')"></i></div>' +
+  '<span class="qa-label" data-qa-label>' + esc(r.label()) + '</span></div></div>';
 
 /* ---- 궁금증 카드 3개: 핵심 표현의 teaser("~할 때, 뭐라고 하지?") — 누르면 뒤집혀 정답 표현·짧은 뜻·[자세히 보기] ----
    고르기(pickTeasers): 앱을 켤 때 한 번 · [다른 3개]마다(표현 탭을 다시 그려도 그대로). 미학습 표현 먼저(모자라면 학습 중·익힘), 그중 무작위.
@@ -4260,6 +4430,7 @@ function toggleTeaser(c) {
 }
 X.teasers.addEventListener("click", e => {
   if (e.target.closest("[data-xt-more]")) { buzz(); teaserRot.swap(); return; }
+  if (e.target.closest("[data-qa-pause]")) { buzz(); teaserRot.toggleUser(); return; }
   const d = e.target.closest("[data-xt-detail]");
   if (d) { buzz(); openExprDetail(d.closest("[data-xt]").dataset.xt, {}); return; }
   const c = e.target.closest("[data-xt]");
@@ -4272,7 +4443,9 @@ X.teasers.addEventListener("keydown", e => {
 const teaserRot = makeRotator({
   view: X.view,
   parts: () => Array.from(X.teasers.querySelectorAll(".xt-list")),
-  ok: () => currentTab === "expr" && !teaserOpen.size && !sheetOpen && !D.open && !PC.open,
+  ok: () => currentTab === "expr" && !sheetOpen && !D.open && !PC.open && !stOpen,
+  held: () => teaserOpen.size > 0,
+  what: "다른 3개",
   next: () => { teaserPick = pickTeasers(); renderTeasers(); }
 });
 X.rv.addEventListener("click", e => {
@@ -4713,7 +4886,7 @@ function gradeCurrentReview(ok) {
   buzz();
   toast(ok ? (statusOf(id) === "mastered" ? "익힘 완료! 🎉" : "다음 복습: " + dueText(id)) : "내일 다시 복습해요");
   reviewIdx++;
-  updateExprBadge();
+  updateBadges();
   showReview();
 }
 
@@ -4773,31 +4946,70 @@ sheetBody.addEventListener("input", e => {
 renderExprTab();
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "visible") return;
-  if (currentTab === "expr" && !sheetOpen) renderExprTab(); else updateExprBadge();
-  if (currentTab === "home") renderHome();          // 다시 돌아오면 바로가기 현황(복습 개수 등)을 새로
+  if (currentTab === "expr" && !sheetOpen) renderExprTab(); else updateBadges();
+  if (currentTab === "today") renderToday();        // 다시 돌아오면 오늘 진행·지금 할 일을 새로
 });
 
-/* ================= 홈 =================
-   위: 질문 카드 "이럴 땐 어떻게?" — 카드의 hooks({ ko: 질문, line: 내 대사 줄 번호(1부터) }) 중 하나를 크게. 앱을 켤 때마다·[다른 질문]마다 새로 고름.
-     고르는 순서(pickHook): 아직 안 본 카드의 질문(그중 무작위) → 없으면 가장 오래전에 본 카드(progress.at)의 질문. 최근에 나온 10개는 빼고.
-     누르면(openHook) 그 카드로 가서 읽기 모드, 연결된 내 대사 줄까지 나온 상태(그 줄은 한글) + 잠깐 강조 → 답을 떠올린 뒤 탭해서 영어로 확인.
-   아래: 바로가기 2×2 — 상황 / 표현 / 글쓰기(그 탭으로) · 드라이브(시작 화면) + 작은 현황.
-   기록: engcards.home.v1 { recent: ["카드id:line", …] } — 최근에 보여 준 질문 10개 */
-const HOME_KEY = "engcards.home.v1";
-const HOOK_RECENT = 10;
-const homeEl = document.getElementById("viewHome");
-const homeState = (() => {
-  try {
-    const s = JSON.parse(localStorage.getItem(HOME_KEY) || "null");
-    if (s && Array.isArray(s.recent)) return { recent: s.recent.filter(x => typeof x === "string").slice(-HOOK_RECENT) };
-  } catch (e) {}
-  return { recent: [] };
+/* ================= 오늘 탭(대시보드) — 2026-10-05 예전 '홈'(질문 카드 + 바로가기 4칸)을 바꿈 =================
+   위에서부터 ① 지금 할 일(화면에서 유일한 큰 버튼) ② 오늘 진행(복습 n/n · 새 표현 n/3 · 상황 카드 n/1 · 일기 n/1, 누르는 곳 아님)
+   ③ 최근 7일(학습한 날 + 연속 학습일) ④ 표현 실력(익힘·학습 중·미학습 — 누르면 표현 탭이 그 필터로) ⑤ 이어 듣기(드라이브를 중간에 멈췄을 때만).
+   '지금 할 일' 고르는 순서(nowTask): 1 오늘 복습할 표현 → 복습 시작 / 2 오늘 새 표현 3개 미만 → 표현 탭 미학습 목록 /
+     3 오늘 상황 카드를 안 봄 → 아직 안 본 다음 카드의 hooks 질문(누르면 그 카드의 그 줄 — 예전 홈 질문 카드와 같은 동작, hooks가 없으면 '다음 카드 보기')
+     / 4 오늘 일기를 안 씀 → 일기 쓰기 / 5 다 함 → "오늘 목표를 모두 채웠어요" + 내일 복습 예정 수 + 보조 버튼 '상황 카드 더 보기'.
+   저절로 바뀌지 않음(탭에 올 때·앱으로 돌아올 때·날짜가 바뀔 때만 다시 그림) */
+try { localStorage.removeItem("engcards.home.v1"); } catch (e) {}   // 예전 홈 질문 카드 기록(최근 질문 10개)
+const todayEl = document.getElementById("viewToday");
+let todayReady = false;   // 스크립트를 끝까지 읽은 뒤(드라이브 상태 D 등)부터 그림 — 맨 아래에서 켬
+
+/* 예전 기록에서 날짜별 학습 기록 채우기(처음 한 번 — filled): 복습 history → r, picks → n, 일기 → w, 카드를 마지막으로 본 시각(progress.at) → c */
+(function fillDays() {
+  if (dayLog.filled) return;
+  const isDay = d => /^\d{4}-\d{2}-\d{2}$/.test(String(d || ""));
+  const rv = {}, nw = {};
+  Object.keys(study.items).forEach(id => (study.items[id].history || []).forEach(h => { if (h && isDay(h.date)) rv[h.date] = (rv[h.date] || 0) + 1; }));
+  Object.keys(rv).forEach(d => { const r = dayRec(d); r.r = Math.max(r.r || 0, rv[d]); });
+  Object.keys(study.picks).forEach(d => { if (isDay(d) && (study.picks[d] || []).length) nw[d] = study.picks[d].length; });
+  Object.keys(study.items).forEach(id => { const d = study.items[id].startedOn; if (isDay(d) && !nw[d]) nw[d] = 1; });
+  Object.keys(nw).forEach(d => { const r = dayRec(d); r.n = Math.max(r.n || 0, nw[d]); });
+  Object.keys(diary.entries).forEach(d => { if (isDay(d) && diary.entries[d].items.some(hasContent)) dayRec(d).w = 1; });
+  Object.keys(progress.at || {}).forEach(key => {
+    const ms = Number(progress.at[key]), c = CARDS.find(x => String(x.id) === key);
+    if (!ms || !c) return;
+    const r = dayRec(dateKey(new Date(ms)));
+    if (!r.c.includes(c.id)) r.c.push(c.id);
+  });
+  dayLog.filled = 1;
+  saveDays();
 })();
-function saveHome() {
-  try { localStorage.setItem(HOME_KEY, JSON.stringify(homeState)); } catch (e) {}
+
+function todayStats() {
+  const t = dateKey(), rec = dayLog.days[t];
+  return {
+    t,
+    reviewed: Object.keys(study.items).filter(id => EXPR_BY_ID[id] && (study.items[id].history || []).some(h => h && h.date === t)).length,
+    due: dueList().length,
+    picks: picksToday(),
+    newLeft: EXPR_LIST.some(it => statusOf(it.id) === "new"),
+    cards: rec && rec.c ? rec.c.length : 0,
+    wrote: wroteToday()
+  };
 }
-let homeHook = null;      // 지금 보여 주는 질문 { ci, h, key }
-let homeReady = false;    // 스크립트를 끝까지 읽은 뒤(드라이브 상태 D 등)부터 홈을 그림 — 맨 아래에서 켬
+/* 아직 안 본 다음 카드(마지막으로 본 카드 다음부터, 화면 순서). 다 봤으면 마지막으로 본 카드의 다음 카드 */
+function nextCardIdx() {
+  const last = progress.last == null ? -1 : indexOfKey(progress.last), L = CARDS.length;
+  for (let k = 1; k <= L; k++) { const i = (last + k + L) % L; if (!seenSet.has(cardKey(i))) return i; }
+  return (last + 1 + L) % L;
+}
+function nowTask(s) {
+  if (s.due) return { kind: "review" };
+  if (s.picks < DAILY_PICKS && s.newLeft) return { kind: "new" };
+  if (!s.cards && CARDS.length) {
+    const ci = nextCardIdx(), x = allHooks().find(h => h.ci === ci);
+    return x ? { kind: "hook", ci, x } : { kind: "card", ci };
+  }
+  if (!s.wrote) return { kind: "write" };
+  return { kind: "done" };
+}
 function allHooks() {
   const out = [];
   CARDS.forEach((c, ci) => (Array.isArray(c.hooks) ? c.hooks : []).forEach(h => {
@@ -4806,52 +5018,119 @@ function allHooks() {
   }));
   return out;
 }
-function pickHook() {
-  const all = allHooks();
-  if (!all.length) return null;
-  const block = new Set(homeState.recent.slice(-Math.min(HOOK_RECENT, all.length - 1)));   // 질문이 적어도 하나는 남게
-  const pool = all.filter(x => !block.has(x.key));
-  const rand = list => list[Math.floor(Math.random() * list.length)];
-  const unseen = pool.filter(x => !seenSet.has(cardKey(x.ci)));
-  let pick;
-  if (unseen.length) pick = rand(unseen);
-  else {
-    const at = x => Number(progress.at && progress.at[cardKey(x.ci)]) || 0;     // 이 기능 전에 본 카드는 시각이 없음 → 가장 오래된 쪽
-    const min = Math.min.apply(null, pool.map(at));
-    pick = rand(pool.filter(x => at(x) === min));
+/* 드라이브를 중간에 멈췄으면 { o: 그때의 범위로 맞춘 옵션, label, left: 남은 문장 수, mins } */
+function driveResumeInfo() {
+  const p = D.pos;
+  if (!p) return null;
+  const o = Object.assign({}, D.opts, { scope: p.scope, cats: p.cats ? String(p.cats).split(",").filter(Boolean) : D.opts.cats });
+  if (p.scope === "diary" && p.range) o.diaryRange = p.range;
+  let pl = buildDrive(o);
+  if (o.order === "random" && Array.isArray(p.order) && pl.blocks.length > 1) pl = dvReorder(pl, p.order);
+  const k = dvResumeIdx(pl, o, p);
+  if (k < 0) return null;
+  let words = 0;
+  const rest = pl.items.slice(k);
+  rest.forEach(it => { words += getScript(it.text).words.length * (o.shadow && it.kind !== "story" ? 2 : 1); });
+  return { o, label: p.label || "", left: rest.length, mins: Math.max(1, Math.round((words * 0.4 / o.rate + rest.length * 0.6) / 60)) };
+}
+
+function renderToday() {
+  if (!todayReady) return;
+  if (todayKey !== dateKey()) { saveToday(); initWrite(); }   // 날짜가 바뀌었으면 글쓰기도 새 날로
+  const s = todayStats(), task = nowTask(s);
+  const gear = '<button class="gear" type="button" data-open-settings aria-label="설정">' + ICON_SLIDERS + '</button>';
+  const btn = (act, label, sub) => '<button class="btn td-go' + (sub ? " sub" : "") + '" type="button" data-td="' + act + '">' + esc(label) + '</button>';
+  let now;
+  if (task.kind === "review") {
+    now = '<section class="td-now" aria-label="지금 할 일"><span class="td-label">지금 할 일</span>' +
+      '<p class="td-title">복습할 표현 ' + s.due + '개</p>' +
+      '<p class="td-sub">약 ' + Math.max(1, Math.round(s.due * 0.6)) + '분 · 정해진 날에 복습하면 오래 기억해요</p>' + btn("review", "복습 시작") + '</section>';
+  } else if (task.kind === "new") {
+    now = '<section class="td-now" aria-label="지금 할 일"><span class="td-label">지금 할 일</span>' +
+      '<p class="td-title">새 표현 고르기</p>' +
+      '<p class="td-sub">오늘 ' + s.picks + ' / ' + DAILY_PICKS + '개 골랐어요 · 미학습 표현을 눌러 \'학습하기\'를 시작해요</p>' + btn("new", "미학습 표현 보기") + '</section>';
+  } else if (task.kind === "hook" || task.kind === "card") {
+    const c = CARDS[task.ci];
+    now = '<section class="td-now hook" style="--h:' + hueOf(c.category) + '" aria-label="지금 할 일"><span class="td-label">지금 할 일 · 상황 카드</span>' +
+      (task.kind === "hook" ?
+        '<p class="td-title">' + esc(task.x.h.ko) + '</p><p class="td-sub">' + (CATEGORY_EMOJI[c.category] || "") + " " + esc(c.category) + " · " + esc(c.title) + '</p>' +
+        btn("hook", "카드에서 떠올려 보기") :
+        '<p class="td-title">다음 카드 보기</p><p class="td-sub">' + (CATEGORY_EMOJI[c.category] || "") + " " + esc(c.title) + '</p>' + btn("card", "카드 보기")) + '</section>';
+  } else if (task.kind === "write") {
+    const it = todayEntry().items[0], q = (it && it.q) || todayCands[0] || { en: "", ko: "" };
+    now = '<section class="td-now" aria-label="지금 할 일"><span class="td-label">지금 할 일</span>' +
+      '<p class="td-title">오늘 일기 쓰기</p>' +
+      '<p class="td-sub">오늘의 질문 · ' + esc(q.ko || q.en) + '</p>' + btn("write", "일기 쓰기") + '</section>';
+  } else {
+    const tm = addDays(s.t, 1);
+    const nTm = Object.keys(study.items).filter(id => EXPR_BY_ID[id] && study.items[id].status === "learning" && study.items[id].due && study.items[id].due <= tm).length;
+    now = '<section class="td-now" aria-label="오늘 할 일 끝"><span class="td-label">오늘 할 일 끝</span>' +
+      '<p class="td-title">오늘 목표를 모두 채웠어요</p>' +
+      '<p class="td-sub">' + (nTm ? "내일 복습할 표현 " + nTm + "개 예정" : "내일 복습할 표현은 없어요") + '</p>' + btn("cards", "상황 카드 더 보기", true) + '</section>';
   }
-  homeState.recent = homeState.recent.filter(k => k !== pick.key).concat([pick.key]).slice(-HOOK_RECENT);
-  saveHome();
-  return pick;
+  /* ② 오늘 진행 */
+  const prog = [
+    ["복습", s.reviewed + "/" + (s.reviewed + s.due), !s.due],
+    ["새 표현", Math.min(s.picks, DAILY_PICKS) + "/" + DAILY_PICKS, s.picks >= DAILY_PICKS || !s.newLeft],
+    ["상황 카드", Math.min(s.cards, 1) + "/1", s.cards >= 1],
+    ["일기", (s.wrote ? 1 : 0) + "/1", s.wrote]
+  ];
+  const nDone = prog.filter(x => x[2]).length;
+  const progHtml = '<section class="td-sec" aria-label="오늘 진행"><div class="td-h"><h3>오늘 진행</h3><small>' + nDone + ' / 4 완료</small></div>' +
+    '<ul class="td-prog">' + prog.map(x => '<li class="' + (x[2] ? "done" : "") + '" aria-label="' + x[0] + " " + x[1] + (x[2] ? " 완료" : "") + '">' +
+      '<span class="td-dot" aria-hidden="true">' + (x[2] ? ICON_CHECK : "") + '</span><span class="td-num">' + x[1] + '</span><span class="td-cap">' + x[0] + '</span></li>').join("") + '</ul></section>';
+  /* ③ 최근 7일 + 연속 학습일(오늘 아직 안 했으면 어제까지 이어진 날 수) */
+  let d = dayLearned(s.t) ? s.t : addDays(s.t, -1), streak = 0;
+  while (dayLearned(d) && streak < 3660) { streak++; d = addDays(d, -1); }
+  const week = [];
+  for (let k = 6; k >= 0; k--) {
+    const key = addDays(s.t, -k), p = key.split("-").map(Number), on = dayLearned(key);
+    const wd = k === 0 ? "오늘" : "일월화수목금토"[new Date(p[0], p[1] - 1, p[2]).getDay()];
+    week.push('<li class="' + (on ? "on" : "") + (k === 0 ? " is-today" : "") + '" aria-label="' + (k === 0 ? "오늘" : koDate(key)) + (on ? " 학습함" : " 안 함") + '">' +
+      '<span class="td-dot" aria-hidden="true">' + (on ? ICON_CHECK : "") + '</span><span class="td-cap">' + wd + '</span></li>');
+  }
+  const weekHtml = '<section class="td-sec" aria-label="최근 7일"><div class="td-h"><h3>최근 7일</h3><small>연속 ' + streak + '일</small></div>' +
+    '<ul class="td-week">' + week.join("") + '</ul></section>';
+  /* ④ 표현 실력 */
+  const cnt = { mastered: 0, learning: 0, new: 0 };
+  EXPR_LIST.forEach(it => { cnt[statusOf(it.id)]++; });
+  const total = EXPR_LIST.length || 1;
+  const lg = (f, cls) => '<button class="td-lg" type="button" data-td-filter="' + f + '" aria-label="' + STATUS_LABEL[f] + " " + cnt[f] + '개 보기"><i class="' + cls + '"></i><span>' + STATUS_LABEL[f] + '<b>' + cnt[f] + '</b></span>' + ICON_ARROW + '</button>';
+  const skillHtml = '<section class="td-sec" aria-label="표현 실력"><div class="td-h"><h3>표현 실력</h3><small>전체 ' + EXPR_LIST.length + '개</small></div>' +
+    '<div class="td-bar" aria-hidden="true"><i class="m" style="width:' + (cnt.mastered / total * 100) + '%"></i><i class="l" style="width:' + (cnt.learning / total * 100) + '%"></i></div>' +
+    '<div class="td-legend">' + lg("mastered", "m") + lg("learning", "l") + lg("new", "n") + '</div></section>';
+  /* ⑤ 이어 듣기 */
+  const ri = driveResumeInfo();
+  const resumeHtml = ri ? '<section class="td-sec" aria-label="드라이브 이어 듣기"><div class="td-resume">' + ICON_CAR +
+    '<div class="td-rtext"><b>드라이브 이어 듣기</b><small>' + esc(ri.label) + '</small><small>남은 약 ' + ri.mins + '분 · 문장 ' + ri.left + '개</small></div>' +
+    '<button class="td-rgo" type="button" data-td="resume">이어 듣기</button></div></section>' : "";
+  todayEl.innerHTML =
+    '<header class="w-top"><div><div class="w-date">' + esc(koDate(s.t, true)) + '</div><h2 class="w-title">오늘</h2></div>' + gear + '</header>' +
+    now + progHtml + weekHtml + skillHtml + resumeHtml;
 }
-function renderHome() {
-  if (!homeReady) return;
-  const x = homeHook, card = x && CARDS[x.ci];
-  const seen = CARDS.filter((c, i) => seenSet.has(cardKey(i))).length;
-  const entry = diary.entries[dateKey()];
-  const wrote = !!(entry && entry.items.some(hasContent));
-  const dp = D.pos, dpCard = dp && CARDS.find(c => c.id === dp.cid);
-  const dvTxt = dp ? "이어 듣기: " + (dpCard ? dpCard.title : String(dp.label || "").split(" · ")[0]) : "시작하기";
-  const svg = sel => { const s = document.querySelector(sel); return s ? s.outerHTML : ""; };
-  const go = (to, icon, name, sub) => '<button class="h-go" type="button" data-home-go="' + to + '">' + icon + '<b>' + name + '</b><small>' + esc(sub) + '</small></button>';
-  homeEl.innerHTML =
-    '<header class="w-top"><div><div class="w-date">' + esc(koDate(dateKey(), true)) + '</div><h2 class="w-title">한 장 영어</h2></div></header>' +
-    '<div class="hq">' + (x ?
-      '<button class="hq-card" type="button" data-hq-go data-qa-card style="--h:' + hueOf(card.category) + '">' +
-        '<span class="hq-label">이럴 땐 어떻게?</span><span class="hq-text">' + esc(x.h.ko) + '</span>' +
-        '<span class="hq-go">눌러서 떠올려 보기' + ICON_ARROW + '</span></button>' +
-      '<div style="--qa-c:hsl(' + hueOf(card.category) + ' 52% var(--tag-l))">' + qaBar(homeRot) + '</div>' +
-      '<div class="hq-meta"><span class="hq-src">' + (CATEGORY_EMOJI[card.category] || "") + " " + esc(card.category) + " · " + esc(card.title) + '</span>' +
-        '<button class="hq-next" type="button" data-hq-next>다른 질문</button></div>' :
-      '<p class="hq-empty">아직 질문이 없어요</p>') + '</div>' +
-    '<nav class="h-grid" aria-label="바로가기">' +
-      go("cards", svg("#tabCards svg"), "상황", CARDS.length + "장 중 " + seen + "장 봄") +
-      go("expr", svg("#tabExpr svg"), "표현", "오늘 복습 " + dueList().length + "개 · 새 표현 " + picksToday() + "/" + DAILY_PICKS) +
-      go("write", svg("#tabWrite svg"), "글쓰기", wrote ? "오늘 작성 완료" : "오늘 아직 안 씀") +
-      go("drive", ICON_CAR, "드라이브", dvTxt) +
-    '</nav>';
-}
-/* 질문 카드 → 그 카드의 그 줄: 읽기 모드(듣기·쉐도잉이었으면 바꿈), 그 줄까지 보이고 그 줄(내 대사)은 한글, 잠깐 강조 */
+/* 지금 할 일 → 그 일이 바로 시작(해당 탭의 2단계) */
+todayEl.addEventListener("click", e => {
+  const t = e.target;
+  let el;
+  if ((el = t.closest("[data-td-filter]"))) { buzz(); openExprFiltered(el.dataset.tdFilter); return; }
+  if (!(el = t.closest("[data-td]"))) return;
+  const a = el.dataset.td, task = nowTask(todayStats());
+  buzz();
+  if (a === "review") { switchTab("expr", true); startReview(null); }
+  else if (a === "new") openExprFiltered("new");
+  else if (a === "hook" && task.kind === "hook") openHook(task.x);
+  else if (a === "card" || a === "cards" || a === "hook") { const ci = task.ci != null ? task.ci : nextCardIdx(); switchTab("cards", true); jumpTo(ci); }
+  else if (a === "write") { switchTab("write", true); W.view.scrollTo({ top: 0 }); }
+  else if (a === "resume") {
+    const ri = driveResumeInfo();
+    if (!ri) { renderToday(); return; }
+    D.opts = ri.o;
+    saveDrive();
+    switchTab("drive", true);
+    dvStart(true);
+  }
+});
+/* 상황 카드의 그 줄로: 읽기 모드(듣기·쉐도잉이었으면 바꿈), 그 줄까지 보이고 그 줄(내 대사)은 한글, 잠깐 강조 → 답을 떠올린 뒤 탭해서 영어로 확인 */
 function openHook(x) {
   const card = feed.children[x.ci];
   if (!card || !card._st) return;
@@ -4875,32 +5154,15 @@ function openHook(x) {
   clearTimeout(row._hook);
   row._hook = setTimeout(() => row.classList.remove("hook-hi"), 2400);
 }
-/* 10초마다 다음 질문(위 makeRotator). 홈 탭에 있고 시트·드라이브·연습이 덮지 않을 때만 */
-const homeRot = makeRotator({
-  view: homeEl,
-  parts: () => Array.from(homeEl.querySelectorAll(".hq-card, .hq-src")),
-  ok: () => currentTab === "home" && homeReady && !!homeHook && !sheetOpen && !D.open && !PC.open,
-  next: () => { homeHook = pickHook(); renderHome(); }
-});
-homeEl.addEventListener("click", e => {
-  const t = e.target;
-  let el;
-  if ((el = t.closest("[data-hq-go]"))) { buzz(); if (homeHook) openHook(homeHook); return; }
-  if ((el = t.closest("[data-hq-next]"))) { buzz(); homeRot.swap(); return; }
-  if ((el = t.closest("[data-home-go]"))) {
-    const to = el.dataset.homeGo;
-    if (to === "drive") openDrive(); else switchTab(to);
-  }
-});
 
 /* ================= 하단 탭 =================
-   [홈 | 상황 | 표현 | 글쓰기]. 앱을 켜면 항상 홈(2026-10-03부터 — 예전 '마지막 탭 기억' engcards.tab.v1은 지움).
+   [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
    탭을 오가도 각 화면의 상태(보던 카드·모드·스크롤·입력)는 그대로(.view.off는 visibility:hidden이라 남아 있음) */
 try { localStorage.removeItem("engcards.tab.v1"); } catch (e) {}
-const VIEWS = { home: homeEl, cards: feed, expr: X.view, write: W.view };
-let currentTab = "home";
+const VIEWS = { today: todayEl, cards: feed, expr: X.view, write: W.view, drive: document.getElementById("viewDrive") };
+let currentTab = "today";
 function switchTab(name, quiet) {
-  if (!VIEWS[name]) name = "home";
+  if (!VIEWS[name]) name = "today";
   if (name !== currentTab) Player.stop();
   currentTab = name;
   Object.keys(VIEWS).forEach(k => {
@@ -4914,15 +5176,38 @@ function switchTab(name, quiet) {
     if (todayKey !== dateKey()) { saveToday(); initWrite(); }
     else { autoGrow(W.text); autoGrow(W.fix); renderAudioList(); }
   }
+  /* 상황 탭에 오면 지금 카드를 오늘 본 카드로(바로 다른 카드로 옮기는 경우 — 오늘 탭 '지금 할 일' — 옮긴 뒤의 카드가 세어지게 조금 뒤에) */
+  if (name === "cards") setTimeout(() => { if (currentTab === "cards" && activeCard) logCardSeen(activeCard); }, 700);
   if (name === "expr") renderExprTab();
-  if (name === "home") renderHome();
+  if (name === "drive") dvRenderSetup();
+  if (name === "today") renderToday();
+  updateBadges();
   if (!quiet) buzz();
+}
+/* 지금 탭을 다시 누름 → 그 탭의 첫 화면(맨 위로). 상황 탭은 지금 카드의 본문 맨 위로(다른 카드로 옮기지는 않음) */
+function tabTop(name) {
+  buzz();
+  if (name === "cards") { const b = activeCard && activeCard.querySelector(".body"); if (b) b.scrollTop = 0; return; }
+  const el = name === "drive" ? VIEWS.drive.querySelector(".dv-sbody") : VIEWS[name];
+  if (el) el.scrollTop = 0;
 }
 document.querySelector(".tabbar").addEventListener("click", e => {
   const t = e.target.closest(".tab");
-  if (t) switchTab(t.dataset.tab);
+  if (!t) return;
+  if (t.dataset.tab === currentTab) tabTop(currentTab); else switchTab(t.dataset.tab);
 });
-switchTab("home", true);                             // 앱을 켜면 항상 홈(내용은 스크립트 맨 아래에서 질문을 고른 뒤 그림)
+switchTab("today", true);                            // 앱을 켜면 항상 오늘 탭(내용은 스크립트 맨 아래에서 그림)
+/* 앱을 켜 둔 채 날짜가 바뀌면(자정): 배지·오늘 탭·표현 탭을 새 날로(글쓰기는 입력 중이 아닐 때) */
+let lastDayKey = dateKey();
+setInterval(() => {
+  const d = dateKey();
+  if (d === lastDayKey) return;
+  lastDayKey = d;
+  updateBadges();
+  if (currentTab === "today") renderToday();
+  else if (currentTab === "expr" && !sheetOpen) renderExprTab();
+  if (!document.body.classList.contains("typing") && todayKey !== d) { saveToday(); initWrite(); }
+}, 15000);
 
 /* ================= 드라이브 모드: 여러 카드를 이어서 듣기 (운전·이동 중) =================
    상황 카드 위쪽 [드라이브] → 시작 화면(옵션) → 재생 화면. 새 재생 로직은 없고 인터랙티브 스크립트의 createReader 하나로 재생:
@@ -4938,13 +5223,35 @@ switchTab("home", true);                             // 앱을 켜면 항상 홈
      문장마다 음성을 따로 캐시하므로 듣기용 본문을 고치면 바뀐 문장만 다음 재생 때 새로 만들어짐(글쓰기 탭 듣기와 같은 음성) */
 const DRIVE_KEY = "engcards.drive.v1";
 const DRIVE_SCOPES = { all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현", due: "오늘 복습할 표현", diary: "내 일기" };
-/* 내용(드라이브·연습 모드 공통): dialogue 대화문만 / examples 예문까지 / story 썰까지 — 대화 포함
-   / exOnly 예문만 / storyOnly 썰만 — 대화 없이 핵심 표현의 예문 또는 썰만. 시작 화면에서 두 줄([대화 포함 3개] [대화 없이 2개])로 보여 줌 */
-const CONTENT_ROWS = [[["dialogue", "대화문만"], ["examples", "예문까지"], ["story", "썰까지"]], [["exOnly", "예문만"], ["storyOnly", "썰만"]]];
-const hasDlg = c => c !== "exOnly" && c !== "storyOnly";
-const hasEx = c => c === "examples" || c === "story" || c === "exOnly";
-const hasStory = c => c === "story" || c === "storyOnly";
-const DRIVE_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지", exOnly: "예문만", storyOnly: "썰만" };
+/* 내용(드라이브·연습 모드 공통): 체크박스 3개 [대화문] [예문] [썰](하나 이상, 2026-10-05 — 예전 3개 + 2개 두 줄에서 바꿈).
+   저장값은 조합 이름 하나: dialogue 대화만 / examples 대화+예문 / story 대화+예문+썰 / dlgStory 대화+썰(새로)
+   / exOnly 예문만 / storyOnly 썰만 / exStory 예문+썰(새로, 대화 없이). [대화, 예문, 썰] */
+const CONTENT_KEYS = { dialogue: [1, 0, 0], examples: [1, 1, 0], story: [1, 1, 1], dlgStory: [1, 0, 1], exOnly: [0, 1, 0], storyOnly: [0, 0, 1], exStory: [0, 1, 1] };
+const contentFlags = c => CONTENT_KEYS[c] || CONTENT_KEYS.story;
+const contentOf = f => Object.keys(CONTENT_KEYS).find(k => CONTENT_KEYS[k].join() === f.map(x => (x ? 1 : 0)).join()) || null;
+const hasDlg = c => !!contentFlags(c)[0];
+const hasEx = c => !!contentFlags(c)[1];
+const hasStory = c => !!contentFlags(c)[2];
+/* 체크박스 3개(attr = data-dv-cbx / data-pc-cbx). 누르면 그 칸만 켜고 끔(마지막 하나는 못 끔 — contentToggle) */
+function contentChecksHtml(c, attr) {
+  const f = contentFlags(c);
+  return '<div class="cbx3" role="group" aria-label="내용 (여러 개 선택)">' + [["대화문", 0], ["예문", 1], ["썰", 2]].map(x =>
+    '<button class="cbx" type="button" role="checkbox" ' + attr + '="' + x[1] + '" aria-checked="' + !!f[x[1]] + '"><span class="box" aria-hidden="true">' + ICON_CHECK + '</span>' + x[0] + '</button>').join("") + '</div>';
+}
+function contentToggle(c, i) {
+  const f = contentFlags(c).slice();
+  f[i] = f[i] ? 0 : 1;
+  const k = contentOf(f);
+  if (!k) { toast("하나 이상 골라 주세요"); return c; }
+  return k;
+}
+/* 설명: 드라이브는 표현 읽기까지, 연습은 예문·썰만 */
+function contentNote(c, drive) {
+  const f = contentFlags(c);
+  if (f[0] && !f[1] && !f[2]) return drive ? "대화만 이어서 들어요." : "대화문만 연습해요.";
+  const parts = [drive ? "표현 읽기" : "", f[1] ? "예문 5개" : "", f[2] ? "썰" : ""].filter(Boolean);
+  return (f[0] ? "대화 → " : "대화 없이 ") + "핵심 표현마다 " + parts.join(drive ? " + " : " → ");
+}
 const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", shadow: false, rate: 1, diaryRange: "30" };   // order: seq 차례대로 / random 랜덤(카드·표현 순서를 섞음)
 
 /* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, key(문장), block(카드·표현), cid, bi, label } } */
@@ -4954,7 +5261,7 @@ function loadDrive() {
     if (s && typeof s === "object") {
       const o = Object.assign({}, DV_DEFAULT, s.opts && typeof s.opts === "object" ? s.opts : {});
       if (!DRIVE_SCOPES[o.scope]) o.scope = "all";
-      if (!DRIVE_CONTENT[o.content]) o.content = "story";
+      if (!CONTENT_KEYS[o.content]) o.content = "story";
       o.cats = Array.isArray(o.cats) ? o.cats.filter(c => typeof c === "string") : [];
       o.order = o.order === "random" ? "random" : "seq";
       o.shadow = !!o.shadow;
@@ -5025,7 +5332,7 @@ function buildDrive(o) {
       blocks.push({ kind: "card", ci, cid: card.id, key: "c" + card.id, start });
       if (hasDlg(o.content)) d.forEach((line, n) => push({ kind: "dlg", text: line.en, ko: line.ko || "", who: whoOf(line), name: whoLabel(line.who), fx: n === 0 ? "card" : null, block: b, ci, n: n + 1, total: d.length }));
       /* 대화문만 = 대화만(표현 효과음·표현 읽기·예문·썰 없음) / 예문까지 = 표현마다 표현 읽기 + 예문 / 썰까지 = + 썰 / 예문만·썰만 = 대화 없이 표현마다 표현 읽기 + 예문(또는 썰) */
-      if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(b, it, hasEx(o.content), hasStory(o.content)));
+      if (hasEx(o.content) || hasStory(o.content)) EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(b, it, hasEx(o.content), hasStory(o.content)));
       if (items[start] && !hasDlg(o.content)) items[start].fx = "card";   // 대화가 없으면 카드의 첫 문장(표현 읽기)에서 새 카드 효과음
     });
   }
@@ -5373,10 +5680,11 @@ function dvSavePos() {
   saveDrive();
 }
 /* 저장된 위치 → 이 재생 목록의 문장 번호. 같은 문장이 없으면 그 카드(표현)의 처음, 카드가 없어졌으면 가장 가까운 카드의 처음. 이어 들을 수 없으면 -1 */
-function dvResumeIdx(pl) {
-  const p = D.pos;
-  if (!p || !pl.items.length || p.scope !== D.opts.scope || (p.scope === "cat" && p.cats !== catsKey(D.opts.cats)) ||
-    (p.scope === "diary" && p.range !== D.opts.diaryRange)) return -1;
+function dvResumeIdx(pl, o, p) {        // o·p를 안 주면 지금 옵션(D.opts)·저장 위치(D.pos) — 오늘 탭 '이어 듣기'는 멈췄을 때의 범위로 계산
+  o = o || D.opts;
+  p = p || D.pos;
+  if (!p || !pl.items.length || p.scope !== o.scope || (p.scope === "cat" && p.cats !== catsKey(o.cats)) ||
+    (p.scope === "diary" && p.range !== o.diaryRange)) return -1;
   const k = pl.items.findIndex(it => it.key === p.key);
   if (k >= 0) return k;
   const b = pl.blocks.find(bl => bl.key === p.block);
@@ -5400,8 +5708,6 @@ function dvSetupHtml() {
   const opt = (v, sub) => '<button class="dv-opt" type="button" data-dv-scope="' + v + '" aria-pressed="' + (o.scope === v) + '"><b>' + DRIVE_SCOPES[v] + '</b><small>' + sub + '</small></button>';
   const seg = (name, list, cls) => '<div class="seg' + (cls ? " " + cls : "") + '" data-dv-set="' + name + '">' +
     list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
-  const contentNote = { dialogue: "대화만 이어서 들어요.", examples: "대화 → 핵심 표현마다 표현 읽기 + 예문 5개", story: "대화 → 핵심 표현마다 표현 읽기 + 예문 5개 + 썰",
-    exOnly: "대화 없이 핵심 표현마다 표현 읽기 + 예문 5개", storyOnly: "대화 없이 핵심 표현마다 표현 읽기 + 썰" };
   const resumeK = dvResumeIdx(pl);
   let words = 0;
   pl.items.forEach(it => { words += getScript(it.text).words.length * (o.shadow && it.kind !== "story" ? 2 : 1); });
@@ -5413,9 +5719,8 @@ function dvSetupHtml() {
     "들을 문장이 없어요";
   const unit = diaryScope ? "일기 " + pl.blocks.length + "편" : exprScope ? "표현 " + pl.blocks.length + "개" : "카드 " + pl.blocks.length + "장";
   const unitWord = diaryScope ? "일기" : exprScope ? "표현" : "카드";
-  return '<header class="dv-head">' +
-      '<button class="dv-x" type="button" data-dv="close" aria-label="닫기">' + ICON_X + '</button>' +
-      '<h2 class="dv-title">드라이브 모드</h2>' +
+  return '<header class="w-top dv-top"><div><div class="w-date">' + esc(koDate(dateKey(), true)) + '</div><h2 class="w-title">드라이브</h2></div>' +
+      '<button class="gear" type="button" data-open-settings aria-label="설정">' + ICON_SLIDERS + '</button>' +
     '</header>' +
     '<div class="dv-sbody">' +
       '<p class="dv-lead">여러 카드를 이어서 영어로만 들려줘요. 화면을 보지 않아도 되고, 잠금화면·블루투스 버튼으로도 조작할 수 있어요.</p>' +
@@ -5431,9 +5736,9 @@ function dvSetupHtml() {
         '<button class="dv-cat" type="button" data-dv-cat="' + esc(n) + '" aria-pressed="' + o.cats.includes(n) + '">' +
           (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
       '</div>' +
-      (diaryScope ? "" : '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
-        seg("content", CONTENT_ROWS[0]) + seg("content", CONTENT_ROWS[1], "seg2") +
-        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 표현 → 예문 5개 → 썰 순서로 들어요." : contentNote[o.content]) + '</p>' +
+      (diaryScope ? "" : '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용 (여러 개 선택)</span>' +
+        contentChecksHtml(o.content, "data-dv-cbx") +
+        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 표현 → 예문 5개 → 썰 순서로 들어요." : contentNote(o.content, true)) + '</p>' +
       '</div>') +
       '<div class="set-group"><span class="set-label">순서</span>' +
         seg("order", [["seq", "차례대로"], ["random", "랜덤"]]) +
@@ -5484,8 +5789,8 @@ function dvPaintPre() {
       !dvElevenOK() ?
       '<p class="dv-pre-msg">새로 만들어야 하는 문장 <b>' + P.need.length + '개</b></p>' +
         '<p class="note">' + (haveNote ? haveNote + "는 그대로 재생돼요. " : "") + "나머지는 " +
-        (settings.engine !== "eleven" || !settings.apiKey ? "음성 설정에서 ElevenLabs와 API 키를 넣어야 만들 수 있어요(없으면 폰 기본 음성으로 읽어요)." : "인터넷에 연결되어 있을 때 만들 수 있어요.") + '</p>' +
-        row(b("pre-cancel", "확인")) :
+        (settings.engine !== "eleven" || !settings.apiKey ? "ElevenLabs API 키가 있어야 만들 수 있어요(없으면 폰 기본 음성으로 읽어요)." : "인터넷에 연결되어 있을 때 만들 수 있어요.") + '</p>' +
+        row((settings.engine !== "eleven" || !settings.apiKey ? b("voice-settings", "설정 › 음성 열기", "link") : "") + b("pre-cancel", "확인")) :
       '<p class="dv-pre-msg">새로 만들 문장 <b>' + P.need.length + '개</b> · 약 <b>' + P.chars.toLocaleString() + '자</b></p>' +
         '<p class="note">' + (haveNote ? haveNote + "는 다시 만들지 않아요. " : "") + '글자 수만큼 ElevenLabs 크레딧이 들어요.</p>' +
         row(b("pre-cancel", "취소") + b("pre-run", "만들기", "ok"));
@@ -5496,8 +5801,10 @@ function dvPaintPre() {
   } else if (P.state === "done") {
     html = '<p class="dv-pre-msg">' + esc(P.msg) + '</p>' + row(b("pre-cancel", "확인"));
   } else {
-    html = '<p class="note" style="margin-top:0">카드·표현 음성은 앱에 들어 있어요. 앱에 없는 문장(내 일기 등)만 세어서, ElevenLabs 키가 있으면 미리 만들어 폰에 저장해요.</p>' +
-      row(b("pre-count", "미리 받아두기"));
+    const noKey = settings.engine !== "eleven" || !settings.apiKey;
+    html = '<p class="note" style="margin-top:0">카드·표현 음성은 앱에 들어 있어요. 앱에 없는 문장(내 일기 등)만 세어서, ElevenLabs 키가 있으면 미리 만들어 폰에 저장해요.' +
+        (noKey ? " ElevenLabs API 키를 넣으면 쓸 수 있어요." : "") + '</p>' +
+      row((noKey ? b("voice-settings", "설정 › 음성 열기", "link") : "") + b("pre-count", "미리 받아두기"));
   }
   box.innerHTML = html;
 }
@@ -5551,40 +5858,30 @@ async function dvPreRun() {
 }
 
 /* ---- 열기 · 화면 바꾸기 · 닫기 ---- */
+/* 드라이브 탭(시작 화면)으로. 2026-10-05부터 시작 화면은 탭 첫 화면이고, 재생 화면만 탭바를 덮는 전체 화면(D.open = 재생 화면이 열려 있음) */
 function openDrive() {
-  if (D.open) return;
-  Player.stop();
-  buzz();
-  D.open = true;
   if (D.pre.state !== "running") D.pre = { state: "idle" };
-  dvScreen("setup");
-  driveEl.hidden = false;
-  document.querySelector(".app").inert = true;
-  document.body.classList.add("driving");
-  D.openId = Date.now();                       // 새로고침 전에 남은 기록과 구분
-  try { history.pushState({ drive: D.openId }, ""); } catch (e) {}
+  switchTab("drive");
 }
+/* 재생 화면 열기(탭바를 덮음, 뒤로 가기 기록) */
 function dvScreen(name) {
   D.screen = name;
-  dvSetupEl.hidden = name !== "setup";
-  dvPlayEl.hidden = name !== "play";
-  if (name === "setup") {
-    D.rd.stop();
-    dvChimeOff();
-    dvKeepAlive(false);
-    dvLock(false);
-    dvMediaHandlers(false);
-    D.ui = null;
-    dvRenderSetup();
-  } else {
-    dvPlayEl.innerHTML = dvPlayHtml();
-    const q = s => dvPlayEl.querySelector(s);
-    D.ui = { prev: q(".dv-prev"), cur: q(".dv-cur"), next: q(".dv-next"), scroll: q(".dv-scroll"),
-      loc1: q(".dv-loc1"), loc2: q(".dv-loc2"), note: q(".dv-note"), toggle: q('[data-dv="toggle"]') };
-    q(".dv-block-label").textContent = D.pl.diaryScope ? "다음 일기" : D.pl.exprScope ? "다음 표현" : "다음 카드";
-    dvMediaHandlers(true);
-    dvLock(true);
+  if (name !== "play") return;
+  if (!D.open) {
+    D.open = true;
+    driveEl.hidden = false;
+    document.querySelector(".app").inert = true;
+    document.body.classList.add("driving");
+    D.openId = Date.now();                       // 새로고침 전에 남은 기록과 구분
+    try { history.pushState({ drive: D.openId }, ""); } catch (e) {}
   }
+  dvPlayEl.innerHTML = dvPlayHtml();
+  const q = s => dvPlayEl.querySelector(s);
+  D.ui = { prev: q(".dv-prev"), cur: q(".dv-cur"), next: q(".dv-next"), scroll: q(".dv-scroll"),
+    loc1: q(".dv-loc1"), loc2: q(".dv-loc2"), note: q(".dv-note"), toggle: q('[data-dv="toggle"]') };
+  q(".dv-block-label").textContent = D.pl.diaryScope ? "다음 일기" : D.pl.exprScope ? "다음 표현" : "다음 카드";
+  dvMediaHandlers(true);
+  dvLock(true);
 }
 /* 블록(카드·표현) 순서를 order(블록 key 목록)대로 바꾼 재생 목록. order에 없는 블록은 뒤에 그대로. 한 블록 안의 문장 순서는 그대로 */
 function dvReorder(pl, order) {
@@ -5623,6 +5920,7 @@ function dvStart(resume) {
   dvShow(k);
   dvGo(k, "start");
 }
+/* 재생 화면 닫기 → 드라이브 탭 시작 화면(이어 듣기 위치를 새로 보여 줌) */
 function dvHide() {
   if (!D.open) return;
   dvSavePos();
@@ -5632,7 +5930,6 @@ function dvHide() {
   dvKeepAlive(false);
   dvLock(false);
   dvMediaHandlers(false);
-  if (D.pre.state === "running") D.pre.cancel = true;
   D.open = false;
   D.screen = "setup";
   D.ui = null;
@@ -5641,18 +5938,18 @@ function dvHide() {
   driveEl.hidden = true;
   document.querySelector(".app").inert = false;
   document.body.classList.remove("driving");
-  if (currentTab === "home") renderHome();          // 홈에서 연 드라이브를 닫으면 이어 듣기 현황을 새로
+  if (currentTab === "drive") dvRenderSetup();
+  if (currentTab === "today") renderToday();
   if (currentTab === "write") renderAudioList();     // 글쓰기 '듣기용'의 이어서 듣기 위치를 새로
 }
-/* 글쓰기 탭 '듣기용' [이어서 듣기]: 드라이브 모드 '내 일기'(그 범위)로 바로 재생 화면. 같은 범위의 위치가 저장돼 있으면 거기서부터 */
+/* 글쓰기 탭 '듣기용' [이어서 듣기]: 드라이브 탭으로 바꾸고 범위 '내 일기'(그 세부 범위)가 미리 선택된 채로. 같은 범위의 위치가 있으면 [이어 듣기]가 보임 */
 function openDriveDiary(range) {
   D.opts.scope = "diary";
   D.opts.diaryRange = diaryRangeOf(range);
   saveDrive();
   openDrive();
-  const pl = buildDrive(D.opts);
-  if (!pl.items.length) { toast("들을 일기가 없어요"); return; }
-  dvStart(dvResumeIdx(pl) >= 0);
+  const b = dvSetupEl.querySelector(".dv-sbody");
+  if (b) b.scrollTop = 0;
 }
 function closeDrive() {
   let viaHistory = false;
@@ -5666,7 +5963,8 @@ window.addEventListener("popstate", () => {
   if (D.open && !(st && st.drive === D.openId)) dvHide();
 });
 
-driveEl.addEventListener("click", e => {
+/* 재생 화면(#drive)과 드라이브 탭 시작 화면(#dvSetup) 공통 */
+function onDriveClick(e) {
   const t = e.target;
   let el;
   if ((el = t.closest("[data-dv]"))) {
@@ -5674,6 +5972,7 @@ driveEl.addEventListener("click", e => {
     const a = el.dataset.dv;
     buzz();
     if (a === "close") closeDrive();
+    else if (a === "voice-settings") openSettings("voice");
     else if (a === "start" || a === "restart") dvStart(false);
     else if (a === "resume") dvStart(true);
     else if (a === "toggle") dvToggle();
@@ -5694,6 +5993,8 @@ driveEl.addEventListener("click", e => {
   } else if ((el = t.closest("[data-dv-cat]"))) {
     const n = el.dataset.dvCat;
     o.cats = o.cats.includes(n) ? o.cats.filter(x => x !== n) : o.cats.concat([n]);
+  } else if ((el = t.closest("[data-dv-cbx]"))) {
+    o.content = contentToggle(o.content, +el.dataset.dvCbx);
   } else if ((el = t.closest("[data-dv-set] button"))) {
     const name = el.parentNode.dataset.dvSet, v = el.dataset.v;
     o[name] = name === "rate" ? parseFloat(v) : name === "shadow" ? v === "true" : v;
@@ -5703,7 +6004,9 @@ driveEl.addEventListener("click", e => {
   saveDrive();
   if (D.pre.state !== "running") D.pre = { state: "idle" };
   dvRenderSetup();
-});
+}
+driveEl.addEventListener("click", onDriveClick);
+dvSetupEl.addEventListener("click", onDriveClick);
 
 /* 화면이 꺼지거나 다른 앱으로 가면: ElevenLabs 음성은 계속 재생(잠금화면에서도 들을 수 있게),
    내장 음성은 백그라운드에서 끊기므로 그 문장에서 멈춰 기다림. 돌아오면 화면 꺼짐 방지를 다시 켬 */
@@ -5738,7 +6041,6 @@ window.addEventListener("pagehide", () => { if (D.open) dvSavePos(); });
    위치: 문장·단계가 바뀔 때마다, 닫을 때, pagehide에 저장. 끝까지 다 하면 위치를 지움 */
 const PRACTICE_KEY = "engcards.practice.v1";
 const PC_SCOPES = { current: "지금 보던 카드", all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현만", due: "오늘 복습할 표현만" };
-const PC_CONTENT = { dialogue: "대화문만", examples: "예문까지", story: "썰까지", exOnly: "예문만", storyOnly: "썰만" };   // 뜻은 CONTENT_ROWS(드라이브 모드 부분)
 const PC_DEFAULT = { scope: "current", cats: [], content: "dialogue", method: "chunk", rate: 1 };
 
 /* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, cid(지금 보던 카드 범위일 때 그 카드), key(문장), step, block, bcid, bi, label } } */
@@ -5748,7 +6050,7 @@ function loadPractice() {
     if (s && typeof s === "object") {
       const o = Object.assign({}, PC_DEFAULT, s.opts && typeof s.opts === "object" ? s.opts : {});
       if (!PC_SCOPES[o.scope]) o.scope = "current";
-      if (!PC_CONTENT[o.content]) o.content = "dialogue";
+      if (!CONTENT_KEYS[o.content]) o.content = "dialogue";
       o.method = o.method === "whole" ? "whole" : "chunk";
       o.cats = Array.isArray(o.cats) ? o.cats.filter(c => typeof c === "string") : [];
       o.rate = o.rate === 0.8 ? 0.8 : 1;
@@ -5853,7 +6155,7 @@ function buildPractice(o, curCi) {
       addBlock({ kind: "card", ci, cid: card.id, key: "c" + card.id }, bi => {
         const d = card.dialogue || [];
         if (hasDlg(o.content)) d.forEach((line, n) => { if (line.en) items.push({ kind: "dlg", line, who: whoOf(line), name: whoLabel(line.who), block: bi, ci, n: n + 1, total: d.length }); });
-        if (o.content !== "dialogue") EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(bi, it, hasEx(o.content), hasStory(o.content)));
+        if (hasEx(o.content) || hasStory(o.content)) EXPR_LIST.filter(it => it.ci === ci && it.kind === "core").forEach(it => exprItems(bi, it, hasEx(o.content), hasStory(o.content)));
       });
     });
   }
@@ -5963,8 +6265,6 @@ function pcSetupHtml() {
   const opt = (v, sub, wide) => '<button class="dv-opt' + (wide ? " wide" : "") + '" type="button" data-pc-scope="' + v + '" aria-pressed="' + (o.scope === v) + '"><b>' + PC_SCOPES[v] + '</b><small>' + esc(sub) + '</small></button>';
   const seg = (name, list, cls) => '<div class="seg' + (cls ? " " + cls : "") + '" data-pc-set="' + name + '">' +
     list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
-  const contentNote = { dialogue: "대화문만 연습해요.", examples: "대화 → 핵심 표현마다 예문 5개", story: "대화 → 핵심 표현마다 예문 5개 → 썰",
-    exOnly: "대화 없이 핵심 표현마다 예문 5개", storyOnly: "대화 없이 핵심 표현마다 썰" };
   const resumeK = pcResumeIdx(pl);
   let words = 0, noData = 0;
   pl.items.forEach(it => {
@@ -5995,9 +6295,9 @@ function pcSetupHtml() {
         '<button class="dv-cat" type="button" data-pc-cat="' + esc(n) + '" aria-pressed="' + o.cats.includes(n) + '">' +
           (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
       '</div>' +
-      '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용</span>' +
-        seg("content", CONTENT_ROWS[0]) + seg("content", CONTENT_ROWS[1], "seg2") +
-        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 예문 5개 → 썰 순서로 연습해요." : contentNote[o.content]) + '</p>' +
+      '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용 (여러 개 선택)</span>' +
+        contentChecksHtml(o.content, "data-pc-cbx") +
+        '<p class="note">' + (exprScope ? "표현 범위는 표현마다 예문 5개 → 썰 순서로 연습해요." : contentNote(o.content, false)) + '</p>' +
       '</div>' +
       '<div class="set-group"><span class="set-label">연습 방식</span>' +
         seg("method", [["chunk", "청크 단계 포함"], ["whole", "전체 문장만"]]) +
@@ -6300,6 +6600,8 @@ practiceEl.addEventListener("click", e => {
   } else if ((el = t.closest("[data-pc-cat]"))) {
     const n = el.dataset.pcCat;
     o.cats = o.cats.includes(n) ? o.cats.filter(x => x !== n) : o.cats.concat([n]);
+  } else if ((el = t.closest("[data-pc-cbx]"))) {
+    o.content = contentToggle(o.content, +el.dataset.pcCbx);
   } else if ((el = t.closest("[data-pc-set] button"))) {
     const name = el.parentNode.dataset.pcSet, v = el.dataset.v;
     o[name] = name === "rate" ? parseFloat(v) : v;
@@ -6790,35 +7092,164 @@ function keyField(note) {
   '</div>';
 }
 
-function openSettings() {
-  const seg = (name, opts) => '<div class="seg" data-set="' + name + '">' +
+/* ================= 설정(전체 화면, 2026-10-05 한 화면으로 모음) =================
+   5개 탭 오른쪽 위 같은 아이콘([data-open-settings]) → 같은 화면. 닫기(X)·안드로이드 뒤로 가기 → 원래 탭(그대로).
+   구역: 음성(예전 상황 카드 아이콘의 음성 설정) · 자동 넘김(표현 탭 궁금증 카드) · 글쓰기(예전 글쓰기 아이콘 — 첨삭 목소리) · 기록(전체 기록 복사).
+   API 키는 하나(음성 구역) — 글쓰기·연습장·드라이브 모두 같은 키. 드라이브 '미리 받아두기'의 [설정 › 음성 열기]는 openSettings("voice") */
+const stEl = document.getElementById("settings");
+let stOpen = false, stId = 0;
+function settingsHtml() {
+  const seg = (name, opts, dis) => '<div class="seg' + (dis ? " dv-dis" : "") + '" data-set="' + name + '">' +
     opts.map(o => '<button type="button" data-v="' + o[0] + '" aria-pressed="' + (String(settings[name]) === String(o[0])) + '">' + o[1] + '</button>').join("") +
   '</div>';
-  const html =
-    '<div class="set-group"><span class="set-label">음성 엔진</span>' +
-      seg("engine", [["device", "폰 기본 음성"], ["eleven", "ElevenLabs"]]) +
-      '<p class="note">폰 기본 음성은 무료이고 바로 쓸 수 있어요. ElevenLabs는 훨씬 자연스럽지만 API 키가 필요하고 크레딧이 들어요.</p>' +
-    '</div>' +
-    '<div class="el-only"' + (settings.engine === "eleven" ? "" : " hidden") + '>' +
-      keyField("키는 이 폰의 이 브라우저 안에만 저장돼요. 글쓰기 탭과 같은 키를 써요. ElevenLabs에서 Text to Speech 권한만 켜고 크레딧 한도를 정해 둔 키를 쓰는 걸 추천해요. 한 번 들은 문장은 폰에 저장돼서 다시 들을 땐 크레딧이 들지 않아요.") +
-      '<div class="set-group"><label class="set-label" for="setModel">모델</label>' +
-        '<select class="field" id="setModel">' + EL_MODELS.map(m => '<option value="' + m.id + '"' + (m.id === settings.model ? " selected" : "") + '>' + esc(m.name) + '</option>').join("") + '</select>' +
-      '</div>' +
-      voiceField("voiceThem", "상대 목소리 (직원·친구 등, 예문)") +
-      voiceField("voiceMe", "내 목소리 (내 대사, 썰)") +
-    '</div>' +
-    '<div class="set-group"><span class="set-label">속도 (읽기 모드 · 예문 · 썰)</span>' +
-      seg("speed", [["0.85", "천천히"], ["1", "보통"]]) +
-      '<p class="note">듣기·쉐도잉 모드 속도는 카드 아래 0.8x / 1.0x 버튼으로 따로 정해요.</p>' +
-    '</div>' +
-    '<div class="set-group"><div class="btn-row">' +
-      '<button class="btn" type="button" id="testVoice">목소리 들어보기</button>' +
-      '<button class="btn" type="button" id="clearCache">저장된 음성 지우기</button>' +
-    '</div></div>';
-  showSheet("설정", "음성", html);
+  return '<header class="dv-head">' +
+      '<button class="dv-x" type="button" data-st-close aria-label="설정 닫기">' + ICON_X + '</button>' +
+      '<h2 class="dv-title">설정</h2>' +
+    '</header>' +
+    '<div class="st-body">' +
+      '<section class="st-sec" id="stVoice" aria-label="음성"><h3>음성</h3>' +
+        '<p class="st-lead">상황 카드 음성은 키 없이 기본 제공돼요. API 키는 일기·연습장 같은 내 문장을 고음질로 들을 때 필요해요.</p>' +
+        '<div class="set-group"><span class="set-label">음성 엔진</span>' +
+          seg("engine", [["device", "폰 기본 음성"], ["eleven", "ElevenLabs"]]) +
+          '<p class="note">폰 기본 음성은 무료이고 바로 쓸 수 있어요. ElevenLabs는 훨씬 자연스럽지만 API 키가 필요하고 크레딧이 들어요.</p>' +
+        '</div>' +
+        '<div class="el-only"' + (settings.engine === "eleven" ? "" : " hidden") + '>' +
+          keyField("키는 이 폰의 이 브라우저 안에만 저장돼요. 글쓰기·연습장·드라이브 모두 이 키를 써요. ElevenLabs에서 Text to Speech 권한만 켜고 크레딧 한도를 정해 둔 키를 쓰는 걸 추천해요. 한 번 들은 문장은 폰에 저장돼서 다시 들을 땐 크레딧이 들지 않아요.") +
+          '<div class="set-group"><label class="set-label" for="setModel">모델</label>' +
+            '<select class="field" id="setModel">' + EL_MODELS.map(m => '<option value="' + m.id + '"' + (m.id === settings.model ? " selected" : "") + '>' + esc(m.name) + '</option>').join("") + '</select>' +
+          '</div>' +
+          voiceField("voiceThem", "상대 목소리 (직원·친구 등, 예문)") +
+          voiceField("voiceMe", "내 목소리 (내 대사, 썰)") +
+        '</div>' +
+        '<div class="set-group"><span class="set-label">속도 (읽기 모드 · 예문 · 썰)</span>' +
+          seg("speed", [["0.85", "천천히"], ["1", "보통"]]) +
+          '<p class="note">듣기·쉐도잉 모드 속도는 카드 아래 0.8x / 1.0x 버튼으로 따로 정해요.</p>' +
+        '</div>' +
+        '<div class="set-group"><div class="btn-row">' +
+          '<button class="btn" type="button" id="testVoice">목소리 들어보기</button>' +
+          '<button class="btn" type="button" id="clearCache">저장된 음성 지우기</button>' +
+        '</div></div>' +
+      '</section>' +
+      '<section class="st-sec" aria-label="자동 넘김"><h3>자동 넘김</h3>' +
+        '<div class="set-group"><span class="set-label">표현 탭 궁금증 카드 자동 넘김</span>' +
+          seg("rotate", [["true", "켜기"], ["false", "끄기"]]) +
+          '<p class="note">\'이 말, 영어로 뭐라고 할까?\' 카드 3개가 시간이 지나면 저절로 다음 3개로 바뀌어요. 정답을 펼친 동안과 일시정지 버튼을 누른 동안은 멈춰요.</p>' +
+        '</div>' +
+        '<div class="set-group"><span class="set-label">넘기는 시간</span>' +
+          seg("rotateSec", [["5", "5초"], ["10", "10초"], ["20", "20초"]], !settings.rotate) +
+        '</div>' +
+      '</section>' +
+      '<section class="st-sec" aria-label="글쓰기"><h3>글쓰기</h3>' +
+        voiceField("voiceWrite", "일기(듣기용 본문)를 읽어 줄 목소리") +
+        '<p class="note">ElevenLabs 키와 모델은 위 \'음성\' 설정을 따라요.</p>' +
+      '</section>' +
+      '<section class="st-sec" aria-label="기록"><h3>기록</h3>' +
+        '<div class="set-group"><span class="set-label">백업</span>' +
+          '<div class="btn-row"><button class="btn" type="button" id="backupAll">전체 기록 복사</button></div>' +
+          '<p class="note">지금까지 쓴 모든 글과 첨삭, 표현 학습 기록·연습장을 텍스트로 복사해요. 메모 앱 등에 붙여넣어 보관하세요.</p>' +
+        '</div>' +
+      '</section>' +
+    '</div>';
 }
+function openSettings(section) {
+  if (stOpen) return;
+  Player.stop();
+  stEl.innerHTML = settingsHtml();
+  stEl.hidden = false;
+  stOpen = true;
+  document.querySelector(".app").inert = true;
+  stId = Date.now();
+  try { history.pushState({ settings: stId }, ""); } catch (e) {}
+  const body = stEl.querySelector(".st-body"), sec = section === "voice" && stEl.querySelector("#stVoice");
+  body.scrollTop = 0;
+  if (sec) body.scrollTop = Math.max(0, sec.getBoundingClientRect().top - body.getBoundingClientRect().top - 8);
+}
+function stHide() {
+  if (!stOpen) return;
+  stOpen = false;
+  Player.stop();
+  if (document.activeElement && stEl.contains(document.activeElement)) document.activeElement.blur();
+  stEl.hidden = true;
+  stEl.innerHTML = "";
+  document.querySelector(".app").inert = false;
+  /* 바뀐 설정을 지금 탭에 반영(자동 넘김 줄, 미리 받아두기 안내 등) */
+  if (currentTab === "expr") renderTeasers();
+  else if (currentTab === "drive") dvRenderSetup();
+  else if (currentTab === "today") renderToday();
+}
+function closeSettings() {
+  let viaHistory = false;
+  try { viaHistory = !!(history.state && history.state.settings === stId); } catch (e) {}
+  if (viaHistory) history.back(); else stHide();
+}
+window.addEventListener("popstate", () => {
+  let st = null;
+  try { st = history.state; } catch (e) {}
+  if (stOpen && !(st && st.settings === stId)) stHide();
+});
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-open-settings]");
+  if (g) { buzz(); openSettings(); }
+});
+document.querySelectorAll("[data-open-settings]").forEach(b => { if (!b.innerHTML.trim()) b.innerHTML = ICON_SLIDERS; });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && stOpen) closeSettings(); });
+stEl.addEventListener("click", e => {
+  const t = e.target;
+  let el;
+  if (t.closest("[data-st-close]")) { buzz(); closeSettings(); return; }
+  if ((el = t.closest(".seg button"))) {
+    const name = el.parentNode.dataset.set, v = el.dataset.v;
+    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" ? v === "true" : v;
+    saveSettings();
+    el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
+    if (name === "engine") { const box = stEl.querySelector(".el-only"); if (box) box.hidden = v !== "eleven"; }
+    if (name === "rotate") { const s = stEl.querySelector('[data-set="rotateSec"]'); if (s) s.classList.toggle("dv-dis", !settings.rotate); }
+    buzz();
+    return;
+  }
+  if ((el = t.closest("#testVoice"))) {
+    if (Player.isPlaying(el)) { Player.stop(); return; }
+    Player.play("Hi there! What can I get started for you?", "them", el);
+    Player.enqueue("Can I get a medium hot americano, please?", "me", el);
+    return;
+  }
+  if ((el = t.closest("#clearCache"))) { AudioCache.clear().then(() => toast("저장된 음성을 지웠어요")); return; }
+  if ((el = t.closest("#backupAll"))) {
+    saveToday();
+    const text = backupText();
+    if (!text) { toast("아직 저장된 기록이 없어요"); return; }
+    copyText(text).then(ok => toast(ok ? "전체 기록을 복사했어요" : "복사하지 못했어요"));
+  }
+});
+stEl.addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "setKey") { settings.apiKey = t.value.trim(); saveSettings(); }
+  else if (t.dataset.voiceCustom) {
+    const v = t.value.trim();
+    settings[t.dataset.voiceCustom] = v || DEFAULTS[t.dataset.voiceCustom];
+    saveSettings();
+  }
+});
+stEl.addEventListener("change", e => {
+  const t = e.target;
+  if (t.id === "setModel") { settings.model = t.value; saveSettings(); }
+  else if (t.dataset.voice) {
+    const name = t.dataset.voice;
+    const custom = stEl.querySelector('[data-voice-custom="' + name + '"]');
+    if (t.value === "custom") {
+      custom.hidden = false;
+      custom.focus();
+      if (custom.value.trim()) { settings[name] = custom.value.trim(); saveSettings(); }
+    } else {
+      custom.hidden = true;
+      settings[name] = t.value;
+      saveSettings();
+    }
+  }
+});
 
-/* 시트 안 클릭: 듣기 버튼 + 설정 컨트롤 */
+
+/* 시트 안 클릭: 예문·썰 듣기 + 목록(설정은 2026-10-05부터 전체 화면 #settings) */
 sheetBody.addEventListener("click", e => {
   const t = e.target;
   let el;
@@ -6851,13 +7282,6 @@ sheetBody.addEventListener("click", e => {
   }
   if ((el = t.closest("[data-go]"))) { goFromList(+el.dataset.go); return; }
   if ((el = t.closest("#goFirst"))) { goFromList(0); return; }
-  if ((el = t.closest("#backupAll"))) {
-    saveToday();
-    const text = backupText();
-    if (!text) { toast("아직 저장된 기록이 없어요"); return; }
-    copyText(text).then(ok => toast(ok ? "전체 기록을 복사했어요" : "복사하지 못했어요"));
-    return;
-  }
   if ((el = t.closest("#goUnseen"))) {
     const cur = activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : -1;
     let idx = -1;
@@ -6878,56 +7302,8 @@ sheetBody.addEventListener("click", e => {
     toast("본 기록을 지웠어요");
     return;
   }
-  if ((el = t.closest(".seg button"))) {
-    const name = el.parentNode.dataset.set;
-    const v = el.dataset.v;
-    settings[name] = name === "speed" ? parseFloat(v) : v;
-    saveSettings();
-    el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
-    if (name === "engine") {
-      const box = sheetBody.querySelector(".el-only");
-      if (box) box.hidden = v !== "eleven";
-    }
-    buzz();
-    return;
-  }
-  if ((el = t.closest("#testVoice"))) {
-    if (Player.isPlaying(el)) { Player.stop(); return; }
-    Player.play("Hi there! What can I get started for you?", "them", el);
-    Player.enqueue("Can I get a medium hot americano, please?", "me", el);
-    return;
-  }
-  if ((el = t.closest("#clearCache"))) {
-    AudioCache.clear().then(() => toast("저장된 음성을 지웠어요"));
-  }
 });
 
-sheetBody.addEventListener("input", e => {
-  const t = e.target;
-  if (t.id === "setKey") { settings.apiKey = t.value.trim(); saveSettings(); }
-  else if (t.dataset.voiceCustom) {
-    const v = t.value.trim();
-    settings[t.dataset.voiceCustom] = v || DEFAULTS[t.dataset.voiceCustom];
-    saveSettings();
-  }
-});
-sheetBody.addEventListener("change", e => {
-  const t = e.target;
-  if (t.id === "setModel") { settings.model = t.value; saveSettings(); }
-  else if (t.dataset.voice) {
-    const name = t.dataset.voice;
-    const custom = sheetBody.querySelector('[data-voice-custom="' + name + '"]');
-    if (t.value === "custom") {
-      custom.hidden = false;
-      custom.focus();
-      if (custom.value.trim()) { settings[name] = custom.value.trim(); saveSettings(); }
-    } else {
-      custom.hidden = true;
-      settings[name] = t.value;
-      saveSettings();
-    }
-  }
-});
 
 function hideSheet() {
   if (!sheetOpen) return;
@@ -6943,7 +7319,8 @@ function hideSheet() {
   sheet.setAttribute("aria-hidden", "true");
   flushNote();
   reviewQueue = [];
-  if (currentTab === "expr") renderExprTab(); else updateExprBadge();
+  if (currentTab === "expr") renderExprTab(); else updateBadges();
+  if (currentTab === "today") renderToday();
 }
 
 /* 닫기 버튼·바깥 탭: 히스토리를 되돌려서 안드로이드 뒤로 가기와 같은 흐름으로 닫음 */
@@ -6993,10 +7370,10 @@ sheetHead.addEventListener("touchend", () => {
   else sheet.style.transform = "";
 });
 
-/* ---------- 시작: 스크립트를 끝까지 읽었으니 홈 질문 카드를 고르고 그림(앱을 켤 때마다 새 질문) ---------- */
-homeReady = true;
-homeHook = pickHook();
-renderHome();
+/* ---------- 시작: 스크립트를 끝까지 읽었으니(드라이브 상태 D 등) 오늘 탭을 그림 ---------- */
+todayReady = true;
+renderToday();
+updateBadges();
 </script>
 </body>
 </html>
