@@ -235,5 +235,124 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 31,
+    variantOf: 18,
+    category: "생활·건강",
+    title: "약국에서 약 알레르기 말하기",
+    situation: "감기 기운이 있어서 약국에서 증상을 말했어요. 약사가 약 알레르기가 있냐고 묻는데, 나는 이부프로펜에 알레르기가 있어요.",
+    hooks: [
+      { ko: "약사에게 '이부프로펜에 알레르기가 있어요'라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "지금 먹는 약이랑 같이 먹어도 안전한지 물을 때, 뭐라고 하지?", line: 5 }
+    ],
+    dialogue: [
+      { who: "pharmacist", en: "Okay. Any allergies to medication?", ko: "그렇군요. 약 알레르기 있으세요?",
+        chunks: "Okay. / Any allergies to medication?",
+        tips: [{ target: "allergies", ko: "'앨러r지즈', 첫음절에 힘." }] },
+      { who: "me", en: "Yes, I'm allergic to ibuprofen.", ko: "네, 이부프로펜에 알레르기가 있어요.",
+        chunks: "Yes, / I'm allergic to ibuprofen.",
+        tips: [{ target: "allergic", ko: "'얼러r직', 두 번째 음절에 힘." }, { target: "ibuprofen", ko: "'아이뷰프로우픈', 세 번째 음절에 힘." }] },
+      { who: "pharmacist", en: "Good to know. Then let's skip this one.", ko: "알려 주셔서 다행이에요. 그럼 이건 빼죠.",
+        chunks: "Good to know. / Then let's skip this one.",
+        tips: [{ target: "let's skip", ko: "s가 겹쳐 '렛스킵'처럼." }] },
+      { who: "pharmacist", en: "This one's acetaminophen. It should be fine for you.", ko: "이건 아세트아미노펜이에요. 이건 괜찮을 거예요.",
+        chunks: "This one's acetaminophen. / It should be fine for you.",
+        tips: [{ target: "acetaminophen", ko: "'어시-터미너픈', 타이레놀 성분이에요." }] },
+      { who: "me", en: "Is it safe to take with my allergy pills?", ko: "제가 먹는 알레르기 약이랑 같이 먹어도 괜찮아요?",
+        chunks: "Is‿it safe to take / with my allergy pills?",
+        tips: [{ target: "safe", ko: "'세이프', f로 끝나요." }] },
+      { who: "pharmacist", en: "Yes, those are fine together.", ko: "네, 같이 드셔도 괜찮아요.",
+        chunks: "Yes, / those are fine together.",
+        tips: [{ target: "together", ko: "'투게더r', 두 번째 음절에 힘." }] },
+      { who: "me", en: "Great. I'll take it, then.", ko: "좋아요. 그럼 그걸로 할게요.",
+        chunks: "Great. / I'll take‿it, then.",
+        tips: [{ target: "take it", ko: "k가 it에 붙어 '테이킷'." }] }
+    ],
+    expressions: [
+      {
+        id: "c31-e1",
+        phrase: "I'm allergic to ~.",
+        teaser: "식당·약국에서 '저 ~ 알레르기 있어요'라고 할 때, 뭐라고 하지?",
+        ko: "'저는 ~에 알레르기가 있어요'라는 뜻이에요. 약·음식·동물처럼 알레르기가 있는 걸 알릴 때 꼭 필요한 말이에요. allergic은 '얼러r직'처럼 두 번째 음절에 힘. 비슷한 표현: I have a ~ allergy. / I can't have ~.",
+        examples: [
+          { en: "I'm allergic to peanuts.", ko: "저 땅콩 알레르기 있어요.",
+            chunks: "I'm allergic to peanuts.",
+            tips: [{ target: "peanuts", ko: "'피-넛츠', 첫음절에 힘." }] },
+          { en: "Does this have shellfish? I'm allergic to it.", ko: "이거 갑각류 들어가요? 저 알레르기 있어요.",
+            chunks: "Does this have shellfish? / I'm allergic to‿it.",
+            tips: [{ target: "shellfish", ko: "'쉘피쉬', 새우·게 같은 갑각류와 조개류." }] },
+          { en: "I'm allergic to cats, so I'll stay outside.", ko: "고양이 알레르기가 있어서 밖에 있을게.",
+            chunks: "I'm allergic to cats, / so I'll stay outside.",
+            tips: [{ target: "outside", ko: "'아웃사이드', 뒤에 힘." }] },
+          { en: "I'm allergic to penicillin.", ko: "저 페니실린 알레르기 있어요.",
+            chunks: "I'm allergic to penicillin.",
+            tips: [{ target: "penicillin", ko: "'페너실린', 세 번째 음절에 힘." }] },
+          { en: "I think I'm allergic to this new detergent.", ko: "이 새 세제에 알레르기가 있나 봐.",
+            chunks: "I think I'm allergic / to this new detergent.",
+            tips: [{ target: "detergent", ko: "'디터r전트', 두 번째 음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At‿a dinner party, / the host proudly served / a giant shrimp pasta.",
+              ko: "저녁 초대 자리에서 주인이 자랑스럽게 커다란 새우 파스타를 내왔어.",
+              tips: [{ target: "shrimp", ko: "'쉬림프', sh로 시작해요." }] },
+            { chunks: "I'm allergic to shellfish, / so I just ate bread / all night.",
+              ko: "난 갑각류 알레르기가 있어서 밤새 빵만 먹었지.",
+              tips: [{ target: "ate", ko: "eat의 과거, '에잇'." }] },
+            { chunks: "She felt so bad / that she sent me home / with‿a whole loaf.",
+              ko: "주인이 너무 미안해하면서 빵 한 덩이를 통째로 싸 줬어.",
+              tips: [{ target: "loaf", ko: "'로우프', 빵 한 덩어리." }] },
+            { chunks: "Honestly, / it was great bread.",
+              ko: "솔직히 진짜 맛있는 빵이었어.",
+              tips: [{ target: "Honestly", ko: "h는 소리 안 나서 '아니스틀리'." }] }
+          ],
+          en: "At a dinner party, the host proudly served a giant shrimp pasta. I'm allergic to shellfish, so I just ate bread all night. She felt so bad that she sent me home with a whole loaf. Honestly, it was great bread.",
+          ko: "저녁 초대를 받아 갔는데 주인이 자랑스럽게 커다란 새우 파스타를 내왔어. 난 갑각류 알레르기가 있어서 밤새 빵만 먹었지. 주인이 너무 미안해하면서 빵 한 덩이를 통째로 싸 주더라. 솔직히 진짜 맛있는 빵이었어."
+        }
+      },
+      {
+        id: "c31-e2",
+        phrase: "Is it safe to ~?",
+        teaser: "'~해도 안전해요(괜찮아요)?'라고 확인할 때, 뭐라고 하지?",
+        ko: "'~해도 안전한가요(괜찮은가요)?'라는 뜻이에요. 약을 같이 먹어도 되는지, 수돗물을 마셔도 되는지, 밤에 걸어 다녀도 되는지처럼 위험하지 않은지 확인할 때 써요. 비슷한 표현: Is it okay to ~? / Can I safely ~?",
+        examples: [
+          { en: "Is it safe to drink the tap water here?", ko: "여기 수돗물 마셔도 괜찮아요?",
+            chunks: "Is‿it safe to drink / the tap water here?",
+            tips: [{ target: "tap water", ko: "'탭 워러r', t가 굴러요." }] },
+          { en: "Is it safe to walk around here at night?", ko: "밤에 이 근처 걸어 다녀도 안전해요?",
+            chunks: "Is‿it safe to walk‿around / here‿at night?",
+            tips: [{ target: "walk around", ko: "l은 소리 안 나 '워커라운드'." }] },
+          { en: "Is it safe to take this while pregnant?", ko: "임신 중에 이거 먹어도 안전한가요?",
+            chunks: "Is‿it safe to take this / while pregnant?",
+            tips: [{ target: "pregnant", ko: "'프레그넌트', 첫음절에 힘." }] },
+          { en: "Is it safe to leave my bike here?", ko: "여기 자전거 세워 둬도 괜찮을까요?",
+            chunks: "Is‿it safe / to leave my bike here?",
+            tips: [{ target: "leave", ko: "길게 '리-브'." }] },
+          { en: "Is it safe to swim at this beach?", ko: "이 해변에서 수영해도 안전해요?",
+            chunks: "Is‿it safe to swim / at this beach?",
+            tips: [{ target: "beach", ko: "길게 '비-치'. 짧게 하면 다른 말이 돼요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On my first day / in Mexico City, / I asked the hotel staff, / “Is‿it safe / to drink the tap water?”",
+              ko: "멕시코시티 첫날, 호텔 직원한테 “수돗물 마셔도 괜찮아요?” 하고 물었어.",
+              tips: [{ target: "Mexico City", ko: "'멕시코우 시티', city의 t는 굴러 '시리'처럼." }] },
+            { chunks: "The guy laughed so hard / he had to sit down.",
+              ko: "그 직원이 너무 웃어서 앉아야 할 정도였어.",
+              tips: [{ target: "sit down", ko: "t는 멈추기만 하고 '싯 다운'." }] },
+            { chunks: "Then he handed me / five bottles‿of water / for free.",
+              ko: "그러더니 생수 다섯 병을 공짜로 건네주더라.",
+              tips: [{ target: "bottles of", ko: "t가 굴러 '바를즈어브'처럼." }] },
+            { chunks: "I took that‿as‿a no.",
+              ko: "그걸 '안 된다'는 뜻으로 알아들었지.",
+              tips: [{ target: "took that as a no", ko: "'~를 거절로 받아들였다'. '대래저'처럼 이어져요." }] }
+          ],
+          en: "On my first day in Mexico City, I asked the hotel staff, “Is it safe to drink the tap water?” The guy laughed so hard he had to sit down. Then he handed me five bottles of water for free. I took that as a no.",
+          ko: "멕시코시티 첫날에 호텔 직원한테 “수돗물 마셔도 괜찮아요?” 하고 물었거든. 그 직원이 너무 웃어서 앉아야 할 정도였어. 그러더니 생수 다섯 병을 공짜로 주더라. 안 된다는 뜻으로 알아들었지."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

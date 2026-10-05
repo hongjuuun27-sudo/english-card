@@ -202,6 +202,13 @@
 
   .title{ margin:0; font-size:24px; line-height:1.3; font-weight:700; letter-spacing:-.015em; }
   .situation{ margin:10px 0 0; font-size:17px; line-height:1.6; color:var(--text-2); }
+  /* '다른 선택' 링크(원래 카드 → 다른 선택 / 다른 선택 → 원래). 글자 링크처럼 보이되 손가락으로 누르기 쉽게 높이 확보 */
+  .var-link{ display:inline-flex; align-items:center; gap:4px; max-width:100%; margin:8px 0 0; padding:8px 12px 8px 12px; min-height:40px;
+    border:1px solid var(--accent-line); border-radius:999px; background:var(--accent-soft); color:var(--accent); font-size:14.5px; font-weight:650; text-align:left; }
+  .var-link span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .var-link svg{ flex:none; width:15px; height:15px; transform:rotate(-90deg); }
+  .var-link.back svg{ transform:rotate(90deg); }
+  .var-link:active{ transform:scale(.97); }
 
   /* ---------- 대화: 한 줄 = renderLine() (세 모드 공통) ----------
      줄에서 무엇을 보일지는 클래스로 정함: 카드 m-read/m-listen/m-shadow·masked, 줄 off/kq-on/cur/past/playing */
@@ -555,6 +562,10 @@
     font-size:13px; font-weight:600; color:var(--muted); background:var(--bg-2);
   }
   .toc-t{ flex:1; min-width:0; }
+  .toc-var{ padding-left:22px; position:relative; }               /* 다른 선택 카드: 원래 카드 아래 들여쓰기 */
+  .toc-var::before{ content:""; position:absolute; left:26px; top:6px; width:10px; height:22px; border-left:1.5px solid var(--line); border-bottom:1.5px solid var(--line); border-bottom-left-radius:6px; }
+  .toc-var .toc-n{ width:24px; height:24px; font-size:12px; }
+  .toc-vtag{ display:block; font-size:12px; font-weight:600; color:var(--accent); line-height:1.3; }
   .toc-check{
     flex:none; width:24px; height:24px; border-radius:50%;
     display:grid; place-items:center;
@@ -1329,7 +1340,25 @@
 <script>
 /* ================= 데이터 받기 ================= */
 /* 카드는 파일 순서와 상관없이 id 순서로 보여 줌 */
-const CARDS = (window.CARD_DATA || []).slice().sort((a, b) => a.id - b.id);
+/* 카드 순서: id 순서. 단 '다른 선택' 카드(variantOf = 원래 카드 id)는 원래 카드 바로 뒤에(같은 원래 카드의 다른 선택끼리는 id 순).
+   id는 그대로라 본 카드·이어 보기·학습 기록은 영향 없음. 피드·목록·카테고리 목록·드라이브·연습 모두 이 순서를 씀 */
+const CARDS = (() => {
+  const byId = (window.CARD_DATA || []).slice().sort((a, b) => a.id - b.id);
+  const ids = new Set(byId.map(c => c.id));
+  const isVar = c => c.variantOf != null && c.variantOf !== c.id && ids.has(c.variantOf);
+  const kids = {};
+  byId.forEach(c => { if (isVar(c)) (kids[c.variantOf] = kids[c.variantOf] || []).push(c); });
+  const out = [], done = new Set();
+  const put = c => { if (done.has(c)) return; done.add(c); out.push(c); (kids[c.id] || []).forEach(put); };
+  byId.forEach(c => { if (!isVar(c)) put(c); });
+  byId.forEach(put);                                        // 잘못 이어진 것(서로를 가리킴 등)도 빠지지 않게 — 검사 도구가 문제로 잡음
+  return out;
+})();
+const CARD_INDEX_BY_ID = {};
+CARDS.forEach((c, i) => { CARD_INDEX_BY_ID[c.id] = i; });
+/* 이 카드의 다른 선택 카드들(CARDS 번호) / 원래 카드(CARDS 번호, 없으면 -1) */
+const variantsOf = ci => CARDS.map((c, i) => i).filter(i => CARDS[i].variantOf === CARDS[ci].id && i !== ci);
+const originOf = ci => { const o = CARDS[ci].variantOf; return o != null && o in CARD_INDEX_BY_ID && CARD_INDEX_BY_ID[o] !== ci ? CARD_INDEX_BY_ID[o] : -1; };
 const QUESTIONS = window.QUESTION_DATA || [];
 const CATEGORY_HUE = {};
 const CATEGORY_EMOJI = {};
@@ -1496,7 +1525,7 @@ function normPhrase(p) {
   return String(p).toLowerCase().replace(/[~.,!?'’]/g, "").replace(/\s+/g, " ").trim();
 }
 const EXPR_OWNER = {};
-CARDS.forEach((c, ci) => (c.expressions || []).forEach(e => {
+CARDS.map((c, ci) => ci).sort((a, b) => CARDS[a].id - CARDS[b].id).forEach(ci => (CARDS[ci].expressions || []).forEach(e => {   // id가 작은 카드가 주인(다른 선택 카드가 앞에 끼어들어도)
   const k = normPhrase(e.phrase);
   if (!(k in EXPR_OWNER)) EXPR_OWNER[k] = ci;
 }));
@@ -1699,6 +1728,23 @@ function duoHtml(card) {
     '<div class="duo-n" aria-live="polite"></div></div>';
 }
 
+/* '다른 선택' 링크(상황 설명 바로 아래): 원래 카드 → "다른 선택 보기 →"(하나면 그 카드로, 여럿이면 목록 시트),
+   다른 선택 카드 → "← 원래 선택 보기". 누르면 그 카드로 이동(떠난 카드는 처음 상태로 — 카드 넘김과 같음) */
+function varLinkHtml(ci) {
+  const o = originOf(ci), vs = variantsOf(ci);
+  if (o >= 0) return '<button class="var-link back" type="button" data-var-go="' + o + '">' + ICON_CHEVRON + '<span>원래 선택 보기 · ' + esc(CARDS[o].title) + '</span></button>';
+  if (!vs.length) return "";
+  return '<button class="var-link" type="button" ' + (vs.length === 1 ? 'data-var-go="' + vs[0] + '"' : 'data-var-list="' + ci + '"') + '>' +
+    '<span>다른 선택 보기' + (vs.length > 1 ? " " + vs.length + "개" : " · " + esc(CARDS[vs[0]].title)) + '</span>' + ICON_CHEVRON + '</button>';
+}
+function openVarList(ci) {
+  const cur = curIdx();
+  showSheet("다른 선택 " + variantsOf(ci).length + "개", CARDS[ci].title,
+    '<p class="note" style="margin-top:0">같은 상황에서 다른 선택을 했을 때의 대화예요.</p>' +
+    '<div class="cat-list" style="--h:' + hueOf(CARDS[ci].category) + '"><ul class="toc">' + [ci].concat(variantsOf(ci)).map(i => tocItemHtml(i, cur)).join("") + '</ul></div>',
+    '<div class="btn-row"><button class="btn sheet-close" type="button" data-close>닫기</button></div>');
+}
+
 /* ---------- 카드 틀: 대화(.chat)와 버튼(.actions)은 모드에 맞춰 resetCard()가 채움 ---------- */
 function renderCard(card, i) {
   const swipe = i === 0 ? '<div class="swipe-hint">밑줄 친 표현을 누르면 예문·썰 · 위로 넘기면 다음 상황</div>' : "";
@@ -1709,6 +1755,7 @@ function renderCard(card, i) {
     '<div class="body"><div class="inner">' +
       '<h2 class="title">' + esc(card.title) + '</h2>' +
       '<p class="situation">' + esc(card.situation) + '</p>' +
+      varLinkHtml(i) +
       '<div class="seg sh-seg" role="group" aria-label="쉐도잉 난이도">' +
         '<button type="button" data-sh="easy" aria-pressed="false">쉬움</button>' +
         '<button type="button" data-sh="mid" aria-pressed="false">중간</button>' +
@@ -3013,6 +3060,8 @@ feed.addEventListener("click", e => {
   if ((el = t.closest("[data-act]"))) { onAct(el.closest(".card"), el.dataset.act); return; }
   if ((el = t.closest(".bubble"))) { onBubble(el.closest(".card"), el.closest(".row"), t); return; }
   if ((el = t.closest("[data-cat-list]"))) { buzz(); openCatList(CARDS[+el.closest(".card").dataset.i].category); return; }   // 카테고리 태그 → 그 카테고리 상황만
+  if ((el = t.closest("[data-var-go]"))) { buzz(); jumpTo(+el.dataset.varGo); return; }      // 다른 선택 ↔ 원래 선택
+  if ((el = t.closest("[data-var-list]"))) { buzz(); openVarList(+el.dataset.varList); return; }
   if ((el = t.closest(".gear"))) { openSettings(); return; }
   if ((el = t.closest(".practice-btn"))) { const c = el.closest(".card"); if (c && c.dataset.i != null) practiceCard(c); else openPractice(); return; }   // 카드: 이 카드 바로 연습 / 끝 화면: 시작 화면
   if ((el = t.closest(".drive-btn"))) { openDrive(); return; }
@@ -6314,7 +6363,7 @@ function sceneOf(card) {
    파일 단위 검사(JS 문법·index.html/sw.js 등록·카드 파일 위치·기존 id 바뀜)는 .claude/check-cards.html이 이 함수에 더해서 함.
    카드에 새 칸이 생기면 아래 KEYS와 검사, CLAUDE.md 체크리스트를 같이 고칠 것 */
 const CHECK_KEYS = {
-  card: ["id", "category", "title", "situation", "scene", "hooks", "dialogue", "expressions", "extraExpressions"],
+  card: ["id", "variantOf", "category", "title", "situation", "scene", "hooks", "dialogue", "expressions", "extraExpressions"],
   hook: ["ko", "line"],
   line: ["who", "en", "ko", "chunks", "tips", "soloChunks"],
   expr: ["id", "phrase", "teaser", "forms", "meaning", "ko", "examples", "story"],
@@ -6337,7 +6386,7 @@ function runChecks() {
   const sentCount = t => String(t || "").split(/(?<=[.!?]["”]?)\s+(?=[A-Z“"])/).filter(s => s.trim()).length;
   const curly = (t, where) => { if (/’/.test(t || "")) warnings.push(where + ": 둥근 아포스트로피(’) — 곧은 ' 로"); };
   CARDS.forEach((c, i) => {
-    const tag = "카드 " + (i + 1) + (c.id != null ? " (id " + c.id + ")" : "");
+    const tag = c.id != null ? "카드 " + c.id : "카드 " + (i + 1) + "번째(id 없음)";   // 카드 번호 = id(다른 선택 카드가 끼어들어 화면 순서와 id가 다를 수 있음)
     keyCheck(c, "card", tag);
     if (c.id == null) issues.push(tag + ": id 없음");
     else {
@@ -6348,6 +6397,16 @@ function runChecks() {
     ["category", "title", "situation"].forEach(k => { if (!c[k]) issues.push(tag + ": " + k + " 없음"); });
     if (c.category && !(c.category in CATEGORY_HUE)) issues.push(tag + ": category \"" + c.category + "\"가 categories.js에 없음 (색·이모지·카테고리 고르기에 안 나옴)");
     if (c.scene != null && c.scene !== "task" && c.scene !== "free") issues.push(tag + ": scene은 \"task\" 또는 \"free\" — " + c.scene);
+    /* variantOf: '다른 선택' 카드 → 원래 카드 id. 있는 카드·자기 자신 아님·원래 카드는 다른 선택 카드가 아님·같은 카테고리 */
+    if (c.variantOf != null) {
+      const o = CARDS.find(x => x.id === c.variantOf);
+      if (!Number.isInteger(c.variantOf) || c.variantOf === c.id) issues.push(tag + ": variantOf는 원래 카드의 id(정수, 자기 자신 아님) — " + JSON.stringify(c.variantOf));
+      else if (!o) issues.push(tag + ": variantOf " + c.variantOf + " — 그런 카드가 없음");
+      else {
+        if (o.variantOf != null) issues.push(tag + ": variantOf " + c.variantOf + " — 원래 카드도 다른 선택 카드임(원래 카드는 보통 카드로)");
+        if (o.category !== c.category) issues.push(tag + ": 다른 선택 카드는 원래 카드와 같은 카테고리여야 함 — 원래 \"" + o.category + "\"");
+      }
+    }
     if (c.title) {
       if (titles[c.title]) warnings.push(tag + ": 제목이 카드 " + titles[c.title] + "와 같음 — " + c.title);
       titles[c.title] = i + 1;
@@ -6638,10 +6697,10 @@ function openExpression(ci, ei, kind) {
 
 /* 목록 한 줄(번호·제목·본 카드 ✓·지금 카드 강조) — 전체 목록과 카테고리 목록(태그)이 같이 씀 */
 function tocItemHtml(i, cur) {
-  const seen = seenSet.has(cardKey(i));
+  const seen = seenSet.has(cardKey(i)), isVar = originOf(i) >= 0;   // 다른 선택 카드는 원래 카드 아래 들여쓰기 + '다른 선택' 표시
   const cls = "toc-item" + (seen ? " seen" : "") + (i === cur ? " current" : "");
-  return '<li><button class="' + cls + '" type="button" data-go="' + i + '"' + (i === cur ? ' aria-current="true"' : "") + '>' +
-    '<span class="toc-n">' + (i + 1) + '</span><span class="toc-t">' + esc(CARDS[i].title) + '</span>' +
+  return '<li' + (isVar ? ' class="toc-var"' : "") + '><button class="' + cls + '" type="button" data-go="' + i + '"' + (i === cur ? ' aria-current="true"' : "") + '>' +
+    '<span class="toc-n">' + (i + 1) + '</span><span class="toc-t">' + (isVar ? '<small class="toc-vtag">다른 선택</small>' : "") + esc(CARDS[i].title) + '</span>' +
     '<span class="toc-check"' + (seen ? ' aria-label="봤음"' : "") + '>' + (seen ? ICON_CHECK : "") + '</span></button></li>';
 }
 const curIdx = () => (activeCard && activeCard.dataset.i != null ? +activeCard.dataset.i : -1);

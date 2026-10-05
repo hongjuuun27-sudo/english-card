@@ -1201,5 +1201,363 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 25,
+    variantOf: 3,
+    category: "카페·식당",
+    title: "식당에서 내가 다 계산하기",
+    situation: "식사를 마치고 계산하려는 상황이에요. 이번엔 친구 몫까지 내가 다 내려고 하고, 팁이 포함돼 있는지도 확인하고 싶어요.",
+    hooks: [
+      { ko: "친구 몫까지 '제가 낼게요'라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "계산서에 팁이 포함돼 있는지 물어볼 때, 뭐라고 하지?", line: 4 },
+      { ko: "팁을 20% 주면 괜찮은지 물어볼 때, 뭐라고 하지?", line: 6 }
+    ],
+    dialogue: [
+      { who: "server", en: "Is this gonna be all together or separate?", ko: "다 같이 계산하세요, 따로 하세요?",
+        chunks: "Is this gonna be / all together‿or separate?",
+        tips: [{ target: "gonna", ko: "going to를 줄인 말, '거너'처럼 약하게." }] },
+      { who: "me", en: "All together, please. I'll take care of it.", ko: "같이 해 주세요. 제가 낼게요.",
+        chunks: "All together, please. / I'll take care‿of‿it.",
+        tips: [{ target: "take care of it", ko: "끊지 말고 '테익 케어러빗'처럼 이어서." }] },
+      { who: "server", en: "You got it. I'll be right back with your receipt.", ko: "네, 영수증 갖다드릴게요.",
+        chunks: "You got‿it. / I'll be right back / with your receipt.",
+        tips: [{ target: "receipt", ko: "p는 소리 나지 않아 '리시-트'." }] },
+      { who: "me", en: "Thanks. Quick question, is the tip included?", ko: "감사해요. 혹시 팁이 포함돼 있나요?",
+        chunks: "Thanks. / Quick question, / is the tip included?",
+        tips: [{ target: "included", ko: "'인클루-디드', 두 번째 음절에 힘. 질문이라 끝을 올려요." }] },
+      { who: "server", en: "It's not, but you can add it on the receipt.", ko: "아니요, 영수증에 직접 적어 주시면 돼요.",
+        chunks: "It's not, / but you can add‿it / on the receipt.",
+        tips: [{ target: "add it", ko: "d가 it에 붙어 '애딧'." }] },
+      { who: "me", en: "Got it. Is twenty percent okay here?", ko: "알겠어요. 여기선 20% 정도면 괜찮을까요?",
+        chunks: "Got‿it. / Is twenty percent okay here?",
+        tips: [{ target: "twenty", ko: "t가 약해져 '트웨니'처럼 들려요." }] },
+      { who: "server", en: "That's more than fine. Thank you so much!", ko: "그럼요, 충분하죠. 정말 감사합니다!",
+        chunks: "That's more than fine. / Thank you so much!",
+        tips: [{ target: "more than", ko: "'모어r댄', than은 약하게." }] }
+    ],
+    expressions: [
+      {
+        id: "c25-e1",
+        phrase: "I'll take care of ~.",
+        teaser: "같이 밥 먹고 '이건 제가 낼게요'라고 할 때, 뭐라고 하지?",
+        ko: "'~는 제가 처리할게요(낼게요)'라는 뜻이에요. 계산할 때 I'll take care of it.이라고 하면 '제가 낼게요', 일을 맡을 때는 '제가 할게요'가 돼요. 비슷한 표현: It's on me. / I've got this.",
+        examples: [
+          { en: "Don't worry about the bill. I'll take care of it.", ko: "계산 걱정 마. 내가 낼게.",
+            chunks: "Don't worry‿about the bill. / I'll take care‿of‿it.",
+            tips: [{ target: "worry about", ko: "'워리어바웃'처럼 이어져요." }] },
+          { en: "I'll take care of the hotel booking.", ko: "호텔 예약은 내가 할게.",
+            chunks: "I'll take care‿of / the hotel booking.",
+            tips: [{ target: "hotel", ko: "'호우텔', 뒤에 힘." }] },
+          { en: "Go home and rest. I'll take care of the rest.", ko: "집에 가서 쉬어. 나머지는 내가 할게.",
+            chunks: "Go home‿and rest. / I'll take care‿of the rest.",
+            tips: [{ target: "the rest", ko: "rest가 두 번 나와요. 앞은 '쉬다', 뒤는 '나머지'." }] },
+          { en: "I'll take care of the dishes tonight.", ko: "오늘 설거지는 내가 할게.",
+            chunks: "I'll take care‿of / the dishes tonight.",
+            tips: [{ target: "dishes", ko: "'디쉬즈', 끝 s는 z 소리." }] },
+          { en: "Leave the tickets to me. I'll take care of everything.", ko: "표는 나한테 맡겨. 내가 다 알아서 할게.",
+            chunks: "Leave the tickets to me. / I'll take care‿of everything.",
+            tips: [{ target: "Leave", ko: "길게 '리-브'. live(리브)와 달라요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "Last week / I took my parents / to‿a fancy steakhouse in LA.",
+              ko: "지난주에 부모님 모시고 LA의 고급 스테이크집에 갔어.",
+              tips: [{ target: "steakhouse", ko: "'스테익하우스', 첫음절에 힘." }] },
+            { chunks: "When the check came, / I grabbed‿it and said, / “I'll take care‿of‿it.”",
+              ko: "계산서가 오자 내가 집어 들고 “제가 낼게요.” 했지.",
+              tips: [{ target: "grabbed it", ko: "ed가 d 소리로 it에 붙어 '그랩딧'." }] },
+            { chunks: "Then I saw the total / and almost dropped my fork.",
+              ko: "그러고 금액을 보고는 포크를 떨어뜨릴 뻔했어.",
+              tips: [{ target: "dropped", ko: "ed는 t 소리로 '드랍트'." }] },
+            { chunks: "My dad just laughed / and said, / “Good luck, / big spender.”",
+              ko: "아빠는 그냥 웃으면서 “행운을 빈다, 큰손.” 하셨어.",
+              tips: [{ target: "laughed", ko: "gh는 f 소리, ed는 t 소리로 '래프트'." }] }
+          ],
+          en: "Last week I took my parents to a fancy steakhouse in LA. When the check came, I grabbed it and said, “I'll take care of it.” Then I saw the total and almost dropped my fork. My dad just laughed and said, “Good luck, big spender.”",
+          ko: "지난주에 부모님 모시고 LA에 있는 고급 스테이크집에 갔거든. 계산서가 오자마자 내가 집어 들고 “제가 낼게요.” 했지. 근데 금액 보고 포크 떨어뜨릴 뻔했어. 아빠는 그냥 웃으시면서 “행운을 빈다, 큰손.” 하시더라."
+        }
+      },
+      {
+        id: "c25-e2",
+        phrase: "Is ~ included?",
+        teaser: "계산서에 팁이 이미 들어가 있는지 물어볼 때, 뭐라고 하지?",
+        ko: "'~가 포함돼 있나요?'라는 뜻이에요. 팁·세금·조식·배송비처럼 가격에 들어 있는지 헷갈릴 때 써요. 미국 식당은 보통 팁이 안 들어가 있지만, 단체 손님이면 들어가 있기도 해요. 비슷한 표현: Does that include ~? / Is ~ extra?",
+        examples: [
+          { en: "Is breakfast included in the room rate?", ko: "숙박비에 조식이 포함돼 있나요?",
+            chunks: "Is breakfast included / in the room rate?",
+            tips: [{ target: "breakfast", ko: "'브렉퍼스트', 첫음절에 힘." }] },
+          { en: "Is tax included in this price?", ko: "이 가격에 세금 포함인가요?",
+            chunks: "Is tax included‿in this price?",
+            tips: [{ target: "included in", ko: "d가 in에 붙어 '인클루디딘'처럼." }] },
+          { en: "Is shipping included, or is that extra?", ko: "배송비 포함인가요, 아니면 따로인가요?",
+            chunks: "Is shipping included, / or‿is that extra?",
+            tips: [{ target: "or is", ko: "r이 is에 붙어 '오어리즈'처럼." }] },
+          { en: "Is the tip already included?", ko: "팁이 이미 포함돼 있나요?",
+            chunks: "Is the tip already included?",
+            tips: [{ target: "already", ko: "'올레디', 두 번째 음절에 힘." }] },
+          { en: "Is a towel included with the gym pass?", ko: "헬스장 이용권에 수건도 포함돼 있나요?",
+            chunks: "Is‿a towel included / with the gym pass?",
+            tips: [{ target: "towel", ko: "'타월'보다 '타우얼'에 가까워요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On my first trip / to New York, / I left‿a twenty percent tip / at‿a busy diner.",
+              ko: "처음 뉴욕 여행 갔을 때 붐비는 식당에서 팁을 20% 남겼어.",
+              tips: [{ target: "diner", ko: "'다이너r', 미국식 간이 식당이에요." }] },
+            { chunks: "Later my friend / pointed‿at the receipt / and asked, / “Wait, was the tip included?”",
+              ko: "나중에 친구가 영수증을 가리키면서 “잠깐, 팁 포함된 거 아니었어?” 하는 거야.",
+              tips: [{ target: "receipt", ko: "p는 소리 나지 않아 '리시-트'." }] },
+            { chunks: "It was, / so I basically tipped twice.",
+              ko: "포함돼 있었어. 결국 팁을 두 번 낸 셈이지.",
+              tips: [{ target: "tipped", ko: "ed는 t 소리로 '팁트'." }] },
+            { chunks: "Now I always ask, / “Is the tip included?” / before I pay.",
+              ko: "그래서 이젠 계산하기 전에 항상 “팁 포함인가요?” 하고 물어봐.",
+              tips: [{ target: "always", ko: "'얼웨이즈', 첫음절에 힘." }] }
+          ],
+          en: "On my first trip to New York, I left a twenty percent tip at a busy diner. Later my friend pointed at the receipt and asked, “Wait, was the tip included?” It was, so I basically tipped twice. Now I always ask, “Is the tip included?” before I pay.",
+          ko: "처음 뉴욕 여행 갔을 때 붐비는 식당에서 팁을 20%나 남겼거든. 나중에 친구가 영수증을 가리키면서 “잠깐, 팁 포함된 거 아니었어?” 하는 거야. 포함돼 있었어. 결국 팁을 두 번 낸 셈이지. 그래서 이젠 계산하기 전에 꼭 “팁 포함인가요?” 하고 물어봐."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 26,
+    variantOf: 3,
+    category: "카페·식당",
+    title: "디저트 메뉴 보고 나눠 먹기",
+    situation: "식사를 거의 다 마쳤는데 직원이 더 필요한 게 없냐고 물어요. 이번엔 계산 대신 디저트를 하나 시켜서 친구와 나눠 먹으려고 해요.",
+    hooks: [
+      { ko: "식사 후에 디저트 메뉴를 보여 달라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "디저트 하나 시켜서 나눠 먹겠다고 할 때, 뭐라고 하지?", line: 4 }
+    ],
+    dialogue: [
+      { who: "server", en: "How's everything tasting? Can I get you guys anything else?", ko: "음식 괜찮으세요? 더 필요한 거 있으세요?",
+        chunks: "How's everything tasting? / Can‿I get‿you guys / anything else?",
+        tips: [{ target: "anything else", ko: "'애니띵 엘스', 끝을 올려요." }] },
+      { who: "me", en: "Actually, could we see the dessert menu?", ko: "사실, 디저트 메뉴 좀 볼 수 있을까요?",
+        chunks: "Actually, / could we see the dessert menu?",
+        tips: [{ target: "dessert", ko: "'디저r트', 뒤에 힘. desert(사막)는 앞에 힘." }] },
+      { who: "server", en: "Sure! Our cheesecake is super popular right now.", ko: "그럼요! 요즘 치즈케이크가 엄청 인기예요.",
+        chunks: "Sure! / Our cheesecake is super popular / right now.",
+        tips: [{ target: "cheesecake", ko: "'치-즈케익', 첫음절에 힘." }] },
+      { who: "me", en: "Sounds good. We'll split one slice.", ko: "좋아요. 한 조각 시켜서 나눠 먹을게요.",
+        chunks: "Sounds good. / We'll split one slice.",
+        tips: [{ target: "split", ko: "s 다음 p는 된소리처럼 '스쁠릿'." }] },
+      { who: "server", en: "Perfect. Want me to bring two forks?", ko: "좋아요. 포크 두 개 갖다 드릴까요?",
+        chunks: "Perfect. / Want me to bring two forks?",
+        tips: [{ target: "Want me to", ko: "'원미러'처럼 빠르게 이어져요." }] },
+      { who: "me", en: "Yes, please. And two decaf coffees, too.", ko: "네. 그리고 디카페인 커피 두 잔도요.",
+        chunks: "Yes, please. / And two decaf coffees, too.",
+        tips: [{ target: "decaf", ko: "'디-캐프', 첫음절에 힘." }] },
+      { who: "server", en: "Coming right up!", ko: "바로 갖다 드릴게요!",
+        chunks: "Coming right‿up!",
+        tips: [{ target: "right up", ko: "t가 굴러 '라이럽'처럼." }] }
+    ],
+    expressions: [
+      {
+        id: "c26-e1",
+        phrase: "Could we see ~?",
+        teaser: "식당에서 '메뉴 좀 볼 수 있을까요?'라고 할 때, 뭐라고 하지?",
+        ko: "'~ 좀 볼 수 있을까요?'라는 뜻이에요. 메뉴·와인 리스트·방·다른 색상처럼 뭔가를 보여 달라고 정중하게 부탁할 때 써요. 혼자면 Could I see ~?. 비슷한 표현: Can we take a look at ~? / Could you show us ~?",
+        examples: [
+          { en: "Could we see the wine list, please?", ko: "와인 리스트 좀 볼 수 있을까요?",
+            chunks: "Could we see the wine list, / please?",
+            tips: [{ target: "wine list", ko: "'와인 리스트', 리스트의 t는 약하게." }] },
+          { en: "Could we see the room before we check in?", ko: "체크인 전에 방을 좀 볼 수 있을까요?",
+            chunks: "Could we see the room / before we check‿in?",
+            tips: [{ target: "check in", ko: "k가 in에 붙어 '체킨'." }] },
+          { en: "Could we see it in a different color?", ko: "다른 색으로 볼 수 있을까요?",
+            chunks: "Could we see‿it / in‿a different color?",
+            tips: [{ target: "different", ko: "'디프런트'처럼 두 음절로 빠르게." }] },
+          { en: "Could we see the menu one more time?", ko: "메뉴 한 번만 더 볼 수 있을까요?",
+            chunks: "Could we see the menu / one more time?",
+            tips: [{ target: "one more time", ko: "'원 모어 타임', 빠르게 이어서." }] },
+          { en: "Could we see some photos of the apartment?", ko: "그 아파트 사진 좀 볼 수 있을까요?",
+            chunks: "Could we see some photos / of the apartment?",
+            tips: [{ target: "apartment", ko: "'어파r트먼트', 두 번째 음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My sister‿and I went / to‿a fancy Italian place / for her birthday.",
+              ko: "여동생 생일이라 같이 고급 이탈리안 식당에 갔어.",
+              tips: [{ target: "Italian", ko: "'이탤리언', 두 번째 음절에 힘." }] },
+            { chunks: "When the server came back, / I said, / “Could we see / the dessert menu?”",
+              ko: "직원이 다시 왔을 때 “디저트 메뉴 볼 수 있을까요?” 했지.",
+              tips: [{ target: "came back", ko: "'케임 백', m과 b가 부드럽게 이어져요." }] },
+            { chunks: "She brought‿out a tray / of real desserts / instead‿of‿a menu.",
+              ko: "직원이 메뉴판 대신 진짜 디저트가 담긴 쟁반을 들고 왔어.",
+              tips: [{ target: "instead of a", ko: "'인스테더버'처럼 한 덩어리로." }] },
+            { chunks: "We pointed‿at the tiramisu, / and‿it was the best part / of the night.",
+              ko: "티라미수를 가리켰는데, 그게 그날 밤 최고였어.",
+              tips: [{ target: "tiramisu", ko: "'티러미수-', 끝에 힘." }] }
+          ],
+          en: "My sister and I went to a fancy Italian place for her birthday. When the server came back, I said, “Could we see the dessert menu?” She brought out a tray of real desserts instead of a menu. We pointed at the tiramisu, and it was the best part of the night.",
+          ko: "여동생 생일이라 같이 고급 이탈리안 식당에 갔거든. 직원이 다시 왔을 때 내가 “디저트 메뉴 볼 수 있을까요?” 했지. 그랬더니 메뉴판 대신 진짜 디저트가 담긴 쟁반을 들고 오는 거야. 티라미수를 가리켰는데, 그게 그날 밤 최고였어."
+        }
+      },
+      {
+        id: "c26-e2",
+        phrase: "We'll split ~.",
+        teaser: "디저트 하나 시켜서 '나눠 먹을게요'라고 할 때, 뭐라고 하지?",
+        ko: "'~를 나눠 먹을게요(나눠 낼게요)'라는 뜻이에요. 음식 하나를 둘이 나눠 먹을 때도, 계산을 나눌 때(We'll split the bill.)도 써요. 비슷한 표현: We'll share ~. / Let's split ~.",
+        examples: [
+          { en: "We'll split the bill, if that's okay.", ko: "괜찮으시면 계산은 나눠서 할게요.",
+            chunks: "We'll split the bill, / if that's okay.",
+            tips: [{ target: "that's okay", ko: "'댓초케이'처럼 이어져요." }] },
+          { en: "We'll split a large pizza.", ko: "라지 피자 하나 나눠 먹을게요.",
+            chunks: "We'll split‿a large pizza.",
+            tips: [{ target: "pizza", ko: "'핏짜', 가운데 zz는 ts 소리." }] },
+          { en: "We'll split the cab fare to the airport.", ko: "공항까지 택시비는 나눠 내자.",
+            chunks: "We'll split the cab fare / to the airport.",
+            tips: [{ target: "fare", ko: "'페어r', fair와 소리가 같아요." }] },
+          { en: "We'll split the cost of the gift.", ko: "선물 값은 나눠서 낼게.",
+            chunks: "We'll split the cost / of the gift.",
+            tips: [{ target: "cost", ko: "'코스트', 끝 t는 약하게." }] },
+          { en: "We'll split the rent three ways.", ko: "월세는 셋이서 나눠 낼 거야.",
+            chunks: "We'll split the rent / three ways.",
+            tips: [{ target: "three ways", ko: "th는 혀를 살짝 물고 '쓰리'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My roommate‿and I / always order too much Thai food.",
+              ko: "룸메이트랑 나는 태국 음식을 늘 너무 많이 시켜.",
+              tips: [{ target: "Thai", ko: "th지만 't' 소리로 '타이'." }] },
+            { chunks: "Last Friday / we finally made‿a rule: / “We'll split one big curry / and that's‿it.”",
+              ko: "지난 금요일에 드디어 규칙을 정했어. “큰 커리 하나 나눠 먹고 끝.”",
+              tips: [{ target: "that's it", ko: "'댓츠잇'을 붙여 '댓칫'처럼." }] },
+            { chunks: "Twenty minutes later, / we were ordering spring rolls / on the app.",
+              ko: "20분 뒤, 우리는 앱으로 스프링롤을 주문하고 있었지.",
+              tips: [{ target: "Twenty", ko: "t가 약해 '트웨니'처럼." }] },
+            { chunks: "Rules are hard.",
+              ko: "규칙은 어려워.",
+              tips: [{ target: "Rules", ko: "r 소리를 확실히 '루-울즈'." }] }
+          ],
+          en: "My roommate and I always order too much Thai food. Last Friday we finally made a rule: “We'll split one big curry and that's it.” Twenty minutes later, we were ordering spring rolls on the app. Rules are hard.",
+          ko: "룸메이트랑 나는 태국 음식을 늘 너무 많이 시켜. 지난 금요일에 드디어 규칙을 정했지. “큰 커리 하나 나눠 먹고 끝.” 20분 뒤, 우리는 앱으로 스프링롤을 주문하고 있었어. 규칙은 어려워."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 28,
+    variantOf: 13,
+    category: "카페·식당",
+    title: "웨이팅 대신 다음에 다시 오기",
+    situation: "주말 브런치집에 왔더니 30분을 기다려야 한대요. 이번엔 기다리지 않고, 예약을 받는지 물어본 뒤 다음에 다시 오려고 해요.",
+    hooks: [
+      { ko: "식당에서 예약도 받는지 물어볼 때, 뭐라고 하지?", line: 3 },
+      { ko: "기다리지 않고 '다음에 다시 올게요'라고 할 때, 뭐라고 하지?", line: 5 }
+    ],
+    dialogue: [
+      { who: "staff", en: "Yeah, it's about thirty minutes. Want me to put you down?", ko: "네, 30분쯤이요. 대기 명단에 올려 드릴까요?",
+        chunks: "Yeah, / it's about thirty minutes. / Want me to put‿you down?",
+        tips: [{ target: "thirty", ko: "th는 혀를 살짝 물고 '써r티'." }] },
+      { who: "me", en: "Hmm, thirty minutes is a bit long.", ko: "음, 30분은 좀 길네요.",
+        chunks: "Hmm, / thirty minutes is‿a bit long.",
+        tips: [{ target: "a bit", ko: "'어빗', t는 멈추기만 해요." }] },
+      { who: "me", en: "Do you take reservations?", ko: "예약도 받으세요?",
+        chunks: "Do you take reservations?",
+        tips: [{ target: "reservations", ko: "'레저r베이션즈', 세 번째 음절에 힘." }] },
+      { who: "staff", en: "We do, but only for parties of six or more.", ko: "받긴 하는데, 6명 이상일 때만요.",
+        chunks: "We do, / but only for parties / of six‿or more.",
+        tips: [{ target: "parties", ko: "t가 굴러 '파r리즈'처럼." }] },
+      { who: "me", en: "Got it. We'll come back another time, then.", ko: "알겠어요. 그럼 다음에 다시 올게요.",
+        chunks: "Got‿it. / We'll come back another time, / then.",
+        tips: [{ target: "come back", ko: "'컴 백', m과 b가 부드럽게 이어져요." }] },
+      { who: "staff", en: "Sounds good. Weekday mornings are usually pretty quiet.", ko: "좋아요. 평일 아침은 보통 꽤 한가해요.",
+        chunks: "Sounds good. / Weekday mornings / are usually pretty quiet.",
+        tips: [{ target: "quiet", ko: "'콰이엇', quite(콰잇)와 헷갈리지 않게." }] },
+      { who: "me", en: "Good to know. Thanks for the tip!", ko: "좋은 정보네요. 알려 줘서 고마워요!",
+        chunks: "Good to know. / Thanks for the tip!",
+        tips: [{ target: "Good to know", ko: "'굿투노우', 빠르게 한 덩어리로." }] }
+    ],
+    expressions: [
+      {
+        id: "c28-e1",
+        phrase: "Do you take ~?",
+        teaser: "가게에서 '카드 되나요? 예약 받나요?'처럼 받는지 물을 때, 뭐라고 하지?",
+        ko: "'~ 받으세요(되나요)?'라는 뜻이에요. 결제 수단(카드·현금·애플페이), 예약, 예약 없이 오는 손님처럼 가게가 무엇을 받는지 물을 때 써요. 비슷한 표현: Do you accept ~? / Can I pay with ~?",
+        examples: [
+          { en: "Do you take credit cards?", ko: "신용카드 되나요?",
+            chunks: "Do you take credit cards?",
+            tips: [{ target: "credit", ko: "'크레딧', 첫음절에 힘." }] },
+          { en: "Do you take walk-ins, or do I need to book?", ko: "예약 없이 와도 되나요, 아니면 예약해야 하나요?",
+            chunks: "Do you take walk-ins, / or do‿I need to book?",
+            tips: [{ target: "walk-ins", ko: "'워킨즈', l은 소리 나지 않아요." }] },
+          { en: "Do you take Apple Pay here?", ko: "여기 애플페이 되나요?",
+            chunks: "Do you take Apple Pay here?",
+            tips: [{ target: "Apple Pay", ko: "'애플 페이', 둘 다 첫음절에 힘." }] },
+          { en: "Do you take US dollars?", ko: "미국 달러 받으세요?",
+            chunks: "Do you take US dollars?",
+            tips: [{ target: "dollars", ko: "'달러r즈', 끝 s는 z 소리." }] },
+          { en: "Do you take returns without a receipt?", ko: "영수증 없이도 반품 받아 주세요?",
+            chunks: "Do you take returns / without‿a receipt?",
+            tips: [{ target: "receipt", ko: "p는 소리 나지 않아 '리시-트'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I found‿a tiny ramen shop / in Portland / with‿an hour-long line.",
+              ko: "포틀랜드에서 한 시간씩 줄 서는 조그만 라멘집을 찾았어.",
+              tips: [{ target: "hour-long", ko: "h는 소리 안 나서 '아워r롱'." }] },
+            { chunks: "When I finally got / to the front, / I asked, / “Do you take cards?”",
+              ko: "드디어 맨 앞에 가서 “카드 되나요?” 하고 물었지.",
+              tips: [{ target: "finally", ko: "'파이널리', 첫음절에 힘." }] },
+            { chunks: "The guy pointed‿at‿a sign / that said “CASH ONLY” / in huge letters.",
+              ko: "아저씨가 큼지막하게 “현금만”이라고 쓰인 안내판을 가리키더라.",
+              tips: [{ target: "pointed at a", ko: "'포인티래러'처럼 한 덩어리로." }] },
+            { chunks: "I had walked right past‿it / for‿an hour.",
+              ko: "한 시간 내내 그 옆을 지나치고 있었던 거야.",
+              tips: [{ target: "past it", ko: "t가 it에 붙어 '패스팃'." }] }
+          ],
+          en: "I found a tiny ramen shop in Portland with an hour-long line. When I finally got to the front, I asked, “Do you take cards?” The guy pointed at a sign that said “CASH ONLY” in huge letters. I had walked right past it for an hour.",
+          ko: "포틀랜드에서 한 시간씩 줄 서는 조그만 라멘집을 찾았거든. 드디어 맨 앞에 가서 “카드 되나요?” 하고 물었지. 아저씨가 큼지막하게 “현금만”이라고 쓰인 안내판을 가리키더라. 한 시간 내내 그 옆을 지나치고 있었던 거야."
+        }
+      },
+      {
+        id: "c28-e2",
+        phrase: "We'll come back ~.",
+        teaser: "가게에서 '다음에 다시 올게요'라고 할 때, 뭐라고 하지?",
+        ko: "'~에 다시 올게요'라는 뜻이에요. 지금은 안 되겠고 나중에 다시 오겠다고 할 때 써요. 뒤에 later, tomorrow, another time처럼 언제인지 붙여요. 혼자면 I'll come back ~. 비슷한 표현: We'll stop by later. / Maybe next time.",
+        examples: [
+          { en: "We'll come back after lunch.", ko: "점심 먹고 다시 올게요.",
+            chunks: "We'll come back after lunch.",
+            tips: [{ target: "after", ko: "t가 약해 '애프터r'." }] },
+          { en: "Thanks, we'll come back tomorrow morning.", ko: "감사해요, 내일 아침에 다시 올게요.",
+            chunks: "Thanks, / we'll come back tomorrow morning.",
+            tips: [{ target: "tomorrow", ko: "'터마로우', 두 번째 음절에 힘." }] },
+          { en: "It's too crowded. We'll come back later.", ko: "너무 붐비네. 이따 다시 오자.",
+            chunks: "It's too crowded. / We'll come back later.",
+            tips: [{ target: "crowded", ko: "'크라우디드', 첫음절에 힘." }] },
+          { en: "We'll come back when it's not raining.", ko: "비 안 올 때 다시 오자.",
+            chunks: "We'll come back / when‿it's not raining.",
+            tips: [{ target: "raining", ko: "'레이닝', r 소리를 확실히." }] },
+          { en: "We'll come back next year for sure.", ko: "내년에 꼭 다시 올 거예요.",
+            chunks: "We'll come back next year / for sure.",
+            tips: [{ target: "for sure", ko: "'퍼r 슈어r', 빠르게 이어서." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend‿and I / drove two hours / to‿a famous pie shop.",
+              ko: "친구랑 둘이 유명한 파이 가게까지 두 시간을 운전해 갔어.",
+              tips: [{ target: "drove", ko: "'드로우브', v는 윗니로 아랫입술을 살짝." }] },
+            { chunks: "It had‿a line / around the block, / so we said, / “We'll come back next weekend.”",
+              ko: "줄이 블록을 한 바퀴 돌 정도라 “다음 주말에 다시 오자.” 했지.",
+              tips: [{ target: "around the block", ko: "'블록을 한 바퀴'. around의 d는 약하게." }] },
+            { chunks: "We came back the next weekend, / and the line / was even longer.",
+              ko: "다음 주말에 다시 갔더니 줄이 더 길었어.",
+              tips: [{ target: "even longer", ko: "'이-븐 롱거r', g 소리를 살려요." }] },
+            { chunks: "Now we just buy frozen pie / at the grocery store.",
+              ko: "이젠 그냥 마트에서 냉동 파이 사 먹어.",
+              tips: [{ target: "grocery", ko: "'그로우서리', 첫음절에 힘." }] }
+          ],
+          en: "My friend and I drove two hours to a famous pie shop. It had a line around the block, so we said, “We'll come back next weekend.” We came back the next weekend, and the line was even longer. Now we just buy frozen pie at the grocery store.",
+          ko: "친구랑 유명한 파이 가게까지 두 시간을 운전해서 갔거든. 줄이 블록을 한 바퀴 돌 정도라 “다음 주말에 다시 오자.” 했지. 다음 주말에 다시 갔더니 줄이 더 길었어. 이젠 그냥 마트에서 냉동 파이 사 먹어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

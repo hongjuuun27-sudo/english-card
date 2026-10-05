@@ -1145,5 +1145,377 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 27,
+    variantOf: 9,
+    category: "이동·쇼핑",
+    title: "옷 가게에서 사지 않고 맡겨 두기",
+    situation: "입어 본 셔츠가 어깨가 좀 껴요. 직원이 한 사이즈 큰 걸 권하는데, 이번엔 바로 사지 않고 큰 사이즈를 맡겨 둔 뒤 다른 가게도 둘러보려고 해요.",
+    hooks: [
+      { ko: "더 큰 사이즈 입어 보겠냐는 말에 '지금은 괜찮아요'라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "사지 않고 옷을 잠깐 맡아 달라고 할 때, 뭐라고 하지?", line: 4 }
+    ],
+    dialogue: [
+      { who: "clerk", en: "Ah, gotcha. Wanna try a size up?", ko: "아, 그렇구나. 한 사이즈 큰 거 입어 보실래요?",
+        chunks: "Ah, gotcha. / Wanna try‿a size‿up?",
+        tips: [{ target: "Wanna", ko: "want to를 줄인 말, '워너'." }] },
+      { who: "me", en: "Hmm, I think I'll pass for now.", ko: "음, 지금은 괜찮을 것 같아요.",
+        chunks: "Hmm, / I think I'll pass for now.",
+        tips: [{ target: "I'll pass", ko: "'아일 패-스', pass를 길게." }] },
+      { who: "clerk", en: "No problem. Want me to put it back?", ko: "괜찮아요. 제자리에 갖다 둘까요?",
+        chunks: "No problem. / Want me to put‿it back?",
+        tips: [{ target: "put it back", ko: "t가 굴러 '푸릿 백'." }] },
+      { who: "me", en: "Actually, could you hold a large for me?", ko: "그보다, 라지 사이즈 하나 맡아 주실 수 있어요?",
+        chunks: "Actually, / could you hold‿a large / for me?",
+        tips: [{ target: "hold a", ko: "d가 a에 붙어 '홀더'." }] },
+      { who: "me", en: "I want to look around a bit first.", ko: "먼저 좀 둘러보고 싶어서요.",
+        chunks: "I want to look‿around / a bit first.",
+        tips: [{ target: "look around", ko: "k가 a에 붙어 '루커라운드'." }] },
+      { who: "clerk", en: "Sure, I can hold it until closing.", ko: "그럼요, 문 닫을 때까지 맡아 둘게요.",
+        chunks: "Sure, / I can hold‿it until closing.",
+        tips: [{ target: "closing", ko: "'클로우징', s는 z 소리." }] },
+      { who: "me", en: "Perfect. I'll be back in an hour.", ko: "좋아요. 한 시간 안에 올게요.",
+        chunks: "Perfect. / I'll be back‿in‿an hour.",
+        tips: [{ target: "in an hour", ko: "h는 소리 안 나서 '이너나워r'." }] },
+      { who: "clerk", en: "Sounds good. What name should I put it under?", ko: "좋아요. 어떤 이름으로 맡아 둘까요?",
+        chunks: "Sounds good. / What name / should‿I put‿it under?",
+        tips: [{ target: "put it under", ko: "t가 굴러 '푸리런더r'." }] },
+      { who: "me", en: "Under Minji. Thanks so much!", ko: "민지로 해 주세요. 정말 감사해요!",
+        chunks: "Under Minji. / Thanks so much!",
+        tips: [] }
+    ],
+    expressions: [
+      {
+        id: "c27-e1",
+        phrase: "I think I'll pass.",
+        teaser: "권유를 정중하게 '전 괜찮아요'라고 거절할 때, 뭐라고 하지?",
+        ko: "'저는 괜찮아요(사양할게요)'라는 뜻이에요. 음식·술·권유·제안을 부드럽게 거절할 때 써요. I'll pass.만 쓰면 조금 딱딱하니 I think를 붙이면 더 부드러워요. 뒤에 on ~를 붙여 '~는 사양할게요'로도 써요. 비슷한 표현: I'm good, thanks. / Maybe next time.",
+        examples: [
+          { en: "Dessert? I think I'll pass tonight.", ko: "디저트요? 오늘은 괜찮아요.",
+            chunks: "Dessert? / I think I'll pass tonight.",
+            tips: [{ target: "Dessert", ko: "'디저r트', 뒤에 힘." }] },
+          { en: "Thanks for the invite, but I think I'll pass.", ko: "초대는 고마운데, 난 빠질게.",
+            chunks: "Thanks for the invite, / but I think I'll pass.",
+            tips: [{ target: "invite", ko: "명사로 쓸 땐 앞에 힘 '인바잇'." }] },
+          { en: "I think I'll pass on the karaoke.", ko: "노래방은 난 빠질래.",
+            chunks: "I think I'll pass / on the karaoke.",
+            tips: [{ target: "karaoke", ko: "'캐리오우키', 세 번째 음절에 힘." }] },
+          { en: "Another drink? No, I think I'll pass.", ko: "한 잔 더? 아니, 난 됐어.",
+            chunks: "Another drink? / No, I think I'll pass.",
+            tips: [{ target: "Another", ko: "'어나더r', 두 번째 음절에 힘." }] },
+          { en: "I think I'll pass on the extended warranty.", ko: "연장 보증은 안 할게요.",
+            chunks: "I think I'll pass / on the extended warranty.",
+            tips: [{ target: "warranty", ko: "'워런티', 첫음절에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My coworkers invited me / to‿a hot sauce challenge / after lunch.",
+              ko: "회사 동료들이 점심 먹고 핫소스 챌린지를 하자고 했어.",
+              tips: [{ target: "challenge", ko: "'챌린지', 첫음절에 힘." }] },
+            { chunks: "I looked‿at the bottle / with‿a skull on‿it / and said, / “I think I'll pass.”",
+              ko: "해골 그림이 있는 병을 보고 “난 빠질게.” 했지.",
+              tips: [{ target: "skull", ko: "s 뒤 k는 된소리처럼 '스껄'." }] },
+            { chunks: "Everyone called me‿a chicken.",
+              ko: "다들 나보고 겁쟁이래.",
+              tips: [{ target: "chicken", ko: "'겁쟁이'라는 뜻으로도 써요." }] },
+            { chunks: "Then I watched them cry / for ten minutes / and felt like‿a genius.",
+              ko: "그러고 걔네가 10분 동안 우는 걸 보면서 내가 천재 같았어.",
+              tips: [{ target: "genius", ko: "'지-니어스', 첫음절에 힘." }] }
+          ],
+          en: "My coworkers invited me to a hot sauce challenge after lunch. I looked at the bottle with a skull on it and said, “I think I'll pass.” Everyone called me a chicken. Then I watched them cry for ten minutes and felt like a genius.",
+          ko: "회사 동료들이 점심 먹고 핫소스 챌린지를 하자는 거야. 해골 그려진 병을 보고 “난 빠질게.” 했지. 다들 나보고 겁쟁이래. 그러고 10분 동안 걔네가 우는 걸 보니까 내가 천재 같더라."
+        }
+      },
+      {
+        id: "c27-e2",
+        phrase: "Could you hold ~ for me?",
+        teaser: "가게에서 '이거 잠깐 맡아 주실 수 있어요?'라고 할 때, 뭐라고 하지?",
+        ko: "'~ 좀 맡아(잡아) 주실 수 있어요?'라는 뜻이에요. 가게에서 물건을 잠시 따로 빼 달라고 할 때, 짐을 잠깐 들어 달라고 할 때, 자리나 엘리베이터를 잡아 달라고 할 때 써요. 비슷한 표현: Could you put ~ aside for me? / Can you save ~ for me?",
+        examples: [
+          { en: "Could you hold my coffee for me?", ko: "커피 좀 들어 줄래?",
+            chunks: "Could you hold my coffee / for me?",
+            tips: [{ target: "coffee", ko: "'커피'보다 '카-피'에 가까워요." }] },
+          { en: "Could you hold this dress for me until Friday?", ko: "이 원피스 금요일까지 맡아 주실 수 있어요?",
+            chunks: "Could you hold this dress / for me until Friday?",
+            tips: [{ target: "until", ko: "'언틸', 두 번째 음절에 힘." }] },
+          { en: "Could you hold the elevator for me?", ko: "엘리베이터 좀 잡아 주실래요?",
+            chunks: "Could you hold the elevator / for me?",
+            tips: [{ target: "elevator", ko: "'엘러베이러r', 첫음절에 힘." }] },
+          { en: "Could you hold a table for me at seven?", ko: "7시에 자리 하나 잡아 주실 수 있어요?",
+            chunks: "Could you hold‿a table / for me‿at seven?",
+            tips: [{ target: "seven", ko: "v는 윗니로 아랫입술을 살짝, '세븐'." }] },
+          { en: "Could you hold my calls for me this afternoon?", ko: "오늘 오후엔 전화 연결하지 말아 주실래요?",
+            chunks: "Could you hold my calls / for me this afternoon?",
+            tips: [{ target: "calls", ko: "'콜즈', 끝 s는 z 소리." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I found the perfect / concert T-shirt, / but I had / no cash‿on me.",
+              ko: "딱 맘에 드는 콘서트 티셔츠를 찾았는데, 현금이 하나도 없었어.",
+              tips: [{ target: "cash on me", ko: "'수중에 현금'. sh가 on에 붙어 '캐쉬온미'." }] },
+            { chunks: "I asked the guy / at the stand, / “Could you hold‿it for me / for ten minutes?”",
+              ko: "가판대 아저씨한테 “10분만 맡아 주실 수 있어요?” 하고 물었지.",
+              tips: [{ target: "hold it", ko: "d가 it에 붙어 '홀딧'." }] },
+            { chunks: "I ran to‿an ATM / and sprinted back.",
+              ko: "ATM까지 달려갔다가 전력 질주로 돌아왔어.",
+              tips: [{ target: "sprinted", ko: "'스프린티드', 첫음절에 힘." }] },
+            { chunks: "He had already sold‿it / to‿a kid / who looked very happy.",
+              ko: "근데 벌써 어떤 꼬마한테 팔았더라. 그 꼬마는 엄청 행복해 보였어.",
+              tips: [{ target: "already", ko: "'올레디', 두 번째 음절에 힘." }] }
+          ],
+          en: "I found the perfect concert T-shirt, but I had no cash on me. I asked the guy at the stand, “Could you hold it for me for ten minutes?” I ran to an ATM and sprinted back. He had already sold it to a kid who looked very happy.",
+          ko: "딱 맘에 드는 콘서트 티셔츠를 찾았는데 현금이 하나도 없었어. 가판대 아저씨한테 “10분만 맡아 주실 수 있어요?” 했지. ATM까지 뛰어갔다가 전력 질주로 돌아왔거든. 근데 벌써 어떤 꼬마한테 팔았더라. 그 꼬마는 엄청 행복해 보였어."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 29,
+    variantOf: 16,
+    category: "이동·쇼핑",
+    title: "옷 환불받기",
+    situation: "지난주에 산 바지가 작아서 영수증을 들고 가게에 왔어요. 직원이 환불과 교환 중에 고르라고 하는데, 이번엔 환불을 받으려고 해요.",
+    hooks: [
+      { ko: "교환 말고 '그냥 환불해 주세요'라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "결제한 카드가 꼭 있어야 하는지 물어볼 때, 뭐라고 하지?", line: 4 },
+      { ko: "환불한 돈이 카드에 들어오기까지 얼마나 걸리는지 물을 때, 뭐라고 하지?", line: 7 }
+    ],
+    dialogue: [
+      { who: "clerk", en: "Great. Would you like a refund or an exchange?", ko: "좋아요. 환불해 드릴까요, 교환해 드릴까요?",
+        chunks: "Great. / Would you like‿a refund / or‿an exchange?",
+        tips: [{ target: "Would you", ko: "'우쥬'처럼 붙여요." }] },
+      { who: "me", en: "I'd just like a refund, please.", ko: "그냥 환불해 주세요.",
+        chunks: "I'd just like‿a refund, / please.",
+        tips: [{ target: "refund", ko: "명사는 앞에 힘 '리-펀드'." }] },
+      { who: "clerk", en: "Sure. Can I see the card you paid with?", ko: "네. 결제하신 카드 좀 보여 주시겠어요?",
+        chunks: "Sure. / Can‿I see the card / you paid with?",
+        tips: [{ target: "paid with", ko: "d는 약하게 '페이드 윋'처럼." }] },
+      { who: "me", en: "Oh, do I need the same card?", ko: "아, 같은 카드가 꼭 있어야 하나요?",
+        chunks: "Oh, / do‿I need the same card?",
+        tips: [{ target: "do I need", ko: "'두아이 니-드', need를 길게." }] },
+      { who: "clerk", en: "Yep, refunds go back to the original card.", ko: "네, 환불은 원래 결제한 카드로 들어가요.",
+        chunks: "Yep, / refunds go back / to the original card.",
+        tips: [{ target: "original", ko: "'어리지널', 두 번째 음절에 힘." }] },
+      { who: "me", en: "Got it. Here it is.", ko: "알겠어요. 여기요.",
+        chunks: "Got‿it. / Here‿it‿is.",
+        tips: [{ target: "Here it is", ko: "'히어리리즈'처럼 한 덩어리로." }] },
+      { who: "me", en: "How long does it take to show up?", ko: "카드에 들어오기까지 얼마나 걸려요?",
+        chunks: "How long does‿it take / to show‿up?",
+        tips: [{ target: "show up", ko: "'나타나다·들어오다'. w가 up에 붙어 '쇼우업'." }] },
+      { who: "clerk", en: "Usually three to five business days.", ko: "보통 영업일 기준 3~5일이요.",
+        chunks: "Usually / three to five business days.",
+        tips: [{ target: "business days", ko: "'비즈니스 데이즈', 주말·공휴일을 뺀 날." }] }
+    ],
+    expressions: [
+      {
+        id: "c29-e1",
+        phrase: "Do I need ~?",
+        teaser: "'이거 꼭 있어야 해요?'처럼 필요한지 물어볼 때, 뭐라고 하지?",
+        ko: "'~가 필요한가요(꼭 있어야 하나요)?'라는 뜻이에요. 서류·영수증·예약처럼 꼭 있어야 하는지, 또는 Do I need to ~?로 '꼭 ~해야 하나요?'를 물을 때 써요. 비슷한 표현: Do I have to ~? / Is ~ required?",
+        examples: [
+          { en: "Do I need a reservation for tonight?", ko: "오늘 저녁 예약해야 하나요?",
+            chunks: "Do‿I need‿a reservation / for tonight?",
+            tips: [{ target: "tonight", ko: "'투나잇', 뒤에 힘." }] },
+          { en: "Do I need my passport to check in?", ko: "체크인하려면 여권이 있어야 하나요?",
+            chunks: "Do‿I need my passport / to check‿in?",
+            tips: [{ target: "passport", ko: "'패스포r트', 첫음절에 힘." }] },
+          { en: "Do I need to print my ticket?", ko: "표를 출력해야 하나요?",
+            chunks: "Do‿I need to print / my ticket?",
+            tips: [{ target: "ticket", ko: "'티킷', 끝 t는 멈추기만 해요." }] },
+          { en: "Do I need cash for the bus?", ko: "버스 타려면 현금이 있어야 하나요?",
+            chunks: "Do‿I need cash / for the bus?",
+            tips: [{ target: "cash", ko: "'캐쉬', sh 소리로 끝내요." }] },
+          { en: "Do I need to take this with food?", ko: "이 약 음식이랑 같이 먹어야 하나요?",
+            chunks: "Do‿I need to take this / with food?",
+            tips: [{ target: "with food", ko: "th는 혀끝을 살짝, '윋 푸-드'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "Last month / I flew to Canada / for‿a weekend trip.",
+              ko: "지난달에 주말여행으로 캐나다에 갔어.",
+              tips: [{ target: "flew", ko: "fly의 과거, '플루-'." }] },
+            { chunks: "At the check-in counter, / I casually asked, / “Do‿I need‿a visa?”",
+              ko: "체크인 카운터에서 별생각 없이 “비자 필요해요?” 하고 물었거든.",
+              tips: [{ target: "visa", ko: "'비자'보다 '비-저'에 가까워요." }] },
+            { chunks: "The agent said / I needed‿an eTA, / which I had never heard‿of.",
+              ko: "직원이 eTA가 있어야 한대. 난 처음 듣는 거였어.",
+              tips: [{ target: "eTA", ko: "'이-티-에이', 캐나다 전자여행허가예요." }] },
+            { chunks: "I filled‿it‿out / on my phone / in five very stressful minutes.",
+              ko: "진땀 나는 5분 동안 폰으로 신청서를 썼지.",
+              tips: [{ target: "filled it out", ko: "'필디라웃'처럼 한 덩어리로." }] }
+          ],
+          en: "Last month I flew to Canada for a weekend trip. At the check-in counter, I casually asked, “Do I need a visa?” The agent said I needed an eTA, which I had never heard of. I filled it out on my phone in five very stressful minutes.",
+          ko: "지난달에 주말여행으로 캐나다에 갔거든. 체크인 카운터에서 별생각 없이 “비자 필요해요?” 하고 물었지. 직원이 eTA가 있어야 한대. 난 처음 듣는 거였어. 진땀 나는 5분 동안 폰으로 신청서를 썼지."
+        }
+      },
+      {
+        id: "c29-e2",
+        phrase: "show up",
+        teaser: "환불한 돈이 '카드에 언제 들어와요?'라고 할 때 쓰는 두 단어 표현은?",
+        forms: ["shows up", "showed up", "shown up", "showing up"],
+        ko: "'나타나다·들어오다·도착하다'라는 뜻이에요. 돈이 계좌에 들어올 때, 택배가 올 때, 사람이 약속 장소에 나타날 때 다 써요. 비슷한 표현: arrive / come in / turn up",
+        examples: [
+          { en: "The money should show up in a few days.", ko: "돈은 며칠 안에 들어올 거예요.",
+            chunks: "The money should show‿up / in‿a few days.",
+            tips: [{ target: "should", ko: "l은 소리 안 나 '슈드', 약하게." }] },
+          { en: "He didn't show up to the meeting.", ko: "걔 회의에 안 나왔어.",
+            chunks: "He didn't show‿up / to the meeting.",
+            tips: [{ target: "didn't", ko: "'디든', 끝 t는 거의 안 들려요." }] },
+          { en: "My package finally showed up today.", ko: "택배가 드디어 오늘 왔어.",
+            chunks: "My package finally showed‿up today.",
+            tips: [{ target: "showed up", ko: "d가 up에 붙어 '쇼우덥'." }] },
+          { en: "The refund still hasn't shown up.", ko: "환불이 아직 안 들어왔어요.",
+            chunks: "The refund still hasn't shown‿up.",
+            tips: [{ target: "hasn't", ko: "'해즌', 끝 t는 거의 안 들려요." }] },
+          { en: "Thanks for showing up so early!", ko: "이렇게 일찍 와 줘서 고마워!",
+            chunks: "Thanks for showing‿up / so early!",
+            tips: [{ target: "early", ko: "'얼-리', r 소리를 살려요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I ordered‿a birthday gift / for my mom / two weeks‿in advance.",
+              ko: "엄마 생일 선물을 2주 전에 미리 주문했어.",
+              tips: [{ target: "in advance", ko: "'미리'. '인어드밴스', 두 번째 음절에 힘." }] },
+            { chunks: "On her birthday, / it still hadn't shown‿up.",
+              ko: "근데 생일 당일까지도 안 오는 거야.",
+              tips: [{ target: "hadn't", ko: "'해든', 끝 t는 거의 안 들려요." }] },
+            { chunks: "I called the company, / and they said / it was sitting‿at‿a warehouse / in Ohio.",
+              ko: "회사에 전화했더니 오하이오 창고에 그대로 있대.",
+              tips: [{ target: "warehouse", ko: "'웨어r하우스', 첫음절에 힘." }] },
+            { chunks: "It finally showed‿up / a week later, / so now she has two birthdays.",
+              ko: "일주일 뒤에야 도착해서, 이제 엄마는 생일이 두 번이야.",
+              tips: [{ target: "birthdays", ko: "th는 혀끝을 살짝, '버r쓰데이즈'." }] }
+          ],
+          en: "I ordered a birthday gift for my mom two weeks in advance. On her birthday, it still hadn't shown up. I called the company, and they said it was sitting at a warehouse in Ohio. It finally showed up a week later, so now she has two birthdays.",
+          ko: "엄마 생일 선물을 2주 전에 미리 주문했거든. 근데 생일 당일까지도 안 오는 거야. 회사에 전화했더니 오하이오 창고에 그대로 있대. 일주일 뒤에야 도착해서, 이제 엄마는 생일이 두 번이야."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 32,
+    variantOf: 23,
+    category: "이동·쇼핑",
+    title: "여러 번 와 본 도시에서 택시 스몰토크",
+    situation: "공항에서 시내로 가는 택시 안이에요. 기사님이 시카고는 처음이냐고 묻는데, 사실 일 때문에 몇 번 와 봤어요.",
+    scene: "free",
+    hooks: [
+      { ko: "처음 왔냐는 질문에 '몇 번 와 봤어요'라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "'주로 학회 때문에 여기 와요'라고 할 때, 뭐라고 하지?", line: 4 }
+    ],
+    dialogue: [
+      { who: "driver", en: "So, is this your first time in Chicago?", ko: "그래서, 시카고는 처음이세요?",
+        chunks: "So, / is this your first time / in Chicago?",
+        tips: [{ target: "Chicago", ko: "'쉬카-고우', 두 번째 음절에 힘." }] },
+      { who: "me", en: "No, actually. I've been here a few times.", ko: "아뇨, 사실 몇 번 와 봤어요.",
+        chunks: "No, actually. / I've been here‿a few times.",
+        tips: [{ target: "I've been", ko: "'아이브빈', 빠르고 약하게." }] },
+      { who: "driver", en: "Oh yeah? What brings you back?", ko: "아 그래요? 무슨 일로 또 오셨어요?",
+        chunks: "Oh yeah? / What brings‿you back?",
+        tips: [{ target: "What brings you back", ko: "'무슨 일로 다시 왔어요?' 끝을 내려요." }] },
+      { who: "me", en: "Work, mostly. I come here for conferences.", ko: "주로 일 때문에요. 학회 때문에 와요.",
+        chunks: "Work, mostly. / I come here for conferences.",
+        tips: [{ target: "conferences", ko: "'컨퍼런시즈', 첫음절에 힘." }] },
+      { who: "driver", en: "Nice. So you probably know the city pretty well.", ko: "좋네요. 그럼 시내를 꽤 잘 아시겠네요.",
+        chunks: "Nice. / So you probably know / the city pretty well.",
+        tips: [{ target: "pretty well", ko: "t가 굴러 '프리리 웰'처럼." }] },
+      { who: "me", en: "Not really. I usually just see hotels and meeting rooms.", ko: "별로요. 보통 호텔이랑 회의실만 봐요.",
+        chunks: "Not really. / I usually just see / hotels‿and meeting rooms.",
+        tips: [{ target: "Not really", ko: "t가 약해 '나-리얼리'처럼." }] },
+      { who: "driver", en: "Ha! Then this time, go check out the river walk.", ko: "하! 그럼 이번엔 리버워크 꼭 가 보세요.",
+        chunks: "Ha! / Then this time, / go check‿out the river walk.",
+        tips: [{ target: "river walk", ko: "'리버r 웍', l은 소리 안 나요." }] },
+      { who: "me", en: "Good idea. I'll make time for it tomorrow.", ko: "좋은 생각이에요. 내일 시간 내서 가 볼게요.",
+        chunks: "Good idea. / I'll make time for‿it tomorrow.",
+        tips: [{ target: "for it", ko: "r이 it에 붙어 '포r릿'." }] }
+    ],
+    expressions: [
+      {
+        id: "c32-e1",
+        phrase: "I've been here ~.",
+        teaser: "'여기 몇 번 와 봤어요'처럼 와 본 적 있다고 할 때, 뭐라고 하지?",
+        ko: "'여기 (~번·~동안) 와 봤어요(있었어요)'라는 뜻이에요. 뒤에 a few times, twice, before(전에), for two weeks(2주째)처럼 횟수나 기간을 붙여요. 처음이면 It's my first time here. 비슷한 표현: I've visited ~ before. / This is my ~ time here.",
+        examples: [
+          { en: "I've been here twice before.", ko: "여기 전에 두 번 와 봤어요.",
+            chunks: "I've been here twice before.",
+            tips: [{ target: "twice", ko: "'트와이스', 끝은 s 소리." }] },
+          { en: "I've been here for almost a month.", ko: "여기 온 지 거의 한 달 됐어요.",
+            chunks: "I've been here / for‿almost‿a month.",
+            tips: [{ target: "almost a", ko: "'올모스터'처럼 이어져요." }] },
+          { en: "I've been here since this morning.", ko: "아침부터 여기 있었어요.",
+            chunks: "I've been here / since this morning.",
+            tips: [{ target: "since this", ko: "s가 겹쳐 '신스디스'처럼 빠르게." }] },
+          { en: "Wait, I've been here before!", ko: "잠깐, 나 여기 와 본 적 있어!",
+            chunks: "Wait, / I've been here before!",
+            tips: [{ target: "Wait", ko: "t는 멈추기만, '웨잇'." }] },
+          { en: "I've been here a few times for work.", ko: "일 때문에 여기 몇 번 와 봤어요.",
+            chunks: "I've been here‿a few times / for work.",
+            tips: [{ target: "for work", ko: "'퍼r 워r크', r을 살려요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend took me / to‿a “secret” bar in Seoul / and said, / “You've never seen / anything like this.”",
+              ko: "친구가 서울의 '비밀' 바에 날 데려가서 “이런 데 처음 보지?” 하는 거야.",
+              tips: [{ target: "secret", ko: "'시-크릿', 첫음절에 힘." }] },
+            { chunks: "The bartender looked‿at me / and said, / “Welcome back!”",
+              ko: "바텐더가 나를 보더니 “또 오셨네요!” 하더라.",
+              tips: [{ target: "Welcome back", ko: "'다시 오신 걸 환영해요'. 단골한테 하는 인사." }] },
+            { chunks: "I had to admit, / “I've been here‿a few times.”",
+              ko: "결국 “나 여기 몇 번 와 봤어.” 하고 털어놓을 수밖에 없었지.",
+              tips: [{ target: "admit", ko: "'어드밋', 뒤에 힘." }] },
+            { chunks: "My friend still hasn't forgiven me.",
+              ko: "친구는 아직도 날 용서 안 했어.",
+              tips: [{ target: "forgiven", ko: "'퍼r기븐', 두 번째 음절에 힘." }] }
+          ],
+          en: "My friend took me to a “secret” bar in Seoul and said, “You've never seen anything like this.” The bartender looked at me and said, “Welcome back!” I had to admit, “I've been here a few times.” My friend still hasn't forgiven me.",
+          ko: "친구가 서울의 '비밀' 바에 날 데려가더니 “이런 데 처음 보지?” 하는 거야. 근데 바텐더가 날 보고 “또 오셨네요!” 하더라. 결국 “나 여기 몇 번 와 봤어.” 하고 털어놓을 수밖에 없었지. 친구는 아직도 날 용서 안 했어."
+        }
+      },
+      {
+        id: "c32-e2",
+        phrase: "I come here for ~.",
+        teaser: "'여기 주로 ~ 때문에 와요'라고 할 때, 뭐라고 하지?",
+        ko: "'여기 ~ 때문에(하러) 와요'라는 뜻이에요. 어떤 곳에 자주 오는 이유를 말할 때 써요. for 뒤에는 이유(work, the coffee), to 뒤에는 할 일(I come here to study.)을 붙여요. 비슷한 표현: I'm here for ~. / I usually come for ~.",
+        examples: [
+          { en: "I come here for the coffee, not the food.", ko: "음식 말고 커피 때문에 여기 와요.",
+            chunks: "I come here for the coffee, / not the food.",
+            tips: [{ target: "coffee", ko: "'커피'보다 '카-피'에 가까워요." }] },
+          { en: "I come here for work every spring.", ko: "매년 봄에 일 때문에 여기 와요.",
+            chunks: "I come here for work / every spring.",
+            tips: [{ target: "every spring", ko: "'에브리 스프링', s 뒤 p는 된소리처럼." }] },
+          { en: "I come here for the quiet.", ko: "조용해서 여기 와요.",
+            chunks: "I come here for the quiet.",
+            tips: [{ target: "quiet", ko: "'콰이엇', 두 음절이에요." }] },
+          { en: "I come here for the live music on Fridays.", ko: "금요일마다 라이브 음악 들으러 여기 와요.",
+            chunks: "I come here / for the live music / on Fridays.",
+            tips: [{ target: "live", ko: "여기선 '라이브'(생생한). '리브'(살다)와 달라요." }] },
+          { en: "Honestly, I come here for the free Wi-Fi.", ko: "솔직히 무료 와이파이 때문에 와요.",
+            chunks: "Honestly, / I come here / for the free Wi-Fi.",
+            tips: [{ target: "Honestly", ko: "h는 소리 안 나서 '아니스틀리'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "There's‿a tiny noodle shop / near my office / that's always packed.",
+              ko: "회사 근처에 늘 손님이 꽉 차는 조그만 국숫집이 있어.",
+              tips: [{ target: "packed", ko: "'꽉 찬'. ed는 t 소리로 '팩트'." }] },
+            { chunks: "One day / the owner asked / why I came almost every day.",
+              ko: "어느 날 사장님이 왜 거의 매일 오냐고 물으셨어.",
+              tips: [{ target: "owner", ko: "'오우너r', 첫음절에 힘." }] },
+            { chunks: "I told her, / “I come here / for the spicy broth.”",
+              ko: "“매운 국물 때문에 와요.” 했지.",
+              tips: [{ target: "broth", ko: "th로 끝나요, '브로th'." }] },
+            { chunks: "The next day / she gave me‿a punch card / with my name‿on‿it.",
+              ko: "다음 날 사장님이 내 이름이 적힌 쿠폰 카드를 주셨어.",
+              tips: [{ target: "punch card", ko: "'펀치 카r드', 도장 찍는 쿠폰 카드." }] }
+          ],
+          en: "There's a tiny noodle shop near my office that's always packed. One day the owner asked why I came almost every day. I told her, “I come here for the spicy broth.” The next day she gave me a punch card with my name on it.",
+          ko: "회사 근처에 늘 손님이 꽉 차는 조그만 국숫집이 있거든. 어느 날 사장님이 왜 거의 매일 오냐고 물으셨어. “매운 국물 때문에 와요.” 했지. 다음 날 사장님이 내 이름이 적힌 쿠폰 카드를 주셨어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

@@ -946,5 +946,169 @@
         }
       }
     ]
+  },
+  {
+    id: 30,
+    variantOf: 17,
+    category: "일상 대화",
+    title: "이번 주말은 안 돼서 약속 미루기",
+    situation: "오랜만에 친구가 주말에 시간 되냐고 연락이 왔어요. 이번 주말엔 이미 약속이 있어서, 미안하다고 하고 다른 날로 미루려고 해요.",
+    hooks: [
+      { ko: "주말에 만나자는 친구에게 '이미 약속이 있어'라고 할 때, 뭐라고 하지?", line: 2 },
+      { ko: "약속을 '다음으로 미뤄도 될까?'라고 할 때, 뭐라고 하지?", line: 5 },
+      { ko: "토요일 대신 '일요일 브런치 어때?'라고 바꿔 제안할 때, 뭐라고 하지?", line: 7 }
+    ],
+    dialogue: [
+      { who: "friend", en: "Hey! It's been forever. Are you free this weekend?", ko: "야! 진짜 오랜만이다. 이번 주말에 시간 돼?",
+        chunks: "Hey! / It's been forever. / Are‿you free this weekend?",
+        tips: [{ target: "forever", ko: "'퍼r에버r', 두 번째 음절에 힘." }] },
+      { who: "me", en: "Ugh, I'm so sorry. I already have plans.", ko: "아, 진짜 미안해. 이미 약속이 있어.",
+        chunks: "Ugh, I'm so sorry. / I already have plans.",
+        tips: [{ target: "already", ko: "'올레디', 두 번째 음절에 힘." }] },
+      { who: "friend", en: "Oh, bummer! Is it a whole-weekend thing?", ko: "아, 아쉽다! 주말 내내 바빠?",
+        chunks: "Oh, bummer! / Is‿it‿a whole-weekend thing?",
+        tips: [{ target: "bummer", ko: "'아쉽다·안타깝다'는 뜻의 말이에요." }] },
+      { who: "me", en: "Pretty much. My cousin's visiting from out of town.", ko: "거의. 사촌이 다른 지역에서 놀러 오거든.",
+        chunks: "Pretty much. / My cousin's visiting / from‿out‿of town.",
+        tips: [{ target: "out of town", ko: "'아우러브 타운'처럼 이어져요." }] },
+      { who: "me", en: "Can I take a rain check?", ko: "다음으로 미뤄도 될까?",
+        chunks: "Can‿I take‿a rain check?",
+        tips: [{ target: "rain check", ko: "'레인 첵', '다음 기회로 미루기'라는 뜻." }] },
+      { who: "friend", en: "Of course! What about next Saturday?", ko: "당연하지! 다음 주 토요일은 어때?",
+        chunks: "Of course! / What‿about next Saturday?",
+        tips: [{ target: "What about", ko: "t가 굴러 '와러바웃'." }] },
+      { who: "me", en: "Saturday's tricky. Can we do Sunday brunch instead?", ko: "토요일은 좀 애매해. 대신 일요일 브런치 어때?",
+        chunks: "Saturday's tricky. / Can we do Sunday brunch / instead?",
+        tips: [{ target: "instead", ko: "'인스테드', 뒤에 힘." }] },
+      { who: "friend", en: "Sunday brunch works. It's a date!", ko: "일요일 브런치 좋아. 그날 보자!",
+        chunks: "Sunday brunch works. / It's‿a date!",
+        tips: [{ target: "It's a date", ko: "'그날 보자, 약속이다'라는 뜻. 연인 사이에만 쓰는 말이 아니에요." }] }
+    ],
+    expressions: [
+      {
+        id: "c30-e1",
+        phrase: "I already have plans.",
+        teaser: "'그날 이미 약속 있어'를 자연스럽게 말하면?",
+        ko: "'이미 약속이 있어요'라는 뜻이에요. 초대나 약속 제안을 거절할 때 이유로 가장 많이 써요. 언제인지 붙이려면 뒤에 on Friday, tonight처럼. 앞에 I'm so sorry를 붙이면 더 부드러워요. 비슷한 표현: I'm busy that day. / I've got something going on.",
+        examples: [
+          { en: "I already have plans on Friday, sorry.", ko: "금요일엔 이미 약속 있어, 미안.",
+            chunks: "I already have plans on Friday, / sorry.",
+            tips: [{ target: "Friday", ko: "'프라이데이', 첫음절에 힘." }] },
+          { en: "Thanks, but I already have plans tonight.", ko: "고마운데, 오늘 밤엔 이미 약속 있어.",
+            chunks: "Thanks, / but I already have plans tonight.",
+            tips: [{ target: "plans", ko: "'플랜즈', 끝 s는 z 소리." }] },
+          { en: "I already have plans with my family.", ko: "가족이랑 이미 약속이 있어.",
+            chunks: "I already have plans / with my family.",
+            tips: [{ target: "family", ko: "'패멀리', 첫음절에 힘." }] },
+          { en: "Ah, I already have plans that day.", ko: "아, 그날은 이미 약속 있어.",
+            chunks: "Ah, / I already have plans that day.",
+            tips: [{ target: "that day", ko: "th는 혀끝을 살짝, '댓 데이'." }] },
+          { en: "I already have plans, but text me next time!", ko: "이미 약속 있는데, 다음에 또 연락 줘!",
+            chunks: "I already have plans, / but text me next time!",
+            tips: [{ target: "text me", ko: "t가 약해 '텍스 미'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My manager asked / if‿I could work this Saturday.",
+              ko: "팀장님이 이번 토요일에 일할 수 있냐고 물었어.",
+              tips: [{ target: "manager", ko: "'매니저r', 첫음절에 힘." }] },
+            { chunks: "I panicked‿and said, / “I already have plans.”",
+              ko: "당황해서 “이미 약속이 있어요.” 해 버렸지.",
+              tips: [{ target: "panicked", ko: "ed는 t 소리로 '패닉트'." }] },
+            { chunks: "She smiled / and asked what they were.",
+              ko: "팀장님이 웃으면서 무슨 약속이냐고 묻는 거야.",
+              tips: [{ target: "smiled", ko: "ed는 d 소리로 '스마일드'." }] },
+            { chunks: "I said, / “Uh, laundry,” / and somehow / I still got the day‿off.",
+              ko: "“어… 빨래요.” 했는데, 어쩐 일인지 그래도 쉬는 날을 받았어.",
+              tips: [{ target: "day off", ko: "'쉬는 날'. y가 off에 붙어 '데이오프'." }] }
+          ],
+          en: "My manager asked if I could work this Saturday. I panicked and said, “I already have plans.” She smiled and asked what they were. I said, “Uh, laundry,” and somehow I still got the day off.",
+          ko: "팀장님이 이번 토요일에 출근할 수 있냐고 물었거든. 당황해서 “이미 약속이 있어요.” 해 버렸지. 팀장님이 웃으면서 무슨 약속이냐고 묻더라. “어… 빨래요.” 했는데, 어쩐 일인지 그래도 쉬는 날을 받았어."
+        }
+      },
+      {
+        id: "c30-e2",
+        phrase: "Can I take a rain check?",
+        teaser: "약속을 거절하면서 '다음에 꼭 하자'고 미룰 때, 뭐라고 하지?",
+        ko: "'다음으로 미뤄도 될까요?'라는 뜻이에요. 지금은 안 되지만 다음에 꼭 하고 싶다는 마음을 담아 거절할 때 써요. 원래 비로 경기가 취소되면 주던 '다음 경기 표'에서 온 말이에요. 뒤에 on ~를 붙여 무엇을 미룰지 말해요. 비슷한 표현: Maybe another time? / Can we do it another day?",
+        examples: [
+          { en: "I'm wiped out tonight. Can I take a rain check?", ko: "오늘 너무 지쳤어. 다음으로 미뤄도 될까?",
+            chunks: "I'm wiped‿out tonight. / Can‿I take‿a rain check?",
+            tips: [{ target: "wiped out", ko: "'완전 지친'. 끝 t가 out에 붙어 '와입타웃'." }] },
+          { en: "Can I take a rain check on dinner?", ko: "저녁은 다음으로 미뤄도 될까?",
+            chunks: "Can‿I take‿a rain check / on dinner?",
+            tips: [{ target: "on dinner", ko: "on 뒤에 미룰 일을 붙여요." }] },
+          { en: "Sorry, can I take a rain check? Work is crazy.", ko: "미안, 다음으로 미뤄도 돼? 일이 너무 많아.",
+            chunks: "Sorry, / can‿I take‿a rain check? / Work‿is crazy.",
+            tips: [{ target: "Work is crazy", ko: "'일이 정신없다'. k가 is에 붙어 '워r키즈'." }] },
+          { en: "Can I take a rain check? I'm still sick.", ko: "다음으로 미뤄도 될까? 아직 아파.",
+            chunks: "Can‿I take‿a rain check? / I'm still sick.",
+            tips: [{ target: "still sick", ko: "'스틸 씩', s를 또렷하게." }] },
+          { en: "Can I take a rain check until next month?", ko: "다음 달로 미뤄도 될까요?",
+            chunks: "Can‿I take‿a rain check / until next month?",
+            tips: [{ target: "month", ko: "th는 혀끝을 살짝, '먼th'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend invited me / to‿an early-morning hiking club.",
+              ko: "친구가 새벽 등산 모임에 같이 가자고 했어.",
+              tips: [{ target: "hiking", ko: "'하이킹', 첫음절에 힘." }] },
+            { chunks: "I said, / “Can‿I take‿a rain check?” / and hoped she'd forget.",
+              ko: "“다음으로 미뤄도 될까?” 하고는 친구가 잊어버리길 바랐지.",
+              tips: [{ target: "hoped", ko: "ed는 t 소리로 '호웁트'." }] },
+            { chunks: "She didn't forget.",
+              ko: "근데 안 잊더라.",
+              tips: [{ target: "didn't forget", ko: "didn't의 t는 거의 안 들려요." }] },
+            { chunks: "Now she texts me / every Saturday‿at dawn: / “Rain check?”",
+              ko: "이제 매주 토요일 새벽마다 “다음으로 미룰래?” 하고 문자가 와.",
+              tips: [{ target: "dawn", ko: "입을 크게 벌려 '더-언'." }] }
+          ],
+          en: "My friend invited me to an early-morning hiking club. I said, “Can I take a rain check?” and hoped she'd forget. She didn't forget. Now she texts me every Saturday at dawn: “Rain check?”",
+          ko: "친구가 새벽 등산 모임에 같이 가자는 거야. “다음으로 미뤄도 될까?” 하고는 걔가 잊어버리길 바랐지. 근데 안 잊더라. 이제 매주 토요일 새벽마다 “다음으로 미룰래?” 하고 문자가 와."
+        }
+      },
+      {
+        id: "c30-e3",
+        phrase: "Can we do ~ instead?",
+        teaser: "약속 날짜를 바꿔서 '대신 ~ 어때?'라고 제안할 때, 뭐라고 하지?",
+        ko: "'대신 ~로 해도 될까요?'라는 뜻이에요. 날짜·시간·장소·메뉴를 바꿔 다시 제안할 때 써요. do 뒤에 바꿀 것(Sunday, lunch, Zoom)을 넣으면 돼요. 비슷한 표현: How about ~ instead? / Could we switch to ~?",
+        examples: [
+          { en: "Can we do lunch instead of dinner?", ko: "저녁 말고 점심으로 해도 될까?",
+            chunks: "Can we do lunch / instead‿of dinner?",
+            tips: [{ target: "instead of", ko: "'인스테더브'처럼 이어져요." }] },
+          { en: "Can we do Zoom instead? I'm stuck at home.", ko: "대신 줌으로 해도 될까요? 집에 묶여 있어서요.",
+            chunks: "Can we do Zoom instead? / I'm stuck‿at home.",
+            tips: [{ target: "stuck at", ko: "k가 at에 붙어 '스터캣'." }] },
+          { en: "Can we do three o'clock instead?", ko: "대신 3시로 해도 될까요?",
+            chunks: "Can we do three o'clock instead?",
+            tips: [{ target: "o'clock", ko: "'어클락', 뒤에 힘." }] },
+          { en: "Can we do pizza instead? I'm tired of sushi.", ko: "대신 피자 먹을까? 초밥은 질렸어.",
+            chunks: "Can we do pizza instead? / I'm tired‿of sushi.",
+            tips: [{ target: "tired of", ko: "'타이어r더브'처럼 이어져요." }] },
+          { en: "Can we do the meeting tomorrow instead?", ko: "회의를 대신 내일 해도 될까요?",
+            chunks: "Can we do the meeting / tomorrow instead?",
+            tips: [{ target: "meeting", ko: "t가 굴러 '미-링'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend wanted / to celebrate my birthday / at‿a karaoke bar.",
+              ko: "친구가 내 생일을 노래방 바에서 축하하자고 했어.",
+              tips: [{ target: "celebrate", ko: "'셀러브레잇', 첫음절에 힘." }] },
+            { chunks: "I can't sing‿at all, / so I asked, / “Can we do bowling instead?”",
+              ko: "나는 노래를 전혀 못 해서 “대신 볼링 치면 안 돼?” 하고 물었지.",
+              tips: [{ target: "at all", ko: "t가 굴러 '애롤'처럼." }] },
+            { chunks: "It turns‿out / I can't bowl either.",
+              ko: "알고 보니 나는 볼링도 못 치더라.",
+              tips: [{ target: "either", ko: "'이-더r' 또는 '아이더r' 둘 다 써요." }] },
+            { chunks: "Everyone agreed / karaoke would've been / less embarrassing.",
+              ko: "다들 차라리 노래방이 덜 창피했겠다고 입을 모았어.",
+              tips: [{ target: "would've", ko: "would have를 줄인 말, '우더브'." }] }
+          ],
+          en: "My friend wanted to celebrate my birthday at a karaoke bar. I can't sing at all, so I asked, “Can we do bowling instead?” It turns out I can't bowl either. Everyone agreed karaoke would've been less embarrassing.",
+          ko: "친구가 내 생일을 노래방 바에서 축하하자고 했거든. 나는 노래를 전혀 못 해서 “대신 볼링 치면 안 돼?” 했지. 알고 보니 볼링도 못 치더라. 다들 차라리 노래방이 덜 창피했겠다고 했어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );
