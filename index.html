@@ -261,12 +261,16 @@
 
   /* 읽기: 아직 확인 안 한 내 대사는 한글만, 탭할 때마다 영어 ↔ 한글 */
   .row.me.kq-on .bubble{ background:var(--accent-soft); border-color:var(--accent-line); border-style:dashed; color:var(--text); }
-  .row.me.kq-on .en, .row.me.kq-on .ko{ display:none; }
-  .row.me.kq-on .kq{ display:block; font-size:16.5px; line-height:1.5; animation:fadeIn .25s ease both; }
-  .m-read .row.me:not(.kq-on) .en{ animation:fadeIn .25s ease both; }
+  .row.them.kq-on .bubble{ border-color:var(--line); border-style:dashed; }   /* 읽기 어려움: 아직 확인 안 한 상대 대사 */
+  .row.kq-on .en, .row.kq-on .ko{ display:none; }
+  .row.kq-on .kq{ display:block; font-size:16.5px; line-height:1.5; animation:fadeIn .25s ease both; }
+  .m-read .row.me:not(.kq-on) .en, .m-read.rhard .row.them:not(.kq-on) .en{ animation:fadeIn .25s ease both; }
   .hint{ display:none; font-size:12.5px; color:var(--faint); margin:6px 8px 0; }
-  .m-read .row.me.kq-on .hint{ display:block; }
-  body.hinted .m-read .row.me .hint{ display:none; }
+  .m-read .row.me.kq-on .hint, .m-read.rhard .row.them.kq-on .hint{ display:block; }
+  .m-read.rhard .row.me .hint{ display:none; }   /* 어려움은 첫 상대 대사에만 안내 */
+  body.hinted .m-read .row .hint{ display:none; }
+  .m-read.rhard .row.them .bubble{ cursor:pointer; }
+  .m-read.rhard .row.them .bubble:active{ transform:scale(.98); }
 
   /* 쉐도잉·듣기: 지금 줄 강조, 지나간 줄은 흐리게 */
   .row.cur .bubble, .row.playing .bubble{ box-shadow:0 0 0 2.5px var(--accent); }
@@ -275,7 +279,9 @@
 
   /* 쉐도잉 쉬움 / 중간 / 어려움 선택 (쉐도잉 모드에서만, 카드 위쪽) */
   .sh-seg{ width:264px; max-width:100%; margin-top:16px; }
-  .card:not(.m-shadow) .sh-seg{ display:none; }   /* 읽기·듣기에서는 숨김 (아래 .seg{display:flex}보다 우선하도록 선택자를 구체적으로) */
+  .card:not(.m-shadow) .sh-seg, .card:not(.m-read) .rl-seg{ display:none; }   /* 쉐도잉 난이도는 쉐도잉에서만, 읽기 난이도(보통/어려움)는 읽기에서만 */
+  .rl-seg{ width:176px; max-width:100%; margin-top:16px; }
+  .rl-seg button{ height:34px; font-size:14.5px; }   /* 읽기·듣기에서는 숨김 (아래 .seg{display:flex}보다 우선하도록 선택자를 구체적으로) */
   .sh-seg button{ height:34px; font-size:14.5px; }
   /* 어려움: 아이콘(.masked) 아래에 지금 줄만 '정답 보기'(.peek) */
   .sh-blind.peek .chat{ display:flex; margin-top:6px; }
@@ -325,7 +331,7 @@
   .spk:active{ transform:scale(.92); }
   .spk.playing svg{ animation:pulse 1s ease-in-out infinite; }
   .card:not(.m-read) .row .spk{ display:none; }   /* 줄마다 스피커는 읽기 모드에만 */
-  .m-read .row.me.kq-on .spk{ display:none; }     /* 읽기 모드: 영어가 보이는 줄에만 (내 대사는 탭해서 영어로 바뀌었을 때) */
+  .m-read .row.kq-on .spk{ display:none; }     /* 읽기 모드: 영어가 보이는 줄에만 (한글인 줄은 탭해서 영어로 바뀌었을 때) */
   .m-read .row.me:not(.kq-on) .spk{ animation:fadeIn .25s ease both; }
   @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
 
@@ -834,7 +840,7 @@
   .dc-lab{ display:inline-block; margin-right:6px; font-size:11.5px; font-weight:700; color:var(--muted); }
   .dc-act{ display:flex; justify-content:flex-end; gap:6px; margin-top:10px; }
   .dc-act button{ height:32px; padding:0 12px; border-radius:999px; font-size:13px; font-weight:600; color:var(--muted); border:1px solid var(--line); }
-  .dc-act button.danger{ color:#fff; background:#e5484d; border-color:transparent; }
+  .dc-act button.danger{ color:#fff; background:#C62A2F; border-color:transparent; }   /* 2026-10-06 #e5484d 3.9:1 → 5.6:1 */
   .dc-act button.pri{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
   .dc-form{ padding:12px 14px; }
   .dc-f{ display:block; margin-top:8px; }
@@ -997,6 +1003,12 @@
   }
   .w-tab[aria-selected="true"]{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
   .w-tab.add{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .w-tab .x{ z-index:1; }   /* 2026-10-06: 탭 버튼의 넓힌 누르는 자리(::after)가 ✕를 덮어서 안 눌렸음 */
+  .w-mode{ margin-top:14px; }
+  .w-mode button{ height:40px; font-size:15px; }
+  .w-delask{ margin-top:10px; padding:12px 14px; border-radius:14px; background:var(--bg-2); border:1px solid #e5484d; }
+  .w-delmsg{ margin:0; font-size:14.5px; line-height:1.55; color:var(--text-2); }
+  .w-delmsg b{ color:var(--text); }
   .w-tab .x{
     display:grid; place-items:center; width:20px; height:20px; margin-right:-7px;
     border-radius:50%; font-size:12px; line-height:1; background:rgba(0,0,0,.15);
@@ -1453,12 +1465,20 @@
       <header class="w-top">
         <div>
           <div class="w-date" id="wDate"></div>
-          <h2 class="w-title">오늘의 영어 일기</h2>
+          <h2 class="w-title" id="wTitle">오늘의 영어 일기</h2>
         </div>
         <button class="gear" type="button" data-open-settings aria-label="설정"></button>
       </header>
 
+      <!-- 일기 / 대화문 전환(2026-10-06): 고른 쪽만 보임 -->
+      <div class="seg w-mode" id="wMode" role="group" aria-label="일기 또는 대화문">
+        <button type="button" data-v="diary" aria-pressed="true">일기</button>
+        <button type="button" data-v="talk" aria-pressed="false">대화문</button>
+      </div>
+
+      <div id="wDiaryPane">
       <div class="w-tabs" id="wTabs" role="tablist" aria-label="오늘 쓴 글"></div>
+      <div class="w-delask" id="wDelAsk" hidden></div>
 
       <div class="q-card">
         <div class="q-head">
@@ -1491,8 +1511,12 @@
       <h3 class="w-h">듣기용</h3>
       <div class="w-audio" id="wAudio"></div>
 
+      <h3 class="w-h">지난 기록</h3>
+      <div class="w-history" id="wHistory"></div>
+      </div>
+
       <!-- 내 대화문(2026-10-06): GPT와 음성 대화 → 첨삭받은 대화문 저장 → 드라이브 '내 대화문'으로 듣고 따라 말하기 -->
-      <h3 class="w-h">내 대화문</h3>
+      <div id="wTalkPane" hidden>
       <div class="w-talk" id="wTalk">
         <p class="note tk-lead">GPT와 영어로 음성 대화를 한 뒤, 첨삭받은 대화문을 붙여넣어 저장해요. 드라이브 모드에서 듣고 따라 말할 수 있어요.</p>
         <button class="btn w-copy" type="button" data-tk-copy>
@@ -1503,9 +1527,7 @@
         <div id="tkPrev"></div>
         <div id="tkList"></div>
       </div>
-
-      <h3 class="w-h">지난 기록</h3>
-      <div class="w-history" id="wHistory"></div>
+      </div>
     </section>
 
     <!-- 드라이브 탭: 시작 화면(옵션)이 첫 화면. [시작]·[이어 듣기] → 재생 화면(#drive, 탭바를 덮는 전체 화면) -->
@@ -2001,7 +2023,7 @@ function renderLine(line, li, enHtml, flags) {
     '<div class="line">' +
       '<div class="bubble">' +
         '<span class="en" lang="en">' + enHtml + '</span>' +
-        (me ? '<span class="kq">' + esc(line.ko || "") + '</span>' : "") +
+        '<span class="kq">' + esc(line.ko || "") + '</span>' +
       '</div>' +
       '<button class="spk" type="button" aria-label="이 줄 듣기">' + ICON_SPEAKER + '</button>' +
     '</div>' +
@@ -2016,7 +2038,7 @@ function chatHtml(card, ci) {
   let firstThem = true, firstMe = true;
   return (card.dialogue || []).map((line, li) => {
     const me = line.who === "me";
-    const flags = { firstThem: !me && firstThem, hint: me && firstMe };
+    const flags = { firstThem: !me && firstThem, hint: me ? firstMe : firstThem };   // 안내는 첫 내 대사(보통) · 첫 상대 대사(어려움에서만 보임)
     if (me) firstMe = false; else firstThem = false;
     return renderLine(line, li, markExpressions(line.en || "", card, ci, used, usedX), flags);
   }).join("");
@@ -2066,6 +2088,9 @@ function renderCard(card, i) {
       '<h2 class="title">' + esc(card.title) + '</h2>' +
       '<p class="situation">' + esc(card.situation) + '</p>' +
       varLinkHtml(i) +
+      '<div class="seg rl-seg" role="group" aria-label="읽기 난이도">' +
+        '<button type="button" data-rl="normal" aria-pressed="false">보통</button>' +
+        '<button type="button" data-rl="hard" aria-pressed="false">어려움</button></div>' +
       '<div class="seg sh-seg" role="group" aria-label="쉐도잉 난이도">' +
         '<button type="button" data-sh="easy" aria-pressed="false">쉬움</button>' +
         '<button type="button" data-sh="mid" aria-pressed="false">중간</button>' +
@@ -2953,6 +2978,21 @@ const shadowPref = (() => {
 function saveShadowPref() {
   try { localStorage.setItem(SHADOW_KEY, JSON.stringify(shadowPref)); } catch (e) {}
 }
+/* 읽기 난이도(2026-10-06 사용자 요청, 모든 카드 공통, 저장): normal 보통(내 대사만 한글) / hard 어려움(상대 대사도 한글 — 탭하면 영어, 내 대사와 같은 방식) */
+const READ_KEY = "engcards.read.v1";
+const readPref = (() => {
+  try { const s = JSON.parse(localStorage.getItem(READ_KEY) || "null"); if (s && s.level === "hard") return { level: "hard" }; } catch (e) {}
+  return { level: "normal" };
+})();
+const readHard = () => readPref.level === "hard";
+function setReadLevel(level) {
+  if (level === readPref.level) return;
+  readPref.level = level === "hard" ? "hard" : "normal";
+  try { localStorage.setItem(READ_KEY, JSON.stringify(readPref)); } catch (e) {}
+  Player.stop();
+  document.querySelectorAll(".card[data-i]").forEach(resetCard);
+  buzz();
+}
 const MID_GAP = 250;                          // 중간: 줄 사이 짧은 간격(ms). 다음 음성을 불러오는 시간이 더해져 실제로는 약 0.3초
 const isMid = st => st.mode === "shadow" && st.level === "mid";
 const isBlind = st => st.mode === "shadow" && st.level === "hard";   // 어려움: 영어 없이 듣고 따라 말하기
@@ -2978,13 +3018,15 @@ function resetCard(card) {
   card.classList.toggle("sh-blind", isBlind(st));
   if (isBlind(st)) card.classList.add("masked");          // 어려움: 듣기 모드처럼 두 사람 아이콘
   card.querySelectorAll("[data-sh]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.sh === shadowPref.level)));
+  card.querySelectorAll("[data-rl]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.rl === readPref.level)));
+  card.classList.toggle("rhard", readHard());
   card.querySelector(".chat").innerHTML = CHAT_HTML[+card.dataset.i];
   setCur(card, -1);
   const rows = rowsOf(card);
   if (mode === "read") {
     rows.forEach((r, i) => {
       r.classList.toggle("off", i > 0);
-      if (r.classList.contains("me")) r.classList.add("kq-on");
+      if (r.classList.contains("me") || readHard()) r.classList.add("kq-on");   // 어려움: 상대 대사도 한글
     });
     st.shown = 1;
   } else if (mode === "listen") {
@@ -3054,9 +3096,9 @@ function renderActions(card) {
     /* 왼쪽 버튼: 아직 다 안 나왔으면 [전체 보기](전체 보기 중이면 [접기]).
        [다음]으로 모든 줄이 다 나왔으면 — 한글로 남은 내 대사가 있으면 [내 답변 영어로](내 대사 전부 영어), 전부 영어면 [접기](한 번에 처음 상태로) */
     const end = st.shown >= n && !st.timer;
-    const kq = rowsOf(card).some(r => r.classList.contains("me") && r.classList.contains("kq-on"));
+    const kq = rowsOf(card).some(r => r.classList.contains("kq-on"));
     const left = st.full ? actBtn("all", "접기", "on") : !end ? actBtn("all", "전체 보기") :
-      kq ? actBtn("meen", "내 답변 영어로") : actBtn("fold", "접기", "on");
+      kq ? actBtn("meen", readHard() ? "모두 영어로" : "내 답변 영어로") : actBtn("fold", "접기", "on");
     html = left + actBtn("next", end ? AGAIN_HTML : NEXT_HTML, "main");
   } else if (st.mode === "listen") {
     const rs = st.rd.state();
@@ -3141,7 +3183,7 @@ function onAct(card, act) {
 function onBubble(card, row, target) {
   const st = card && card._st;
   if (!st || !row || row.classList.contains("typing")) return;
-  if (st.mode === "read" && row.classList.contains("me")) {
+  if (st.mode === "read" && (row.classList.contains("me") || readHard())) {   // 어려움은 상대 대사도 한글 ↔ 영어
     row.classList.toggle("kq-on");
     if (row.classList.contains("kq-on") && row.classList.contains("playing")) Player.stop();   // 한글로 돌아가면(스피커도 숨김) 그 줄 소리도 멈춤
     document.body.classList.add("hinted");
@@ -3380,6 +3422,7 @@ feed.addEventListener("click", e => {
   if ((el = t.closest("[data-var-list]"))) { buzz(); openVarList(+el.dataset.varList); return; }
   if ((el = t.closest(".practice-btn"))) { const c = el.closest(".card"); if (c && c.dataset.i != null) practiceCard(c); else openPractice(); return; }   // 카드: 이 카드 바로 연습 / 끝 화면: 시작 화면
   if ((el = t.closest("[data-sh]"))) { setShadowLevel(el.dataset.sh); return; }
+  if ((el = t.closest("[data-rl]"))) { setReadLevel(el.dataset.rl); return; }
   if ((el = t.closest(".jump"))) { openList(); return; }
   if ((el = t.closest(".restart"))) { feed.scrollTo({ top: 0, behavior: "smooth" }); return; }
 });
@@ -3642,8 +3685,9 @@ function renderTabs() {
   const items = todayEntry().items.length ? todayEntry().items : [activeItem()];
   let html = items.map((it, i) => {
     const sel = i === activeIdx;
-    const del = sel && items.length > 1 && !hasContent(it) ?
-      '<span class="x" data-del="' + i + '" role="button" aria-label="빈 글 지우기">✕</span>' : "";
+    /* ✕: 지금 고른 글에만. 글이 둘 이상이거나 내용이 있으면(하나뿐인 글은 비우기) — 빈 글은 바로, 내용이 있으면 경고(wDelAsk) */
+    const del = sel && (items.length > 1 || hasContent(it)) ?
+      '<span class="x" data-del="' + i + '" role="button" aria-label="글 ' + (i + 1) + ' 지우기">✕</span>' : "";
     return '<button class="w-tab" type="button" role="tab" data-i="' + i + '" aria-selected="' + sel + '">글 ' + (i + 1) + del + '</button>';
   }).join("");
   if (items.length < MAX_WRITES) html += '<button class="w-tab add" type="button" data-add="1">+ 새 글</button>';
@@ -3859,21 +3903,51 @@ W.text.addEventListener("input", () => { autoGrow(W.text); updateCount(); onWrit
 W.fix.addEventListener("input", () => { autoGrow(W.fix); onWriteInput(); });
 
 /* 글 1·2·3 탭: 바꾸기 / 새 글(하루 최대 3편) / 빈 글 지우기 */
+/* 글 지우기(2026-10-06 사용자 요청): 빈 글은 바로 지우고, 내용이 있는 글은 탭 아래 경고 → [지우기]. 하나뿐인 글을 지우면 새 빈 글로 */
+const wDelAskEl = document.getElementById("wDelAsk");
+function wDelAskShow(i) {
+  wDelAskEl.dataset.i = i;
+  wDelAskEl.innerHTML = '<p class="w-delmsg"><b>글 ' + (i + 1) + (i === 1 ? "를" : "을") + ' 지울까요?</b><br>쓴 글과 첨삭, 듣기용 본문이 모두 지워지고 되돌릴 수 없어요.</p>' +
+    '<div class="dc-act"><button type="button" data-del-no>취소</button><button type="button" class="danger" data-del-yes>지우기</button></div>';
+  wDelAskEl.hidden = false;
+  buzz();
+}
+function wDelAskHide() { wDelAskEl.hidden = true; wDelAskEl.innerHTML = ""; }
+function wDelete(i) {
+  clearTimeout(saveTimer);                              // 지운 글이 나중에 다시 저장되지 않게
+  wDelAskHide();
+  const items = todayEntry().items;
+  if (!items[i]) return;
+  if (Player.isPlaying(W.listen) || lbBusy(W.view)) Player.stop();
+  items.splice(i, 1);
+  if (!items.length) items.push(newItem());
+  activeIdx = Math.max(0, Math.min(i === activeIdx ? i - 1 : activeIdx > i ? activeIdx - 1 : activeIdx, items.length - 1));
+  if (!items.some(hasContent)) { const r = dayRec(todayKey); if (r.w) { delete r.w; saveDays(); } }   // 오늘 쓴 글이 다 없어지면 '일기 씀'도 지움
+  lbEdit = null; audioOpen = null;
+  saveDiary();
+  renderTabs();
+  loadItem();
+  lastFilled = null;
+  renderAudioList(true);
+  updateBadges();
+  buzz();
+  toast("글을 지웠어요");
+}
+wDelAskEl.addEventListener("click", e => {
+  if (e.target.closest("[data-del-no]")) { wDelAskHide(); return; }
+  if (e.target.closest("[data-del-yes]")) wDelete(+wDelAskEl.dataset.i);
+});
 W.tabs.addEventListener("click", e => {
   const del = e.target.closest("[data-del]");
   if (del) {
     const i = +del.dataset.del;
-    const items = todayEntry().items;
-    if (items.length > 1 && !hasContent(items[i])) {
-      items.splice(i, 1);
-      activeIdx = Math.max(0, i - 1);
-      saveDiary();
-      renderTabs();
-      loadItem();
-      buzz();
-    }
+    const it = todayEntry().items[i];
+    if (!it) return;
+    if (i === activeIdx) { it.text = W.text.value; it.fix = W.fix.value; }
+    if (hasContent(it)) wDelAskShow(i); else wDelete(i);
     return;
   }
+  wDelAskHide();                                        // 다른 글로 옮기거나 새 글이면 지우기 경고는 닫음
   if (e.target.closest("[data-add]")) {
     saveToday();
     const items = todayEntry().items;
@@ -4455,6 +4529,29 @@ TK.box.addEventListener("click", async e => {
 });
 renderTalkPrev();
 renderTalkList();
+
+/* 글쓰기 [일기 | 대화문] 전환(2026-10-06 사용자 요청 — 한 화면에 길게 이어져 헷갈려서). 앱을 켜면 일기, 앱을 쓰는 동안은 마지막으로 고른 쪽 */
+let wMode = "diary";
+function setWMode(m) {
+  if (m !== "talk") m = "diary";
+  const changed = m !== wMode;
+  wMode = m;
+  document.getElementById("wDiaryPane").hidden = m !== "diary";
+  document.getElementById("wTalkPane").hidden = m !== "talk";
+  document.getElementById("wTitle").textContent = m === "talk" ? "내 대화문" : "오늘의 영어 일기";
+  document.querySelectorAll("#wMode button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === m)));
+  if (changed) {
+    if (lbBusy(W.view) || tkBusy()) Player.stop();      // 숨는 쪽에서 재생 중이면 멈춤
+    W.view.scrollTo({ top: 0 });
+  }
+}
+document.getElementById("wMode").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b || b.dataset.v === wMode) return;
+  if (wMode === "diary") saveToday();
+  buzz();
+  setWMode(b.dataset.v);
+});
 
 /* 앱을 닫거나 다른 앱으로 갈 때 저장, 날짜가 바뀌었으면 새 질문으로 */
 document.addEventListener("visibilitychange", () => {
@@ -6129,7 +6226,7 @@ todayEl.addEventListener("click", e => {
   else if (a === "new") openExprFiltered("new");
   else if (a === "hook" && task.kind === "hook") openHook(task.x);
   else if (a === "card" || a === "cards" || a === "hook") { const ci = task.ci != null ? task.ci : nextCardIdx(); switchTab("cards", true); jumpTo(ci); }
-  else if (a === "write") { switchTab("write", true); W.view.scrollTo({ top: 0 }); }
+  else if (a === "write") { switchTab("write", true); setWMode("diary"); W.view.scrollTo({ top: 0 }); }
   else if (a === "resume") {
     const ri = driveResumeInfo();
     if (!ri) { renderToday(); return; }
