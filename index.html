@@ -1262,6 +1262,11 @@
   .dv-en mark{ font-weight:inherit; }
   .dv-note{ flex:none; min-height:22px; text-align:center; font-size:14px; color:var(--faint); }
   /* 내 대화문 역할극(2026-10-06): 내 차례를 기다리는 동안·다음 줄 미리보기에서는 내 말 영어를 가리고 한국어만 */
+  /* 글자 크기(설정 › 글자 크기, 2026-10-06 — 엄마가 연습하기 쉽게): 드라이브 재생 화면 문장 · 쉐도잉 모드 대화만. zoom이라 말풍선·줄바꿈도 같이 커짐 */
+  .dv-line, .card.m-shadow .chat{ zoom:var(--tz, 1); }
+  .st-tzprev{ margin-top:10px; padding:12px 14px; border-radius:14px; background:var(--bg-2); border:1px solid var(--line); zoom:var(--tz, 1); }
+  .st-tzen{ margin:0; font-size:18px; line-height:1.45; font-weight:600; color:var(--text); }
+  .st-tzko{ margin:4px 0 0; font-size:14px; line-height:1.5; color:var(--muted); }
   .dv-line.dv-quiz .dv-en{ visibility:hidden; }
   .dv-cur .dv-line.dv-quiz .dv-ko{ font-size:21px; line-height:1.45; color:var(--text); }   /* 기다리는 동안은 한국어가 문제라 크게 */
   .dv-next .dv-line.role-me .dv-en{ display:none; }
@@ -1665,8 +1670,10 @@ const DEFAULTS = {
   rotateSec: 10,                         // 자동 넘김 시간(초): 5 / 10 / 20
   fcAuto: true,                          // 복습 덱: 카드를 뒤집으면 영어 자동 재생 (설정 › 복습)
   fcRemote: true,                        // 복습 덱: 이어폰·차(블루투스)·잠금화면 버튼 — ⏭ 알았음 · ⏮ 다시 · ▶ 뒤집기
-  fcEcho: 0                              // 복습 덱: 따라 말하기 0(끄기) / 1 / 3 / 5번 — 듣기 → 문장 길이만큼 따라 말할 시간
+  fcEcho: 0,                             // 복습 덱: 따라 말하기 0(끄기) / 1 / 3 / 5번 — 듣기 → 문장 길이만큼 따라 말할 시간
+  textZoom: 1                            // 글자 크기(2026-10-06, 드라이브 재생 화면·상황 카드 쉐도잉): 1 기본 / 1.25 크게 / 1.5 더 크게 / 1.8 아주 크게
 };
+const TEXT_ZOOMS = [1, 1.25, 1.5, 1.8];
 function loadSettings() {
   try {
     const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "null");
@@ -1678,6 +1685,7 @@ function loadSettings() {
     merged.fcAuto = merged.fcAuto !== false;
     merged.fcRemote = merged.fcRemote !== false;
     if (![0, 1, 3, 5].includes(merged.fcEcho)) merged.fcEcho = 0;
+    if (!TEXT_ZOOMS.includes(merged.textZoom)) merged.textZoom = 1;
     delete merged.autoplay;                // 예전 '자동 재생' 설정 (모드 개편으로 없어짐)
     return merged;
   } catch (e) { return Object.assign({}, DEFAULTS); }
@@ -1686,6 +1694,9 @@ function saveSettings() {
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch (e) { /* 저장 못 해도 동작은 함 */ }
 }
 const settings = loadSettings();
+/* 글자 크기: CSS 변수 --tz → 드라이브 재생 화면 문장(.dv-line)·쉐도잉 모드 대화(.m-shadow .chat)에 zoom(글자·말풍선·줄바꿈이 같이 커짐) */
+function applyTextZoom() { try { document.documentElement.style.setProperty("--tz", String(settings.textZoom || 1)); } catch (e) {} }
+applyTextZoom();
 
 /* ---------- 앱의 '지금'과 '오늘' (하루는 자정 기준 — 폰 현지 시각) ----------
    모든 '오늘' 계산(복습 날짜·하루 새 표현 3개·글쓰기 오늘의 질문·"오늘 작성"·오늘 탭 집계·연속 학습일)은 dateKey()(= 오늘 날짜 "YYYY-MM-DD") 하나로.
@@ -8340,6 +8351,13 @@ function settingsHtml() {
       '<h2 class="dv-title">설정</h2>' +
     '</header>' +
     '<div class="st-body">' +
+      '<section class="st-sec" id="stText" aria-label="글자 크기"><h3>글자 크기</h3>' +
+        '<div class="set-group"><span class="set-label">드라이브 · 쉐도잉 화면 글자</span>' +
+          seg("textZoom", [["1", "기본"], ["1.25", "크게"], ["1.5", "더 크게"], ["1.8", "아주 크게"]]) +
+          '<div class="st-tzprev" aria-hidden="true"><p class="st-tzen">Can I get a medium hot americano, please?</p><p class="st-tzko">따뜻한 아메리카노 미디엄으로 주시겠어요?</p></div>' +
+          '<p class="note">드라이브 모드 재생 화면과 상황 카드 쉐도잉 모드의 대화 글자가 커져요. 위 미리보기가 그 크기예요.</p>' +
+        '</div>' +
+      '</section>' +
       '<section class="st-sec" id="stVoice" aria-label="음성"><h3>음성</h3>' +
         '<p class="st-lead">상황 카드 음성은 키 없이 기본 제공돼요. API 키는 일기·연습장 같은 내 문장을 고음질로 들을 때 필요해요.</p>' +
         '<div class="set-group"><span class="set-label">음성 엔진</span>' +
@@ -8447,11 +8465,12 @@ stEl.addEventListener("click", e => {
   if (t.closest("[data-st-close]")) { buzz(); closeSettings(); return; }
   if ((el = t.closest(".seg button"))) {
     const name = el.parentNode.dataset.set, v = el.dataset.v;
-    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" || name === "fcAuto" || name === "fcRemote" ? v === "true" : name === "fcEcho" ? parseInt(v, 10) : v;
+    settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" || name === "fcAuto" || name === "fcRemote" ? v === "true" : name === "fcEcho" ? parseInt(v, 10) : name === "textZoom" ? parseFloat(v) : v;
     saveSettings();
     el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
     if (name === "engine") { const box = stEl.querySelector(".el-only"); if (box) box.hidden = v !== "eleven"; }
     if (name === "rotate") { const s = stEl.querySelector('[data-set="rotateSec"]'); if (s) s.classList.toggle("dv-dis", !settings.rotate); }
+    if (name === "textZoom") applyTextZoom();
     buzz();
     return;
   }
