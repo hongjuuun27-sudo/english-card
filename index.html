@@ -6380,7 +6380,7 @@ function contentNote(c, drive, expr) {
     if (expr) seq.push("표현마다");
   }
   if (f[1]) seq.push("예문 5개");
-  if (f[2]) seq.push(drive ? "썰" : "썰 문장");
+  if (f[2]) seq.push("썰 문장");                     // 드라이브도 2026-10-06부터 썰을 한 문장씩
   let s = seq.join(" → ").replace(/표현마다 → /g, "표현마다 ");
   return '<b>' + (drive ? "재생 순서" : "연습 순서") + '</b> · ' + s;
 }
@@ -6397,7 +6397,7 @@ function talksFor(o) {
 /* 따라 말할 시간이 붙는 문장인지(드라이브 '따라 말할 시간' · 내 대화문 '따라 말하기'). 역할극은 쉬는 시간이 문장 앞(dvRoleWait) */
 function dvEchoOn(o, it) {
   if (it.kind === "tl") return o.talkEcho === "all" || (o.talkEcho === "me" && it.who === "me");
-  return o.shadow && it.kind !== "story";
+  return o.shadow;                                  // 썰도 한 문장씩이라 문장마다(2026-10-06)
 }
 const dvRoleOn = (o, it) => it.kind === "tl" && it.who === "me" && o.talkEcho === "role";   // order: seq 차례대로 / random 랜덤(카드·표현 순서를 섞음)
 
@@ -6443,6 +6443,7 @@ function sayPhrase(p) {
 }
 const catsKey = cats => cats.slice().sort().join(",");
 const dvVoice = it => it.voice || (it.who === "me" ? settings.voiceMe : settings.voiceThem);
+const dvSpeech = it => getScript(it.audio || it.text).speech;   // 음성으로 받는 글(썰 문장은 썰 전체 — 그 안에서 구간만 재생)
 function dvElevenOK() { return settings.engine === "eleven" && !!settings.apiKey && navigator.onLine !== false; }
 
 /* ---- 재생 목록 만들기 → { items: [문장], blocks: [카드 또는 표현], exprScope }
@@ -6459,7 +6460,12 @@ function buildDrive(o) {
     const ex = it.ex, base = { block: b, ci: it.ci, xid: it.id, ex };
     push(Object.assign({ kind: "phrase", text: sayPhrase(ex.phrase), ko: shortMeaning(ex), who: "me", fx: "expr", n: 1, total: 1 }, base));
     if (withEx) (ex.examples || []).forEach((x, n, arr) => push(Object.assign({ kind: "ex", text: x.en, ko: x.ko, who: "them", n: n + 1, total: arr.length }, base)));
-    if (withStory && ex.story) push(Object.assign({ kind: "story", text: ex.story.en, ko: ex.story.ko, who: "me", n: 1, total: 1 }, base));
+    /* 썰은 한 문장씩(2026-10-06 — 일기처럼 문장마다 따라 말하기). 소리는 썰 전체 음성(미리 만든 음성·캐시 그대로)에서 그 문장 구간만 잘라 냄(연습 모드와 같은 storySents·구간 재생) */
+    if (withStory && ex.story && ex.story.en) {
+      const ss = storySents(ex.story), full = getScript(ex.story.en).words.length - 1;
+      ss.forEach((s, n) => push(Object.assign({ kind: "story", text: s.text, ko: (s.data && s.data.ko) || (ss.length === 1 ? ex.story.ko : ""), who: "me", n: n + 1, total: ss.length,
+        audio: ex.story.en, a0: s.a0, a1: s.a1, whole: s.a0 === 0 && s.a1 === full }, base)));
+    }
   };
   if (talkScope) {
     /* 내 대화문(2026-10-06): 대화문마다 [새 대화문 효과음] 줄을 차례대로(내 말 = 내 목소리, AI 말 = 상대 목소리, 최신 대화문부터) */
@@ -6514,7 +6520,7 @@ function driveLabels(k) {
     pl.exprScope ? "표현 " + pos + " · " + card.title : card.title + " · " + pos,
     it.kind === "dlg" ? "대화 " + it.n + "/" + it.total :
       it.kind === "phrase" ? ph + " · 핵심 표현" :
-      it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total : ph + " · 썰"
+      it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total : ph + " · 썰" + (it.total > 1 ? " " + it.n + "/" + it.total : "")
   ];
 }
 function dvBlockIndex(k) {
@@ -6527,10 +6533,10 @@ function dvEl(k) {
   if (D.els[k]) return D.els[k];
   const it = D.pl.items[k];
   const el = document.createElement("div");
-  el.className = "dv-line k-" + it.kind + (it.who === "me" ? " me" : "") + (it.kind === "story" || it.text.length > 120 ? " long" : "") +
+  el.className = "dv-line k-" + it.kind + (it.who === "me" ? " me" : "") + (it.text.length > 120 ? " long" : "") +
     (dvRoleOn(D.opts, it) ? " role-me" : "");                   // 역할극: 내 말은 차례가 오기 전까지 영어를 가림
   const who = it.kind === "dlg" || it.kind === "tl" ? it.name : it.kind === "phrase" ? "핵심 표현" : it.kind === "ex" ? "예문 " + it.n :
-    it.kind === "q" ? "오늘의 질문" : it.kind === "wr" ? "내 일기 · " + it.n + "/" + it.total : "썰";
+    it.kind === "q" ? "오늘의 질문" : it.kind === "wr" ? "내 일기 · " + it.n + "/" + it.total : "썰" + (it.total > 1 ? " · " + it.n + "/" + it.total : "");
   el.innerHTML = '<div class="dv-who">' + esc(who) + '</div>' +
     '<div class="dv-en" lang="en">' + scriptHtml(it.text, it.ex && it.kind !== "phrase" ? markRanges(it.text, it.ex) : []) + '</div>' +
     (it.ko ? '<div class="dv-ko">' + esc(it.ko) + '</div>' : "");
@@ -6539,7 +6545,9 @@ function dvEl(k) {
 
 /* ---- 재생기: 인터랙티브 스크립트 공통 재생기를 그대로 씀 ---- */
 D.rd = createReader({
-  items: () => (D.pl ? D.pl.items.map((it, k) => ({ get el() { return dvEl(k).querySelector(".sc"); }, who: it.who, voice: it.voice })) : []),
+  items: () => (D.pl ? D.pl.items.map((it, k) => Object.assign({ get el() { return dvEl(k).querySelector(".sc"); }, who: it.who, voice: it.voice },
+    it.audio && !it.whole ? { script: getScript(it.audio), from: it.a0, to: it.a1, offset: -it.a0 } :   // 썰 문장: 썰 전체 음성의 그 구간(화면 단어 j = 음성 단어 a0 + j)
+    it.audio ? { script: getScript(it.audio) } : {})) : []),
   rate: () => D.opts.rate,
   before: (k, first) => dvBefore(k, first),
   gap: k => dvGap(k),
@@ -6580,10 +6588,11 @@ async function dvRoleWait(k) {
     if (D.echo) { D.echo = false; dvPaintCtl(); }   // 정답이 나올 때 '내 차례예요' 막대를 지움
   }
 }
-/* 문장 사이: 카드·표현이 바뀌면 조금 더 쉬고, '따라 말할 시간'이면 방금 문장 길이만큼 쉼(썰은 여러 문장이라 쉬지 않음) */
+/* 문장 사이: 카드·표현이 바뀌면 조금 더 쉬고, '따라 말할 시간'이면 방금 문장 길이만큼 쉼(썰도 2026-10-06부터 한 문장씩이라 문장마다) */
 function dvGap(k) {
   const it = D.pl.items[k], nx = D.pl.items[k + 1];
-  let ms = nx && nx.block !== it.block ? 900 : nx && nx.fx ? 650 : 450;
+  let ms = nx && nx.block !== it.block ? 900 : nx && nx.fx ? 650 :
+    nx && it.kind === "story" && nx.kind === "story" && nx.n > 1 ? 300 : 450;   // 같은 썰의 다음 문장은 조금 짧게(잘라 낸 소리 끝에 쉼이 들어 있음)
   if (dvEchoOn(D.opts, it)) {
     let len = Player.lastLength();
     if (!len) len = getScript(it.text).words.length * 0.38 / D.opts.rate;   // 길이를 못 쟀으면 단어 수로 어림
@@ -6834,7 +6843,7 @@ function dvPrefetch(k) {
   if (navigator.onLine === false) return;
   const eleven = dvElevenOK();
   for (let j = k + 1; j <= k + 3 && j < D.pl.items.length; j++) {
-    const it = D.pl.items[j], sp = getScript(it.text).speech, v = dvVoice(it);
+    const it = D.pl.items[j], sp = dvSpeech(it), v = dvVoice(it);
     if (!eleven && !Prebuilt.has(sp, v)) continue;                  // 키가 없으면 미리 만든 음성만 받아 둠
     const key = settings.model + "|" + v + "|" + sp;
     if (dvPreSeen.has(key)) continue;
@@ -6845,7 +6854,7 @@ function dvPrefetch(k) {
 /* 이 문장을 mp3로 낼 수 있는지(미리 만든 음성이 있거나 ElevenLabs를 쓸 수 있음) — 아니면 백그라운드에서 내장 음성이라 소리가 안 남 */
 function dvMp3OK(k) {
   const it = D.pl && D.pl.items[k];
-  return dvElevenOK() || (!!it && Prebuilt.has(getScript(it.text).speech, dvVoice(it)));
+  return dvElevenOK() || (!!it && Prebuilt.has(dvSpeech(it), dvVoice(it)));
 }
 
 /* ---- 위치 기억 ---- */
@@ -7011,7 +7020,7 @@ async function dvPreCount() {
   const pl = buildDrive(D.opts);
   const seen = new Set(), todo = [];
   pl.items.forEach(it => {
-    const sp = getScript(it.text).speech, v = dvVoice(it), k = v + "|" + sp;
+    const sp = dvSpeech(it), v = dvVoice(it), k = v + "|" + sp;
     if (!sp.trim() || seen.has(k)) return;
     seen.add(k);
     todo.push({ sp, v });
