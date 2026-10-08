@@ -5,5 +5,6 @@ window.CATEGORY_DATA = [
   { name: "공항·숙소", hue: 208, emoji: "✈️", file: "airport-hotel.js" },
   { name: "이동·쇼핑", hue: 275, emoji: "🛍️", file: "transport-shopping.js" },
   { name: "일상 대화", hue: 150, emoji: "💬", file: "daily-talk.js" },
-  { name: "생활·건강", hue: 350, emoji: "💊", file: "life-health.js" }
+  { name: "생활·건강", hue: 350, emoji: "💊", file: "life-health.js" },
+  { name: "미국 여행", hue: 90,  emoji: "🗽", file: "us-travel.js" }
 ];
