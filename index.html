@@ -1392,6 +1392,8 @@
   .dview .dv-sfoot{ padding-bottom:14px; }
   /* 내용(드라이브·연습 공통): 체크박스 3개 [대화문] [예문] [썰] — 하나 이상 */
   .cbx3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .cbx3.cbx4{ grid-template-columns:repeat(2, 1fr); }      /* 드라이브 표현 범위: [예문] [썰] / [직접 말해 보기] [내 문장](2026-10-08) */
+  .dv-mine{ margin-top:10px; }
   .cbx{
     min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0 8px; border-radius:14px;
     font-size:15px; font-weight:600; color:var(--muted); background:var(--bg-2); border:1.5px solid var(--line);
@@ -6451,7 +6453,28 @@ function contentNote(c, drive, expr) {
   let s = seq.join(" → ").replace(/표현마다 → /g, "표현마다 ");
   return '<b>' + (drive ? "재생 순서" : "연습 순서") + '</b> · ' + s;
 }
-const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", shadow: false, rate: 1, diaryRange: "30", talkRange: "all", talkId: "", talkEcho: "me" };
+const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", shadow: false, rate: 1, diaryRange: "30", talkRange: "all", talkId: "", talkEcho: "me", xParts: ["ex", "story"], xMine: "3" };
+/* 표현 범위(학습 중·오늘 복습)에서 들을 것(2026-10-08): xParts = 고른 것(하나 이상) ex 예문 / story 썰 / drill 직접 말해 보기 / mine 내 문장(연습장),
+   xMine = 내 문장 개수 all 전부 / "3" 표현마다 3개(복습 덱 pickMine과 같은 기준 — 틀린 것 → 오래 안 나온 것). 기본은 예문 + 썰(예전과 같은 재생) */
+const X_PARTS = [["ex", "예문"], ["story", "썰"], ["drill", "직접 말해 보기"], ["mine", "내 문장"]];
+const X_MINE = [["all", "전부"], ["3", "표현마다 3개"]];
+function xPartsHtml(o) {
+  return '<div class="cbx3 cbx4" role="group" aria-label="들을 것 (여러 개 선택)">' + X_PARTS.map(x =>
+    '<button class="cbx" type="button" role="checkbox" data-dv-xp="' + x[0] + '" aria-checked="' + o.xParts.includes(x[0]) + '"><span class="box" aria-hidden="true">' + ICON_CHECK + '</span>' + x[1] + '</button>').join("") + '</div>';
+}
+function xPartsToggle(o, p) {
+  const next = o.xParts.includes(p) ? o.xParts.filter(x => x !== p) : X_PARTS.map(x => x[0]).filter(x => x === p || o.xParts.includes(x));
+  if (!next.length) { toast("하나 이상 골라 주세요"); return; }
+  o.xParts = next;
+}
+function xPartsNote(o) {
+  const x = o.xParts, seq = ["표현마다 효과음", "표현 읽기"];
+  if (x.includes("ex")) seq.push("예문 5개");
+  if (x.includes("story")) seq.push("썰 문장");
+  if (x.includes("drill")) seq.push("말해 보기 10문장");
+  if (x.includes("mine")) seq.push(o.xMine === "all" ? "내 문장 전부" : "내 문장 3개");
+  return '<b>재생 순서</b> · ' + seq.join(" → ");
+}
 /* 내 대화문 범위(2026-10-06): talkRange all 전체 / fav 즐겨찾기 / one 하나만(talkId), talkEcho = 따라 말하기 none 없음 / all 문장마다 / me 내 대사만 / role 역할극 */
 const TALK_RANGES = [["all", "전체"], ["fav", "즐겨찾기"], ["one", "하나만"]];
 const TALK_ECHO = [["none", "없음"], ["all", "문장마다"], ["me", "내 대사만"], ["role", "역할극"]];
@@ -6484,6 +6507,9 @@ function loadDrive() {
       o.talkRange = TALK_RANGES.some(x => x[0] === o.talkRange) ? o.talkRange : "all";
       o.talkId = typeof o.talkId === "string" ? o.talkId : "";
       o.talkEcho = TALK_ECHO.some(x => x[0] === o.talkEcho) ? o.talkEcho : "me";
+      const xp = Array.isArray(o.xParts) ? X_PARTS.map(x => x[0]).filter(x => o.xParts.includes(x)) : [];
+      o.xParts = xp.length ? xp : DV_DEFAULT.xParts.slice();
+      o.xMine = o.xMine === "all" ? "all" : "3";
       return { opts: o, pos: s.pos && typeof s.pos === "object" && s.pos.key ? s.pos : null };
     }
   } catch (e) {}
@@ -6523,7 +6549,7 @@ function buildDrive(o) {
   const items = [], blocks = [];
   const exprScope = o.scope === "learning" || o.scope === "due", diaryScope = o.scope === "diary", talkScope = o.scope === "talk";
   const push = x => { if (String(x.text || "").trim()) items.push(x); };
-  const exprItems = (b, it, withEx, withStory) => {
+  const exprItems = (b, it, withEx, withStory, withDrill, mineN) => {
     const ex = it.ex, base = { block: b, ci: it.ci, xid: it.id, ex };
     push(Object.assign({ kind: "phrase", text: sayPhrase(ex.phrase), ko: shortMeaning(ex), who: "me", fx: "expr", n: 1, total: 1 }, base));
     if (withEx) (ex.examples || []).forEach((x, n, arr) => push(Object.assign({ kind: "ex", text: x.en, ko: x.ko, who: "them", n: n + 1, total: arr.length }, base)));
@@ -6532,6 +6558,13 @@ function buildDrive(o) {
       const ss = storySents(ex.story), full = getScript(ex.story.en).words.length - 1;
       ss.forEach((s, n) => push(Object.assign({ kind: "story", text: s.text, ko: (s.data && s.data.ko) || (ss.length === 1 ? ex.story.ko : ""), who: "me", n: n + 1, total: ss.length,
         audio: ex.story.en, a0: s.a0, a1: s.a1, whole: s.a0 === 0 && s.a1 === full }, base)));
+    }
+    /* 표현 범위만(2026-10-08): 직접 말해 보기 10문장(내 목소리, 미리 만든 음성) → 연습장 내 문장(고친 영어 EN, 내 목소리 — 폰 저장 음성 → 키로 만들기 → 폰 기본 음성).
+       내 문장은 기록을 읽기만 함(복습 덱과 달리 rv를 안 바꿈). 위치 key는 번호 대신 문장 카드 id(mid — 순서가 바뀌어도 같은 문장으로 이어 듣기) */
+    if (withDrill) drillsOf(it.id).forEach((d, n, arr) => push(Object.assign({ kind: "drill", text: d.en, ko: d.ko, who: "me", n: n + 1, total: arr.length }, base)));
+    if (mineN) {
+      const mine = pickMine(it.id, mineN).filter(c => c && String(c.en || "").trim());
+      mine.forEach((c, n) => push(Object.assign({ kind: "mine", text: String(c.en).trim(), ko: c.ko || "", who: "me", n: n + 1, total: mine.length, mid: c.id }, base)));
     }
   };
   if (talkScope) {
@@ -6552,9 +6585,12 @@ function buildDrive(o) {
       sents.forEach((t, n) => push(Object.assign({ kind: "wr", text: t, ko: "", who: "me", voice: settings.voiceWrite, fx: n === 0 && !q.en ? "card" : null, n: n + 1, total: sents.length }, base)));
     });
   } else if (exprScope) {
+    const xp = o.xParts || DV_DEFAULT.xParts;
     driveExprs(o).forEach(it => {
-      blocks.push({ kind: "expr", ci: it.ci, xid: it.id, key: "x" + it.id, start: items.length });
-      exprItems(blocks.length - 1, it, true, true);
+      const start = items.length;
+      blocks.push({ kind: "expr", ci: it.ci, xid: it.id, key: "x" + it.id, start });
+      exprItems(blocks.length - 1, it, xp.includes("ex"), xp.includes("story"), xp.includes("drill"), xp.includes("mine") ? (o.xMine === "all" ? Infinity : 3) : 0);
+      if (items.length === start + 1) items.pop();   // 고른 것이 하나도 없는 표현(예: 내 문장만 골랐는데 내 문장이 없음)은 표현 읽기만 남지 않게 통째로 뺌
     });
   } else {
     CARDS.forEach((card, ci) => {
@@ -6567,7 +6603,7 @@ function buildDrive(o) {
       if (items[start] && !hasDlg(o.content)) items[start].fx = "card";   // 대화가 없으면 카드의 첫 문장(표현 읽기)에서 새 카드 효과음
     });
   }
-  items.forEach(it => { it.key = blocks[it.block].key + "/" + it.kind + "/" + (it.xid || "") + "/" + it.n; });
+  items.forEach(it => { it.key = blocks[it.block].key + "/" + it.kind + "/" + (it.xid || "") + "/" + (it.mid || it.n); });
   if (items.length && !items[0].fx) items[0].fx = exprScope ? "expr" : "card";
   return { items, blocks: blocks.filter(bl => items.some(it => it.block === blocks.indexOf(bl))), exprScope, diaryScope, talkScope };
 }
@@ -6587,7 +6623,9 @@ function driveLabels(k) {
     pl.exprScope ? "표현 " + pos + " · " + card.title : card.title + " · " + pos,
     it.kind === "dlg" ? "대화 " + it.n + "/" + it.total :
       it.kind === "phrase" ? ph + " · 핵심 표현" :
-      it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total : ph + " · 썰" + (it.total > 1 ? " " + it.n + "/" + it.total : "")
+      it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total :
+      it.kind === "drill" ? ph + " · 말해 보기 " + it.n + "/" + it.total :
+      it.kind === "mine" ? ph + " · 내 문장 " + it.n + "/" + it.total : ph + " · 썰" + (it.total > 1 ? " " + it.n + "/" + it.total : "")
   ];
 }
 function dvBlockIndex(k) {
@@ -6603,6 +6641,7 @@ function dvEl(k) {
   el.className = "dv-line k-" + it.kind + (it.who === "me" ? " me" : "") + (it.text.length > 120 ? " long" : "") +
     (dvRoleOn(D.opts, it) ? " role-me" : "");                   // 역할극: 내 말은 차례가 오기 전까지 영어를 가림
   const who = it.kind === "dlg" || it.kind === "tl" ? it.name : it.kind === "phrase" ? "핵심 표현" : it.kind === "ex" ? "예문 " + it.n :
+    it.kind === "drill" ? "말해 보기 · " + it.n + "/" + it.total : it.kind === "mine" ? "내 문장 · " + it.n + "/" + it.total :
     it.kind === "q" ? "오늘의 질문" : it.kind === "wr" ? "내 일기 · " + it.n + "/" + it.total : "썰" + (it.total > 1 ? " · " + it.n + "/" + it.total : "");
   el.innerHTML = '<div class="dv-who">' + esc(who) + '</div>' +
     '<div class="dv-en" lang="en">' + scriptHtml(it.text, it.ex && it.kind !== "phrase" ? markRanges(it.text, it.ex) : []) + '</div>' +
@@ -6972,6 +7011,7 @@ function dvSetupHtml() {
   const mins = Math.max(1, Math.round((words * 0.4 / o.rate + pl.items.length * 0.6) / 60));
   const empty = talkScope ? (!talks.items.length ? "저장한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 붙여넣어 보세요" :
       o.talkRange === "fav" ? "즐겨찾기한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 ☆을 눌러 주세요" : "들을 대화문을 하나 골라 주세요") : o.scope === "cat" && !o.cats.length ? "카테고리를 하나 이상 골라 주세요" :
+    exprScope && driveExprs(o).length ? (o.xParts.length === 1 && o.xParts[0] === "mine" ? "연습장에 저장한 내 문장이 없어요 · 표현 상세 '연습장'에서 저장해 보세요" : "고른 내용이 있는 표현이 없어요") :
     o.scope === "learning" ? "학습 중인 표현이 없어요 · 표현 탭에서 '학습하기'를 시작해 보세요" :
     o.scope === "due" ? "오늘 복습할 표현이 없어요" :
     diaryScope ? (!nDiary ? "첨삭을 붙여넣은 일기가 없어요 · 글쓰기 탭에서 첨삭을 붙여넣어 보세요" : o.diaryRange === "fav" ? "즐겨찾기한 일기가 없어요 · 글쓰기 탭 '듣기용'에서 ☆을 눌러 주세요" : "이 기간에 첨삭 받은 일기가 없어요") :
@@ -7000,13 +7040,21 @@ function dvSetupHtml() {
         '<button class="dv-cat" type="button" data-dv-cat="' + esc(n) + '" aria-pressed="' + o.cats.includes(n) + '">' +
           (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
       '</div>' +
-      (diaryScope || talkScope ? "" : '<div class="set-group' + (exprScope ? " dv-dis" : "") + '"><span class="set-label">내용 (여러 개 선택)</span>' +
+      (diaryScope || talkScope ? "" : exprScope ?
+      '<div class="set-group"><span class="set-label">들을 것 (여러 개 선택)</span>' +
+        xPartsHtml(o) +
+        (o.xParts.includes("mine") ? '<div class="dv-mine">' + seg("xMine", X_MINE) +
+          '<p class="note">' + (o.xMine === "all" ? "연습장에 저장한 내 문장을 모두" : "표현마다 3개 · 틀렸던 문장 → 복습에 오래 안 나온 문장 먼저(복습 덱과 같은 기준)") +
+          ' · 고친 영어를 내 목소리로 읽어요</p></div>' : "") +
+        '<p class="note">' + xPartsNote(o) + '</p>' +
+      '</div>' :
+      '<div class="set-group"><span class="set-label">내용 (여러 개 선택)</span>' +
         contentChecksHtml(o.content, "data-dv-cbx") +
-        '<p class="note">' + contentNote(o.content, true, exprScope) + '</p>' +
+        '<p class="note">' + contentNote(o.content, true, false) + '</p>' +
       '</div>') +
       '<div class="set-group"><span class="set-label">순서</span>' +
         seg("order", [["seq", "차례대로"], ["random", "랜덤"]]) +
-        '<p class="note">' + (o.order === "random" ? unitWord + " 순서를 섞어서 들어요. 한 " + unitWord + " 안의 순서(" + (talkScope ? "줄 순서" : diaryScope ? "질문 → 본문" : "대화 → 예문 → 썰") + ")는 그대로예요. [처음부터]를 누를 때마다 새로 섞여요." :
+        '<p class="note">' + (o.order === "random" ? unitWord + " 순서를 섞어서 들어요. 한 " + unitWord + " 안의 순서(" + (talkScope ? "줄 순서" : diaryScope ? "질문 → 본문" : exprScope ? "표현 읽기 → 고른 내용" : "대화 → 예문 → 썰") + ")는 그대로예요. [처음부터]를 누를 때마다 새로 섞여요." :
           (talkScope ? "최신 대화문부터 들어요." : diaryScope ? "최신 일기부터 들어요." : exprScope ? "표현 목록 순서대로 들어요." : "카드 번호 순서대로 들어요.")) + '</p>' +
       '</div>' +
       (talkScope ? '<div class="set-group"><span class="set-label">따라 말하기</span>' +
@@ -7280,6 +7328,8 @@ function onDriveClick(e) {
     o.talkId = el.dataset.dvTalk;
   } else if ((el = t.closest("[data-dv-cbx]"))) {
     o.content = contentToggle(o.content, +el.dataset.dvCbx);
+  } else if ((el = t.closest("[data-dv-xp]"))) {
+    xPartsToggle(o, el.dataset.dvXp);
   } else if ((el = t.closest("[data-dv-set] button"))) {
     const name = el.parentNode.dataset.dvSet, v = el.dataset.v;
     o[name] = name === "rate" ? parseFloat(v) : name === "shadow" ? v === "true" : v;
