@@ -1742,5 +1742,175 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 69,
+    category: "미국 여행",
+    title: "박물관에서 화장실이 몇 층인지 묻기",
+    situation: "엄마와 박물관을 구경하다가 화장실을 찾는데 이 층에는 안 보여요. 안내 직원에게 화장실이 몇 층에 있는지 물어봐요.",
+    hooks: [
+      { ko: "'화장실 몇 층에 있어요?'는 뭐라고 하지?", line: 1 },
+      { ko: "'혹시 이 층에도 있어요?'는 뭐라고 하지?", line: 3 },
+      { ko: "'그냥 쭉 가면 돼요?'는 뭐라고 하지?", line: 5 }
+    ],
+    dialogue: [
+      { who: "me", en: "Excuse me, what floor are the restrooms on?", ko: "저기, 화장실 몇 층에 있어?",
+        chunks: "Excuse me, / what floor are / the restrooms on?",
+        tips: [{ target: "what floor", ko: "'몇 층'. '왓 플로어r'." },
+               { target: "restrooms", ko: "'레스트룸즈'." }] },
+      { who: "staff", en: "There's one on the lower level, right by the gift shop.", ko: "아래층 기념품 가게 바로 옆에 있어요.",
+        chunks: "There's one on the lower level, / right by the gift shop.",
+        tips: [{ target: "lower level", ko: "'아래층'. 지하층을 이렇게 부르기도 해요." },
+               { target: "right by", ko: "'바로 옆에'." }] },
+      { who: "me", en: "Is there one on this floor, by any chance?", ko: "혹시 이 층에도 있어?",
+        chunks: "Is there one on this floor, / by any chance?",
+        tips: [{ target: "by any chance", ko: "'혹시'. 공손하게 물을 때 끝에 붙여요." },
+               { target: "this floor", ko: "'디스 플로어r'." }] },
+      { who: "staff", en: "There is, but it's all the way at the end, past the dinosaurs.", ko: "있긴 한데, 공룡 전시 지나서 맨 끝에 있어요.",
+        chunks: "There is, / but it's all the way / at the end, / past the dinosaurs.",
+        tips: [{ target: "all the way at the end", ko: "'맨 끝에'. all the way가 '끝까지'를 강조해요." },
+               { target: "past the dinosaurs", ko: "'공룡 지나서'. '패스트 더 다이너쏘r즈'." }] },
+      { who: "me", en: "So I just keep going straight?", ko: "그럼 그냥 쭉 가면 돼?",
+        chunks: "So I just / keep going straight?",
+        tips: [{ target: "keep going", ko: "'계속 가다'. '킵 고잉'." },
+               { target: "straight", ko: "'스트레잇'." }] },
+      { who: "staff", en: "Yep, straight until you hit the big T-rex. It's on your right.", ko: "네, 큰 티라노사우루스 나올 때까지 쭉 가세요. 오른쪽에 있어요.",
+        chunks: "Yep, / straight until you hit / the big T-rex. / It's on your right.",
+        tips: [{ target: "until you hit", ko: "'~에 닿을 때까지'. hit은 '(장소에) 닿다'." },
+               { target: "on your right", ko: "'오른쪽에'." }] },
+      { who: "me", en: "Awesome. My mom's already heading that way.", ko: "좋아. 엄마가 벌써 그쪽으로 가고 계셔.",
+        chunks: "Awesome. / My mom's already / heading that way.",
+        tips: [{ target: "heading that way", ko: "'그쪽으로 가는 중'." }] },
+      { who: "staff", en: "Have fun! And don't miss the planetarium.", ko: "즐거운 시간 보내세요! 그리고 천체 투영관도 꼭 보세요.",
+        chunks: "Have fun! / And don't miss the planetarium.",
+        tips: [{ target: "planetarium", ko: "'천체 투영관'. '플래니테어리엄'." },
+               { target: "don't miss", ko: "'꼭 보세요, 놓치지 마세요'." }] }
+    ],
+    expressions: [
+      {
+        id: "c69-e1",
+        phrase: "What floor ~ on?",
+        teaser: "'~는 몇 층에 있어요?'라고 물을 때는?",
+        ko: "'~는 몇 층에 있어요?'라는 뜻이에요. on the third floor처럼 층 앞에 on을 쓰니까 질문 끝에도 on이 남아요. 화장실·식당가·수영장·매장처럼 건물 안 위치를 물을 때 써요. which floor라고 해도 같은 뜻이에요. 비슷한 표현: Where's ~? / Which level is ~ on?",
+        examples: [
+          { en: "What floor is the food court on?", ko: "푸드코트 몇 층에 있어?",
+            chunks: "What floor‿is / the food court on?",
+            tips: [{ target: "food court", ko: "'푸드 코r트'." }] },
+          { en: "What floor is the pool on?", ko: "수영장 몇 층에 있어?",
+            chunks: "What floor‿is the pool on?",
+            tips: [{ target: "pool", ko: "'풀'." }] },
+          { en: "What floor are the kids' clothes on?", ko: "아동복은 몇 층이야?",
+            chunks: "What floor are / the kids' clothes on?",
+            tips: [{ target: "clothes", ko: "'클로우즈'." }] },
+          { en: "What floor is your office on?", ko: "너희 사무실 몇 층이야?",
+            chunks: "What floor‿is your office on?",
+            tips: [{ target: "office", ko: "'아피스'." }] },
+          { en: "What floor was our room on again?", ko: "우리 방 몇 층이었지?",
+            chunks: "What floor was our room / on again?",
+            tips: [{ target: "again", ko: "'다시, 또'. 기억 안 날 때 끝에 붙여요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "I got lost / in‿a huge mall / last Christmas.",
+              ko: "작년 크리스마스에 엄청 큰 쇼핑몰에서 길을 잃었거든.",
+              tips: [{ target: "got lost", ko: "'길을 잃었다'. t가 약해요." }] },
+            { chunks: "I asked‿a security guard, / “What floor‿is / the parking lot on?”",
+              ko: "경비원한테 “주차장 몇 층이에요?” 하고 물었어.",
+              tips: [{ target: "security guard", ko: "'경비원'. '씨큐러티 가r드'." }] },
+            { chunks: "He smiled‿and said, / “Which one? / There are six.”",
+              ko: "그분이 웃으면서 “어느 거요? 여섯 개 있어요” 하더라.",
+              tips: [{ target: "There are six", ko: "'여섯 개 있어요'." }] },
+            { chunks: "I found my car / three hours later.",
+              ko: "세 시간 뒤에야 차를 찾았어.",
+              tips: [{ target: "found my car", ko: "'파운 마이 카r'." }] }
+          ],
+          en: "I got lost in a huge mall last Christmas. I asked a security guard, “What floor is the parking lot on?” He smiled and said, “Which one? There are six.” I found my car three hours later.",
+          ko: "작년 크리스마스에 엄청 큰 쇼핑몰에서 길을 잃었거든. 경비원한테 “주차장 몇 층이에요?” 하고 물었어. 그분이 웃으면서 “어느 거요? 여섯 개 있어요” 하더라. 세 시간 뒤에야 차를 찾았어."
+        }
+      },
+      {
+        id: "c69-e2",
+        phrase: "by any chance",
+        teaser: "'혹시 ~ 있어요?'라고 공손하게 물을 때 끝에 붙이는 말은?",
+        ko: "'혹시'라는 뜻이에요. 질문 끝에 붙이면 '없어도 괜찮지만'이라는 느낌이 들어서 훨씬 부드러워요. Is there a pharmacy nearby, by any chance?처럼 물건·정보·가능성을 물을 때 써요. 비슷한 표현: by chance / happen to ~",
+        examples: [
+          { en: "Do you have a spare umbrella, by any chance?", ko: "혹시 여분 우산 있어?",
+            chunks: "Do you have‿a spare umbrella, / by any chance?",
+            tips: [{ target: "spare", ko: "'여분의'. '스페어r'." }] },
+          { en: "Are you Korean, by any chance?", ko: "혹시 한국 사람이야?",
+            chunks: "Are you Korean, / by any chance?",
+            tips: [{ target: "Korean", ko: "'커리언'." }] },
+          { en: "Is there a pharmacy nearby, by any chance?", ko: "혹시 근처에 약국 있어?",
+            chunks: "Is there‿a pharmacy nearby, / by any chance?",
+            tips: [{ target: "pharmacy", ko: "'파r머씨'." }] },
+          { en: "By any chance, did you see a black wallet?", ko: "혹시 검은 지갑 봤어?",
+            chunks: "By any chance, / did you see‿a black wallet?",
+            tips: [{ target: "wallet", ko: "'월릿'." }] },
+          { en: "Are there any seats left, by any chance?", ko: "혹시 남은 자리 있어?",
+            chunks: "Are there‿any seats left, / by any chance?",
+            tips: [{ target: "seats left", ko: "'남은 자리'. s가 l에 이어져요." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On‿a train in Boston, / I heard someone humming / a Korean song.",
+              ko: "보스턴에서 기차를 탔는데 누가 한국 노래를 흥얼거리는 거야.",
+              tips: [{ target: "humming", ko: "'흥얼거리다'. '허밍'." }] },
+            { chunks: "I leaned over / and asked, / “Are you from Korea, / by any chance?”",
+              ko: "몸을 숙여서 “혹시 한국 분이세요?” 하고 물었어.",
+              tips: [{ target: "leaned over", ko: "'몸을 기울였다'. '린도버r'." }] },
+            { chunks: "She said, / “No, / but my favorite band is!”",
+              ko: "그 사람이 “아니요, 근데 제가 제일 좋아하는 밴드가요!” 하더라.",
+              tips: [{ target: "favorite band", ko: "'페이버릿 밴드'." }] },
+            { chunks: "We talked about K-pop / until my stop.",
+              ko: "내가 내릴 때까지 케이팝 얘기를 했지.",
+              tips: [{ target: "until my stop", ko: "'내 정류장까지'." }] }
+          ],
+          en: "On a train in Boston, I heard someone humming a Korean song. I leaned over and asked, “Are you from Korea, by any chance?” She said, “No, but my favorite band is!” We talked about K-pop until my stop.",
+          ko: "보스턴에서 기차를 탔는데 누가 한국 노래를 흥얼거리는 거야. 몸을 숙여서 “혹시 한국 분이세요?” 하고 물었어. 그 사람이 “아니요, 근데 제가 제일 좋아하는 밴드가요!” 하더라. 내가 내릴 때까지 케이팝 얘기를 했지."
+        }
+      },
+      {
+        id: "c69-e3",
+        phrase: "keep going ~",
+        teaser: "'계속 쭉 가세요'처럼 길을 말할 때는?",
+        ko: "'계속 ~로 가다'라는 뜻이에요. 길 안내에서 keep going straight(쭉 가세요), keep going until ~(~ 나올 때까지 가세요)처럼 정말 자주 들려요. 어떤 일을 '멈추지 말고 계속하다'라는 뜻으로도 써요. 비슷한 표현: go straight / continue ~",
+        examples: [
+          { en: "Keep going straight for two blocks.", ko: "두 블록 쭉 가.",
+            chunks: "Keep going straight / for two blocks.",
+            tips: [{ target: "blocks", ko: "'블락스'." }] },
+          { en: "Keep going until you see a gas station.", ko: "주유소 보일 때까지 계속 가.",
+            chunks: "Keep going / until you see‿a gas station.",
+            tips: [{ target: "gas station", ko: "'개스 스테이션'." }] },
+          { en: "Should we keep going or turn back?", ko: "계속 갈까, 아니면 돌아갈까?",
+            chunks: "Should we keep going / or turn back?",
+            tips: [{ target: "turn back", ko: "'돌아가다'. '턴 백'." }] },
+          { en: "You're doing great. Keep going!", ko: "잘하고 있어. 계속해!",
+            chunks: "You're doing great. / Keep going!",
+            tips: [{ target: "doing great", ko: "'잘하고 있다'." }] },
+          { en: "Keep going past the bridge, and it's on your left.", ko: "다리 지나서 계속 가면 왼쪽에 있어.",
+            chunks: "Keep going past the bridge, / and it's‿on your left.",
+            tips: [{ target: "on your left", ko: "'왼쪽에'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On‿a hike‿in Utah, / we couldn't find the waterfall.",
+              ko: "유타에서 하이킹하는데 폭포를 못 찾겠는 거야.",
+              tips: [{ target: "waterfall", ko: "'워러r폴'." }] },
+            { chunks: "A hiker coming down / told us, / “Keep going, / you're almost there.”",
+              ko: "내려오던 등산객이 “계속 가요, 거의 다 왔어요” 하더라.",
+              tips: [{ target: "almost there", ko: "'거의 다 왔다'." }] },
+            { chunks: "Two hours later, / every hiker / was still saying the same thing.",
+              ko: "두 시간 뒤에도 등산객마다 똑같은 말을 하더라.",
+              tips: [{ target: "same thing", ko: "'쎄임 띵'." }] },
+            { chunks: "The waterfall / was worth‿it, / but my legs disagree.",
+              ko: "폭포는 그럴 만했는데, 내 다리는 아직도 동의 안 해.",
+              tips: [{ target: "disagree", ko: "'반대하다'. '디써그리'." }] }
+          ],
+          en: "On a hike in Utah, we couldn't find the waterfall. A hiker coming down told us, “Keep going, you're almost there.” Two hours later, every hiker was still saying the same thing. The waterfall was worth it, but my legs disagree.",
+          ko: "유타에서 하이킹하는데 폭포를 못 찾겠는 거야. 내려오던 등산객이 “계속 가요, 거의 다 왔어요” 하더라. 두 시간 뒤에도 등산객마다 똑같은 말을 하더라. 폭포는 그럴 만했는데, 내 다리는 아직도 동의 안 해."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );
