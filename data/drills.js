@@ -1528,14 +1528,14 @@ window.DRILL_DATA = {
   ],
   "c51-e3": [
     { ko: "(프런트 직원에게) 혹시 우리가 늦을 수도 있으니까 내 번호 남겨 둘게.", en: "I'll leave my number in case we're late." },
-    { ko: "(엄마에게) 추워질 수도 있으니까 겉옷 챙기자.", en: "Let's bring jackets in case it gets cold." },
+    { ko: "(친구에게) 추워질 수도 있으니까 겉옷 챙기자.", en: "Let's bring jackets in case it gets cold." },
     { ko: "(친구에게) 혹시 길 잃을까 봐 지도 캡처해 뒀어.", en: "I took a screenshot of the map in case we get lost." },
     { ko: "(동료에게) 회의가 길어질 수도 있으니까 먼저 먹자.", en: "Let's eat first in case the meeting runs long." },
     { ko: "(가이드에게) 혹시 우리가 떨어지면 어디서 만나?", en: "Where should we meet in case we get separated?" },
     { ko: "(식당 직원에게) 혹시 자리 나면 전화 줄래?", en: "Can you call me in case a table opens up?" },
     { ko: "(룸메이트에게) 혹시 필요할 수도 있으니까 여분 열쇠 줄게.", en: "Here's a spare key in case you need it." },
     { ko: "(친구에게) 줄이 길 수도 있으니까 지금 나가자.", en: "Let's head out now in case the line is long." },
-    { ko: "(엄마에게) 혹시 배고플지도 모르니까 간식 좀 챙길게.", en: "I'll grab some snacks in case we get hungry." },
+    { ko: "(친구에게) 혹시 배고플지도 모르니까 간식 좀 챙길게.", en: "I'll grab some snacks in case we get hungry." },
     { ko: "(호텔 직원에게) 혹시 우리가 늦게 도착할 수도 있으니까 방 잡아 둬 줄래?", en: "Can you hold the room in case we arrive late?" }
   ],
   "c52-e1": [
@@ -1553,12 +1553,12 @@ window.DRILL_DATA = {
   "c52-e2": [
     { ko: "(친구에게) 나 원래 커피 엄청 좋아하는 사람이야.", en: "I'm a big coffee person." },
     { ko: "(동료에게) 난 고양이보다는 강아지를 엄청 좋아해.", en: "I'm a big dog person, not a cat person." },
-    { ko: "(친구에게) 우리 엄마는 등산을 엄청 좋아하셔.", en: "My mom's a big hiking person." },
+    { ko: "(친구에게) 우리 남동생은 등산을 엄청 좋아해.", en: "My brother's a big hiking person." },
     { ko: "(데이트 상대에게) 너 영화 엄청 좋아해?", en: "Are you a big movie person?" },
     { ko: "(동료에게) 난 매운 음식을 엄청 좋아하는 편은 아니야.", en: "I'm not a big spicy food person." },
     { ko: "(친구에게) 걔는 빵을 엄청 좋아해.", en: "He's a big bread person." },
     { ko: "(룸메이트에게) 난 밤에 쌩쌩한 편은 아니야.", en: "I'm not a big night person." },
-    { ko: "(가이드에게) 우리 엄마가 박물관을 엄청 좋아하셔서 거기부터 가자.", en: "My mom's a big museum person, so let's go there first." },
+    { ko: "(가이드에게) 내 친구가 박물관을 엄청 좋아해서 거기부터 가자.", en: "My friend's a big museum person, so let's go there first." },
     { ko: "(동료에게) 너 원래 아침 잘 챙겨 먹는 사람이야?", en: "Are you a big breakfast person?" },
     { ko: "(친구에게) 난 쇼핑을 엄청 좋아하는 편은 아니야.", en: "I'm not a big shopping person." }
   ],
@@ -1569,7 +1569,7 @@ window.DRILL_DATA = {
     { ko: "(가족에게) 트렁크에 가방 들어갈 자리 남겨 둬.", en: "Leave room for the bags in the trunk." },
     { ko: "(친구에게) 오늘 저녁에 바비큐 먹으니까 배 좀 남겨 둬.", en: "Leave room for barbecue tonight." },
     { ko: "(동료에게) 일정에 쉬는 시간 좀 남겨 두자.", en: "Let's leave room for a break in the schedule." },
-    { ko: "(엄마에게) 캐리어에 쇼핑한 거 넣을 자리 남겨 둬.", en: "Leave room for shopping in your suitcase." },
+    { ko: "(친구에게) 캐리어에 쇼핑한 거 넣을 자리 남겨 둬.", en: "Leave room for shopping in your suitcase." },
     { ko: "(바리스타에게) 위에 휘핑크림 올릴 자리 남겨 줄래?", en: "Could you leave room for whipped cream?" },
     { ko: "(친구에게) 공항 가는 길에 막힐 수도 있으니까 여유 시간 남겨 두자.", en: "Let's leave room for traffic on the way to the airport." },
     { ko: "(웨이터에게) 디저트 먹을 배는 남겨 둘게.", en: "I'm gonna leave room for dessert." }
@@ -1578,7 +1578,7 @@ window.DRILL_DATA = {
     { ko: "(웨이터에게) 남은 거 다 싸 줄래?", en: "Could you box up the rest?" },
     { ko: "(웨이터에게) 이 스테이크 싸 줄 수 있어?", en: "Can you box up this steak?" },
     { ko: "(웨이터에게) 이거 용기 두 개에 나눠서 싸 줄래?", en: "Could you box this up in two containers?" },
-    { ko: "(엄마에게) 이거 싸 가서 내일 먹자.", en: "Let's box this up and eat it tomorrow." },
+    { ko: "(친구에게) 이거 싸 가서 내일 먹자.", en: "Let's box this up and eat it tomorrow." },
     { ko: "(웨이터에게) 디저트는 포장해 줄 수 있어?", en: "Can you box up the dessert for us?" },
     { ko: "(빵집 직원에게) 쿠키 여섯 개 상자에 담아 줄래?", en: "Could you box up six cookies?" },
     { ko: "(친구에게) 남은 피자 싸 갈래?", en: "Do you want to box up the leftover pizza?" },
@@ -1588,7 +1588,7 @@ window.DRILL_DATA = {
   ],
   "c53-e2": [
     { ko: "(친구에게) 이 쿠키는 내일 먹으려고 남겨 둘래.", en: "I'm saving these cookies for tomorrow." },
-    { ko: "(엄마에게) 이 와인은 마지막 밤을 위해 아껴 두자.", en: "Let's save this wine for our last night." },
+    { ko: "(친구에게) 이 와인은 마지막 밤을 위해 아껴 두자.", en: "Let's save this wine for our last night." },
     { ko: "(동료에게) 내 자리 좀 맡아 줄래? 커피 사 올게.", en: "Can you save a seat for me? I'm getting coffee." },
     { ko: "(친구에게) 나 여행 가려고 돈 모으는 중이야.", en: "I'm saving up for a trip." },
     { ko: "(룸메이트에게) 피자 한 조각만 나 먹게 남겨 줘.", en: "Save a slice for me, okay?" },
@@ -1606,7 +1606,7 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 시간 될 때 사진 보내 줘.", en: "Send me the pictures when you get a chance." },
     { ko: "(집주인에게) 시간 될 때 싱크대 좀 봐 줄래?", en: "Could you look at the sink when you get a chance?" },
     { ko: "(웨이터에게) 시간 될 때 커피 좀 더 줄래?", en: "Could I get more coffee when you get a chance?" },
-    { ko: "(엄마에게) 시간 될 때 내일 일정 같이 보자.", en: "Let's go over tomorrow's plan when you get a chance." },
+    { ko: "(친구에게) 시간 될 때 내일 일정 같이 보자.", en: "Let's go over tomorrow's plan when you get a chance." },
     { ko: "(동료에게) 시간 될 때 잠깐 얘기할 수 있어?", en: "Can we talk for a minute when you get a chance?" },
     { ko: "(친구에게) 시간 될 때 그 식당 이름 알려 줘.", en: "Tell me the name of that place when you get a chance." }
   ],
@@ -1615,7 +1615,7 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 나 내년에 이사할까 생각 중이야.", en: "I'm thinking of moving next year." },
     { ko: "(호텔 직원에게) 하룻밤 더 묵을까 생각 중이야.", en: "We're thinking of staying one more night." },
     { ko: "(동료에게) 요가 수업 등록할까 생각 중이야.", en: "I'm thinking of signing up for yoga." },
-    { ko: "(엄마에게) 내일 아침에 해돋이 보러 갈까 생각 중이야. 같이 갈래?", en: "I'm thinking of catching the sunrise tomorrow. Are you in?" },
+    { ko: "(친구에게) 내일 아침에 해돋이 보러 갈까 생각 중이야. 같이 갈래?", en: "I'm thinking of catching the sunrise tomorrow. Are you in?" },
     { ko: "(가이드에게) 우리 오후에 자전거 빌릴까 생각 중이야.", en: "We're thinking of renting bikes this afternoon." },
     { ko: "(친구에게) 너 그 콘서트 갈 생각 있어?", en: "Are you thinking of going to the concert?" },
     { ko: "(웨이터에게) 우리 디저트 시킬까 생각 중이야.", en: "We're thinking of getting dessert." },
@@ -1625,7 +1625,7 @@ window.DRILL_DATA = {
   "c54-e2": [
     { ko: "(웨이터에게) 이 피자 반으로 잘라 줄래?", en: "Could you cut this pizza in half?" },
     { ko: "(빵집 직원에게) 이 빵 반으로 잘라 줄 수 있어?", en: "Can you cut this loaf in half?" },
-    { ko: "(엄마에게) 이 케이크 반으로 잘라서 나눠 먹자.", en: "Let's cut this cake in half and share it." },
+    { ko: "(친구에게) 이 케이크 반으로 잘라서 나눠 먹자.", en: "Let's cut this cake in half and share it." },
     { ko: "(카페 직원에게) 머핀 반으로 잘라 줄래?", en: "Could you cut the muffin in half?" },
     { ko: "(친구에게) 내가 샌드위치 반으로 자를게.", en: "I'll cut the sandwich in half." },
     { ko: "(동료에게) 회의 시간을 반으로 줄이자.", en: "Let's cut the meeting time in half." },
@@ -1647,19 +1647,19 @@ window.DRILL_DATA = {
     { ko: "(가이드에게) 이 해변은 언제쯤 사람이 줄어?", en: "When does this beach slow down?" }
   ],
   "c55-e2": [
-    { ko: "(엄마에게) 사람 몰리기 전에 8시에 출발하자.", en: "Let's head out at eight to beat the crowds." },
+    { ko: "(친구에게) 사람 몰리기 전에 8시에 출발하자.", en: "Let's head out at eight to beat the crowds." },
     { ko: "(친구에게) 차 막히기 전에 가려면 지금 나가야 해.", en: "We have to leave now to beat the traffic." },
     { ko: "(동료에게) 붐비기 전에 점심 일찍 먹자.", en: "Let's eat lunch early to beat the rush." },
     { ko: "(가이드에게) 사람 몰리기 전에 가려면 몇 시에 가야 해?", en: "What time should we go to beat the crowds?" },
     { ko: "(친구에게) 사람 몰리기 전에 가려고 7시에 도착했어.", en: "We got there at seven to beat the crowd." },
-    { ko: "(엄마에게) 퇴근 시간 전에 가서 차 막히는 거 피하자.", en: "Let's go before rush hour to beat the traffic." },
+    { ko: "(친구에게) 퇴근 시간 전에 가서 차 막히는 거 피하자.", en: "Let's go before rush hour to beat the traffic." },
     { ko: "(호텔 직원에게) 붐비기 전에 조식 먹으려면 언제 가야 해?", en: "When should we go to breakfast to beat the rush?" },
     { ko: "(친구에게) 사람 몰리기 전에 놀이기구부터 타자.", en: "Let's hit the rides first to beat the crowds." },
     { ko: "(동료에게) 차 막히기 전에 가려고 일찍 퇴근했어.", en: "I left work early to beat the traffic." },
     { ko: "(친구에게) 사람 몰리기 전에 가려면 평일에 가는 게 나아.", en: "It's better to go on a weekday to beat the crowds." }
   ],
   "c55-e3": [
-    { ko: "(엄마에게) 문 열자마자 들어가자.", en: "Let's go in right when they open." },
+    { ko: "(친구에게) 문 열자마자 들어가자.", en: "Let's go in right when they open." },
     { ko: "(친구에게) 도착하자마자 문자 줘.", en: "Text me right when you get there." },
     { ko: "(동료에게) 회의 끝나자마자 전화할게.", en: "I'll call you right when the meeting ends." },
     { ko: "(호텔 직원에게) 방 준비되자마자 알려 줄래?", en: "Can you let me know right when the room is ready?" },
@@ -1674,11 +1674,11 @@ window.DRILL_DATA = {
     { ko: "(웨이터에게) 우리 둘 다 아이스티로 줘.", en: "Iced tea for both of us, please." },
     { ko: "(호텔 직원에게) 우리 둘 다 조식 추가해 줄 수 있어?", en: "Can you add breakfast for both of us?" },
     { ko: "(매표소 직원에게) 우리 둘 표 줘.", en: "Tickets for both of us, please." },
-    { ko: "(엄마에게) 내가 우리 둘 다 예약해 놨어.", en: "I made reservations for both of us." },
+    { ko: "(친구에게) 내가 우리 둘 다 예약해 놨어.", en: "I made reservations for both of us." },
     { ko: "(친구에게) 이 우산은 우리 둘이 쓰기엔 작아.", en: "This umbrella is too small for both of us." },
     { ko: "(가이드에게) 우리 둘 다 들어갈 자리 있어?", en: "Is there space for both of us?" },
     { ko: "(바리스타에게) 우리 둘 다 라지로 줘.", en: "Large for both of us, please." },
-    { ko: "(엄마에게) 이 방은 우리 둘이 쓰기에 충분히 커.", en: "This room is big enough for both of us." },
+    { ko: "(친구에게) 이 방은 우리 둘이 쓰기에 충분히 커.", en: "This room is big enough for both of us." },
     { ko: "(점원에게) 우리 둘 거 같이 계산해 줘.", en: "Ring it up for both of us together." },
     { ko: "(친구에게) 내가 우리 둘 커피 살게.", en: "I'll get coffee for both of us." }
   ],
@@ -1688,7 +1688,7 @@ window.DRILL_DATA = {
     { ko: "(바리스타에게) 휘핑크림은 뺄게, 고마워.", en: "I'll skip the whipped cream, thanks." },
     { ko: "(가이드에게) 다음 장소는 건너뛰어도 돼?", en: "Can we skip the next stop?" },
     { ko: "(동료에게) 오늘은 회의 건너뛰자.", en: "Let's skip the meeting today." },
-    { ko: "(엄마에게) 줄 서지 말고 다른 데 가자.", en: "Let's skip the line and go somewhere else." },
+    { ko: "(친구에게) 줄 서지 말고 다른 데 가자.", en: "Let's skip the line and go somewhere else." },
     { ko: "(웨이터에게) 내 거엔 치즈 빼 줄래?", en: "Could you skip the cheese on mine?" },
     { ko: "(친구에게) 예고편은 건너뛰고 좀 늦게 들어가자.", en: "Let's skip the trailers and go in later." },
     { ko: "(택시 기사님에게) 고속도로 말고 다른 길로 갈 수 있어?", en: "Could we skip the highway?" },
@@ -1697,7 +1697,7 @@ window.DRILL_DATA = {
   "c56-e3": [
     { ko: "(웨이터에게) 물 미지근한 걸로 줄래?", en: "Could I have my water at room temperature?" },
     { ko: "(바텐더에게) 맥주는 차갑지 않은 걸로 줘.", en: "A beer at room temperature, please." },
-    { ko: "(엄마에게) 케이크는 실온에 두자.", en: "Let's keep the cake at room temperature." },
+    { ko: "(친구에게) 케이크는 실온에 두자.", en: "Let's keep the cake at room temperature." },
     { ko: "(마트 직원에게) 이거 실온에 둬도 돼?", en: "Can I store this at room temperature?" },
     { ko: "(승무원에게) 미지근한 물 한 컵 줄래?", en: "Could I get a cup of water at room temperature?" },
     { ko: "(친구에게) 난 콜라를 실온으로 마셔.", en: "I drink my soda at room temperature." },
@@ -1713,7 +1713,7 @@ window.DRILL_DATA = {
     { ko: "(가이드에게) 우리 일정이 빠듯해서 짧은 투어로 할게.", en: "We're on a tight schedule, so we'll do the short tour." },
     { ko: "(호텔 직원에게) 일정이 빠듯해서 체크인 빨리 할 수 있어?", en: "We're on a tight schedule, so could we check in quickly?" },
     { ko: "(친구에게) 나 오늘 일정 빠듯해서 커피만 마실게.", en: "I'm on a tight schedule today, so just coffee for me." },
-    { ko: "(엄마에게) 내일 일정이 빠듯하니까 일찍 자자.", en: "We're on a tight schedule tomorrow, so let's sleep early." },
+    { ko: "(친구에게) 내일 일정이 빠듯하니까 일찍 자자.", en: "We're on a tight schedule tomorrow, so let's sleep early." },
     { ko: "(점원에게) 일정이 빠듯해서 포장은 안 해도 돼.", en: "I'm on a tight schedule, so no need to wrap it." },
     { ko: "(미용사에게) 일정이 빠듯해. 30분 안에 끝낼 수 있어?", en: "I'm on a tight schedule. Can you finish in thirty minutes?" },
     { ko: "(동료에게) 그 팀 일정이 빠듯하대.", en: "That team's on a tight schedule." }
@@ -1722,7 +1722,7 @@ window.DRILL_DATA = {
     { ko: "(택시 기사님에게) 나 타야 하는 비행기가 있어. 서둘러 줄 수 있어?", en: "I've got a flight to catch. Could you hurry?" },
     { ko: "(웨이터에게) 우리 타야 하는 기차가 있어. 계산서 줄래?", en: "We've got a train to catch. Can we get the check?" },
     { ko: "(동료에게) 미안, 타야 하는 버스가 있어. 먼저 갈게.", en: "Sorry, I've got a bus to catch. I'll head out." },
-    { ko: "(엄마에게) 우리 타야 하는 배가 있으니까 지금 가자.", en: "We've got a ferry to catch, so let's go now." },
+    { ko: "(친구에게) 우리 타야 하는 배가 있으니까 지금 가자.", en: "We've got a ferry to catch, so let's go now." },
     { ko: "(호텔 직원에게) 타야 하는 셔틀이 있어. 짐 빨리 받을 수 있어?", en: "I've got a shuttle to catch. Can I get my bags quickly?" },
     { ko: "(친구에게) 나 6시에 타야 하는 기차 있어.", en: "I've got a train to catch at six." },
     { ko: "(점원에게) 타야 하는 비행기가 있어. 빨리 계산해 줄래?", en: "I have a flight to catch. Could you ring me up fast?" },
@@ -1740,14 +1740,14 @@ window.DRILL_DATA = {
     { ko: "(동료에게) 이거 제일 빨리 고치는 방법이 뭐야?", en: "What's the fastest way to fix this?" },
     { ko: "(바리스타에게) 제일 빨리 나오는 음료가 뭐야?", en: "What's the fastest drink to make?" },
     { ko: "(렌터카 직원에게) 차 반납을 제일 빨리 하는 방법이 뭐야?", en: "What's the fastest way to return the car?" },
-    { ko: "(엄마에게) 박물관까지 제일 빠른 버스가 뭐야?", en: "What's the fastest bus to the museum?" }
+    { ko: "(친구에게) 박물관까지 제일 빠른 버스가 뭐야?", en: "What's the fastest bus to the museum?" }
   ],
   "c58-e1": [
     { ko: "(웨이터에게) 메뉴가 거의 안 보여. 너무 어두워.", en: "I can barely read the menu. It's so dark." },
     { ko: "(친구에게) 너무 배불러서 거의 못 움직이겠어.", en: "I'm so full I can barely move." },
     { ko: "(택시 기사님에게) 음악 소리 때문에 말이 거의 안 들려.", en: "I can barely hear you over the music." },
     { ko: "(동료에게) 너무 피곤해서 생각을 제대로 못 하겠어.", en: "I'm so tired I can barely think straight." },
-    { ko: "(엄마에게) 이 가방 너무 무거워서 거의 못 들겠어.", en: "This bag is so heavy I can barely lift it." },
+    { ko: "(친구에게) 이 가방 너무 무거워서 거의 못 들겠어.", en: "This bag is so heavy I can barely lift it." },
     { ko: "(호텔 직원에게) 방에서 와이파이가 거의 안 잡혀.", en: "I can barely get Wi-Fi in my room." },
     { ko: "(친구에게) 글씨가 너무 작아서 거의 못 읽겠어.", en: "The print is so small I can barely read it." },
     { ko: "(가이드에게) 뒤에서는 말씀이 거의 안 들려.", en: "We can barely hear you in the back." },
@@ -1760,7 +1760,7 @@ window.DRILL_DATA = {
     { ko: "(동료에게) 내일 재택해도 괜찮을까?", en: "Would it be okay if I worked from home tomorrow?" },
     { ko: "(가게 직원에게) 사진 몇 장 찍어도 괜찮을까?", en: "Would it be okay if I took a few photos?" },
     { ko: "(승무원에게) 저 빈자리로 옮겨도 괜찮을까?", en: "Would it be okay if I switched to that empty seat?" },
-    { ko: "(엄마에게) 오늘 저녁은 내가 골라도 괜찮을까?", en: "Would it be okay if I picked dinner tonight?" },
+    { ko: "(친구에게) 오늘 저녁은 내가 골라도 괜찮을까?", en: "Would it be okay if I picked dinner tonight?" },
     { ko: "(집주인에게) 친구가 하룻밤 자고 가도 괜찮을까?", en: "Would it be okay if a friend stayed over?" },
     { ko: "(카페 직원에게) 여기서 노트북 써도 괜찮을까?", en: "Would it be okay if I used my laptop here?" },
     { ko: "(친구에게) 나 좀 늦게 가도 괜찮을까?", en: "Would it be okay if I came a little late?" },
@@ -1769,7 +1769,7 @@ window.DRILL_DATA = {
   "c58-e3": [
     { ko: "(호텔 직원에게) 얼음 기계에서 먼 방으로 줄 수 있어?", en: "Could we get a room away from the ice machine?" },
     { ko: "(웨이터에게) 주방에서 떨어진 데 앉을 수 있어?", en: "Could we sit away from the kitchen?" },
-    { ko: "(엄마에게) 사람들 없는 데로 가서 사진 찍자.", en: "Let's take photos away from the crowd." },
+    { ko: "(친구에게) 사람들 없는 데로 가서 사진 찍자.", en: "Let's take photos away from the crowd." },
     { ko: "(친구에게) 휴대폰은 침대에서 멀리 둬.", en: "Keep your phone away from the bed." },
     { ko: "(승무원에게) 화장실에서 떨어진 자리 있어?", en: "Is there a seat away from the restroom?" },
     { ko: "(가이드에게) 관광객 없는 식당 추천해 줄래?", en: "Can you recommend a place away from the tourists?" },
@@ -1791,7 +1791,7 @@ window.DRILL_DATA = {
     { ko: "(서점 직원에게) 혹시 이 책 한국어판 있어?", en: "Would you happen to have this book in Korean?" }
   ],
   "c59-e2": [
-    { ko: "(엄마에게) 아웃렛에서 너무 많이 사지 말자.", en: "Let's not go overboard at the outlet mall." },
+    { ko: "(친구에게) 아웃렛에서 너무 많이 사지 말자.", en: "Let's not go overboard at the outlet mall." },
     { ko: "(친구에게) 나 어제 쇼핑 좀 과하게 했어.", en: "I went a bit overboard shopping yesterday." },
     { ko: "(동료에게) 생일 장식 너무 과하게 하지 마.", en: "Don't go overboard with the birthday decorations." },
     { ko: "(웨이터에게) 우리 주문을 좀 과하게 한 것 같아.", en: "I think we went overboard with the order." },
@@ -1800,14 +1800,14 @@ window.DRILL_DATA = {
     { ko: "(가족에게) 이번 크리스마스엔 과하게 하지 말자.", en: "Let's not go overboard this Christmas." },
     { ko: "(친구에게) 미안, 사진을 너무 많이 찍었어.", en: "Sorry, I went overboard with the photos." },
     { ko: "(동료에게) 팀 회식 너무 거창하게 하지 말자.", en: "Let's not go overboard with the team dinner." },
-    { ko: "(엄마에게) 우리 오늘 디저트 완전 과하게 먹었다.", en: "We totally went overboard on dessert today." }
+    { ko: "(친구에게) 우리 오늘 디저트 완전 과하게 먹었다.", en: "We totally went overboard on dessert today." }
   ],
   "c59-e3": [
     { ko: "(웨이터에게) 우리 좀 널찍하게 앉을 수 있는 데 있어?", en: "Is there somewhere we can spread out?" },
     { ko: "(카페 직원에게) 저 큰 테이블에서 좀 넓게 써도 돼?", en: "Can I spread out at that big table?" },
     { ko: "(친구에게) 해변에 넓게 자리 잡자.", en: "Let's spread out on the beach." },
     { ko: "(동료에게) 회의실이 넓으니까 좀 떨어져 앉자.", en: "The room's big, so let's spread out." },
-    { ko: "(엄마에게) 지도를 침대에 펼쳐 놓고 보자.", en: "Let's spread out the map on the bed." },
+    { ko: "(친구에게) 지도를 침대에 펼쳐 놓고 보자.", en: "Let's spread out the map on the bed." },
     { ko: "(승무원에게) 옆자리가 비었어. 좀 넓게 써도 돼?", en: "The seat next to me is empty. Can I spread out?" },
     { ko: "(가이드에게) 우리 흩어져서 찾아볼까?", en: "Should we spread out and look for it?" },
     { ko: "(룸메이트에게) 거실에 짐 다 펼쳐 놓지 마.", en: "Please don't spread out your stuff in the living room." },
@@ -1817,7 +1817,7 @@ window.DRILL_DATA = {
   "c60-e1": [
     { ko: "(아이스크림 가게 직원에게) 쿠키 도우 맛 좀 봐도 돼?", en: "Could I have a taste of the cookie dough?" },
     { ko: "(와인 바 직원에게) 이 레드 와인 맛 좀 볼 수 있어?", en: "Can I get a taste of this red?" },
-    { ko: "(엄마에게) 엄마 거 한 입만 맛볼게.", en: "Let me have a taste of yours." },
+    { ko: "(친구에게) 네 거 한 입만 맛볼게.", en: "Let me have a taste of yours." },
     { ko: "(빵집 직원에게) 이 치즈 빵 맛 좀 봐도 돼?", en: "Could I have a taste of the cheese bread?" },
     { ko: "(친구에게) 네 커리 한 입만 맛보게 해 줘.", en: "Give me a taste of your curry." },
     { ko: "(치즈 가게 직원에게) 이 치즈 맛 좀 봐도 돼?", en: "Can I have a taste of this cheese?" },
@@ -1828,7 +1828,7 @@ window.DRILL_DATA = {
   ],
   "c60-e2": [
     { ko: "(웨이터에게) 나는 커피만 줘. 그 스테이크 먹은 게 아직 안 꺼졌어.", en: "Just coffee for me. I'm still full from that steak." },
-    { ko: "(엄마에게) 나 그 푸짐한 아침 때문에 아직 배불러.", en: "I'm still full from that big breakfast." },
+    { ko: "(친구에게) 나 그 푸짐한 아침 때문에 아직 배불러.", en: "I'm still full from that big breakfast." },
     { ko: "(친구에게) 어젯밤 저녁 때문에 아직도 배불러.", en: "I'm still full from last night's dinner." },
     { ko: "(동료에게) 점심 먹은 게 안 꺼져서 간식은 패스할게.", en: "I'm still full from lunch, so I'll skip the snack." },
     { ko: "(호텔 직원에게) 조식 먹은 게 아직 안 꺼져서 점심은 늦게 먹을게.", en: "We're still full from breakfast, so we'll eat lunch late." },
@@ -1836,7 +1836,7 @@ window.DRILL_DATA = {
     { ko: "(가족에게) 추수감사절 음식 때문에 아직 배불러.", en: "I'm still full from Thanksgiving." },
     { ko: "(승무원에게) 아까 먹은 기내식이 아직 안 꺼졌어, 고마워.", en: "I'm still full from the last meal, thanks." },
     { ko: "(친구에게) 너 아직 점심 때문에 배불러?", en: "Are you still full from lunch?" },
-    { ko: "(엄마에게) 엄마도 아직 저녁 먹은 게 안 꺼졌어?", en: "Are you still full from dinner too?" }
+    { ko: "(친구에게) 너도 아직 저녁 먹은 게 안 꺼졌어?", en: "Are you still full from dinner too?" }
   ],
   "c61-e1": [
     { ko: "(웨이터에게) 5분만 더 줄 수 있어?", en: "Can you give us five more minutes?" },
@@ -1853,7 +1853,7 @@ window.DRILL_DATA = {
   "c61-e2": [
     { ko: "(웨이터에게) 라자냐랑 스테이크 중에 못 고르겠어.", en: "I'm torn between the lasagna and the steak." },
     { ko: "(점원에게) 회색이랑 남색 중에 못 고르겠어.", en: "I'm torn between the gray and the navy." },
-    { ko: "(엄마에게) 해변이랑 산 중에 어디 갈지 못 정하겠어.", en: "I'm torn between the beach and the mountains." },
+    { ko: "(친구에게) 해변이랑 산 중에 어디 갈지 못 정하겠어.", en: "I'm torn between the beach and the mountains." },
     { ko: "(친구에게) 오늘 밤 영화랑 볼링 중에 고민 중이야.", en: "I'm torn between a movie and bowling tonight." },
     { ko: "(바리스타에게) 라떼랑 모카 중에 못 고르겠어.", en: "I'm torn between a latte and a mocha." },
     { ko: "(가이드에게) 우리 박물관이랑 동물원 중에 고민 중이야.", en: "We're torn between the museum and the zoo." },
@@ -1865,19 +1865,19 @@ window.DRILL_DATA = {
   "c61-e3": [
     { ko: "(웨이터에게) 그동안 물 좀 줄래?", en: "Could we get some water in the meantime?" },
     { ko: "(호텔 직원에게) 방 준비되는 동안 짐 맡겨도 돼?", en: "Can I leave my bags in the meantime?" },
-    { ko: "(엄마에게) 그동안 우리 저 가게 구경하자.", en: "Let's check out that shop in the meantime." },
+    { ko: "(친구에게) 그동안 우리 저 가게 구경하자.", en: "Let's check out that shop in the meantime." },
     { ko: "(친구에게) 나 5분 거리야. 그동안 먼저 주문해.", en: "I'm five minutes away. Order first in the meantime." },
     { ko: "(동료에게) 그동안 내가 자료 정리할게.", en: "I'll organize the files in the meantime." },
     { ko: "(가이드에게) 그동안 화장실 다녀와도 돼?", en: "Can I use the restroom in the meantime?" },
     { ko: "(점원에게) 그동안 다른 것도 좀 볼게.", en: "I'll look at a few other things in the meantime." },
     { ko: "(룸메이트에게) 그동안 빨래 좀 돌려 줄래?", en: "Could you start the laundry in the meantime?" },
     { ko: "(친구에게) 그동안 내가 간식 사 올게.", en: "I'll grab snacks in the meantime." },
-    { ko: "(엄마에게) 그동안 커피 한잔하자.", en: "Let's grab a coffee in the meantime." }
+    { ko: "(친구에게) 그동안 커피 한잔하자.", en: "Let's grab a coffee in the meantime." }
   ],
   "c62-e1": [
     { ko: "(점원에게) 나는 보통 미디엄 입어.", en: "I'm usually a medium." },
     { ko: "(신발 가게 직원에게) 나는 보통 7 사이즈 신어.", en: "I'm usually a size seven." },
-    { ko: "(점원에게) 엄마는 보통 스몰 입으셔.", en: "My mom's usually a small." },
+    { ko: "(점원에게) 여동생은 보통 스몰 입어.", en: "My sister's usually a small." },
     { ko: "(점원에게) 나는 보통 라지인데 이건 커 보여.", en: "I'm usually a large, but this looks big." },
     { ko: "(친구에게) 너 보통 미디엄 입어?", en: "Are you usually a medium?" },
     { ko: "(점원에게) 남동생은 보통 라지인데 넉넉한 걸 좋아해.", en: "My brother's usually a large, but he likes it loose." },
@@ -1890,7 +1890,7 @@ window.DRILL_DATA = {
     { ko: "(점원에게) 이거 내 사이즈는 다 팔렸어?", en: "Is this sold out in my size?" },
     { ko: "(점원에게) 흰색은 다 팔렸어?", en: "Is it sold out in white?" },
     { ko: "(친구에게) 그 신발 근처 매장에선 다 팔렸대.", en: "Those shoes are sold out in every store nearby." },
-    { ko: "(엄마에게) 엄마 사이즈는 다 팔렸대.", en: "It's sold out in your size, Mom." },
+    { ko: "(친구에게) 네 사이즈는 다 팔렸대.", en: "It's sold out in your size." },
     { ko: "(점원에게) 스몰은 다 팔렸어? 미디엄은?", en: "Is it sold out in a small? What about a medium?" },
     { ko: "(매표소 직원에게) 1층 좌석은 다 매진이야?", en: "Is it sold out in the lower level?" },
     { ko: "(친구에게) 그 가방 검은색은 온라인에서 다 팔렸어.", en: "That bag is sold out in black online." },
@@ -1902,7 +1902,7 @@ window.DRILL_DATA = {
     { ko: "(점원에게) 이거 비슷한데 더 짧은 거 있어?", en: "Do you have something like this, but shorter?" },
     { ko: "(웨이터에게) 이거 비슷한데 덜 단 걸로 줄래?", en: "Could I get something like this, but less sweet?" },
     { ko: "(호텔 직원에게) 이 방 비슷한데 더 조용한 방 있어?", en: "Do you have something like this room, but quieter?" },
-    { ko: "(점원에게) 엄마 거 비슷한데 더 밝은 색으로 찾고 있어.", en: "I'm looking for something like my mom's, but brighter." },
+    { ko: "(점원에게) 친구 거 비슷한데 더 밝은 색으로 찾고 있어.", en: "I'm looking for something like my friend's, but brighter." },
     { ko: "(친구에게) 그 가방 비슷한데 더 작은 거 사고 싶어.", en: "I want something like that bag, but smaller." },
     { ko: "(바리스타에게) 라떼 비슷한데 우유 덜 들어간 거 있어?", en: "Is there something like a latte, but with less milk?" },
     { ko: "(가이드에게) 그 투어 비슷한데 더 짧은 거 있어?", en: "Is there something like that tour, but shorter?" },
@@ -1917,13 +1917,13 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 싼 우산은 바람에 못 버텨.", en: "Cheap umbrellas don't hold up in the wind." },
     { ko: "(점원에게) 이 가방 매일 들어도 오래가?", en: "Will this bag hold up for everyday use?" },
     { ko: "(동료에게) 내 노트북 3년째인데 아직 잘 버티고 있어.", en: "My laptop is still holding up after three years." },
-    { ko: "(엄마에게) 그 신발 여행 동안 잘 버틸 것 같아?", en: "Do you think those shoes will hold up on the trip?" },
+    { ko: "(친구에게) 그 신발 여행 동안 잘 버틸 것 같아?", en: "Do you think those shoes will hold up on the trip?" },
     { ko: "(점원에게) 이 소파 애들 있어도 튼튼해?", en: "Does this couch hold up with kids around?" },
     { ko: "(친구에게) 그 텐트 비 왔을 때 괜찮았어?", en: "Did the tent hold up in the rain?" },
     { ko: "(점원에게) 이 색 빨래해도 괜찮아?", en: "Does this color hold up after washing?" }
   ],
   "c63-e2": [
-    { ko: "(엄마에게) 혹시 모르니까 우산 챙기자.", en: "Let's bring an umbrella, just to be on the safe side." },
+    { ko: "(친구에게) 혹시 모르니까 우산 챙기자.", en: "Let's bring an umbrella, just to be on the safe side." },
     { ko: "(호텔 직원에게) 혹시 모르니까 택시 일찍 불러 줄래?", en: "Could you call a cab early, just to be on the safe side?" },
     { ko: "(친구에게) 혹시 모르니까 여권 사본 하나 만들어 둬.", en: "Make a copy of your passport to be on the safe side." },
     { ko: "(동료에게) 혹시 모르니까 파일 백업해 둘게.", en: "I'll back up the files, just to be on the safe side." },
@@ -1931,42 +1931,42 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 혹시 모르니까 공항에 세 시간 일찍 가자.", en: "Let's get to the airport three hours early to be on the safe side." },
     { ko: "(약사에게) 혹시 모르니까 두 통 살게.", en: "I'll buy two boxes, just to be on the safe side." },
     { ko: "(가이드에게) 혹시 모르니까 간식 좀 챙길게.", en: "I'll pack some snacks, just to be on the safe side." },
-    { ko: "(엄마에게) 혹시 모르니까 표 미리 사 두자.", en: "Let's buy tickets ahead of time, just to be on the safe side." },
+    { ko: "(친구에게) 혹시 모르니까 표 미리 사 두자.", en: "Let's buy tickets ahead of time, just to be on the safe side." },
     { ko: "(룸메이트에게) 혹시 모르니까 나갈 때 문 잠가.", en: "Lock the door on your way out, just to be on the safe side." }
   ],
   "c63-e3": [
     { ko: "(점원에게) 안 맞으면 다른 지점에 반품해도 돼?", en: "Can I bring it back to another location if it doesn't fit?" },
-    { ko: "(점원에게) 엄마 마음에 안 들면 반품해도 돼?", en: "Can we bring it back if my mom doesn't like it?" },
+    { ko: "(점원에게) 친구 마음에 안 들면 반품해도 돼?", en: "Can we bring it back if my friend doesn't like it?" },
     { ko: "(친구에게) 네 충전기 내일 돌려줄게.", en: "I'll bring your charger back tomorrow." },
     { ko: "(점원에게) 영수증 없이도 반품돼?", en: "Can I bring it back without a receipt?" },
     { ko: "(도서관 직원에게) 이 책 다음 주에 반납해도 돼?", en: "Can I bring this book back next week?" },
     { ko: "(동료에게) 빌린 우산 다시 가져왔어.", en: "I brought your umbrella back." },
     { ko: "(점원에게) 포장 뜯었어도 반품돼?", en: "Can I still bring it back if I opened it?" },
-    { ko: "(엄마에게) 이거 별로면 내일 반품하자.", en: "If you don't love it, let's bring it back tomorrow." },
+    { ko: "(친구에게) 이거 별로면 내일 반품하자.", en: "If you don't love it, let's bring it back tomorrow." },
     { ko: "(점원에게) 세일 상품도 반품돼?", en: "Can I bring sale items back?" },
     { ko: "(렌터카 직원에게) 차 공항 지점에 반납해도 돼?", en: "Can I bring the car back to the airport location?" }
   ],
   "c64-e1": [
     { ko: "(점원에게) 이 컵도 세일 대상이야?", en: "Is this mug part of the sale?" },
     { ko: "(점원에게) 아동복도 세일 대상이야?", en: "Are the kids' clothes part of the sale?" },
-    { ko: "(엄마에게) 이 스카프도 세일 대상이래.", en: "This scarf is part of the sale too." },
+    { ko: "(친구에게) 이 스카프도 세일 대상이래.", en: "This scarf is part of the sale too." },
     { ko: "(점원에게) 이 색도 세일 대상이야?", en: "Is this color part of the sale?" },
     { ko: "(친구에게) 신발은 세일 대상 아니래.", en: "The shoes aren't part of the sale." },
     { ko: "(점원에게) 저 벽에 걸린 것도 다 세일 대상이야?", en: "Is everything on that wall part of the sale?" },
     { ko: "(점원에게) 온라인 주문도 세일 대상이야?", en: "Are online orders part of the sale?" },
     { ko: "(점원에게) 이 엽서 세트도 세일 대상이야?", en: "Is this postcard set part of the sale?" },
-    { ko: "(엄마에게) 이 컵은 세일 대상이 아닌가 봐.", en: "I guess this cup isn't part of the sale." },
+    { ko: "(친구에게) 이 컵은 세일 대상이 아닌가 봐.", en: "I guess this cup isn't part of the sale." },
     { ko: "(점원에게) 계산대 옆에 있는 것도 세일 대상이야?", en: "Are the items by the register part of the sale?" }
   ],
   "c64-e2": [
     { ko: "(점원에게) 이거 먼저 계산해 줄래?", en: "Can you ring this up first?" },
-    { ko: "(점원에게) 엄마 거는 따로 계산해 줄래?", en: "Could you ring up my mom's things separately?" },
+    { ko: "(점원에게) 친구 거는 따로 계산해 줄래?", en: "Could you ring up my friend's things separately?" },
     { ko: "(점원에게) 이것도 같이 계산해 줘.", en: "Please ring this up too." },
     { ko: "(친구에게) 직원이 내 거 두 번 계산했어.", en: "The cashier rang me up twice." },
     { ko: "(점원에게) 저기 계산대에서 계산해 줄 수 있어?", en: "Can you ring us up at that register?" },
     { ko: "(점원에게) 이건 빼고 계산해 줄래?", en: "Could you ring it up without this one?" },
     { ko: "(점원에게) 쿠폰 쓰고 계산해 줄래?", en: "Can you ring it up with this coupon?" },
-    { ko: "(엄마에게) 직원이 아직 이거 안 찍은 것 같아.", en: "I don't think she rang this up yet." },
+    { ko: "(친구에게) 직원이 아직 이거 안 찍은 것 같아.", en: "I don't think she rang this up yet." },
     { ko: "(점원에게) 기다리는 동안 이거 계산해 줄래?", en: "Could you ring these up while I wait?" },
     { ko: "(점원에게) 다른 카드로 다시 계산해 줄래?", en: "Could you ring it up on a different card?" }
   ],
@@ -1977,7 +1977,7 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 송금 처리됐어?", en: "Did the money go through?" },
     { ko: "(점원에게) 쿠폰이 적용됐는지 확인해 줄래?", en: "Can you check if the coupon went through?" },
     { ko: "(렌터카 직원에게) 보증금 결제 처리됐어?", en: "Did the deposit go through?" },
-    { ko: "(엄마에게) 엄마 주문 처리됐대.", en: "Your order went through, Mom." },
+    { ko: "(친구에게) 네 주문 처리됐대.", en: "Your order went through." },
     { ko: "(동료에게) 내 휴가 신청 처리됐어?", en: "Did my vacation request go through?" },
     { ko: "(항공사 직원에게) 좌석 변경 처리됐어?", en: "Did my seat change go through?" },
     { ko: "(친구에게) 결제가 계속 안 돼.", en: "My payment won't go through." }
@@ -1995,20 +1995,20 @@ window.DRILL_DATA = {
     { ko: "(사진관 직원에게) 여기 여권 사진도 찍어 줘?", en: "Do you guys do passport photos?" }
   ],
   "c65-e2": [
-    { ko: "(점원에게) 엄마가 이 색 고르셨어.", en: "My mom picked out this color." },
+    { ko: "(점원에게) 친구가 이 색 골랐어.", en: "My friend picked out this color." },
     { ko: "(친구에게) 식당은 네가 골라.", en: "You pick out the restaurant." },
     { ko: "(점원에게) 열 살짜리 줄 거 고르는 것 좀 도와줄래?", en: "Could you help us pick out something for a ten-year-old?" },
-    { ko: "(엄마에게) 기념품은 엄마가 골라.", en: "You pick out the souvenirs, Mom." },
+    { ko: "(친구에게) 기념품은 네가 골라.", en: "You pick out the souvenirs." },
     { ko: "(동료에게) 이 와인 네가 골랐어?", en: "Did you pick out this wine?" },
     { ko: "(친구에게) 이거 내가 직접 고른 거야.", en: "I picked it out myself." },
-    { ko: "(점원에게) 엄마가 고르실 때까지 잠깐만 기다려 줘.", en: "Give us a minute while my mom picks one out." },
+    { ko: "(점원에게) 친구가 고를 때까지 잠깐만 기다려 줘.", en: "Give us a minute while my friend picks one out." },
     { ko: "(가족에게) 크리스마스트리는 같이 고르자.", en: "Let's pick out the Christmas tree together." },
     { ko: "(친구에게) 이 자리 네가 골랐어? 딱 좋다.", en: "Did you pick out these seats? They're perfect." },
     { ko: "(점원에게) 이 중에서 하나 골라 줄래?", en: "Can you pick one out for me?" }
   ],
   "c65-e3": [
     { ko: "(점원에게) 이 메모 상자 안에 넣어 줄래?", en: "Could you tuck this note inside the box?" },
-    { ko: "(엄마에게) 여권은 가방 안쪽에 넣어 둬.", en: "Tuck your passport inside your bag." },
+    { ko: "(친구에게) 여권은 가방 안쪽에 넣어 둬.", en: "Tuck your passport inside your bag." },
     { ko: "(점원에게) 선물 영수증은 봉투 안에 넣어 줄래?", en: "Can you tuck the gift receipt inside the envelope?" },
     { ko: "(친구에게) 카드 안에 쪽지 하나 넣어 뒀어.", en: "I tucked a note inside the card." },
     { ko: "(점원에게) 쿠폰은 쇼핑백 안에 넣어 줘.", en: "Please tuck the coupon inside the bag." },
@@ -2016,7 +2016,7 @@ window.DRILL_DATA = {
     { ko: "(호텔 직원에게) 방 열쇠를 이 봉투 안에 넣어 줄래?", en: "Could you tuck the key inside this envelope?" },
     { ko: "(친구에게) 현금은 지갑 안쪽에 넣어 둬.", en: "Tuck the cash inside your wallet." },
     { ko: "(점원에게) 사용 설명서도 안에 넣어 줄래?", en: "Can you tuck the manual inside too?" },
-    { ko: "(엄마에게) 엄마가 쓴 편지 상자 안에 넣었어.", en: "I tucked your letter inside the box, Mom." }
+    { ko: "(친구에게) 네가 쓴 편지 상자 안에 넣었어.", en: "I tucked your letter inside the box." }
   ],
   "c66-e1": [
     { ko: "(델리 직원에게) 1파운드면 돼.", en: "One pound will do." },
@@ -2027,12 +2027,12 @@ window.DRILL_DATA = {
     { ko: "(웨이터에게) 아무 소스나 괜찮아.", en: "Any sauce will do." },
     { ko: "(동료에게) 대충 쓴 초안이면 돼.", en: "A rough draft will do." },
     { ko: "(렌터카 직원에게) 소형차면 돼.", en: "A compact car will do." },
-    { ko: "(엄마에게) 나는 커피 한 잔이면 돼.", en: "Just one coffee will do." },
+    { ko: "(친구에게) 나는 커피 한 잔이면 돼.", en: "Just one coffee will do." },
     { ko: "(바리스타에게) 오트 우유 없으면 일반 우유도 돼.", en: "If you're out of oat milk, regular milk will do." }
   ],
   "c66-e2": [
     { ko: "(웨이터에게) 디저트는 셰프한테 맡길게.", en: "I'll leave dessert up to the chef." },
-    { ko: "(엄마에게) 저녁 메뉴는 엄마한테 맡길게.", en: "I'll leave dinner up to you, Mom." },
+    { ko: "(룸메이트에게) 저녁 메뉴는 너한테 맡길게.", en: "I'll leave dinner up to you." },
     { ko: "(미용사에게) 앞머리는 알아서 해 줘.", en: "I'll leave the bangs up to you." },
     { ko: "(친구에게) 영화는 네가 골라.", en: "I'll leave the movie up to you." },
     { ko: "(가이드에게) 점심 장소는 알아서 정해 줘.", en: "We'll leave lunch up to you." },
@@ -2044,7 +2044,7 @@ window.DRILL_DATA = {
   ],
   "c66-e3": [
     { ko: "(델리 직원에게) 그거면 우리 둘이 먹기에 충분할 거야.", en: "That should be plenty for both of us." },
-    { ko: "(엄마에게) 물 두 병이면 충분할 거야.", en: "Two bottles of water should be plenty." },
+    { ko: "(친구에게) 물 두 병이면 충분할 거야.", en: "Two bottles of water should be plenty." },
     { ko: "(친구에게) 공항까지 두 시간이면 충분할 거야.", en: "Two hours should be plenty to get to the airport." },
     { ko: "(호텔 직원에게) 수건 네 장이면 충분할 거야.", en: "Four towels should be plenty." },
     { ko: "(동료에게) 의자 열 개면 충분할 거야.", en: "Ten chairs should be plenty." },
@@ -2052,14 +2052,14 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 현금 100달러면 충분할 거야.", en: "A hundred dollars in cash should be plenty." },
     { ko: "(웨이터에게) 접시 하나면 우리 셋한테 충분할 거야.", en: "One plate should be plenty for the three of us." },
     { ko: "(가이드에게) 30분이면 충분할 거야.", en: "Thirty minutes should be plenty." },
-    { ko: "(엄마에게) 그 재킷이면 충분히 따뜻할 거야.", en: "That jacket should be plenty warm." }
+    { ko: "(친구에게) 그 재킷이면 충분히 따뜻할 거야.", en: "That jacket should be plenty warm." }
   ],
   "c67-e1": [
     { ko: "(식당 직원에게) 예약했는데 10분 정도 늦을 것 같아.", en: "We have a reservation, but we're running ten minutes late." },
     { ko: "(투어 가이드에게) 우리 좀 늦어지고 있어. 기다려 줄 수 있어?", en: "We're running a little late. Can you wait for us?" },
     { ko: "(친구에게) 나 늦을 것 같으니까 먼저 들어가 있어.", en: "I'm running late, so go in without me." },
     { ko: "(동료에게) 회의가 늦어지고 있대.", en: "The meeting is running late." },
-    { ko: "(엄마에게) 셔틀이 좀 늦게 온대.", en: "The shuttle is running late." },
+    { ko: "(친구에게) 셔틀이 좀 늦게 온대.", en: "The shuttle is running late." },
     { ko: "(호텔 직원에게) 늦어지고 있어. 체크인 괜찮아?", en: "We're running late. Is check-in still okay?" },
     { ko: "(미용사에게) 15분쯤 늦을 것 같아, 미안해.", en: "I'm running about fifteen minutes late, sorry." },
     { ko: "(친구에게) 늦을 것 같으면 그냥 전화해.", en: "If you're running late, just call me." },
@@ -2070,7 +2070,7 @@ window.DRILL_DATA = {
     { ko: "(호텔 직원에게) 늦어도 자정까지는 도착할 거야.", en: "We'll arrive by midnight at the latest." },
     { ko: "(동료에게) 늦어도 내일까지는 답 줄게.", en: "I'll get back to you by tomorrow at the latest." },
     { ko: "(렌터카 직원에게) 늦어도 5시까지는 반납할게.", en: "I'll return the car by five at the latest." },
-    { ko: "(엄마에게) 늦어도 8시까지는 출발하자.", en: "Let's leave by eight at the latest." },
+    { ko: "(친구에게) 늦어도 8시까지는 출발하자.", en: "Let's leave by eight at the latest." },
     { ko: "(친구에게) 늦어도 금요일까지는 돈 갚을게.", en: "I'll pay you back by Friday at the latest." },
     { ko: "(식당 직원에게) 늦어도 7시 반까지는 갈게.", en: "We'll get there by seven thirty at the latest." },
     { ko: "(집주인에게) 늦어도 이번 달 말까지는 이사 나갈게.", en: "I'll move out by the end of the month at the latest." },
@@ -2082,7 +2082,7 @@ window.DRILL_DATA = {
     { ko: "(호텔 직원에게) 우리 방 다른 사람한테 주지 마.", en: "Please don't give our room away." },
     { ko: "(식당 직원에게) 우리 자리 다른 사람 줬어?", en: "Did you give our table away?" },
     { ko: "(친구에게) 안 입는 옷 다 나눠 줄 거야.", en: "I'm giving away all my old clothes." },
-    { ko: "(엄마에게) 그 화분 이웃한테 줬어?", en: "Did you give that plant away to the neighbor?" },
+    { ko: "(룸메이트에게) 그 화분 이웃한테 줬어?", en: "Did you give that plant away to the neighbor?" },
     { ko: "(매표소 직원에게) 우리 좌석 다른 사람한테 안 넘어가는 거 맞지?", en: "Our seats won't get given away, right?" },
     { ko: "(동료에게) 남은 쿠키 다 나눠 줬어.", en: "I gave the leftover cookies away." },
     { ko: "(친구에게) 그 표 다른 사람 주지 마. 나 갈게.", en: "Don't give that ticket away. I'm coming." },
@@ -2093,7 +2093,7 @@ window.DRILL_DATA = {
   "c68-e1": [
     { ko: "(호텔 손님에게) 이 커피 머신 어떻게 쓰는지 알아?", en: "Do you know how this coffee machine works?" },
     { ko: "(역에서 처음 본 사람에게) 이 개찰구 어떻게 쓰는지 알아?", en: "Do you know how this gate works?" },
-    { ko: "(엄마에게) 이 TV 리모컨 어떻게 쓰는지 알아?", en: "Do you know how this remote works?" },
+    { ko: "(룸메이트에게) 이 TV 리모컨 어떻게 쓰는지 알아?", en: "Do you know how this remote works?" },
     { ko: "(친구에게) 이 앱 어떻게 쓰는지 알아?", en: "Do you know how this app works?" },
     { ko: "(주차장에서 처음 본 사람에게) 이 정산기 어떻게 쓰는지 알아?", en: "Do you know how this pay station works?" },
     { ko: "(호텔 직원에게) 방 금고 어떻게 쓰는지 알아?", en: "Do you know how the room safe works?" },
@@ -2107,7 +2107,7 @@ window.DRILL_DATA = {
     { ko: "(엘리베이터에서 처음 본 사람에게) 로비 좀 눌러 줄래?", en: "Could you hit the lobby for me?" },
     { ko: "(친구에게) 문 옆에 스위치 좀 눌러 줄래?", en: "Could you hit the light switch by the door?" },
     { ko: "(룸메이트에게) 전자레인지 시작 버튼 좀 눌러 줄래?", en: "Could you hit start on the microwave?" },
-    { ko: "(엄마에게) 엘리베이터 열림 버튼 좀 눌러 줄래?", en: "Could you hit the door open button?" },
+    { ko: "(친구에게) 엘리베이터 열림 버튼 좀 눌러 줄래?", en: "Could you hit the door open button?" },
     { ko: "(동료에게) 녹화 버튼 좀 눌러 줄래?", en: "Could you hit record?" },
     { ko: "(택시 기사님에게) 에어컨 좀 틀어 줄래?", en: "Could you hit the AC?" },
     { ko: "(친구에게) 이 노래 넘겨 줄래?", en: "Could you hit skip on this song?" },
@@ -2120,7 +2120,7 @@ window.DRILL_DATA = {
     { ko: "(친구에게) 너 몇 층에 살아?", en: "What floor are you on?" },
     { ko: "(병원 직원에게) 소아과 몇 층이야?", en: "What floor is pediatrics on?" },
     { ko: "(호텔 직원에게) 세탁실 몇 층에 있어?", en: "What floor is the laundry room on?" },
-    { ko: "(엄마에게) 우리 몇 층에 주차했지?", en: "What floor did we park on?" },
+    { ko: "(친구에게) 우리 몇 층에 주차했지?", en: "What floor did we park on?" },
     { ko: "(쇼핑몰 직원에게) 영화관 몇 층에 있어?", en: "What floor is the movie theater on?" },
     { ko: "(동료에게) 회의실 몇 층이야?", en: "What floor is the conference room on?" },
     { ko: "(박물관 직원에게) 인상파 전시는 몇 층이야?", en: "What floor is the Impressionist exhibit on?" },
@@ -2136,18 +2136,18 @@ window.DRILL_DATA = {
     { ko: "(가이드에게) 혹시 한국어 안내서 있어?", en: "Do you have a Korean guide, by any chance?" },
     { ko: "(매표소 직원에게) 혹시 학생 할인 있어?", en: "Is there a student discount, by any chance?" },
     { ko: "(택시 기사님에게) 혹시 카드 돼?", en: "Do you take cards, by any chance?" },
-    { ko: "(엄마에게) 혹시 충전기 챙겼어?", en: "Did you bring your charger, by any chance?" }
+    { ko: "(친구에게) 혹시 충전기 챙겼어?", en: "Did you bring your charger, by any chance?" }
   ],
   "c69-e3": [
     { ko: "(택시 기사님에게) 이 길로 계속 가 줘.", en: "Keep going on this road." },
-    { ko: "(엄마에게) 신호등 나올 때까지 계속 가자.", en: "Let's keep going until the traffic light." },
+    { ko: "(친구에게) 신호등 나올 때까지 계속 가자.", en: "Let's keep going until the traffic light." },
     { ko: "(처음 본 사람에게) 이쪽으로 계속 가면 해변 나와?", en: "If I keep going this way, will I hit the beach?" },
     { ko: "(친구에게) 힘들어도 조금만 더 가자.", en: "Let's keep going a little longer." },
     { ko: "(택시 기사님에게) 다리 지나서 계속 가 줄래?", en: "Could you keep going past the bridge?" },
     { ko: "(가이드에게) 계속 갈까, 아니면 여기서 기다릴까?", en: "Should we keep going or wait here?" },
     { ko: "(동료에게) 잘하고 있어. 계속 그렇게 해.", en: "You're on the right track. Keep going." },
     { ko: "(친구에게) 두 블록만 더 계속 가면 돼.", en: "Just keep going for two more blocks." },
-    { ko: "(엄마에게) 쭉 가다가 서점에서 왼쪽이야.", en: "Keep going straight and turn left at the bookstore." },
+    { ko: "(친구에게) 쭉 가다가 서점에서 왼쪽이야.", en: "Keep going straight and turn left at the bookstore." },
     { ko: "(운전하는 친구에게) 출구 놓쳤으니까 그냥 계속 가.", en: "We missed the exit, so just keep going." }
   ],
   "c70-e1": [
@@ -2163,45 +2163,45 @@ window.DRILL_DATA = {
     { ko: "(웨이터에게) 감자튀김을 샐러드로 바꾸면 얼마야?", en: "How much is it if I swap the fries for a salad?" }
   ],
   "c70-e2": [
-    { ko: "(엄마에게) 이 책들은 내 가방으로 옮길게.", en: "I'll move these books into my bag." },
+    { ko: "(친구에게) 이 책들은 내 가방으로 옮길게.", en: "I'll move these books into my bag." },
     { ko: "(호텔 직원에게) 짐을 새 방으로 옮겨 줄 수 있어?", en: "Could you move our bags into the new room?" },
     { ko: "(친구에게) 사진 이 폴더로 옮겨 줘.", en: "Move the photos into this folder." },
     { ko: "(항공사 직원에게) 이거 기내 가방으로 옮겨도 돼?", en: "Can I move this into my carry-on?" },
     { ko: "(룸메이트에게) 의자 거실로 옮기자.", en: "Let's move the chairs into the living room." },
     { ko: "(동료에게) 회의를 큰 방으로 옮길 수 있어?", en: "Can we move the meeting into the big room?" },
-    { ko: "(엄마에게) 무거운 건 내 캐리어로 옮겨.", en: "Move the heavy stuff into my suitcase." },
+    { ko: "(친구에게) 무거운 건 내 캐리어로 옮겨.", en: "Move the heavy stuff into my suitcase." },
     { ko: "(친구에게) 남은 음식 큰 통으로 옮겨 줄래?", en: "Could you move the leftovers into a bigger container?" },
     { ko: "(웨이터에게) 우리 안쪽 방으로 옮겨 줄 수 있어?", en: "Could you move us into the back room?" },
     { ko: "(가족에게) 장식은 다 창고로 옮겼어.", en: "I moved all the decorations into the garage." }
   ],
   "c70-e3": [
-    { ko: "(엄마에게) 가방에서 여권 좀 꺼내 줄래?", en: "Could you pull out the passports?" },
+    { ko: "(친구에게) 가방에서 여권 좀 꺼내 줄래?", en: "Could you pull out the passports?" },
     { ko: "(보안 요원에게) 노트북 꺼내야 해?", en: "Do I need to pull my laptop out?" },
     { ko: "(친구에게) 지도 좀 꺼내 봐.", en: "Pull out the map." },
     { ko: "(점원에게) 이거 진열장에서 꺼내 줄 수 있어?", en: "Could you pull this out of the display case?" },
     { ko: "(동료에게) 지난달 숫자 다시 꺼내 줄래?", en: "Could you pull out last month's numbers?" },
     { ko: "(룸메이트에게) 냉장고에서 우유 좀 꺼내 줘.", en: "Pull the milk out of the fridge." },
-    { ko: "(엄마에게) 신발은 캐리어에서 꺼내자.", en: "Let's pull the shoes out of the suitcase." },
+    { ko: "(친구에게) 신발은 캐리어에서 꺼내자.", en: "Let's pull the shoes out of the suitcase." },
     { ko: "(친구에게) 휴대폰 꺼내서 보여 줄게.", en: "Let me pull out my phone and show you." },
     { ko: "(택시 기사님에게) 트렁크에서 가방 좀 꺼내 줄래?", en: "Could you pull our bags out of the trunk?" },
     { ko: "(아이에게) 주머니에서 손 빼.", en: "Pull your hands out of your pockets." }
   ],
   "c71-e1": [
     { ko: "(택시 기사님에게) 우리 진짜 아슬아슬하니까 좀 서둘러 줘.", en: "We're really cutting it close, so please hurry." },
-    { ko: "(엄마에게) 이번엔 아슬아슬하게 하지 말자.", en: "Let's not cut it close this time." },
+    { ko: "(친구에게) 이번엔 아슬아슬하게 하지 말자.", en: "Let's not cut it close this time." },
     { ko: "(친구에게) 경유 40분은 너무 아슬아슬해.", en: "A forty-minute layover is cutting it close." },
     { ko: "(동료에게) 마감을 너무 아슬아슬하게 맞추지 마.", en: "Don't cut it so close with the deadline." },
     { ko: "(친구에게) 어제 기차 진짜 아슬아슬했어.", en: "I really cut it close with the train yesterday." },
     { ko: "(호텔 직원에게) 11시에 체크아웃하면 좀 아슬아슬하네.", en: "Checking out at eleven is cutting it close." },
     { ko: "(가이드에게) 30분이면 좀 아슬아슬하지 않아?", en: "Isn't thirty minutes cutting it close?" },
-    { ko: "(엄마에게) 공항에 한 시간 전에 가면 아슬아슬해.", en: "Getting there an hour early is cutting it close." },
+    { ko: "(친구에게) 공항에 한 시간 전에 가면 아슬아슬해.", en: "Getting there an hour early is cutting it close." },
     { ko: "(친구에게) 너 항상 아슬아슬하게 오더라.", en: "You always cut it close." },
     { ko: "(동료에게) 오늘 회의 시간 좀 아슬아슬해.", en: "We're cutting it close for the meeting today." }
   ],
   "c71-e2": [
     { ko: "(호텔 직원에게) 공항까지 기차 타는 게 더 빠를까?", en: "Would it be faster to take the train to the airport?" },
     { ko: "(택시 기사님에게) 다리로 가는 게 더 빠를까?", en: "Would it be faster to take the bridge?" },
-    { ko: "(엄마에게) 그냥 걸어가는 게 더 빠를까?", en: "Would it be faster to just walk?" },
+    { ko: "(친구에게) 그냥 걸어가는 게 더 빠를까?", en: "Would it be faster to just walk?" },
     { ko: "(동료에게) 이메일보다 전화하는 게 더 빠를까?", en: "Would it be faster to call than email?" },
     { ko: "(가이드에게) 반대쪽 입구로 들어가는 게 더 빠를까?", en: "Would it be faster to use the other entrance?" },
     { ko: "(친구에게) 우버 부르는 게 더 빠를까?", en: "Would it be faster to get an Uber?" },
@@ -2212,14 +2212,14 @@ window.DRILL_DATA = {
   ],
   "c71-e3": [
     { ko: "(택시 기사님에게) 다리 쪽도 막혀?", en: "Is the bridge backed up too?" },
-    { ko: "(엄마에게) 출구가 완전히 막혔어.", en: "The exit is totally backed up." },
+    { ko: "(친구에게) 출구가 완전히 막혔어.", en: "The exit is totally backed up." },
     { ko: "(호텔 직원에게) 공항 가는 길 지금 막혀?", en: "Is the road to the airport backed up right now?" },
     { ko: "(친구에게) 고속도로가 시내까지 쭉 막혀 있대.", en: "The highway's backed up all the way downtown." },
     { ko: "(동료에게) 주문이 좀 밀려 있어.", en: "Orders are a little backed up." },
     { ko: "(택시 기사님에게) 이 시간엔 보통 이렇게 막혀?", en: "Is it usually this backed up at this hour?" },
     { ko: "(친구에게) 화장실 줄이 엄청 밀렸어.", en: "The restroom line is backed up." },
     { ko: "(가이드에게) 국경 쪽 막혀 있어?", en: "Is the border crossing backed up?" },
-    { ko: "(엄마에게) 터널이 막혀서 아마 늦을 거야.", en: "The tunnel's backed up, so we'll probably be late." },
+    { ko: "(친구에게) 터널이 막혀서 아마 늦을 거야.", en: "The tunnel's backed up, so we'll probably be late." },
     { ko: "(동료에게) 내 메일함이 잔뜩 밀려 있어.", en: "My inbox is so backed up." }
   ]
 };

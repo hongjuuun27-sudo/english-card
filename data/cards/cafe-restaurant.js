@@ -1774,10 +1774,10 @@
     id: 52,
     category: "카페·식당",
     title: "카페에서 제일 큰 사이즈로 주문하기",
-    situation: "엄마와 한참 걸어서 둘 다 목이 말라요. 카페에서 엄마가 좋아하는 아이스커피를 제일 큰 사이즈로 주문해요.",
+    situation: "한참 걸어서 목이 너무 말라요. 카페에서 좋아하는 아이스커피를 제일 큰 사이즈로 주문해요.",
     hooks: [
       { ko: "'제일 큰 사이즈가 뭐예요?'는 뭐라고 하지?", line: 2 },
-      { ko: "'엄마가 아이스커피를 엄청 좋아하거든요'는 뭐라고 하지?", line: 4 },
+      { ko: "'제가 아이스커피를 엄청 좋아하거든요'는 뭐라고 하지?", line: 4 },
       { ko: "우유 넣을 자리를 남겨 달라고 할 때, 뭐라고 하지?", line: 6 }
     ],
     dialogue: [
@@ -1793,9 +1793,9 @@
         chunks: "Our biggest is / thirty-two ounces. / It's pretty huge.",
         tips: [{ target: "thirty-two ounces", ko: "32온스는 약 950ml예요. ounces는 '아운시즈'." },
                { target: "pretty huge", ko: "pretty는 '꽤'. t가 굴러 '프리디'처럼." }] },
-      { who: "me", en: "Works for me. My mom's a big iced coffee person.", ko: "괜찮아. 우리 엄마가 아이스커피를 엄청 좋아하거든.",
-        chunks: "Works for me. / My mom's‿a big / iced coffee person.",
-        tips: [{ target: "mom's a", ko: "s가 a에 붙어 '맘저'처럼." },
+      { who: "me", en: "Works for me. I'm a big iced coffee person.", ko: "괜찮아. 나 아이스커피 엄청 좋아하거든.",
+        chunks: "Works for me. / I'm‿a big / iced coffee person.",
+        tips: [{ target: "I'm a big", ko: "'아이머 빅'처럼 이어져요." },
                { target: "iced coffee", ko: "d는 거의 안 들리고 '아이스 커피'처럼." }] },
       { who: "staff", en: "Love that. So, one large iced Americano?", ko: "좋네요. 그럼 아이스 아메리카노 큰 걸로 하나요?",
         chunks: "Love that. / So, / one large iced Americano?",
@@ -1944,7 +1944,7 @@
     id: 53,
     category: "카페·식당",
     title: "식당에서 남은 음식 포장하기",
-    situation: "엄마와 식당에서 파스타를 시켰는데 양이 너무 많아요. 엄마가 내일 아침으로 먹자고 해서 남은 음식을 포장해요.",
+    situation: "친구와 식당에서 파스타를 시켰는데 양이 너무 많아요. 내일 아침으로 먹으려고 남은 음식을 포장해요.",
     hooks: [
       { ko: "'이거 포장해 줄 수 있어요?'는 뭐라고 하지?", line: 4 },
       { ko: "'아침으로 먹으려고 남겨 두는 거예요'는 뭐라고 하지?", line: 6 },
@@ -2120,11 +2120,11 @@
     id: 54,
     category: "카페·식당",
     title: "샌드위치 반으로 잘라 달라고 하기",
-    situation: "엄마와 브런치 식당에 왔어요. 클럽 샌드위치 하나를 둘이 나눠 먹으려고, 주방에서 반으로 잘라 달라고 부탁해요.",
+    situation: "친구와 브런치 식당에 왔어요. 클럽 샌드위치 하나를 둘이 나눠 먹으려고, 주방에서 반으로 잘라 달라고 부탁해요.",
     hooks: [
       { ko: "'샌드위치 하나 나눠 먹을까 해요'는 뭐라고 하지?", line: 2 },
       { ko: "주방에서 반으로 잘라 줄 수 있냐고 물을 때, 뭐라고 하지?", line: 4 },
-      { ko: "'엄마 쪽 반에는 양파 빼 주세요'는 뭐라고 하지?", line: 6 }
+      { ko: "'친구 쪽 반에는 양파 빼 주세요'는 뭐라고 하지?", line: 6 }
     ],
     dialogue: [
       { who: "server", en: "Alright, have you two decided?", ko: "자, 두 분 다 정하셨어요?",
@@ -2147,8 +2147,8 @@
         chunks: "Totally. / I can even put / each half / on‿its own plate.",
         tips: [{ target: "each half", ko: "'반쪽씩'. half의 l은 소리 나지 않아요." },
                { target: "its own", ko: "'각자의'. s가 own에 붙어 '잇초운'처럼." }] },
-      { who: "me", en: "That'd be great. And no onions on my mom's half.", ko: "그럼 좋지. 그리고 엄마 쪽 반에는 양파 빼 줘.",
-        chunks: "That'd be great. / And no onions / on my mom's half.",
+      { who: "me", en: "That'd be great. And no onions on my friend's half.", ko: "그럼 좋지. 그리고 친구 쪽 반에는 양파 빼 줘.",
+        chunks: "That'd be great. / And no onions / on my friend's half.",
         tips: [{ target: "That'd be great", ko: "That would be great를 줄인 말. '대드비 그레잇'처럼." },
                { target: "onions", ko: "'어니언즈'. 첫음절에 힘." }] },
       { who: "server", en: "Can do. I'll let the kitchen know.", ko: "알겠습니다. 주방에 말해 둘게요.",
@@ -2177,8 +2177,8 @@
           { en: "I'm thinking of trying the fish tacos.", ko: "피시 타코 먹어 볼까 생각 중이야.",
             chunks: "I'm thinking‿of trying / the fish tacos.",
             tips: [{ target: "tacos", ko: "'타코우즈'. 첫음절에 힘." }] },
-          { en: "My mom's thinking of taking a cooking class here.", ko: "엄마가 여기서 요리 수업을 들어 볼까 생각 중이셔.",
-            chunks: "My mom's thinking‿of taking / a cooking class here.",
+          { en: "My sister's thinking of taking a cooking class here.", ko: "여동생이 여기서 요리 수업을 들어 볼까 생각 중이야.",
+            chunks: "My sister's thinking‿of taking / a cooking class here.",
             tips: [{ target: "cooking class", ko: "g가 c에 이어져 '쿠킹클래스'." }] }
         ],
         story: {
@@ -2248,7 +2248,7 @@
     id: 55,
     category: "카페·식당",
     title: "유명 빵집에서 덜 붐비는 시간 물어보기",
-    situation: "엄마가 꼭 가 보고 싶어 하던 유명 빵집에 왔는데 줄이 가게 밖까지 길어요. 직원에게 언제 덜 붐비는지 물어봐요.",
+    situation: "꼭 가 보고 싶던 유명 빵집에 왔는데 줄이 가게 밖까지 길어요. 직원에게 언제 덜 붐비는지 물어봐요.",
     hooks: [
       { ko: "가게가 언제쯤 한산해지냐고 물을 때, 뭐라고 하지?", line: 3 },
       { ko: "'사람 몰리기 전에 오려면 어떻게 해요?'는 뭐라고 하지?", line: 5 },
@@ -2270,23 +2270,23 @@
         chunks: "Usually after two. / But the croissants / sell‿out by then.",
         tips: [{ target: "croissants", ko: "미국에서는 '크러산츠'처럼 읽어요." },
                { target: "sell out", ko: "'다 팔리다'. l이 out에 붙어 '쎌라웃'." }] },
-      { who: "me", en: "Hmm. How can we beat the crowds tomorrow?", ko: "음. 내일은 어떻게 하면 사람 몰리기 전에 올 수 있어?",
-        chunks: "Hmm. / How can we beat the crowds / tomorrow?",
+      { who: "me", en: "Hmm. How can I beat the crowds tomorrow?", ko: "음. 내일은 어떻게 하면 사람 몰리기 전에 올 수 있어?",
+        chunks: "Hmm. / How can I beat the crowds / tomorrow?",
         tips: [{ target: "beat the crowds", ko: "'사람들이 몰리기 전에 먼저 가다'라는 뜻이에요." },
                { target: "crowds", ko: "끝 ds는 '즈'처럼 짧게. '크라우즈'." }] },
       { who: "staff", en: "Honestly, early morning is your best bet. We open at seven.", ko: "솔직히 이른 아침이 제일 좋아요. 저희 7시에 열어요.",
         chunks: "Honestly, / early morning is your best bet. / We open‿at seven.",
         tips: [{ target: "best bet", ko: "'가장 확실한 방법'. t는 짧게 끊어요." },
                { target: "open at", ko: "n이 at에 붙어 '오우프냇'처럼." }] },
-      { who: "me", en: "So we should get here right when you open?", ko: "그럼 문 열자마자 오면 되는 거야?",
-        chunks: "So we should get here / right when you open?",
+      { who: "me", en: "So I should get here right when you open?", ko: "그럼 문 열자마자 오면 되는 거야?",
+        chunks: "So I should get here / right when you open?",
         tips: [{ target: "right when", ko: "'~하자마자 바로'. t는 거의 안 들려요." },
                { target: "get here", ko: "t가 굴러 '게리어r'처럼." }] },
       { who: "staff", en: "Exactly. You'll be in and out in ten minutes.", ko: "맞아요. 10분이면 사서 나가실 거예요.",
         chunks: "Exactly. / You'll be in‿and out / in ten minutes.",
         tips: [{ target: "in and out", ko: "'금방 들어갔다 나오다'. '이낸아웃'처럼 이어져요." }] },
-      { who: "me", en: "Awesome. My mom's already setting an alarm.", ko: "좋아. 엄마가 벌써 알람 맞추고 계셔.",
-        chunks: "Awesome. / My mom's already / setting‿an alarm.",
+      { who: "me", en: "Awesome. I'm setting an alarm right now.", ko: "좋아. 지금 바로 알람 맞추는 중이야.",
+        chunks: "Awesome. / I'm setting‿an alarm / right now.",
         tips: [{ target: "setting an alarm", ko: "t가 굴러 '쎄리너널람'처럼." }] }
     ],
     expressions: [
@@ -2421,7 +2421,7 @@
     id: 56,
     category: "카페·식당",
     title: "식당에서 얼음 없는 미지근한 물 부탁하기",
-    situation: "엄마와 식당에 앉았는데 미국 식당 물은 얼음이 가득이에요. 엄마는 찬물보다 미지근한 물을 좋아하셔서, 물을 주문할 때 미리 말해요.",
+    situation: "친구와 식당에 앉았는데 미국 식당 물은 얼음이 가득이에요. 찬물이 별로라서 물을 주문할 때 미리 말해요.",
     hooks: [
       { ko: "'우리 둘 다 물로 주세요'는 뭐라고 하지?", line: 2 },
       { ko: "물에 얼음을 빼 달라고 할 때, 뭐라고 하지?", line: 4 },
@@ -2456,9 +2456,9 @@
         chunks: "You bet. / I'll pour‿it in the back / so it's not chilled.",
         tips: [{ target: "chilled", ko: "'차갑게 식힌'. '칠드'." },
                { target: "pour it", ko: "r이 it에 이어져 '포어릿'." }] },
-      { who: "me", en: "Thanks! My mom always drinks it that way.", ko: "고마워! 엄마는 항상 그렇게 드시거든.",
-        chunks: "Thanks! / My mom always / drinks‿it that way.",
-        tips: [{ target: "that way", ko: "'그렇게, 그런 식으로'. t는 짧게." }] }
+      { who: "me", en: "Thanks! Cold water just isn't my thing.", ko: "고마워! 찬물은 그냥 나랑 안 맞아.",
+        chunks: "Thanks! / Cold water just / isn't my thing.",
+        tips: [{ target: "isn't my thing", ko: "'내 취향이 아니다'. '이즌 마이 띵'." }] }
     ],
     expressions: [
       {
@@ -2592,7 +2592,7 @@
     id: 57,
     category: "카페·식당",
     title: "시간이 빠듯할 때 빨리 나오는 메뉴 묻기",
-    situation: "엄마와 투어 버스 출발 40분 전에 식당에 들어왔어요. 시간이 빠듯해서 빨리 나오는 메뉴를 물어보고 주문해요.",
+    situation: "친구와 투어 버스 출발 40분 전에 식당에 들어왔어요. 시간이 빠듯해서 빨리 나오는 메뉴를 물어보고 주문해요.",
     hooks: [
       { ko: "'우리 시간이 좀 빠듯해요'는 뭐라고 하지?", line: 2 },
       { ko: "'타야 하는 투어 버스가 있어요'는 뭐라고 하지?", line: 4 },
@@ -2624,8 +2624,8 @@
         chunks: "The soup‿and the grilled cheese. / Those take‿about five minutes.",
         tips: [{ target: "grilled cheese", ko: "치즈를 넣고 구운 샌드위치예요. '그릴드 치즈'." },
                { target: "take about", ko: "k가 a에 붙어 '테이커바웃'." }] },
-      { who: "me", en: "Cool. Soup for my mom, grilled cheese for me.", ko: "좋아. 엄마는 수프, 나는 그릴드 치즈.",
-        chunks: "Cool. / Soup for my mom, / grilled cheese for me.",
+      { who: "me", en: "Cool. Soup for my friend, grilled cheese for me.", ko: "좋아. 친구는 수프, 나는 그릴드 치즈.",
+        chunks: "Cool. / Soup for my friend, / grilled cheese for me.",
         tips: [{ target: "for me", ko: "'나는'. for는 약하게 '퍼r'." }] },
       { who: "server", en: "On it. I'll put that in right away and bring the check with it.", ko: "알겠어요. 바로 주문 넣고 계산서도 같이 갖다 드릴게요.",
         chunks: "On it. / I'll put that‿in right‿away / and bring the check with‿it.",
@@ -2764,7 +2764,7 @@
     id: 58,
     category: "카페·식당",
     title: "시끄러운 자리에서 조용한 자리로 옮기기",
-    situation: "엄마와 저녁을 먹는데 자리가 스피커 바로 옆이라 서로 말이 잘 안 들려요. 직원에게 조용한 자리로 옮겨도 되는지 물어봐요.",
+    situation: "친구와 저녁을 먹는데 자리가 스피커 바로 옆이라 서로 말이 잘 안 들려요. 직원에게 조용한 자리로 옮겨도 되는지 물어봐요.",
     hooks: [
       { ko: "'서로 말이 거의 안 들려요'는 뭐라고 하지?", line: 2 },
       { ko: "'자리 옮겨도 괜찮을까요?'는 뭐라고 하지?", line: 4 },
@@ -2799,9 +2799,9 @@
         chunks: "Don't worry about‿it. / I'll carry everything over.",
         tips: [{ target: "about it", ko: "t가 굴러 '어바우릿'." },
                { target: "carry everything over", ko: "'다 옮겨 주다'. '캐리 에브리띵 오버r'." }] },
-      { who: "me", en: "Thanks! Now my mom can finish her story.", ko: "고마워! 이제 엄마가 하던 얘기 마저 하실 수 있겠다.",
-        chunks: "Thanks! / Now my mom can / finish her story.",
-        tips: [{ target: "finish her", ko: "h가 약해져 '피니셔r'처럼." }] }
+      { who: "me", en: "Thanks! Now we can actually talk.", ko: "고마워! 이제 진짜 얘기할 수 있겠다.",
+        chunks: "Thanks! / Now we can / actually talk.",
+        tips: [{ target: "actually talk", ko: "'진짜로 얘기하다'. '액츄얼리 톡'." }] }
     ],
     expressions: [
       {
@@ -2822,8 +2822,8 @@
           { en: "Sorry, I can barely hear you. The signal's bad.", ko: "미안, 네 말이 거의 안 들려. 신호가 안 좋아.",
             chunks: "Sorry, / I can barely hear you. / The signal's bad.",
             tips: [{ target: "signal's bad", ko: "'신호가 안 좋아'. '시그널즈 배드'." }] },
-          { en: "My mom can barely walk past a bookstore without going in.", ko: "엄마는 서점 앞을 그냥 지나가질 못하셔.",
-            chunks: "My mom can barely / walk past‿a bookstore / without going‿in.",
+          { en: "My sister can barely walk past a bookstore without going in.", ko: "여동생은 서점 앞을 그냥 지나가질 못해.",
+            chunks: "My sister can barely / walk past‿a bookstore / without going‿in.",
             tips: [{ target: "walk past", ko: "'지나쳐 가다'. k가 p에 이어져요." }] }
         ],
         story: {
@@ -2934,7 +2934,7 @@
     id: 59,
     category: "카페·식당",
     title: "짐이 많아서 넓은 자리로 옮기기",
-    situation: "엄마와 쇼핑하고 쇼핑백을 잔뜩 든 채 식당에 왔어요. 2인용 작은 테이블이라 접시와 짐을 둘 데가 없어서 더 넓은 자리를 부탁해요.",
+    situation: "친구와 쇼핑하고 쇼핑백을 잔뜩 든 채 식당에 왔어요. 2인용 작은 테이블이라 접시와 짐을 둘 데가 없어서 더 넓은 자리를 부탁해요.",
     hooks: [
       { ko: "'혹시 더 큰 테이블 있어요?'는 뭐라고 하지?", line: 2 },
       { ko: "'쇼핑을 좀 과하게 했어요'는 뭐라고 하지?", line: 4 },
@@ -2967,9 +2967,9 @@
         chunks: "The corner booth / just opened‿up. / It seats four.",
         tips: [{ target: "opened up", ko: "'(자리가) 났다'. d가 up에 붙어요." },
                { target: "seats four", ko: "'네 명이 앉는다'. seat는 '앉히다'라는 동사로도 써요." }] },
-      { who: "me", en: "Awesome. My mom's grabbing the bags.", ko: "좋아. 엄마가 짐 챙기고 계셔.",
-        chunks: "Awesome. / My mom's grabbing the bags.",
-        tips: [{ target: "grabbing", ko: "'챙기다, 집다'. '그래빙'." }] }
+      { who: "me", en: "Awesome. I'll grab the bags.", ko: "좋아. 내가 짐 챙길게.",
+        chunks: "Awesome. / I'll grab the bags.",
+        tips: [{ target: "grab the bags", ko: "'짐을 챙기다'. b가 th 앞에서 짧게 끊겨요." }] }
     ],
     expressions: [
       {
@@ -3038,21 +3038,21 @@
         ],
         story: {
           sentences: [
-            { chunks: "For my mom's sixtieth birthday, / my brother‿and I / planned‿a small party.",
-              ko: "엄마 예순 번째 생신에 남동생이랑 작은 파티를 준비했거든.",
-              tips: [{ target: "sixtieth", ko: "'식스티이쓰'. 60번째." }] },
+            { chunks: "For my grandpa's eightieth birthday, / my brother‿and I / planned‿a small party.",
+              ko: "할아버지 여든 번째 생신에 남동생이랑 작은 파티를 준비했거든.",
+              tips: [{ target: "eightieth", ko: "'에이티이쓰'. 80번째." }] },
             { chunks: "Then my brother / went totally overboard / with the decorations.",
               ko: "근데 남동생이 장식을 완전히 과하게 해 버렸어.",
               tips: [{ target: "decorations", ko: "'데커레이션즈'." }] },
-            { chunks: "There were balloons, / a photo wall, / and‿a giant banner / with her face‿on‿it.",
-              ko: "풍선에 포토월에, 엄마 얼굴이 들어간 커다란 현수막까지 있었어.",
+            { chunks: "There were balloons, / a photo wall, / and‿a giant banner / with his face‿on‿it.",
+              ko: "풍선에 포토월에, 할아버지 얼굴이 들어간 커다란 현수막까지 있었어.",
               tips: [{ target: "banner", ko: "'배너r'. 현수막." }] },
-            { chunks: "My mom loved‿it / and posted every photo online.",
-              ko: "엄마는 엄청 좋아하시면서 사진을 하나도 빠짐없이 인터넷에 올리셨어.",
+            { chunks: "My grandpa loved‿it / and posted every photo online.",
+              ko: "할아버지는 엄청 좋아하시면서 사진을 하나도 빠짐없이 인터넷에 올리셨어.",
               tips: [{ target: "posted", ko: "'올렸다'. '포우스티드'." }] }
           ],
-          en: "For my mom's sixtieth birthday, my brother and I planned a small party. Then my brother went totally overboard with the decorations. There were balloons, a photo wall, and a giant banner with her face on it. My mom loved it and posted every photo online.",
-          ko: "엄마 예순 번째 생신에 남동생이랑 작은 파티를 준비했거든. 근데 남동생이 장식을 완전히 과하게 해 버렸어. 풍선에 포토월에, 엄마 얼굴이 들어간 커다란 현수막까지 있었어. 엄마는 엄청 좋아하시면서 사진을 하나도 빠짐없이 인터넷에 올리셨어."
+          en: "For my grandpa's eightieth birthday, my brother and I planned a small party. Then my brother went totally overboard with the decorations. There were balloons, a photo wall, and a giant banner with his face on it. My grandpa loved it and posted every photo online.",
+          ko: "할아버지 여든 번째 생신에 남동생이랑 작은 파티를 준비했거든. 근데 남동생이 장식을 완전히 과하게 해 버렸어. 풍선에 포토월에, 할아버지 얼굴이 들어간 커다란 현수막까지 있었어. 할아버지는 엄청 좋아하시면서 사진을 하나도 빠짐없이 인터넷에 올리셨어."
         }
       },
       {
@@ -3104,7 +3104,7 @@
     id: 60,
     category: "카페·식당",
     title: "아이스크림 가게에서 제일 작은 사이즈 시키기",
-    situation: "점심을 배부르게 먹었는데 엄마가 유명한 아이스크림 가게에 들르자고 하셨어요. 엄마는 두 스쿱을 고르시고, 나는 맛을 본 뒤 제일 작은 사이즈로 시켜요.",
+    situation: "점심을 배부르게 먹었는데 친구가 유명한 아이스크림 가게에 들르자고 했어요. 친구는 두 스쿱을 고르고, 나는 맛을 본 뒤 제일 작은 사이즈로 시켜요.",
     hooks: [
       { ko: "'피스타치오 맛 좀 봐도 돼요?'는 뭐라고 하지?", line: 2 },
       { ko: "'스몰보다 더 작은 사이즈 있어요?'는 뭐라고 하지?", line: 4 },
@@ -3134,12 +3134,12 @@
         chunks: "That's perfect. / I'm still full from lunch.",
         tips: [{ target: "still full", ko: "'아직 배부른'. l을 살짝 두 번." },
                { target: "from lunch", ko: "'프럼 런치'." }] },
-      { who: "staff", en: "You bet. And what can I get for your mom?", ko: "그럼요. 어머님은 뭐 드릴까요?",
-        chunks: "You bet. / And what can I get / for your mom?",
+      { who: "staff", en: "You bet. And what can I get for your friend?", ko: "그럼요. 친구분은 뭐 드릴까요?",
+        chunks: "You bet. / And what can I get / for your friend?",
         tips: [{ target: "You bet", ko: "'그럼요, 물론이죠'." },
-               { target: "your mom", ko: "'유어r 맘'." }] },
-      { who: "me", en: "She wants a double scoop, mango and coconut.", ko: "엄마는 망고랑 코코넛으로 두 스쿱 드신대.",
-        chunks: "She wants‿a double scoop, / mango‿and coconut.",
+               { target: "your friend", ko: "'유어r 프렌드'." }] },
+      { who: "me", en: "My friend wants a double scoop, mango and coconut.", ko: "친구는 망고랑 코코넛으로 두 스쿱 먹고 싶대.",
+        chunks: "My friend wants‿a double scoop, / mango‿and coconut.",
         tips: [{ target: "double scoop", ko: "'두 스쿱'. '더블 스쿱'." },
                { target: "coconut", ko: "'코우커넛'. 첫음절에 힘." }] },
       { who: "staff", en: "Love it. That'll be eleven twenty.", ko: "좋네요. 11달러 20센트예요.",
@@ -3212,21 +3212,21 @@
         ],
         story: {
           sentences: [
-            { chunks: "My friend's mom / invited me / for lunch‿at noon.",
-              ko: "친구 어머니가 정오에 점심 먹으러 오라고 하셨거든.",
+            { chunks: "My neighbor / invited me / for lunch‿at noon.",
+              ko: "이웃이 정오에 점심 먹으러 오라고 했거든.",
               tips: [{ target: "invited me", ko: "'초대했다'. d가 m에 이어져요." }] },
             { chunks: "At three, / I told her, / “I'm still full from lunch, / thank you.”",
               ko: "3시에 내가 “아직 점심 먹은 게 안 꺼졌어요, 감사해요” 했어.",
               tips: [{ target: "thank you", ko: "th는 혀끝을 이 사이에. '땡큐'." }] },
             { chunks: "She nodded / and brought‿out / a whole apple pie anyway.",
-              ko: "어머니는 고개를 끄덕이시더니 그래도 사과파이를 통째로 내오셨어.",
+              ko: "이웃은 고개를 끄덕이더니 그래도 사과파이를 통째로 내왔어.",
               tips: [{ target: "brought out", ko: "'내왔다'. t가 굴러 '브라라웃'." }] },
             { chunks: "I ate two slices, / of course.",
               ko: "물론 나는 두 조각을 먹었지.",
               tips: [{ target: "of course", ko: "'어브 코r스'. 당연하지." }] }
           ],
-          en: "My friend's mom invited me for lunch at noon. At three, I told her, “I'm still full from lunch, thank you.” She nodded and brought out a whole apple pie anyway. I ate two slices, of course.",
-          ko: "친구 어머니가 정오에 점심 먹으러 오라고 하셨거든. 3시에 내가 “아직 점심 먹은 게 안 꺼졌어요, 감사해요” 했어. 어머니는 고개를 끄덕이시더니 그래도 사과파이를 통째로 내오셨어. 물론 나는 두 조각을 먹었지."
+          en: "My neighbor invited me for lunch at noon. At three, I told her, “I'm still full from lunch, thank you.” She nodded and brought out a whole apple pie anyway. I ate two slices, of course.",
+          ko: "이웃이 정오에 점심 먹으러 오라고 했거든. 3시에 내가 “아직 점심 먹은 게 안 꺼졌어요, 감사해요” 했어. 이웃은 고개를 끄덕이더니 그래도 사과파이를 통째로 내왔어. 물론 나는 두 조각을 먹었지."
         }
       }
     ],
@@ -3236,10 +3236,10 @@
     id: 61,
     category: "카페·식당",
     title: "주문 전에 시간 조금 더 달라고 하기",
-    situation: "엄마와 처음 온 식당이라 메뉴가 너무 많아요. 직원이 주문을 받으러 왔는데 아직 못 골라서 시간을 좀 더 달라고 해요.",
+    situation: "친구와 처음 온 식당이라 메뉴가 너무 많아요. 직원이 주문을 받으러 왔는데 아직 못 골라서 시간을 좀 더 달라고 해요.",
     hooks: [
       { ko: "'몇 분만 더 주실래요?'는 뭐라고 하지?", line: 4 },
-      { ko: "'엄마가 립이랑 연어 중에 못 고르고 계세요'는 뭐라고 하지?", line: 6 },
+      { ko: "'친구가 립이랑 연어 중에 못 고르고 있어요'는 뭐라고 하지?", line: 6 },
       { ko: "고르는 동안 음료부터 달라고 할 때, 뭐라고 하지?", line: 8 }
     ],
     dialogue: [
@@ -3260,8 +3260,8 @@
       { who: "server", en: "You bet. Any questions I can help with?", ko: "그럼요. 궁금한 거 있으면 도와드릴까요?",
         chunks: "You bet. / Any questions / I can help with?",
         tips: [{ target: "help with", ko: "'~를 돕다'. p가 w에 이어져요." }] },
-      { who: "me", en: "Yeah, my mom's torn between the ribs and the salmon.", ko: "응, 엄마가 립이랑 연어 중에 못 고르고 계셔.",
-        chunks: "Yeah, / my mom's torn between / the ribs‿and the salmon.",
+      { who: "me", en: "Yeah, my friend's torn between the ribs and the salmon.", ko: "응, 친구가 립이랑 연어 중에 못 고르고 있어.",
+        chunks: "Yeah, / my friend's torn between / the ribs‿and the salmon.",
         tips: [{ target: "torn between", ko: "'~ 사이에서 갈등하는'. '토r운 비트윈'." },
                { target: "salmon", ko: "l은 소리 나지 않아요. '쌔먼'." }] },
       { who: "server", en: "Honestly, the ribs are our most popular dish.", ko: "솔직히 립이 저희 제일 인기 메뉴예요.",

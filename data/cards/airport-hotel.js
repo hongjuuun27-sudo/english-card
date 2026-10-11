@@ -913,7 +913,7 @@
     id: 47,
     category: "공항·숙소",
     title: "예약 없이 호텔 빈방 물어보기",
-    situation: "엄마가 지도에서 찾아 둔 호텔에 예약 없이 들어왔어요. 오늘 밤 묵을 방이 있는지 묻고 가격을 확인해요.",
+    situation: "친구와 여행하다가 일정이 바뀌어서 예약 없이 근처 호텔에 들어왔어요. 오늘 밤 묵을 방이 있는지 묻고 가격을 확인해요.",
     hooks: [
       { ko: "예약 없이 와도 방을 받을 수 있냐고 물을 때, 뭐라고 하지?", line: 2 },
       { ko: "'두 명이 묵을 방 있어요?'는 뭐라고 하지?", line: 4 },
@@ -955,9 +955,9 @@
         chunks: "Awesome. / I'll just need‿an ID / and a card / for incidentals.",
         tips: [{ target: "incidentals", ko: "미니바·주차처럼 숙박비 말고 생길 수 있는 비용이에요. 체크인할 때 카드를 받아 둬요." },
                { target: "need an", ko: "d가 an에 붙어 '니던'처럼." }] },
-      { who: "me", en: "Yep. My mom's parking the car right now.", ko: "그래. 엄마는 지금 차 대는 중이야.",
-        chunks: "Yep. / My mom's parking the car / right now.",
-        tips: [{ target: "mom's parking", ko: "mom is를 줄인 말. '맘즈 파r킹'." },
+      { who: "me", en: "Yep. My friend's parking the car right now.", ko: "그래. 친구는 지금 차 대는 중이야.",
+        chunks: "Yep. / My friend's parking the car / right now.",
+        tips: [{ target: "friend's parking", ko: "friend is를 줄인 말. '프렌즈 파r킹'." },
                { target: "right now", ko: "t는 거의 안 들리고 '롸이나우'처럼." }] }
     ],
     expressions: [
@@ -1051,7 +1051,7 @@
     id: 48,
     category: "공항·숙소",
     title: "호텔 방 휴지와 커피 캡슐이 떨어졌을 때",
-    situation: "밤에 호텔 방에서 보니 휴지가 다 떨어졌고, 엄마랑 마신 커피 캡슐도 다 썼어요. 프런트에 전화해요.",
+    situation: "밤에 친구와 묵는 호텔 방에서 보니 휴지가 다 떨어졌고, 커피 캡슐도 다 썼어요. 프런트에 전화해요.",
     hooks: [
       { ko: "'휴지가 다 떨어진 것 같아요'는 뭐라고 하지?", line: 4 },
       { ko: "누가 방으로 좀 갖다줄 수 있냐고 물을 때, 뭐라고 하지?", line: 6 },
@@ -1090,8 +1090,8 @@
       { who: "staff", en: "Not a problem. I'll send some up with the toilet paper.", ko: "알겠습니다. 휴지랑 같이 몇 개 올려 보낼게요.",
         chunks: "Not a problem. / I'll send some‿up / with the toilet paper.",
         tips: [{ target: "send some up", ko: "'센섬업'처럼 이어져요." }] },
-      { who: "me", en: "Awesome. My mom can't start her day without coffee.", ko: "좋아. 엄마는 커피 없이는 하루를 시작 못 하거든.",
-        chunks: "Awesome. / My mom can't start her day / without coffee.",
+      { who: "me", en: "Awesome. We can't start our day without coffee.", ko: "좋아. 우리 커피 없이는 하루를 시작 못 하거든.",
+        chunks: "Awesome. / We can't start our day / without coffee.",
         tips: [{ target: "can't start", ko: "t가 거의 안 들려 '캔스타r트'처럼." },
                { target: "without", ko: "'위다웃'. th는 약하게." }] }
     ],
@@ -1187,7 +1187,7 @@
     id: 49,
     category: "공항·숙소",
     title: "숙박 하룻밤 연장하기",
-    situation: "엄마가 이 동네가 마음에 든다며 하루 더 있자고 하셨어요. 아침에 프런트에 가서 숙박을 하룻밤 늘려요.",
+    situation: "친구와 머무는 동네가 마음에 들어서 하루 더 있기로 했어요. 아침에 프런트에 가서 숙박을 하룻밤 늘려요.",
     hooks: [
       { ko: "'하룻밤 더 연장할 수 있어요?'는 뭐라고 하지?", line: 2 },
       { ko: "늘린 날의 숙박비가 얼마냐고 물을 때, 뭐라고 하지?", line: 6 },
@@ -1325,7 +1325,7 @@
     id: 50,
     category: "공항·숙소",
     title: "호텔 청소는 괜찮고 수건만 부탁하기",
-    situation: "아침에 엄마와 방에서 오늘 일정을 짜고 있는데 청소 직원이 노크해요. 청소는 괜찮다고 하고 새 수건만 부탁해요.",
+    situation: "아침에 친구와 방에서 오늘 일정을 짜고 있는데 청소 직원이 노크해요. 청소는 괜찮다고 하고 새 수건만 부탁해요.",
     hooks: [
       { ko: "'오늘은 청소 안 해도 괜찮아요'는 뭐라고 하지?", line: 2 },
       { ko: "'새 수건만 좀 두고 가 주실래요?'는 뭐라고 하지?", line: 4 },
@@ -1360,9 +1360,9 @@
         chunks: "Here are your towels. / Just call down / if you change your mind.",
         tips: [{ target: "call down", ko: "'(위층 방에서 프런트로) 전화하다'라는 뜻이에요." },
                { target: "change your mind", ko: "'마음을 바꾸다'. mind의 d는 약하게." }] },
-      { who: "me", en: "Thanks! My mom says thank you, too.", ko: "고마워! 엄마도 고맙대.",
-        chunks: "Thanks! / My mom says / thank you, too.",
-        tips: [{ target: "says", ko: "'쎄즈'. '세이즈'가 아니에요." }] }
+      { who: "me", en: "Thanks! Enjoy your morning.", ko: "고마워! 좋은 아침 보내.",
+        chunks: "Thanks! / Enjoy your morning.",
+        tips: [{ target: "Enjoy your morning", ko: "'좋은 아침 보내세요'. 헤어질 때 가볍게 하는 인사예요." }] }
     ],
     expressions: [
       {
@@ -1456,7 +1456,7 @@
     id: 51,
     category: "공항·숙소",
     title: "호텔 프런트에 분실물 물어보기",
-    situation: "체크아웃 전에 조식당에 회색 카디건을 두고 온 걸 알았어요. 엄마가 아침에 의자 위에 있는 걸 봤다고 해서 프런트에 물어봐요.",
+    situation: "체크아웃 전에 조식당에 회색 카디건을 두고 온 걸 알았어요. 프런트에 가서 혹시 들어온 게 있는지 물어봐요.",
     hooks: [
       { ko: "'혹시 ~ 들어온 거 있어요?'라고 분실물을 물을 때, 뭐라고 하지?", line: 1 },
       { ko: "잃어버린 물건이 어떻게 생겼는지 설명할 때, 뭐라고 하지?", line: 5 },
@@ -1471,10 +1471,10 @@
         chunks: "Hmm, / let me check / the lost‿and found. / Where do you think / you left‿it?",
         tips: [{ target: "lost and found", ko: "'분실물 보관소'. '로스턴 파운드'처럼 이어져요." },
                { target: "left it", ko: "t가 it에 붙어 '레프팃'처럼." }] },
-      { who: "me", en: "The breakfast room. My mom saw it on a chair.", ko: "조식당이야. 엄마가 의자 위에 있는 걸 봤대.",
-        chunks: "The breakfast room. / My mom saw‿it / on‿a chair.",
+      { who: "me", en: "The breakfast room. I left it on a chair.", ko: "조식당이야. 의자 위에 두고 왔어.",
+        chunks: "The breakfast room. / I left‿it / on‿a chair.",
         tips: [{ target: "breakfast", ko: "'브렉퍼스트'. 첫음절에 힘." },
-               { target: "saw it", ko: "'쏘잇'처럼 이어져요." }] },
+               { target: "on a chair", ko: "'의자 위에'. n이 a에 붙어 '오너 체어r'." }] },
       { who: "staff", en: "Alright. Can you tell me what it looks like?", ko: "알겠어요. 어떻게 생겼는지 말씀해 주시겠어요?",
         chunks: "Alright. / Can you tell me / what‿it looks like?",
         tips: [{ target: "what it", ko: "t가 굴러 '와릿'처럼." },
@@ -1495,8 +1495,8 @@
         chunks: "Sure thing. / Write‿it down here, / and I'll call / the breakfast room right now.",
         tips: [{ target: "Write it down", ko: "'적다'. t가 굴러 '롸이릿 다운'." },
                { target: "right now", ko: "'지금 바로'. t는 거의 안 들려요." }] },
-      { who: "me", en: "Thanks. We're here until about two.", ko: "고마워. 우리 2시쯤까지는 여기 있어.",
-        chunks: "Thanks. / We're here / until‿about two.",
+      { who: "me", en: "Thanks. I'm here until about two.", ko: "고마워. 나 2시쯤까지는 여기 있어.",
+        chunks: "Thanks. / I'm here / until‿about two.",
         tips: [{ target: "until about", ko: "l이 a에 이어져 '언틸러바웃'." }] }
     ],
     expressions: [
@@ -1607,8 +1607,8 @@
         ],
         story: {
           sentences: [
-            { chunks: "Before my road trip, / my mom made me pack / a first-aid kit, / just in case.",
-              ko: "로드 트립 가기 전에 엄마가 혹시 모르니까 구급상자를 챙기라고 하셨거든.",
+            { chunks: "Before my road trip, / my roommate made me pack / a first-aid kit, / just in case.",
+              ko: "로드 트립 가기 전에 룸메이트가 혹시 모르니까 구급상자를 챙기라고 했거든.",
               tips: [{ target: "first-aid kit", ko: "'구급상자'. '퍼r스테이드 킷'." }] },
             { chunks: "I rolled my eyes / and said / nothing ever happens / on these trips.",
               ko: "나는 눈을 굴리면서 이런 여행에선 아무 일도 안 생긴다고 했지.",
@@ -1616,12 +1616,12 @@
             { chunks: "On day two, / my friend cut his hand / opening‿a can‿of beans.",
               ko: "근데 둘째 날에 친구가 콩 통조림을 따다가 손을 베였어.",
               tips: [{ target: "can of beans", ko: "'캐너v 빈즈'처럼 이어져요." }] },
-            { chunks: "Now I pack‿a kit / no matter what, / and my mom / never lets me forget‿it.",
-              ko: "이제는 무조건 구급상자를 챙기는데, 엄마는 그때 얘기를 두고두고 하셔.",
+            { chunks: "Now I pack‿a kit / no matter what, / and my roommate / never lets me forget‿it.",
+              ko: "이제는 무조건 구급상자를 챙기는데, 룸메이트는 그때 얘기를 두고두고 해.",
               tips: [{ target: "no matter what", ko: "'무슨 일이 있어도'. t가 약해져 '노매러r왓'." }] }
           ],
-          en: "Before my road trip, my mom made me pack a first-aid kit, just in case. I rolled my eyes and said nothing ever happens on these trips. On day two, my friend cut his hand opening a can of beans. Now I pack a kit no matter what, and my mom never lets me forget it.",
-          ko: "로드 트립 가기 전에 엄마가 혹시 모르니까 구급상자를 챙기라고 하셨거든. 나는 눈을 굴리면서 이런 여행에선 아무 일도 안 생긴다고 했지. 근데 둘째 날에 친구가 콩 통조림을 따다가 손을 베였어. 이제는 무조건 구급상자를 챙기는데, 엄마는 그때 얘기를 두고두고 하셔."
+          en: "Before my road trip, my roommate made me pack a first-aid kit, just in case. I rolled my eyes and said nothing ever happens on these trips. On day two, my friend cut his hand opening a can of beans. Now I pack a kit no matter what, and my roommate never lets me forget it.",
+          ko: "로드 트립 가기 전에 룸메이트가 혹시 모르니까 구급상자를 챙기라고 했거든. 나는 눈을 굴리면서 이런 여행에선 아무 일도 안 생긴다고 했지. 근데 둘째 날에 친구가 콩 통조림을 따다가 손을 베였어. 이제는 무조건 구급상자를 챙기는데, 룸메이트는 그때 얘기를 두고두고 해."
         }
       }
     ],
@@ -1631,7 +1631,7 @@
     id: 67,
     category: "공항·숙소",
     title: "호텔에 늦게 도착한다고 전화하기",
-    situation: "비행기가 두 시간 지연돼서 호텔에 늦게 도착할 것 같아요. 엄마가 짐을 찾는 동안 호텔에 전화해서 몇 시까지 갈지 알려요.",
+    situation: "비행기가 두 시간 지연돼서 호텔에 늦게 도착할 것 같아요. 짐을 기다리는 동안 호텔에 전화해서 몇 시까지 갈지 알려요.",
     hooks: [
       { ko: "'비행기가 지연돼서 늦을 것 같아요'는 뭐라고 하지?", line: 4 },
       { ko: "'늦어도 11시까지는 도착할 거예요'는 뭐라고 하지?", line: 6 },
@@ -1641,23 +1641,23 @@
       { who: "staff", en: "Lakeview Inn, this is Sam speaking.", ko: "레이크뷰 인, 샘입니다.",
         chunks: "Lakeview Inn, / this is Sam speaking.",
         tips: [{ target: "this is Sam speaking", ko: "전화 받을 때 '저는 ~입니다'라고 이름을 말하는 표현이에요." }] },
-      { who: "me", en: "Hi, we're booked for tonight under Yoon.", ko: "안녕, 오늘 밤에 윤으로 예약돼 있어.",
-        chunks: "Hi, / we're booked for tonight / under Yoon.",
+      { who: "me", en: "Hi, I'm booked for tonight under Yoon.", ko: "안녕, 오늘 밤에 윤으로 예약돼 있어.",
+        chunks: "Hi, / I'm booked for tonight / under Yoon.",
         tips: [{ target: "booked", ko: "'예약된'. '북트'." },
                { target: "under Yoon", ko: "'윤 이름으로'." }] },
       { who: "staff", en: "Yes, I've got it right here. Is there a problem?", ko: "네, 여기 확인돼요. 무슨 문제 있으세요?",
         chunks: "Yes, / I've got‿it right here. / Is there‿a problem?",
         tips: [{ target: "I've got it right here", ko: "'여기 확인돼요'. t가 굴러 '갓잇'." }] },
-      { who: "me", en: "Our flight got delayed, so we're running late.", ko: "비행기가 지연돼서 우리 늦을 것 같아.",
-        chunks: "Our flight got delayed, / so we're running late.",
+      { who: "me", en: "My flight got delayed, so I'm running late.", ko: "비행기가 지연돼서 우리 늦을 것 같아.",
+        chunks: "My flight got delayed, / so I'm running late.",
         tips: [{ target: "got delayed", ko: "'지연됐다'. '갓 딜레이드'." },
                { target: "running late", ko: "'늦어지고 있다'." }] },
       { who: "staff", en: "Oh, that's no fun. What time do you think you'll get in?", ko: "아이고, 힘드시겠어요. 몇 시쯤 도착하실 것 같아요?",
         chunks: "Oh, that's no fun. / What time do you think / you'll get‿in?",
         tips: [{ target: "that's no fun", ko: "'저런, 안됐네요'." },
                { target: "get in", ko: "'도착하다'. t가 굴러 '게린'." }] },
-      { who: "me", en: "We should get there by eleven at the latest.", ko: "늦어도 11시까지는 도착할 거야.",
-        chunks: "We should get there / by eleven‿at the latest.",
+      { who: "me", en: "I should get there by eleven at the latest.", ko: "늦어도 11시까지는 도착할 거야.",
+        chunks: "I should get there / by eleven‿at the latest.",
         tips: [{ target: "at the latest", ko: "'늦어도'. '앳 더 레이티스트'." },
                { target: "get there", ko: "t가 약해져 '겟 데어r'." }] },
       { who: "staff", en: "That's totally fine. The front desk is open twenty-four hours.", ko: "전혀 괜찮아요. 프런트는 24시간 열려 있어요.",
@@ -1808,7 +1808,7 @@
     id: 68,
     category: "공항·숙소",
     title: "호텔 엘리베이터에서 층 버튼이 안 눌릴 때",
-    situation: "엄마와 호텔 엘리베이터를 탔는데 층 버튼이 눌리지 않아요. 같이 탄 다른 투숙객에게 방법을 물어봐요.",
+    situation: "호텔 엘리베이터를 탔는데 층 버튼이 눌리지 않아요. 같이 탄 다른 투숙객에게 방법을 물어봐요.",
     hooks: [
       { ko: "처음 보는 기계를 '이거 어떻게 쓰는지 아세요?'라고 물을 때, 뭐라고 하지?", line: 1 },
       { ko: "'해 봤는데 불이 계속 빨간색이에요'는 뭐라고 하지?", line: 3 },
@@ -1823,30 +1823,30 @@
         chunks: "Yeah, / you have‿to tap / your room key first.",
         tips: [{ target: "tap", ko: "'(카드를) 대다'. '탭'." },
                { target: "room key", ko: "'룸 키'." }] },
-      { who: "me", en: "We tried, but the light stays red.", ko: "해 봤는데 불이 계속 빨간색이야.",
-        chunks: "We tried, / but the light stays red.",
+      { who: "me", en: "I tried, but the light stays red.", ko: "해 봤는데 불이 계속 빨간색이야.",
+        chunks: "I tried, / but the light stays red.",
         tips: [{ target: "light stays red", ko: "'불이 계속 빨갛다'." }] },
       { who: "stranger", en: "Hmm, your key might not work on this elevator. Mine should, though.", ko: "음, 그 키는 이 엘리베이터에서 안 될 수도 있어요. 근데 제 건 될 거예요.",
         chunks: "Hmm, / your key might not work / on this elevator. / Mine should, though.",
         tips: [{ target: "might not work", ko: "'안 될 수도 있다'. t가 약해요." },
                { target: "though", ko: "문장 끝 though는 '그래도'." }] },
-      { who: "me", en: "Could you hit twelve for us, then?", ko: "그럼 12층 좀 눌러 줄 수 있어?",
-        chunks: "Could you hit twelve / for us, then?",
+      { who: "me", en: "Could you hit twelve for me, then?", ko: "그럼 12층 좀 눌러 줄 수 있어?",
+        chunks: "Could you hit twelve / for me, then?",
         tips: [{ target: "hit", ko: "'(버튼을) 누르다'. press보다 편한 말이에요." },
                { target: "twelve", ko: "'트웰브'." }] },
       { who: "stranger", en: "You bet. Oh, I'm on twelve too.", ko: "그럼요. 아, 저도 12층이에요.",
         chunks: "You bet. / Oh, / I'm on twelve too.",
         tips: [{ target: "I'm on twelve", ko: "'저도 12층에 묵어요'." }] },
-      { who: "me", en: "Lucky us! Appreciate it.", ko: "운 좋다! 고마워.",
-        chunks: "Lucky us! / Appreciate‿it.",
-        tips: [{ target: "Lucky us", ko: "'우리 운 좋네요'." }] },
+      { who: "me", en: "Lucky me! Appreciate it.", ko: "운 좋다! 고마워.",
+        chunks: "Lucky me! / Appreciate‿it.",
+        tips: [{ target: "Lucky me", ko: "'나 운 좋네요'." }] },
       { who: "stranger", en: "Anytime. The front desk can fix your key, by the way.", ko: "별말씀을요. 참, 프런트에서 키 고쳐 줄 거예요.",
         chunks: "Anytime. / The front desk / can fix your key, / by the way.",
         tips: [{ target: "Anytime", ko: "'언제든지요'. 고맙다는 말에 답할 때 써요." },
                { target: "by the way", ko: "'참, 그나저나'." }] },
-      { who: "me", en: "Oh, good. My mom will handle it later.", ko: "아, 다행이다. 엄마가 이따 해결하실 거야.",
-        chunks: "Oh, good. / My mom will handle‿it later.",
-        tips: [{ target: "handle it", ko: "'처리하다'. '핸들릿'." }] }
+      { who: "me", en: "Oh, good. I'll stop by there later.", ko: "아, 다행이다. 이따 들를게.",
+        chunks: "Oh, good. / I'll stop by there later.",
+        tips: [{ target: "stop by", ko: "'잠깐 들르다'. p가 b에 이어져요." }] }
     ],
     expressions: [
       {
@@ -1938,11 +1938,11 @@
     id: 70,
     category: "공항·숙소",
     title: "공항에서 짐 무게가 넘었을 때",
-    situation: "돌아가는 날, 공항 카운터에서 부칠 캐리어가 무게를 넘었대요. 엄마와 짐을 기내 가방으로 옮겨서 추가 요금을 피해요.",
+    situation: "친구와 돌아가는 날, 공항 카운터에서 부칠 캐리어가 무게를 넘었대요. 짐을 기내 가방으로 옮겨서 추가 요금을 피해요.",
     hooks: [
       { ko: "'넘으면 얼마예요?'는 뭐라고 하지?", line: 4 },
       { ko: "'짐 좀 기내 가방으로 옮겨도 돼요?'는 뭐라고 하지?", line: 6 },
-      { ko: "'엄마가 벌써 신발 꺼내고 계세요'는 뭐라고 하지?", line: 8 }
+      { ko: "'신발부터 꺼낼게요'는 뭐라고 하지?", line: 8 }
     ],
     dialogue: [
       { who: "agent", en: "Okay, can you put your bag on the scale for me?", ko: "자, 가방 저울에 올려 주시겠어요?",
@@ -1973,10 +1973,10 @@
         chunks: "Go for‿it. / You can step to the side / right there.",
         tips: [{ target: "Go for it", ko: "'그러세요, 해 보세요'." },
                { target: "step to the side", ko: "'옆으로 비키다'." }] },
-      { who: "me", en: "Thanks. My mom's already pulling out the shoes.", ko: "고마워. 엄마가 벌써 신발 꺼내고 계셔.",
-        chunks: "Thanks. / My mom's already / pulling‿out the shoes.",
+      { who: "me", en: "Thanks. I'll start by pulling out the shoes.", ko: "고마워. 신발부터 꺼낼게.",
+        chunks: "Thanks. / I'll start by / pulling‿out the shoes.",
         tips: [{ target: "pulling out", ko: "'꺼내다'. g가 out에 붙어 '풀링아웃'." },
-               { target: "already", ko: "'올레디'." }] },
+               { target: "start by", ko: "'~부터 하다'. t가 b 앞에서 끊겨요." }] },
       { who: "agent", en: "Okay, let's weigh it again. Forty-nine pounds, perfect.", ko: "자, 다시 재 볼게요. 49파운드, 딱 좋네요.",
         chunks: "Okay, / let's weigh‿it again. / Forty-nine pounds, perfect.",
         tips: [{ target: "weigh it again", ko: "'다시 무게를 재다'. gh는 소리 나지 않아요." },
@@ -2046,8 +2046,8 @@
           { en: "Could you move us into a quieter room?", ko: "더 조용한 방으로 옮겨 줄 수 있어?",
             chunks: "Could you move us / into‿a quieter room?",
             tips: [{ target: "quieter", ko: "'콰이어러r'." }] },
-          { en: "I moved half my clothes into my mom's suitcase.", ko: "내 옷 절반을 엄마 캐리어로 옮겼어.",
-            chunks: "I moved half my clothes / into my mom's suitcase.",
+          { en: "I moved half my clothes into my sister's suitcase.", ko: "내 옷 절반을 여동생 캐리어로 옮겼어.",
+            chunks: "I moved half my clothes / into my sister's suitcase.",
             tips: [{ target: "half my clothes", ko: "l은 소리 나지 않아요. '해프 마이 클로우즈'." }] }
         ],
         story: {
