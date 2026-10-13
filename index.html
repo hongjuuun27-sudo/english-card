@@ -120,7 +120,7 @@
     background:var(--bg);
     border-top:1px solid var(--line);
   }
-  /* 탭 5개 [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 선택된 탭 = 아이콘 뒤 알약 모양 배경 + 진한 글자(색만으로 구분하지 않게) */
+  /* 탭 5개 [오늘 | 상황 | 표현 | 드라이브 | 그림 묘사](글쓰기 탭 버튼은 뺌 — 화면·데이터·코드는 남아 있음). 선택된 탭 = 아이콘 뒤 알약 모양 배경 + 진한 글자(색만으로 구분하지 않게) */
   .tab{
     flex:1; min-width:0; min-height:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
     font-size:12px; font-weight:600; color:var(--faint);
@@ -695,7 +695,7 @@
   .xview{
     overflow-y:auto; overflow-x:hidden;
     overscroll-behavior-y:contain;
-    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) 40px max(var(--pad), env(safe-area-inset-left));
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 24px) max(var(--pad), env(safe-area-inset-left));
   }
   .rv-card{
     margin-top:18px; padding:16px 16px 14px; border-radius:20px;
@@ -982,7 +982,7 @@
   .write{
     overflow-y:auto; overflow-x:hidden;
     overscroll-behavior-y:contain;
-    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) 40px max(var(--pad), env(safe-area-inset-left));
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 24px) max(var(--pad), env(safe-area-inset-left));
   }
   .w-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
   .w-date{ font-size:13.5px; color:var(--faint); font-weight:600; letter-spacing:.02em; }
@@ -1441,6 +1441,41 @@
   }
   .toast.on{ opacity:1; transform:translate(-50%, 0); }
 
+  /* ---------- 그림 묘사(pic-): 그림·질문·n/8 + [정답 보기](영어·뜻·재생), 마지막 장 정답을 본 뒤 스토리 ---------- */
+  .picview{
+    overflow-y:auto; overflow-x:hidden;
+    overscroll-behavior-y:contain;
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 24px) max(var(--pad), env(safe-area-inset-left));
+  }
+  .pic-verbs{ margin:8px 0 0; font-size:14px; color:var(--faint); }
+  .pic-card{
+    display:flex; flex-direction:column; gap:12px; margin-top:18px;
+    padding:14px; border-radius:20px; background:var(--bg-2); border:1px solid var(--line);
+  }
+  .pic-ans-btn{ width:100%; margin-top:12px; }
+  .pic-ans{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+  .pic-ans[hidden]{ display:none; }
+  .pic-img{ display:block; width:auto; max-width:100%; max-height:250px; aspect-ratio:1/1; margin:0 auto; object-fit:contain; border-radius:14px; background:var(--bg-3); }   /* 정답을 펼쳐도 듣기 버튼이 탭 바 위에 */
+  .pic-q{ margin:0; font-size:17px; font-weight:650; text-align:center; }
+  .pic-n{ font-size:13.5px; color:var(--faint); text-align:center; font-variant-numeric:tabular-nums; }
+  .pic-en{ margin:0; font-size:22px; line-height:1.4; font-weight:700; letter-spacing:-.01em; }
+  .pic-ko{ margin:0; font-size:16.5px; color:var(--text-2); }
+  .pic-play{ align-self:flex-start; height:46px; padding:0 18px; font-size:15.5px; color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .pic-play svg{ width:18px; height:18px; }
+  .pic-play.playing{ color:var(--on-accent); background:var(--accent); }
+  .pic-nav{ display:flex; gap:8px; margin-top:12px; }      /* 핵심 동사 바로 아래: 정답을 펼쳐도 탭 바에 안 가림 */
+  .pic-nav .btn{ flex:1; height:44px; font-size:15.5px; border-radius:14px; }
+  .pic-nav + .pic-card{ margin-top:12px; }
+  .pic-nav svg, .pic-story-bar svg{ width:19px; height:19px; flex:none; }
+  .pic-nav .btn:disabled{ opacity:.38; cursor:default; transform:none; }
+  .pic-story-btn{ width:100%; margin-top:10px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .pic-story{ margin:18px 0 0; font-size:18px; line-height:1.7; }
+  .pic-story-ko{ margin:12px 0 0; font-size:15.5px; line-height:1.7; color:var(--text-2); }
+  .pic-story-bar{ display:flex; gap:8px; margin-top:18px; }
+  .pic-story-bar .btn{ flex:1; }
+  .pic-story-bar .pic-play{ height:54px; align-self:auto; }
+  .picview .btn[hidden]{ display:none; }
+
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
   }
@@ -1566,6 +1601,9 @@
     <section class="view dview off" id="viewDrive" aria-label="드라이브" inert>
       <section class="dv-screen" id="dvSetup"></section>
     </section>
+
+    <!-- 그림 묘사 탭(pic-): 그림 보고 영어로 말하기. 내용은 스크립트(그림 묘사 부분)가 채움 -->
+    <section class="view picview off" id="viewPic" aria-label="그림 묘사" inert></section>
   </div>
 
   <nav class="tabbar" role="tablist" aria-label="화면 전환">
@@ -1584,16 +1622,13 @@
       </span>
       <span>표현</span>
     </button>
-    <button class="tab" id="tabWrite" type="button" role="tab" data-tab="write" aria-selected="false">
-      <span class="tab-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>
-        <span class="badge dot" id="writeBadge" hidden></span>
-      </span>
-      <span>글쓰기</span>
-    </button>
     <button class="tab" id="tabDrive" type="button" role="tab" data-tab="drive" aria-selected="false">
       <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v-4.5L6.2 7a2 2 0 0 1 1.9-1.4h7.8A2 2 0 0 1 17.8 7l2.2 5.5V17"/><path d="M3.5 17h17M4 12.5h16M6 17v2M18 17v2"/><circle cx="7.6" cy="14.8" r=".6" fill="currentColor"/><circle cx="16.4" cy="14.8" r=".6" fill="currentColor"/></svg></span>
       <span>드라이브</span>
+    </button>
+    <button class="tab" id="tabPic" type="button" role="tab" data-tab="pic" aria-selected="false">
+      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M20.5 15.5l-4.5-4.5-8.5 8.5"/></svg></span>
+      <span>그림 묘사</span>
     </button>
   </nav>
 </div>
@@ -1633,6 +1668,7 @@
 <script src="data/cards/us-travel.js"></script>
 <script src="data/questions.js"></script>
 <script src="data/drills.js"></script>
+<script src="data/pic-ramen.js"></script>
 
 <script>
 /* ================= 데이터 받기 ================= */
@@ -4572,6 +4608,7 @@ renderTalkPrev();
 renderTalkList();
 
 /* 글쓰기 [일기 | 대화문] 전환(2026-10-06 사용자 요청 — 한 화면에 길게 이어져 헷갈려서). 앱을 켜면 일기, 앱을 쓰는 동안은 마지막으로 고른 쪽 */
+const WRITE_TAB = !!document.getElementById("tabWrite");   // 하단 탭바에 글쓰기 버튼이 있는지(지금은 없음)
 let wMode = "diary";
 function setWMode(m) {
   if (m !== "talk") m = "diary";
@@ -4751,9 +4788,9 @@ function updateBadges() {
   b.hidden = n === 0;
   b.textContent = n > 99 ? "99+" : String(n);
   document.getElementById("tabExpr").setAttribute("aria-label", "표현" + (n ? ", 복습 " + n + "개" : ""));
-  const w = !wroteToday();
-  document.getElementById("writeBadge").hidden = !w;
-  document.getElementById("tabWrite").setAttribute("aria-label", "글쓰기" + (w ? ", 오늘 아직 안 씀" : ""));
+  const w = !wroteToday(), wb = document.getElementById("writeBadge"), wt = document.getElementById("tabWrite");   // 글쓰기 탭 버튼이 없으면 건너뜀
+  if (wb) wb.hidden = !w;
+  if (wt) wt.setAttribute("aria-label", "글쓰기" + (w ? ", 오늘 아직 안 씀" : ""));
 }
 
 /* 표현이 나온 대사(복습 힌트·상세에서 씀) */
@@ -6167,7 +6204,7 @@ function nowTask(s) {
     const ci = nextCardIdx(), x = allHooks().find(h => h.ci === ci);
     return x ? { kind: "hook", ci, x } : { kind: "card", ci };
   }
-  if (!s.wrote) return { kind: "write" };
+  if (WRITE_TAB && !s.wrote) return { kind: "write" };
   return { kind: "done" };
 }
 function allHooks() {
@@ -6248,9 +6285,9 @@ function renderToday() {
     ["새 표현", Math.min(s.picks, DAILY_PICKS) + "/" + DAILY_PICKS, s.picks >= DAILY_PICKS || !s.newLeft],
     ["상황 카드", Math.min(s.cards, 1) + "/1", s.cards >= 1],
     ["일기", (s.wrote ? 1 : 0) + "/1", s.wrote]
-  ];
+  ].filter(x => WRITE_TAB || x[0] !== "일기");
   const nDone = prog.filter(x => x[2]).length;
-  const progHtml = '<section class="td-sec" aria-label="오늘 진행"><div class="td-h"><h3>오늘 진행</h3><small>' + nDone + ' / 4 완료</small></div>' +
+  const progHtml = '<section class="td-sec" aria-label="오늘 진행"><div class="td-h"><h3>오늘 진행</h3><small>' + nDone + ' / ' + prog.length + ' 완료</small></div>' +
     '<ul class="td-prog">' + prog.map(x => '<li class="' + (x[2] ? "done" : "") + '" aria-label="' + x[0] + " " + x[1] + (x[2] ? " 완료" : "") + '">' +
       '<span class="td-dot" aria-hidden="true">' + (x[2] ? ICON_CHECK : "") + '</span><span class="td-num">' + x[1] + '</span><span class="td-cap">' + x[0] + '</span></li>').join("") + '</ul></section>';
   /* ③ 최근 7일 + 연속 학습일(오늘 아직 안 했으면 어제까지 이어진 날 수) */
@@ -6341,15 +6378,104 @@ function openHook(x) {
   row._hook = setTimeout(() => row.classList.remove("hook-hi"), 2400);
 }
 
+/* ================= 그림 묘사 탭(pic-) =================
+   window.PIC_SETS(data/pic-*.js)의 첫 세트. 그림 + 질문 + n/8, [정답 보기]를 누르면 그림 아래에 영어·뜻·재생(이전/다음 하면 다시 숨김).
+   마지막 장 정답을 보면 '스토리로 보기'(8문장 한 문단 + 전체 듣기). mp3가 없으면 재생은 조용히 실패.
+   기록은 localStorage 'pic-progress'만({ [세트 id]: { i: 보던 장, done: 마지막 장 정답 봄 } }) */
+const PIC_KEY = "pic-progress";
+const PIC = { view: document.getElementById("viewPic"), set: (window.PIC_SETS || [])[0] || null, i: 0, ans: false, story: false, done: false, audio: null, btn: null };
+function picLoad() {
+  try { const o = JSON.parse(localStorage.getItem(PIC_KEY) || "{}")[PIC.set.id] || {}; PIC.i = Math.min(Math.max(o.i | 0, 0), PIC.set.items.length - 1); PIC.done = !!o.done; } catch (e) {}
+}
+function picSave() {
+  try {
+    const all = JSON.parse(localStorage.getItem(PIC_KEY) || "{}");
+    all[PIC.set.id] = { i: PIC.i, done: PIC.done };
+    localStorage.setItem(PIC_KEY, JSON.stringify(all));
+  } catch (e) {}
+}
+function picStop() {
+  if (PIC.audio) { try { PIC.audio.pause(); } catch (e) {} PIC.audio = null; }
+  if (PIC.btn) { PIC.btn.classList.remove("playing"); PIC.btn = null; }
+}
+function picPlay(src, btn) {
+  const again = PIC.btn === btn;
+  picStop();
+  if (again) return;                                 // 재생 중에 다시 누르면 멈춤
+  Player.stop();
+  const a = new Audio(src);
+  PIC.audio = a;
+  PIC.btn = btn;
+  btn.classList.add("playing");
+  const end = () => { if (PIC.audio === a) picStop(); };
+  a.addEventListener("ended", end);
+  a.addEventListener("error", end);                  // 파일 없음 → 조용히
+  const p = a.play();
+  if (p && p.catch) p.catch(end);
+}
+function picRender() {
+  picStop();
+  const v = PIC.view, set = PIC.set;
+  if (!set) { v.innerHTML = '<p class="note">그림 세트가 없어요.</p>'; return; }
+  const n = set.items.length, it = set.items[PIC.i];
+  const head = '<header class="w-top"><div><div class="w-date">그림 묘사</div><h2 class="w-title">' + esc(set.title) + '</h2>' +
+    '<p class="pic-verbs">' + esc((set.verbs || []).join(" · ")) + '</p></div></header>';
+  if (PIC.story) {
+    v.innerHTML = head +
+      '<p class="pic-story" lang="en">' + esc(set.story.en) + '</p>' +
+      '<p class="pic-story-ko">' + esc(set.items.map(x => x.ko).join(" ")) + '</p>' +
+      '<div class="pic-story-bar"><button class="btn" type="button" data-pic="cards">' + ICON_BACK + '카드로</button>' +
+      '<button class="btn pic-play" type="button" data-pic="play-story">' + ICON_PLAY + '전체 듣기</button></div>';
+    return;
+  }
+  v.innerHTML = head +
+    '<div class="pic-nav"><button class="btn" type="button" data-pic="prev"' + (PIC.i ? '' : ' disabled') + '>' + ICON_BACK + '이전</button>' +
+      '<button class="btn" type="button" data-pic="next"' + (PIC.i < n - 1 ? '' : ' disabled') + '>다음' + ICON_ARROW + '</button></div>' +
+    '<div class="pic-card"><img class="pic-img" src="' + esc(it.img) + '" alt="그림 ' + (PIC.i + 1) + '">' +
+      '<p class="pic-q">이 그림을 영어로 말해 보세요</p><span class="pic-n">' + (PIC.i + 1) + ' / ' + n + '</span></div>' +
+    '<button class="btn pic-ans-btn" type="button" data-pic="answer" aria-expanded="' + PIC.ans + '">' + (PIC.ans ? '정답 숨기기' : '정답 보기') + '</button>' +
+    '<div class="pic-ans"' + (PIC.ans ? '' : ' hidden') + '><p class="pic-en" lang="en">' + esc(it.en) + '</p>' +
+      '<p class="pic-ko">' + esc(it.ko) + '</p>' +
+      '<button class="btn pic-play" type="button" data-pic="play">' + ICON_PLAY + '듣기</button></div>' +
+    '<button class="btn pic-story-btn" type="button" data-pic="story"' + (PIC.done ? '' : ' hidden') + '>스토리로 보기</button>';
+}
+PIC.view.addEventListener("click", e => {
+  const b = e.target.closest("[data-pic]");
+  if (!b || !PIC.set) return;
+  const a = b.dataset.pic, n = PIC.set.items.length;
+  buzz();
+  if (a === "play") { picPlay(PIC.set.items[PIC.i].audio, b); return; }
+  if (a === "play-story") { picPlay(PIC.set.story.audio, b); return; }
+  if (a === "answer") {                             // 다시 그리지 않고 정답 칸만 보이기/숨기기(스크롤 그대로)
+    picStop();
+    PIC.ans = !PIC.ans;
+    if (PIC.ans && PIC.i === n - 1) PIC.done = true;
+    b.textContent = PIC.ans ? "정답 숨기기" : "정답 보기";
+    b.setAttribute("aria-expanded", String(PIC.ans));
+    PIC.view.querySelector(".pic-ans").hidden = !PIC.ans;
+    PIC.view.querySelector('[data-pic="story"]').hidden = !PIC.done;
+    picSave();
+    return;
+  }
+  if (a === "prev" && PIC.i > 0) { PIC.i--; PIC.ans = false; }
+  else if (a === "next" && PIC.i < n - 1) { PIC.i++; PIC.ans = false; }
+  else if (a === "story") PIC.story = true;
+  else if (a === "cards") PIC.story = false;
+  picSave();
+  picRender();
+  if (a === "story" || a === "cards") PIC.view.scrollTop = 0;
+});
+if (PIC.set) picLoad();
+
 /* ================= 하단 탭 =================
    [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
    탭을 오가도 각 화면의 상태(보던 카드·모드·스크롤·입력)는 그대로(.view.off는 visibility:hidden이라 남아 있음) */
 try { localStorage.removeItem("engcards.tab.v1"); } catch (e) {}
-const VIEWS = { today: todayEl, cards: feed, expr: X.view, write: W.view, drive: document.getElementById("viewDrive") };
+const VIEWS = { today: todayEl, cards: feed, expr: X.view, write: W.view, drive: document.getElementById("viewDrive"), pic: PIC.view };
 let currentTab = "today";
 function switchTab(name, quiet) {
-  if (!VIEWS[name]) name = "today";
-  if (name !== currentTab) Player.stop();
+  if (!VIEWS[name] || (name === "write" && !WRITE_TAB)) name = "today";   // 글쓰기 탭 버튼이 없으면 글쓰기 화면으로 가는 길은 오늘 탭으로
+  if (name !== currentTab) { Player.stop(); picStop(); }
   currentTab = name;
   Object.keys(VIEWS).forEach(k => {
     const on = k === name;
@@ -6364,6 +6490,7 @@ function switchTab(name, quiet) {
   }
   if (name === "expr") renderExprTab();
   if (name === "drive") dvRenderSetup();
+  if (name === "pic") picRender();
   if (name === "today") renderToday();
   updateBadges();
   if (!quiet) buzz();
