@@ -5,16 +5,22 @@
    미리 만든 음성(audio/{id}.mp3)은 글이 바뀌면 파일 이름이 바뀌므로 한 번 받으면 그대로 씀(저장해 둔 것 먼저, 따로 AUDIO 저장소 —
    CACHE 숫자를 올려도 지우지 않음). audio/manifest.json은 다른 파일처럼 인터넷 먼저.
    ElevenLabs 같은 다른 사이트 요청은 건드리지 않음. */
-const CACHE = "english-card-v13";
+const CACHE = "english-card-v14";
 const AUDIO = "english-card-audio-v1";
 const CORE = [
   "./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png",
   "./data/categories.js", "./data/questions.js", "./data/drills.js",
   "./data/cards/cafe-restaurant.js", "./data/cards/airport-hotel.js", "./data/cards/transport-shopping.js",
   "./data/cards/daily-talk.js", "./data/cards/life-health.js", "./data/cards/us-travel.js",
-  "./data/pic-ramen.js",
+  "./data/pic-ramen.js", "./data/pic-work.js", "./data/pic-store.js", "./data/pic-laundry.js",
   "./images/pic-ramen-1.webp", "./images/pic-ramen-2.webp", "./images/pic-ramen-3.webp", "./images/pic-ramen-4.webp",
-  "./images/pic-ramen-5.webp", "./images/pic-ramen-6.webp", "./images/pic-ramen-7.webp", "./images/pic-ramen-8.webp"
+  "./images/pic-ramen-5.webp", "./images/pic-ramen-6.webp", "./images/pic-ramen-7.webp", "./images/pic-ramen-8.webp",
+  "./images/pic-work-1.webp", "./images/pic-work-2.webp", "./images/pic-work-3.webp", "./images/pic-work-4.webp",
+  "./images/pic-work-5.webp", "./images/pic-work-6.webp", "./images/pic-work-7.webp", "./images/pic-work-8.webp",
+  "./images/pic-store-1.webp", "./images/pic-store-2.webp", "./images/pic-store-3.webp", "./images/pic-store-4.webp",
+  "./images/pic-store-5.webp", "./images/pic-store-6.webp", "./images/pic-store-7.webp", "./images/pic-store-8.webp",
+  "./images/pic-laundry-1.webp", "./images/pic-laundry-2.webp", "./images/pic-laundry-3.webp", "./images/pic-laundry-4.webp",
+  "./images/pic-laundry-5.webp", "./images/pic-laundry-6.webp", "./images/pic-laundry-7.webp", "./images/pic-laundry-8.webp"
 ];
 
 self.addEventListener("install", e => {

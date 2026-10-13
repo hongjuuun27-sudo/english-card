@@ -1475,6 +1475,19 @@
   .pic-story-bar .btn{ flex:1; }
   .pic-story-bar .pic-play{ height:54px; align-self:auto; }
   .picview .btn[hidden]{ display:none; }
+  .pic-back{ flex:none; height:38px; padding:0 12px 0 8px; font-size:14.5px; border-radius:12px; }   /* 주제 목록으로(머리 오른쪽 — 세로 공간 그대로) */
+  .pic-back svg{ width:17px; height:17px; }
+  .pic-list{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .pic-topic{
+    display:grid; grid-template-columns:1fr auto auto; grid-template-areas:"t n a" "v n a"; align-items:center; gap:4px 10px;
+    width:100%; padding:14px 12px 14px 16px; text-align:left; font:inherit; color:var(--text);
+    border-radius:18px; background:var(--bg-2); border:1px solid var(--line); cursor:pointer;
+  }
+  .pic-topic-t{ grid-area:t; font-size:17px; font-weight:700; }
+  .pic-topic-v{ grid-area:v; font-size:13.5px; line-height:1.45; color:var(--faint); }
+  .pic-topic-n{ grid-area:n; font-size:14px; font-weight:650; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .pic-topic-n.full{ color:var(--accent); }
+  .pic-topic svg{ grid-area:a; width:18px; height:18px; color:var(--faint); }
 
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
@@ -1669,6 +1682,9 @@
 <script src="data/questions.js"></script>
 <script src="data/drills.js"></script>
 <script src="data/pic-ramen.js"></script>
+<script src="data/pic-work.js"></script>
+<script src="data/pic-store.js"></script>
+<script src="data/pic-laundry.js"></script>
 
 <script>
 /* ================= 데이터 받기 ================= */
@@ -6379,18 +6395,33 @@ function openHook(x) {
 }
 
 /* ================= 그림 묘사 탭(pic-) =================
-   window.PIC_SETS(data/pic-*.js)의 첫 세트. 그림 + 질문 + n/8, [정답 보기]를 누르면 그림 아래에 영어·뜻·재생(이전/다음 하면 다시 숨김).
+   첫 화면은 주제 목록(window.PIC_SETS = data/pic-*.js, script 순서대로 — 제목·핵심 동사·진행 n/8). 주제를 누르면 그 세트로.
+   세트: 그림 + 질문 + n/8, [정답 보기]를 누르면 그림 아래에 영어·뜻·재생(이전/다음 하면 다시 숨김). 위 [목록]으로 주제 목록.
    마지막 장 정답을 보면 '스토리로 보기'(8문장 한 문단 + 전체 듣기). mp3가 없으면 재생은 조용히 실패.
-   기록은 localStorage 'pic-progress'만({ [세트 id]: { i: 보던 장, done: 마지막 장 정답 봄 } }) */
+   기록은 localStorage 'pic-progress'만({ [세트 id]: { i: 보던 장, done: 마지막 장 정답 봄, m: 가장 멀리 본 장 수 } }).
+   m이 없는 예전 기록(라면 세트 { i, done })은 done이면 전부, 아니면 i + 1로 읽음 */
 const PIC_KEY = "pic-progress";
-const PIC = { view: document.getElementById("viewPic"), set: (window.PIC_SETS || [])[0] || null, i: 0, ans: false, story: false, done: false, audio: null, btn: null };
-function picLoad() {
-  try { const o = JSON.parse(localStorage.getItem(PIC_KEY) || "{}")[PIC.set.id] || {}; PIC.i = Math.min(Math.max(o.i | 0, 0), PIC.set.items.length - 1); PIC.done = !!o.done; } catch (e) {}
+const PIC_SETS = window.PIC_SETS || [];
+const PIC = { view: document.getElementById("viewPic"), set: null, i: 0, m: 0, ans: false, story: false, done: false, audio: null, btn: null };
+function picRec(set) {
+  let o = {};
+  try { o = JSON.parse(localStorage.getItem(PIC_KEY) || "{}")[set.id] || {}; } catch (e) {}
+  const n = set.items.length, i = Math.min(Math.max(o.i | 0, 0), n - 1), done = !!o.done;
+  const m = Math.min(n, Math.max(o.m | 0, done ? n : (o.i == null ? 0 : i + 1)));
+  return { i, done, m };
+}
+function picOpen(set) {
+  const r = picRec(set);
+  PIC.set = set; PIC.i = r.i; PIC.done = r.done; PIC.m = Math.max(r.m, r.i + 1);
+  PIC.ans = false; PIC.story = false;
+  picSave();
 }
 function picSave() {
+  if (!PIC.set) return;
+  PIC.m = Math.max(PIC.m, PIC.i + 1);
   try {
     const all = JSON.parse(localStorage.getItem(PIC_KEY) || "{}");
-    all[PIC.set.id] = { i: PIC.i, done: PIC.done };
+    all[PIC.set.id] = { i: PIC.i, done: PIC.done, m: PIC.m };
     localStorage.setItem(PIC_KEY, JSON.stringify(all));
   } catch (e) {}
 }
@@ -6416,10 +6447,22 @@ function picPlay(src, btn) {
 function picRender() {
   picStop();
   const v = PIC.view, set = PIC.set;
-  if (!set) { v.innerHTML = '<p class="note">그림 세트가 없어요.</p>'; return; }
+  if (!PIC_SETS.length) { v.innerHTML = '<p class="note">그림 세트가 없어요.</p>'; return; }
+  if (!set) {
+    v.innerHTML = '<header class="w-top"><div><div class="w-date">그림 묘사</div><h2 class="w-title">주제 고르기</h2></div></header>' +
+      '<div class="pic-list">' + PIC_SETS.map((s, si) => {
+        const r = picRec(s), n = s.items.length;
+        return '<button class="pic-topic" type="button" data-pic="open" data-si="' + si + '">' +
+          '<span class="pic-topic-t">' + esc(s.title) + '</span>' +
+          '<span class="pic-topic-v" lang="en">' + esc((s.verbs || []).join(" · ")) + '</span>' +
+          '<span class="pic-topic-n' + (r.m >= n ? ' full' : '') + '">' + r.m + ' / ' + n + '</span>' + ICON_ARROW + '</button>';
+      }).join("") + '</div>';
+    return;
+  }
   const n = set.items.length, it = set.items[PIC.i];
   const head = '<header class="w-top"><div><div class="w-date">그림 묘사</div><h2 class="w-title">' + esc(set.title) + '</h2>' +
-    '<p class="pic-verbs">' + esc((set.verbs || []).join(" · ")) + '</p></div></header>';
+    '<p class="pic-verbs">' + esc((set.verbs || []).join(" · ")) + '</p></div>' +
+    '<button class="btn pic-back" type="button" data-pic="list">' + ICON_BACK + '목록</button></header>';
   if (PIC.story) {
     v.innerHTML = head +
       '<p class="pic-story" lang="en">' + esc(set.story.en) + '</p>' +
@@ -6441,9 +6484,13 @@ function picRender() {
 }
 PIC.view.addEventListener("click", e => {
   const b = e.target.closest("[data-pic]");
-  if (!b || !PIC.set) return;
-  const a = b.dataset.pic, n = PIC.set.items.length;
+  if (!b) return;
+  const a = b.dataset.pic;
   buzz();
+  if (a === "open") { const s = PIC_SETS[+b.dataset.si]; if (s) { picOpen(s); picRender(); PIC.view.scrollTop = 0; } return; }
+  if (!PIC.set) return;
+  const n = PIC.set.items.length;
+  if (a === "list") { PIC.set = null; picRender(); PIC.view.scrollTop = 0; return; }
   if (a === "play") { picPlay(PIC.set.items[PIC.i].audio, b); return; }
   if (a === "play-story") { picPlay(PIC.set.story.audio, b); return; }
   if (a === "answer") {                             // 다시 그리지 않고 정답 칸만 보이기/숨기기(스크롤 그대로)
@@ -6465,7 +6512,6 @@ PIC.view.addEventListener("click", e => {
   picRender();
   if (a === "story" || a === "cards") PIC.view.scrollTop = 0;
 });
-if (PIC.set) picLoad();
 
 /* ================= 하단 탭 =================
    [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
