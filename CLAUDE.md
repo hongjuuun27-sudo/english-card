@@ -45,7 +45,7 @@
 - PC: `.claude/audio-build.ps1`
 - 이 박스: `/workspace/tools/audio-build.js`(저장소 밖). 키는 환경변수 `ELEVENLABS_API_KEY`만 씀. 키는 출력·저장·커밋 금지
   - 없는 음성만 만들기: `bash -lc 'node --experimental-websocket /workspace/tools/audio-build.js --cards 47,48,...'`(`--dry`로 목록만 볼 수 있음)
-  - 검증: `... --verify 1,2,...,71`(id·파일·단어 시간 개수)
+  - 검증: `... --verify 1,2,...,80`(id·파일·단어 시간 개수)
 - 문장을 고친 뒤에는 바뀐 문장만 다시 만들고, 어떤 카드에도 안 쓰이는 음성(manifest 항목과 mp3)을 지운 다음 `--verify`를 돌림
 
 ## 테스트
@@ -57,4 +57,7 @@
 ## 작업 방식
 
 - 커밋·푸시는 확인받은 뒤에만
-- `여행영어_대사집.pdf`는 `.gitignore`에 있음. 절대 커밋하지 않음
+- 참고 PDF(저장소 루트, 모두 `.gitignore`에 있음. 절대 커밋하지 않음)
+  - `여행영어_대사집.pdf` — 32가지 상황 → 카드 47~71
+  - `여행영어_대사집_41.pdf`
+  - `여행영어_대사집_50.pdf` — 50가지 상황. 새로 추가된 42~50번(9가지) → 카드 72~80
