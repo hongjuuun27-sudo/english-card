@@ -2930,5 +2930,174 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 81,
+    category: "이동·쇼핑",
+    title: "100달러 지폐 잔돈 바꿔 달라고 하기",
+    situation: "편의점에서 생수 하나를 사려는데 지갑에 100달러 지폐밖에 없어요. 계산대 직원에게 100달러짜리를 바꿔 줄 수 있는지 물어봐요.",
+    hooks: [
+      { ko: "'100달러짜리 바꿔 줄 수 있어요?'는 뭐라고 하지?", line: 2 },
+      { ko: "'이거밖에 없어요'는 뭐라고 하지?", line: 4 },
+      { ko: "'작은 지폐가 더 좋아요'라고 할 때, 뭐라고 하지?", line: 6 }
+    ],
+    dialogue: [
+      { who: "clerk", en: "Hey there. Just the water today?", ko: "안녕하세요. 오늘은 물만 하시는 거죠?",
+        chunks: "Hey there. / Just the water today?",
+        tips: [{ target: "Just the water", ko: "'물만요?'. 계산할 때 더 살 게 있는지 확인하는 말이에요." }] },
+      { who: "me", en: "Yep. Sorry, can you break a hundred?", ko: "응. 미안한데, 100달러짜리 바꿔 줄 수 있어?",
+        chunks: "Yep. / Sorry, / can you break‿a hundred?",
+        tips: [{ target: "break a hundred", ko: "'100달러짜리를 잔돈으로 바꾸다'. hundred는 100달러 지폐예요." },
+               { target: "can you", ko: "can은 약하게 '큰유'처럼." }] },
+      { who: "clerk", en: "Hmm, that's a big bill for a two-dollar water.", ko: "음, 2달러짜리 물에 너무 큰 지폐네요.",
+        chunks: "Hmm, / that's‿a big bill / for‿a two-dollar water.",
+        tips: [{ target: "big bill", ko: "'큰 지폐'. bill은 미국에서 지폐를 뜻해요." },
+               { target: "two-dollar", ko: "'투 달러r'. 숫자+dollar는 단수로 붙여 써요." }] },
+      { who: "me", en: "I know, sorry. It's all I've got.", ko: "알아, 미안. 이거밖에 없어.",
+        chunks: "I know, sorry. / It's all I've got.",
+        tips: [{ target: "all I've got", ko: "'가진 게 이것뿐'. '올 아이브 갓'을 한 번에." }] },
+      { who: "clerk", en: "Let me check the drawer. I can do it if you're okay with some fives.", ko: "서랍 좀 볼게요. 5달러짜리 몇 장 섞여도 괜찮으시면 해 드릴 수 있어요.",
+        chunks: "Let me check the drawer. / I can do‿it / if you're okay / with some fives.",
+        tips: [{ target: "drawer", ko: "'계산대 서랍'. '드로어r'." },
+               { target: "some fives", ko: "'5달러짜리 몇 장'. five에 s를 붙여 지폐를 말해요." }] },
+      { who: "me", en: "Sure, small bills are actually better for me.", ko: "응, 사실 작은 지폐가 나한테 더 나아.",
+        chunks: "Sure, / small bills are actually / better for me.",
+        tips: [{ target: "Small bills", ko: "'작은 단위 지폐'. '스몰 빌즈'." },
+               { target: "actually", ko: "'액츄얼리'. 빠르게는 '액슐리'." }] },
+      { who: "clerk", en: "Okay, here's ninety-eight back. Four twenties, three fives, and three ones.", ko: "네, 98달러 거슬러 드릴게요. 20달러 네 장, 5달러 세 장, 1달러 세 장이에요.",
+        chunks: "Okay, / here's ninety-eight back. / Four twenties, / three fives, / and three ones.",
+        tips: [{ target: "ninety-eight back", ko: "'98달러 거스름돈'. back이 '돌려주는 돈'이라는 뜻이에요." },
+               { target: "twenties", ko: "'20달러짜리들'. t가 약해져 '트웨니즈'." }] },
+      { who: "me", en: "Awesome, thanks a lot.", ko: "좋아, 정말 고마워.",
+        chunks: "Awesome, / thanks‿a lot.",
+        tips: [{ target: "thanks a lot", ko: "'정말 고마워요'. s가 a에 붙어 '땡써랏'." }] }
+    ],
+    expressions: [
+      {
+        id: "c81-e1",
+        phrase: "break a hundred",
+        forms: ["break a twenty", "break a fifty", "break a ten"],
+        teaser: "가게에서 '100달러짜리 잔돈으로 바꿔 줄 수 있어요?'라고 할 때는?",
+        ko: "'(큰 지폐를) 잔돈으로 바꿔 주다, 깨다'라는 뜻이에요. 여기서 a hundred는 100달러 지폐예요(골프 점수 이야기가 아니에요). 미국 가게는 큰 지폐를 꺼리는 곳이 많아서, 계산 전에 Can you break a hundred?라고 먼저 물어보면 좋아요. a twenty(20달러), a fifty(50달러)처럼 바꿔 써요. 비슷한 표현: Do you have change for a hundred? / Can you make change for a hundred?",
+        examples: [
+          { en: "Sorry, we can't break a hundred right now.", ko: "죄송해요, 지금은 100달러짜리를 바꿔 드릴 수가 없어요.",
+            chunks: "Sorry, / we can't break‿a hundred / right now.",
+            tips: [{ target: "can't break", ko: "t는 거의 안 들려 '캔브레익'처럼." }] },
+          { en: "Can you break a twenty for the laundry machine?", ko: "빨래방 기계에 쓰게 20달러짜리 바꿔 줄 수 있어?",
+            chunks: "Can you break‿a twenty / for the laundry machine?",
+            tips: [{ target: "twenty", ko: "t가 약해져 '트웨니'처럼." }] },
+          { en: "The cab driver couldn't break a fifty.", ko: "택시 기사님이 50달러짜리를 못 바꿔 줬어.",
+            chunks: "The cab driver / couldn't break‿a fifty.",
+            tips: [{ target: "couldn't", ko: "'쿠든트'. t는 약하게." }] },
+          { en: "Do you think the bank can break a hundred?", ko: "은행에서 100달러짜리 바꿔 줄 수 있을까?",
+            chunks: "Do you think the bank / can break‿a hundred?",
+            tips: [{ target: "bank", ko: "'뱅크'." }] },
+          { en: "I bought gum just to break a ten.", ko: "10달러짜리 깨려고 껌을 샀어.",
+            chunks: "I bought gum / just to break‿a ten.",
+            tips: [{ target: "bought gum", ko: "gh는 소리 나지 않아요. '밧 검'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "On my first day / in Chicago, / the ATM only gave me / hundred-dollar bills.",
+              ko: "시카고에 간 첫날, ATM에서 100달러 지폐만 나오는 거야.",
+              tips: [{ target: "hundred-dollar bills", ko: "'헌드레드 달러r 빌즈'." }] },
+            { chunks: "I walked‿into / a tiny coffee shop / and asked, / “Can you break‿a hundred?”",
+              ko: "작은 커피숍에 들어가서 “100달러짜리 바꿔 주실 수 있어요?” 하고 물었어.",
+              tips: [{ target: "walked into", ko: "ed가 t 소리로 into에 붙어 '웍틴투'처럼." }] },
+            { chunks: "The barista just / pointed‿at‿a sign: / “No bills over twenty.”",
+              ko: "바리스타가 그냥 “20달러 넘는 지폐 안 받음”이라고 쓰인 안내판을 가리키더라.",
+              tips: [{ target: "pointed at a", ko: "'포인티대러'처럼 이어져요." }] },
+            { chunks: "So I paid / for‿a four-dollar latte / with my card / and felt very silly.",
+              ko: "결국 4달러짜리 라떼를 카드로 내고 엄청 머쓱했어.",
+              tips: [{ target: "felt very silly", ko: "'엄청 머쓱했다'. silly는 '바보 같은'." }] }
+          ],
+          en: "On my first day in Chicago, the ATM only gave me hundred-dollar bills. I walked into a tiny coffee shop and asked, “Can you break a hundred?” The barista just pointed at a sign: “No bills over twenty.” So I paid for a four-dollar latte with my card and felt very silly.",
+          ko: "시카고에 간 첫날, ATM에서 100달러 지폐만 나오는 거야. 작은 커피숍에 들어가서 “100달러짜리 바꿔 주실 수 있어요?” 하고 물었어. 바리스타가 그냥 “20달러 넘는 지폐 안 받음”이라고 쓰인 안내판을 가리키더라. 결국 4달러짜리 라떼를 카드로 내고 엄청 머쓱했어."
+        }
+      },
+      {
+        id: "c81-e2",
+        phrase: "all I've got",
+        teaser: "'이거밖에 없어요, 가진 게 이게 다예요'라고 할 때는?",
+        ko: "'(제가) 가진 게 이것뿐이에요, 이거밖에 없어요'라는 뜻이에요. 돈·시간·물건이 그것뿐이라 어쩔 수 없다는 느낌으로 써요. It's all I've got.처럼 통째로 말하거나 앞에 Ten bucks is처럼 가진 걸 붙여요. 비슷한 표현: That's all I have. / It's the only one I have.",
+        examples: [
+          { en: "Sorry, a fifty is all I've got.", ko: "미안, 가진 게 50달러짜리뿐이야.",
+            chunks: "Sorry, / a fifty is all I've got.",
+            tips: [{ target: "fifty", ko: "'피프티'." }] },
+          { en: "Five minutes is all I've got before my meeting.", ko: "회의 전에 시간이 5분밖에 없어.",
+            chunks: "Five minutes is all I've got / before my meeting.",
+            tips: [{ target: "meeting", ko: "t가 굴러 '미링'처럼." }] },
+          { en: "This old phone is all I've got right now.", ko: "지금은 이 옛날 폰밖에 없어.",
+            chunks: "This old phone / is all I've got right now.",
+            tips: [{ target: "right now", ko: "'롸이나우'." }] },
+          { en: "Here, take my last granola bar. That's all I've got.", ko: "자, 마지막 그래놀라 바 먹어. 그게 다야.",
+            chunks: "Here, / take my last granola bar. / That's all I've got.",
+            tips: [{ target: "granola bar", ko: "'그래놀라 바'." }] },
+          { en: "Coins are all I've got for the meter.", ko: "주차 미터기에 넣을 건 동전밖에 없어.",
+            chunks: "Coins are all I've got / for the meter.",
+            tips: [{ target: "meter", ko: "t가 굴러 '미러r'처럼." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At‿a flea market, / I fell‿in love / with‿an old leather jacket.",
+              ko: "벼룩시장에서 낡은 가죽 재킷에 완전히 반했거든.",
+              tips: [{ target: "flea market", ko: "'벼룩시장'. '플리 마r킷'." }] },
+            { chunks: "The seller wanted fifty, / but I only had / thirty-two dollars.",
+              ko: "판매자는 50달러를 원했는데, 나한테는 32달러밖에 없었어.",
+              tips: [{ target: "thirty-two", ko: "'써r리 투'." }] },
+            { chunks: "I held‿out my cash / and said, / “Honestly, / this is all I've got.”",
+              ko: "현금을 내밀면서 “솔직히 이게 제가 가진 전부예요” 했어.",
+              tips: [{ target: "held out", ko: "'내밀었다'. d가 out에 붙어 '헬다웃'." }] },
+            { chunks: "He sighed, / took‿it, / and threw‿in‿a scarf / for free.",
+              ko: "그 사람이 한숨을 쉬더니 돈을 받고 목도리까지 공짜로 얹어 줬어.",
+              tips: [{ target: "threw in", ko: "'덤으로 얹어 줬다'. '쓰루인'." }] }
+          ],
+          en: "At a flea market, I fell in love with an old leather jacket. The seller wanted fifty, but I only had thirty-two dollars. I held out my cash and said, “Honestly, this is all I've got.” He sighed, took it, and threw in a scarf for free.",
+          ko: "벼룩시장에서 낡은 가죽 재킷에 완전히 반했거든. 판매자는 50달러를 원했는데, 나한테는 32달러밖에 없었어. 현금을 내밀면서 “솔직히 이게 제가 가진 전부예요” 했어. 그 사람이 한숨을 쉬더니 돈을 받고 목도리까지 공짜로 얹어 줬어."
+        }
+      },
+      {
+        id: "c81-e3",
+        phrase: "small bills",
+        teaser: "'작은 단위 지폐로 주세요'라고 할 때는?",
+        ko: "'작은 단위 지폐(1·5·10·20달러짜리)'라는 뜻이에요. 팁·택시·자판기처럼 잔돈이 필요한 미국 여행에서 자주 써요. Could I get it in small bills?(작은 지폐로 주실래요?)처럼 부탁하고, 큰 지폐는 large bills라고 해요. 비슷한 표현: smaller bills / some ones and fives",
+        examples: [
+          { en: "Could I get that in small bills?", ko: "그거 작은 지폐로 줄 수 있어?",
+            chunks: "Could‿I get that / in small bills?",
+            tips: [{ target: "small bills", ko: "'스몰 빌즈'. l을 살짝 길게." }] },
+          { en: "Bring small bills for tips.", ko: "팁 주게 작은 지폐 챙겨 가.",
+            chunks: "Bring small bills / for tips.",
+            tips: [{ target: "tips", ko: "'팁스'." }] },
+          { en: "Sorry, we only have small bills left.", ko: "죄송해요, 작은 지폐밖에 안 남았어요.",
+            chunks: "Sorry, / we only have small bills left.",
+            tips: [{ target: "bills left", ko: "s가 l에 이어져 '빌즐레프트'처럼." }] },
+          { en: "The food trucks here like small bills.", ko: "여기 푸드트럭은 작은 지폐를 좋아해.",
+            chunks: "The food trucks here / like small bills.",
+            tips: [{ target: "food trucks", ko: "'푸드 트럭스'." }] },
+          { en: "I always keep some small bills in my pocket.", ko: "나는 항상 주머니에 작은 지폐를 좀 넣고 다녀.",
+            chunks: "I always keep / some small bills / in my pocket.",
+            tips: [{ target: "pocket", ko: "'파킷'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "Before‿a long drive / through the desert, / I got‿a hundred dollars / in small bills.",
+              ko: "사막을 오래 달리는 여행 전에 100달러를 작은 지폐로 바꿔 놨거든.",
+              tips: [{ target: "long drive", ko: "'롱 드라이브'. 오래 운전해서 가는 여행." }] },
+            { chunks: "My friend said / I was being way too careful.",
+              ko: "친구는 내가 너무 유난이라고 했지.",
+              tips: [{ target: "way too careful", ko: "'너무 지나치게 조심하는'." }] },
+            { chunks: "Then every gas station / and taco stand / on the way / was cash only.",
+              ko: "그런데 가는 길의 주유소랑 타코 가게가 전부 현금만 받는 거야.",
+              tips: [{ target: "cash only", ko: "'현금만'. '캐쉬 오운리'." }] },
+            { chunks: "By day two, / my friend was borrowing / my ones‿and fives.",
+              ko: "이틀째엔 친구가 내 1달러, 5달러짜리를 빌리고 있었어.",
+              tips: [{ target: "ones and fives", ko: "'1달러와 5달러 지폐'. '원즈 앤 파이브즈'." }] }
+          ],
+          en: "Before a long drive through the desert, I got a hundred dollars in small bills. My friend said I was being way too careful. Then every gas station and taco stand on the way was cash only. By day two, my friend was borrowing my ones and fives.",
+          ko: "사막을 오래 달리는 여행 전에 100달러를 작은 지폐로 바꿔 놨거든. 친구는 내가 너무 유난이라고 했지. 그런데 가는 길의 주유소랑 타코 가게가 전부 현금만 받는 거야. 이틀째엔 친구가 내 1달러, 5달러짜리를 빌리고 있었어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

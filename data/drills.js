@@ -2546,5 +2546,41 @@ window.DRILL_DATA = {
     { ko: "(호텔 직원에게) 늦게 체크아웃하면 돈 내야 해?", en: "Will I get charged for a late checkout?" },
     { ko: "(직원에게) 이거 두 번 결제된 것 같아.", en: "I think I got charged for this twice." },
     { ko: "(직원에게) 취소한 음료 값이 청구됐어.", en: "I got charged for a drink I canceled." }
+  ],
+  "c81-e1": [
+    { ko: "(편의점 직원에게) 저기, 100달러짜리 바꿔 줄 수 있어?", en: "Hi, can you break a hundred for me?" },
+    { ko: "(호텔 직원에게) 혹시 100달러짜리 잔돈으로 바꿔 줄 수 있어?", en: "Is there any way you can break a hundred?" },
+    { ko: "(택시 기사님에게) 50달러짜리 바꿔 줄 수 있어?", en: "Can you break a fifty?" },
+    { ko: "(주유소 직원에게) 기름 넣을 건데, 100달러짜리 바꿔 줄 수 있어?", en: "I'm getting gas, so can you break a hundred?" },
+    { ko: "(친구에게) 20달러짜리 바꿔 줄 수 있어? 팁 남기고 싶어서.", en: "Can you break a twenty? I want to leave a tip." },
+    { ko: "(웨이터에게) 100달러짜리 바꿔 줄 수 있어, 아니면 카드로 할까?", en: "Can you break a hundred, or should I use a card?" },
+    { ko: "(동료에게) 자판기 쓰게 10달러짜리 바꿔 줄 수 있어?", en: "Can you break a ten for the vending machine?" },
+    { ko: "(점원에게) 이거 사면 100달러짜리 바꿔 줄 수 있어?", en: "If I buy this, can you break a hundred?" },
+    { ko: "(매표소 직원에게) ATM에서 큰 돈만 나와서 그런데, 100달러짜리 바꿔 줄 수 있어?", en: "The ATM only gave me big bills, so can you break a hundred?" },
+    { ko: "(친구에게) 그 가게는 100달러짜리 안 바꿔 줄 거야.", en: "That store won't break a hundred." }
+  ],
+  "c81-e2": [
+    { ko: "(점원에게) 미안, 가진 건 20달러짜리 하나뿐이야.", en: "Sorry, all I've got is a twenty." },
+    { ko: "(택시 기사님에게) 현금은 이게 전부야.", en: "This cash is all I've got." },
+    { ko: "(친구에게) 오늘 쉬는 시간은 30분밖에 없어.", en: "Thirty minutes is all I've got today." },
+    { ko: "(동료에게) 충전기는 이 짧은 케이블밖에 없어.", en: "This short cable is all I've got." },
+    { ko: "(호텔 직원에게) 신분증은 여권밖에 없어.", en: "My passport is all I've got for ID." },
+    { ko: "(친구에게) 미안, 간식은 이 젤리밖에 없어.", en: "Sorry, these gummies are all I've got." },
+    { ko: "(주차 요원에게) 동전은 이게 다야.", en: "These quarters are all I've got." },
+    { ko: "(룸메이트에게) 우산은 이 작은 거밖에 없어.", en: "This tiny umbrella is all I've got." },
+    { ko: "(웨이터에게) 지금 현금은 10달러밖에 없어.", en: "Ten dollars in cash is all I've got." },
+    { ko: "(친구에게) 내가 해 줄 조언은 그게 다야.", en: "That's all I've got for advice." }
+  ],
+  "c81-e3": [
+    { ko: "(은행 직원에게) 300달러를 작은 지폐로 줄 수 있어?", en: "Can I get three hundred in small bills?" },
+    { ko: "(친구에게) 팁 줄 작은 지폐 좀 있어?", en: "Do you have any small bills for the tip?" },
+    { ko: "(호텔 직원에게) 이걸 작은 지폐로 바꿔 줄 수 있어?", en: "Could you change this into small bills?" },
+    { ko: "(점원에게) 거스름돈은 작은 지폐로 줘.", en: "Small bills for the change, please." },
+    { ko: "(동료에게) 출장 가기 전에 작은 지폐 좀 챙겨.", en: "Grab some small bills before the trip." },
+    { ko: "(택시 기사님에게) 미안, 작은 지폐가 없어.", en: "Sorry, I don't have any small bills." },
+    { ko: "(친구에게) 그 시장은 작은 지폐만 받아.", en: "That market only takes small bills." },
+    { ko: "(은행 직원에게) 여기서 작은 지폐로 뽑을 수 있어?", en: "Can I take out small bills here?" },
+    { ko: "(친구에게) 작은 지폐가 다 떨어졌어.", en: "I'm out of small bills." },
+    { ko: "(가이드에게) 투어 팁은 작은 지폐로 준비하면 돼?", en: "Should we bring small bills for tips on the tour?" }
   ]
 };
