@@ -1460,6 +1460,9 @@
   .sh-time{ flex:none; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
   .sh-lines{ display:flex; flex-direction:column; gap:2px; }
   .sh-line{ padding:9px 10px; border-radius:12px; font-size:18px; line-height:1.5; cursor:pointer; color:var(--text-2); transition:background-color .2s ease; }
+  .sh-spk{ display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; margin-right:4px; border-radius:8px; vertical-align:2px; user-select:none; }
+  .sh-spk-a{ background:#dbeafe; color:#1d4ed8; }
+  .sh-spk-b{ background:#fce7f3; color:#be185d; }
   .sh-line.cur{ background:var(--sh-hl); color:var(--text); }
   .sh-line .w{ transition:opacity .15s ease, text-shadow .15s ease; }
   .sh-line.cur .w{ opacity:.4; }
@@ -6460,7 +6463,7 @@ function shRender() {
       '<input class="sh-seek" type="range" min="0" max="' + (it.duration || 0) + '" step="0.01" value="0" aria-label="재생 위치">' +
       '<span class="sh-time">0:00</span></div>' +
     '<div class="sh-lines" lang="en">' + it.cues.map((c, i) =>
-      '<div class="sh-line" data-ci="' + i + '">' + c.text.split(" ").map((w, j) => '<span class="w" data-wi="' + j + '">' + esc(w) + '</span>').join(" ") + '</div>').join("") + '</div>';
+      '<div class="sh-line" data-ci="' + i + '">' + (c.spk ? '<span class="sh-spk sh-spk-' + (c.spk === "동생" ? "b" : "a") + '">' + esc(c.spk) + '</span> ' : '') + c.text.split(" ").map((w, j) => '<span class="w" data-wi="' + j + '">' + esc(w) + '</span>').join(" ") + '</div>').join("") + '</div>';
   SH.cur = -1;
   const seek = v.querySelector(".sh-seek");
   seek.addEventListener("input", () => { SH.drag = true; v.querySelector(".sh-time").textContent = shFmt(+seek.value) + " / " + shFmt(+seek.max); });
