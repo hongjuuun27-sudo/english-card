@@ -1441,53 +1441,31 @@
   }
   .toast.on{ opacity:1; transform:translate(-50%, 0); }
 
-  /* ---------- 그림 묘사(pic-): 그림·질문·n/8 + [정답 보기](영어·뜻·재생), 마지막 장 정답을 본 뒤 스토리 ---------- */
-  .picview{
-    overflow-y:auto; overflow-x:hidden;
-    overscroll-behavior-y:contain;
-    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 24px) max(var(--pad), env(safe-area-inset-left));
-  }
-  .pic-verbs{ margin:8px 0 0; font-size:14px; color:var(--faint); }
-  .pic-card{
-    display:flex; flex-direction:column; gap:12px; margin-top:18px;
-    padding:14px; border-radius:20px; background:var(--bg-2); border:1px solid var(--line);
-  }
-  .pic-ans-btn{ width:100%; margin-top:12px; }
-  .pic-ans{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }
-  .pic-ans[hidden]{ display:none; }
-  .pic-img{ display:block; width:auto; max-width:100%; max-height:250px; aspect-ratio:1/1; margin:0 auto; object-fit:contain; border-radius:14px; background:var(--bg-3); }   /* 정답을 펼쳐도 듣기 버튼이 탭 바 위에 */
-  .pic-q{ margin:0; font-size:17px; font-weight:650; text-align:center; }
-  .pic-n{ font-size:13.5px; color:var(--faint); text-align:center; font-variant-numeric:tabular-nums; }
-  .pic-en{ margin:0; font-size:22px; line-height:1.4; font-weight:700; letter-spacing:-.01em; }
-  .pic-ko{ margin:0; font-size:16.5px; color:var(--text-2); }
-  .pic-play{ align-self:flex-start; height:46px; padding:0 18px; font-size:15.5px; color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
-  .pic-play svg{ width:18px; height:18px; }
-  .pic-play.playing{ color:var(--on-accent); background:var(--accent); }
-  .pic-nav{ display:flex; gap:8px; margin-top:12px; }      /* 핵심 동사 바로 아래: 정답을 펼쳐도 탭 바에 안 가림 */
-  .pic-nav .btn{ flex:1; height:44px; font-size:15.5px; border-radius:14px; }
-  .pic-nav + .pic-card{ margin-top:12px; }
-  .pic-nav svg, .pic-story-bar svg{ width:19px; height:19px; flex:none; }
-  .pic-nav .btn:disabled{ opacity:.38; cursor:default; transform:none; }
-  .pic-story-btn{ width:100%; margin-top:10px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
-  .pic-story{ margin:18px 0 0; font-size:18px; line-height:1.7; }
-  .pic-story-ko{ margin:12px 0 0; font-size:15.5px; line-height:1.7; color:var(--text-2); }
-  .pic-story-bar{ display:flex; gap:8px; margin-top:18px; }
-  .pic-story-bar .btn{ flex:1; }
-  .pic-story-bar .pic-play{ height:54px; align-self:auto; }
-  .picview .btn[hidden]{ display:none; }
-  .pic-back{ flex:none; height:38px; padding:0 12px 0 8px; font-size:14.5px; border-radius:12px; }   /* 주제 목록으로(머리 오른쪽 — 세로 공간 그대로) */
-  .pic-back svg{ width:17px; height:17px; }
-  .pic-list{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
-  .pic-topic{
-    display:grid; grid-template-columns:1fr auto auto; grid-template-areas:"t n a" "v n a"; align-items:center; gap:4px 10px;
-    width:100%; padding:14px 12px 14px 16px; text-align:left; font:inherit; color:var(--text);
-    border-radius:18px; background:var(--bg-2); border:1px solid var(--line); cursor:pointer;
-  }
-  .pic-topic-t{ grid-area:t; font-size:17px; font-weight:700; }
-  .pic-topic-v{ grid-area:v; font-size:13.5px; line-height:1.45; color:var(--faint); }
-  .pic-topic-n{ grid-area:n; font-size:14px; font-weight:650; color:var(--muted); font-variant-numeric:tabular-nums; }
-  .pic-topic-n.full{ color:var(--accent); }
-  .pic-topic svg{ grid-area:a; width:18px; height:18px; color:var(--faint); }
+  /* ---------- 쇼츠 탭(sh-): 유튜브 쇼츠 음성 + 자동자막(노래방식 채우기, 문장·단어 탭/진행 바 드래그 = 그 자리부터 이어 듣기) ---------- */
+  .shview{ overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain;
+    padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 24px) max(var(--pad), env(safe-area-inset-left)); }
+  .sh-list{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .sh-item{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:4px 10px; width:100%; padding:14px 12px 14px 16px; text-align:left; font:inherit; color:var(--text); border-radius:18px; background:var(--bg-2); border:1px solid var(--line); cursor:pointer; }
+  .sh-item-t{ font-size:17px; font-weight:700; }
+  .sh-item-s{ grid-column:1; font-size:13px; color:var(--faint); }
+  .sh-item svg{ grid-row:1 / span 2; grid-column:2; width:18px; height:18px; color:var(--faint); }
+  .sh-src{ margin:6px 0 0; font-size:12.5px; color:var(--faint); }
+  .sh-src a{ color:var(--faint); }
+  .sh-back{ flex:none; height:38px; padding:0 12px 0 8px; font-size:14.5px; border-radius:12px; }
+  .sh-back svg{ width:17px; height:17px; }
+  .sh-bar{ position:sticky; top:-14px; z-index:2; display:flex; align-items:center; gap:10px; margin:12px 0 6px; padding:10px 0; background:var(--bg); }
+  .sh-play{ flex:none; width:52px; height:52px; padding:0; border-radius:50%; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .sh-play svg{ width:22px; height:22px; }
+  .sh-seek{ flex:1; min-width:0; accent-color:var(--accent); height:28px; }
+  .sh-time{ flex:none; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .sh-lines{ display:flex; flex-direction:column; gap:2px; }
+  .sh-line{ padding:9px 10px; border-radius:12px; font-size:18px; line-height:1.5; cursor:pointer; color:var(--text-2); transition:background-color .2s ease; }
+  .sh-line.cur{ background:var(--sh-hl); color:var(--text); }
+  .sh-line .w{ transition:opacity .15s ease, text-shadow .15s ease; }
+  .sh-line.cur .w{ opacity:.4; }
+  .sh-line.cur .w.past, .sh-line.cur .w.now{ opacity:1; text-shadow:.3px 0 currentColor, -.3px 0 currentColor; }
+  .sh-line.cur .w.now{ background:rgba(255,214,0,.55); border-radius:4px; box-shadow:0 0 0 2px rgba(255,214,0,.55); color:#1b1b1b; }
+  :root{ --sh-hl:rgba(255,214,0,.16); }
 
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
@@ -1615,8 +1593,8 @@
       <section class="dv-screen" id="dvSetup"></section>
     </section>
 
-    <!-- 그림 묘사 탭(pic-): 그림 보고 영어로 말하기. 내용은 스크립트(그림 묘사 부분)가 채움 -->
-    <section class="view picview off" id="viewPic" aria-label="그림 묘사" inert></section>
+    <!-- 쇼츠 탭(sh-): 쇼츠 음성 + 자막(노래방식). 내용은 스크립트(쇼츠 부분)가 채움 -->
+    <section class="view shview off" id="viewShorts" aria-label="쇼츠" inert></section>
   </div>
 
   <nav class="tabbar" role="tablist" aria-label="화면 전환">
@@ -1639,9 +1617,9 @@
       <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v-4.5L6.2 7a2 2 0 0 1 1.9-1.4h7.8A2 2 0 0 1 17.8 7l2.2 5.5V17"/><path d="M3.5 17h17M4 12.5h16M6 17v2M18 17v2"/><circle cx="7.6" cy="14.8" r=".6" fill="currentColor"/><circle cx="16.4" cy="14.8" r=".6" fill="currentColor"/></svg></span>
       <span>드라이브</span>
     </button>
-    <button class="tab" id="tabPic" type="button" role="tab" data-tab="pic" aria-selected="false">
-      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M20.5 15.5l-4.5-4.5-8.5 8.5"/></svg></span>
-      <span>그림 묘사</span>
+    <button class="tab" id="tabShorts" type="button" role="tab" data-tab="shorts" aria-selected="false">
+      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 9.2v5.6l4.5-2.8z" fill="currentColor"/></svg></span>
+      <span>쇼츠</span>
     </button>
   </nav>
 </div>
@@ -1681,10 +1659,7 @@
 <script src="data/cards/us-travel.js"></script>
 <script src="data/questions.js"></script>
 <script src="data/drills.js"></script>
-<script src="data/pic-ramen.js"></script>
-<script src="data/pic-work.js"></script>
-<script src="data/pic-store.js"></script>
-<script src="data/pic-laundry.js"></script>
+<script src="data/shorts.js"></script>
 
 <script>
 /* ================= 데이터 받기 ================= */
@@ -6394,134 +6369,129 @@ function openHook(x) {
   row._hook = setTimeout(() => row.classList.remove("hook-hi"), 2400);
 }
 
-/* ================= 그림 묘사 탭(pic-) =================
-   첫 화면은 주제 목록(window.PIC_SETS = data/pic-*.js, script 순서대로 — 제목·핵심 동사·진행 n/8). 주제를 누르면 그 세트로.
-   세트: 그림 + 질문 + n/8, [정답 보기]를 누르면 그림 아래에 영어·뜻·재생(이전/다음 하면 다시 숨김). 위 [목록]으로 주제 목록.
-   마지막 장 정답을 보면 '스토리로 보기'(8문장 한 문단 + 전체 듣기). mp3가 없으면 재생은 조용히 실패.
-   기록은 localStorage 'pic-progress'만({ [세트 id]: { i: 보던 장, done: 마지막 장 정답 봄, m: 가장 멀리 본 장 수 } }).
-   m이 없는 예전 기록(라면 세트 { i, done })은 done이면 전부, 아니면 i + 1로 읽음 */
-const PIC_KEY = "pic-progress";
-const PIC_SETS = window.PIC_SETS || [];
-const PIC = { view: document.getElementById("viewPic"), set: null, i: 0, m: 0, ans: false, story: false, done: false, audio: null, btn: null };
-function picRec(set) {
-  let o = {};
-  try { o = JSON.parse(localStorage.getItem(PIC_KEY) || "{}")[set.id] || {}; } catch (e) {}
-  const n = set.items.length, i = Math.min(Math.max(o.i | 0, 0), n - 1), done = !!o.done;
-  const m = Math.min(n, Math.max(o.m | 0, done ? n : (o.i == null ? 0 : i + 1)));
-  return { i, done, m };
+/* ================= 쇼츠 탭(sh-) =================
+   첫 화면은 쇼츠 목록(window.SHORTS = data/shorts.js). 누르면 재생 화면: 재생 버튼 + 진행 바(드래그 = 그 자리부터) + 자막.
+   자막은 문장 단위(cues: start·end 초, w = 단어별 시작 초). 지금 문장은 노란 배경, 단어는 노래방식으로 채움.
+   문장/단어를 누르면 그 자리부터 이어서 재생. 기록은 localStorage 'sh-pos'({ [id]: 마지막 위치 초 }) */
+const SH_KEY = "sh-pos";
+const SHORTS = window.SHORTS || [];
+const SH = { view: document.getElementById("viewShorts"), item: null, audio: null, raf: 0, cur: -1, drag: false };
+function shFmt(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0"); }
+function shSavePos() {
+  if (!SH.item || !SH.audio) return;
+  try { const o = JSON.parse(localStorage.getItem(SH_KEY) || "{}"); o[SH.item.id] = SH.audio.currentTime; localStorage.setItem(SH_KEY, JSON.stringify(o)); } catch (e) {}
 }
-function picOpen(set) {
-  const r = picRec(set);
-  PIC.set = set; PIC.i = r.i; PIC.done = r.done; PIC.m = Math.max(r.m, r.i + 1);
-  PIC.ans = false; PIC.story = false;
-  picSave();
+function shStop() {
+  if (SH.audio) { try { SH.audio.pause(); } catch (e) {} }
+  cancelAnimationFrame(SH.raf);
 }
-function picSave() {
-  if (!PIC.set) return;
-  PIC.m = Math.max(PIC.m, PIC.i + 1);
-  try {
-    const all = JSON.parse(localStorage.getItem(PIC_KEY) || "{}");
-    all[PIC.set.id] = { i: PIC.i, done: PIC.done, m: PIC.m };
-    localStorage.setItem(PIC_KEY, JSON.stringify(all));
-  } catch (e) {}
+function shOpen(it) {
+  shStop();
+  SH.item = it; SH.cur = -1;
+  const a = new Audio(it.audio);
+  a.preload = "auto";
+  let pos = 0;
+  try { pos = +(JSON.parse(localStorage.getItem(SH_KEY) || "{}")[it.id] || 0); } catch (e) {}
+  a.addEventListener("loadedmetadata", () => { if (pos && pos < a.duration - 1) a.currentTime = pos; shSync(); });
+  a.addEventListener("play", () => { shBtn(); shLoop(); });
+  a.addEventListener("pause", () => { shBtn(); shSavePos(); cancelAnimationFrame(SH.raf); });
+  a.addEventListener("ended", () => { shBtn(); shSync(); try { const o = JSON.parse(localStorage.getItem(SH_KEY) || "{}"); delete o[it.id]; localStorage.setItem(SH_KEY, JSON.stringify(o)); } catch (e) {} });
+  SH.audio = a;
 }
-function picStop() {
-  if (PIC.audio) { try { PIC.audio.pause(); } catch (e) {} PIC.audio = null; }
-  if (PIC.btn) { PIC.btn.classList.remove("playing"); PIC.btn = null; }
+function shBtn() {
+  const b = SH.view.querySelector(".sh-play");
+  if (!b || !SH.audio) return;
+  const on = !SH.audio.paused;
+  b.innerHTML = on ? ICON_PAUSE : ICON_PLAY;
+  b.setAttribute("aria-label", on ? "일시정지" : "재생");
 }
-function picPlay(src, btn) {
-  const again = PIC.btn === btn;
-  picStop();
-  if (again) return;                                 // 재생 중에 다시 누르면 멈춤
-  Player.stop();
-  const a = new Audio(src);
-  PIC.audio = a;
-  PIC.btn = btn;
-  btn.classList.add("playing");
-  const end = () => { if (PIC.audio === a) picStop(); };
-  a.addEventListener("ended", end);
-  a.addEventListener("error", end);                  // 파일 없음 → 조용히
-  const p = a.play();
-  if (p && p.catch) p.catch(end);
+function shLoop() { shSync(); if (SH.audio && !SH.audio.paused) SH.raf = requestAnimationFrame(shLoop); }
+function shSync() {
+  const a = SH.audio, it = SH.item;
+  if (!a || !it) return;
+  const t = a.currentTime, dur = a.duration || it.duration || 0;
+  const seek = SH.view.querySelector(".sh-seek"), tm = SH.view.querySelector(".sh-time");
+  if (seek && !SH.drag) { seek.max = dur; seek.value = t; }
+  if (tm) tm.textContent = shFmt(t) + " / " + shFmt(dur);
+  let ci = -1;
+  for (let i = 0; i < it.cues.length; i++) { if (it.cues[i].start <= t + 0.05) ci = i; else break; }
+  if (ci >= 0 && t > it.cues[ci].end + 0.6 && !(it.cues[ci + 1] && t >= it.cues[ci + 1].start)) { /* 문장 사이 쉼: 앞 문장 유지 */ }
+  const lines = SH.view.querySelectorAll(".sh-line");
+  if (ci !== SH.cur) {
+    lines.forEach((el, i) => { el.classList.toggle("cur", i === ci); if (i !== ci) el.querySelectorAll(".w").forEach(w => w.classList.remove("past", "now")); });
+    SH.cur = ci;
+    const el = lines[ci];
+    if (el && !a.paused) el.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  const el = lines[ci];
+  if (el) {
+    const ws = it.cues[ci].w || [];
+    el.querySelectorAll(".w").forEach((w, j) => {
+      const st = ws[j], nx = j + 1 < ws.length ? ws[j + 1] : it.cues[ci].end;
+      w.classList.toggle("past", t >= nx);
+      w.classList.toggle("now", t >= st && t < nx);
+    });
+  }
 }
-function picRender() {
-  picStop();
-  const v = PIC.view, set = PIC.set;
-  if (!PIC_SETS.length) { v.innerHTML = '<p class="note">그림 세트가 없어요.</p>'; return; }
-  if (!set) {
-    v.innerHTML = '<header class="w-top"><div><div class="w-date">그림 묘사</div><h2 class="w-title">주제 고르기</h2></div></header>' +
-      '<div class="pic-list">' + PIC_SETS.map((s, si) => {
-        const r = picRec(s), n = s.items.length;
-        return '<button class="pic-topic" type="button" data-pic="open" data-si="' + si + '">' +
-          '<span class="pic-topic-t">' + esc(s.title) + '</span>' +
-          '<span class="pic-topic-v" lang="en">' + esc((s.verbs || []).join(" · ")) + '</span>' +
-          '<span class="pic-topic-n' + (r.m >= n ? ' full' : '') + '">' + r.m + ' / ' + n + '</span>' + ICON_ARROW + '</button>';
-      }).join("") + '</div>';
+function shSeek(t, play) {
+  const a = SH.audio;
+  if (!a) return;
+  a.currentTime = Math.max(0, t);
+  SH.cur = -1;
+  shSync();
+  if (play && a.paused) a.play().catch(() => {});
+}
+function shRender() {
+  const v = SH.view;
+  if (!SHORTS.length) { v.innerHTML = '<p class="note">쇼츠가 없어요.</p>'; return; }
+  if (!SH.item) {
+    v.innerHTML = '<header class="w-top"><div><div class="w-date">쇼츠</div><h2 class="w-title">들으면서 따라 읽기</h2>' +
+      '<p class="sh-src">유튜브 쇼츠 음성 + 자동자막 · 학습용</p></div></header>' +
+      '<div class="sh-list">' + SHORTS.map((s, si) =>
+        '<button class="sh-item" type="button" data-sh="open" data-si="' + si + '"><span class="sh-item-t">' + esc(s.title) + '</span>' +
+        '<span class="sh-item-s">' + esc(s.channel) + ' · ' + shFmt(s.duration) + ' · ' + s.cues.length + '문장</span>' + ICON_ARROW + '</button>').join("") + '</div>';
     return;
   }
-  const n = set.items.length, it = set.items[PIC.i];
-  const head = '<header class="w-top"><div><div class="w-date">그림 묘사</div><h2 class="w-title">' + esc(set.title) + '</h2>' +
-    '<p class="pic-verbs">' + esc((set.verbs || []).join(" · ")) + '</p></div>' +
-    '<button class="btn pic-back" type="button" data-pic="list">' + ICON_BACK + '목록</button></header>';
-  if (PIC.story) {
-    v.innerHTML = head +
-      '<p class="pic-story" lang="en">' + esc(set.story.en) + '</p>' +
-      '<p class="pic-story-ko">' + esc(set.items.map(x => x.ko).join(" ")) + '</p>' +
-      '<div class="pic-story-bar"><button class="btn" type="button" data-pic="cards">' + ICON_BACK + '카드로</button>' +
-      '<button class="btn pic-play" type="button" data-pic="play-story">' + ICON_PLAY + '전체 듣기</button></div>';
-    return;
-  }
-  v.innerHTML = head +
-    '<div class="pic-nav"><button class="btn" type="button" data-pic="prev"' + (PIC.i ? '' : ' disabled') + '>' + ICON_BACK + '이전</button>' +
-      '<button class="btn" type="button" data-pic="next"' + (PIC.i < n - 1 ? '' : ' disabled') + '>다음' + ICON_ARROW + '</button></div>' +
-    '<div class="pic-card"><img class="pic-img" src="' + esc(it.img) + '" alt="그림 ' + (PIC.i + 1) + '">' +
-      '<p class="pic-q">이 그림을 영어로 말해 보세요</p><span class="pic-n">' + (PIC.i + 1) + ' / ' + n + '</span></div>' +
-    '<button class="btn pic-ans-btn" type="button" data-pic="answer" aria-expanded="' + PIC.ans + '">' + (PIC.ans ? '정답 숨기기' : '정답 보기') + '</button>' +
-    '<div class="pic-ans"' + (PIC.ans ? '' : ' hidden') + '><p class="pic-en" lang="en">' + esc(it.en) + '</p>' +
-      '<p class="pic-ko">' + esc(it.ko) + '</p>' +
-      '<button class="btn pic-play" type="button" data-pic="play">' + ICON_PLAY + '듣기</button></div>' +
-    '<button class="btn pic-story-btn" type="button" data-pic="story"' + (PIC.done ? '' : ' hidden') + '>스토리로 보기</button>';
+  const it = SH.item;
+  v.innerHTML = '<header class="w-top"><div><div class="w-date">쇼츠</div><h2 class="w-title">' + esc(it.title) + '</h2>' +
+      '<p class="sh-src">출처: ' + esc(it.channel) + (it.youtubeUrl ? ' · <a href="' + esc(it.youtubeUrl) + '" target="_blank" rel="noopener">유튜브에서 보기</a>' : '') + '</p></div>' +
+      '<button class="btn sh-back" type="button" data-sh="list">' + ICON_BACK + '목록</button></header>' +
+    '<div class="sh-bar"><button class="btn sh-play" type="button" data-sh="toggle" aria-label="재생">' + ICON_PLAY + '</button>' +
+      '<input class="sh-seek" type="range" min="0" max="' + (it.duration || 0) + '" step="0.01" value="0" aria-label="재생 위치">' +
+      '<span class="sh-time">0:00</span></div>' +
+    '<div class="sh-lines" lang="en">' + it.cues.map((c, i) =>
+      '<div class="sh-line" data-ci="' + i + '">' + c.text.split(" ").map((w, j) => '<span class="w" data-wi="' + j + '">' + esc(w) + '</span>').join(" ") + '</div>').join("") + '</div>';
+  SH.cur = -1;
+  const seek = v.querySelector(".sh-seek");
+  seek.addEventListener("input", () => { SH.drag = true; v.querySelector(".sh-time").textContent = shFmt(+seek.value) + " / " + shFmt(+seek.max); });
+  seek.addEventListener("change", () => { SH.drag = false; shSeek(+seek.value, true); });
+  shBtn(); shSync();
 }
-PIC.view.addEventListener("click", e => {
-  const b = e.target.closest("[data-pic]");
-  if (!b) return;
-  const a = b.dataset.pic;
-  buzz();
-  if (a === "open") { const s = PIC_SETS[+b.dataset.si]; if (s) { picOpen(s); picRender(); PIC.view.scrollTop = 0; } return; }
-  if (!PIC.set) return;
-  const n = PIC.set.items.length;
-  if (a === "list") { PIC.set = null; picRender(); PIC.view.scrollTop = 0; return; }
-  if (a === "play") { picPlay(PIC.set.items[PIC.i].audio, b); return; }
-  if (a === "play-story") { picPlay(PIC.set.story.audio, b); return; }
-  if (a === "answer") {                             // 다시 그리지 않고 정답 칸만 보이기/숨기기(스크롤 그대로)
-    picStop();
-    PIC.ans = !PIC.ans;
-    if (PIC.ans && PIC.i === n - 1) PIC.done = true;
-    b.textContent = PIC.ans ? "정답 숨기기" : "정답 보기";
-    b.setAttribute("aria-expanded", String(PIC.ans));
-    PIC.view.querySelector(".pic-ans").hidden = !PIC.ans;
-    PIC.view.querySelector('[data-pic="story"]').hidden = !PIC.done;
-    picSave();
+SH.view.addEventListener("click", e => {
+  const b = e.target.closest("[data-sh]");
+  if (b) {
+    const a = b.dataset.sh;
+    if (a === "open") { const s = SHORTS[+b.dataset.si]; if (s) { shOpen(s); shRender(); SH.view.scrollTop = 0; buzz(); } return; }
+    if (a === "list") { shStop(); shSavePos(); SH.item = null; SH.audio = null; shRender(); SH.view.scrollTop = 0; return; }
+    if (a === "toggle" && SH.audio) { if (SH.audio.paused) SH.audio.play().catch(() => {}); else SH.audio.pause(); return; }
     return;
   }
-  if (a === "prev" && PIC.i > 0) { PIC.i--; PIC.ans = false; }
-  else if (a === "next" && PIC.i < n - 1) { PIC.i++; PIC.ans = false; }
-  else if (a === "story") PIC.story = true;
-  else if (a === "cards") PIC.story = false;
-  picSave();
-  picRender();
-  if (a === "story" || a === "cards") PIC.view.scrollTop = 0;
+  const line = e.target.closest(".sh-line");
+  if (!line || !SH.item) return;
+  const c = SH.item.cues[+line.dataset.ci], w = e.target.closest(".w");
+  const t = w && c.w && c.w[+w.dataset.wi] != null ? c.w[+w.dataset.wi] : c.start;
+  shSeek(t, true);
 });
 
 /* ================= 하단 탭 =================
    [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
    탭을 오가도 각 화면의 상태(보던 카드·모드·스크롤·입력)는 그대로(.view.off는 visibility:hidden이라 남아 있음) */
 try { localStorage.removeItem("engcards.tab.v1"); } catch (e) {}
-const VIEWS = { today: todayEl, cards: feed, expr: X.view, write: W.view, drive: document.getElementById("viewDrive"), pic: PIC.view };
+const VIEWS = { today: todayEl, cards: feed, expr: X.view, write: W.view, drive: document.getElementById("viewDrive"), shorts: SH.view };
 let currentTab = "today";
 function switchTab(name, quiet) {
   if (!VIEWS[name] || (name === "write" && !WRITE_TAB)) name = "today";   // 글쓰기 탭 버튼이 없으면 글쓰기 화면으로 가는 길은 오늘 탭으로
-  if (name !== currentTab) { Player.stop(); picStop(); }
+  if (name !== currentTab) { Player.stop(); shStop(); }
   currentTab = name;
   Object.keys(VIEWS).forEach(k => {
     const on = k === name;
@@ -6536,7 +6506,7 @@ function switchTab(name, quiet) {
   }
   if (name === "expr") renderExprTab();
   if (name === "drive") dvRenderSetup();
-  if (name === "pic") picRender();
+  if (name === "shorts") shRender();
   if (name === "today") renderToday();
   updateBadges();
   if (!quiet) buzz();
