@@ -499,14 +499,13 @@
   .ex .spk{ position:absolute; right:0; top:10px; width:34px; height:34px; }
   .ex-en{ font-size:17px; line-height:1.5; }
   .ex-ko{ margin-top:3px; font-size:16px; line-height:1.55; color:var(--muted); }
-  /* 표현 상세 '직접 말해 보기' 10문장(접어 둠): 한국어 위, 영어 아래 */
-  .dr-sec{ margin-top:22px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-  .dr-sec > summary{ list-style:none; cursor:pointer; min-height:48px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:16px; font-weight:700; }
-  .dr-sec > summary::-webkit-details-marker{ display:none; }
-  .dr-sec > summary small{ margin-left:4px; font-size:13px; font-weight:600; color:var(--muted); }
-  .dr-sec[open] > summary .h-chev{ transform:rotate(180deg); }
-  .dr-sec .sec-row{ margin-top:6px; }
-  .dr-sec .sec-row .sec-h{ visibility:hidden; }
+  /* 표현 상세 '직접 말해 보기' 10문장(2026-10-28: 예문 바로 아래에 늘 펼쳐 둠): 한국어 위, 영어 아래 */
+  .dr-sec .sec-h small{ margin-left:4px; font-size:13px; font-weight:600; color:var(--muted); }
+  .dr-sec > .note{ margin:2px 2px 4px; }
+  /* 예문·말해 보기 문장마다 [대화 만들기] */
+  .mk-btn{ display:inline-flex; align-items:center; height:28px; margin-top:6px; padding:0 10px; border-radius:999px; font-size:12.5px; font-weight:600;
+    color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line); }
+  .mk-btn:active{ transform:scale(.96); }
   .dr-ko{ font-size:15px; line-height:1.55; color:var(--muted); margin-bottom:3px; }
   mark{
     color:inherit; font-weight:650;
@@ -876,6 +875,25 @@
   .dg-memo[open] .h-chev{ transform:rotate(180deg); }
   .dg-mtext{ padding:0 12px 10px; font-size:14px; line-height:1.6; color:var(--text-2); white-space:pre-wrap; word-break:break-word; }
   .dg-memo .dc-act{ margin:0 12px 10px; }
+  /* 연습장 '내 대화'(2026-10-28): 저장 카드(접으면 제목·줄 수) · 편집기(줄마다 나/상대 + KO·ME·EN) */
+  .dlg-title{ display:block; font-weight:700; }
+  .dlg-meta{ display:block; margin-top:2px; font-size:12.5px; color:var(--faint); }
+  .dlg .dc-body{ padding-top:4px; }
+  .dlg .tk-l .dc-me, .dlg .tk-l .dc-tip{ margin-top:4px; font-size:13.5px; }
+  .dlg-form .w-copy{ margin-top:12px; }
+  .dlg-form .w-label{ margin-top:14px; }
+  .dlg-form #dlgPasteMsg:empty{ display:none; }
+  .dlg-lines{ list-style:none; margin:10px 0 0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .dlg-ln{ padding:8px 10px 10px; border-radius:12px; background:var(--bg); border:1px solid var(--line); }
+  .dlg-ln.me{ border-left:3px solid var(--accent); }
+  .dlg-ln .dc-in + .dc-in{ margin-top:6px; }
+  .dlg-ln-h{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .dlg-who{ height:26px; padding:0 10px; border-radius:999px; font-size:12.5px; font-weight:700; color:var(--muted); background:var(--bg-3); }
+  .dlg-ln.me .dlg-who{ color:var(--accent); background:var(--accent-soft); }
+  .dlg-n{ flex:1; font-size:12px; color:var(--faint); }
+  .dlg-rm{ height:26px; padding:0 10px; border-radius:999px; font-size:12px; font-weight:600; color:var(--muted); border:1px solid var(--line); }
+  .dlg-rm:disabled{ opacity:.4; }
+  .dlg-form textarea.dc-in{ resize:none; overflow:hidden; min-height:38px; }
   .note-past{ margin-top:14px; }
   .note-past details{ border-bottom:1px solid var(--line); }
   .note-past summary{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:12px; padding:12px 2px; }
@@ -4687,9 +4705,9 @@ const EXPR_BY_ID = {};
 const study = (() => {
   try {
     const s = JSON.parse(localStorage.getItem(STUDY_KEY) || "null");
-    if (s && typeof s === "object") return { items: s.items && typeof s.items === "object" ? s.items : {}, picks: s.picks && typeof s.picks === "object" ? s.picks : {} };
+    if (s && typeof s === "object") return { items: s.items && typeof s.items === "object" ? s.items : {}, picks: s.picks && typeof s.picks === "object" ? s.picks : {}, mine: s.mine || 0 };
   } catch (e) {}
-  return { items: {}, picks: {} };
+  return { items: {}, picks: {}, mine: 1 };
 })();
 function saveStudy() {
   try { localStorage.setItem(STUDY_KEY, JSON.stringify(study)); return true; } catch (e) { return false; }
@@ -4716,6 +4734,19 @@ function drillDay(s, d) {
     changed = true;
   });
   if (changed) saveStudy();
+})();
+/* 내 문장 → 내 대화(2026-10-28, 사용자 요청 '기존 내 문장 다 지워 줘'): 한 번만 — 모든 표현의 연습장 기록(sessions: 단문 카드·메모)과 쓰다 만 정리하기 글(draft)을 지움.
+   학습 상태·복습 날짜·history·exRv·picks는 그대로. 다 했으면 study.mine = 1(같은 저장에 같이 남김 → 다시 지우지 않음) */
+(function migrateMineDialog() {
+  if (study.mine >= 1) return;
+  Object.keys(study.items).forEach(id => {
+    const s = study.items[id];
+    if (!s || typeof s !== "object") return;
+    delete s.sessions;
+    delete s.draft;
+  });
+  study.mine = 1;
+  saveStudy();
 })();
 /* 화면용 상태: new(미학습·중단) / learning(학습 중) / mastered(익힘) */
 function statusOf(id) {
@@ -4818,13 +4849,13 @@ function writtenCount(id) {
   let n = 0;
   Object.keys(ses).forEach(d => {
     const cards = ses[d] && ses[d].cards;
-    if (Array.isArray(cards)) cards.forEach(c => { if (c && String(c.me == null ? "" : c.me).trim()) n++; });
+    if (Array.isArray(cards)) cards.forEach(c => { if (dlgValid(c)) n++; });
   });
   return n;
 }
 /* 펜 아이콘 + 숫자 알약(0이면 없음). 화면 읽기 프로그램은 "영작한 문장 3개" */
 function writtenPill(n) {
-  return n ? '<span class="wr">' + ICON_PEN + '<span aria-hidden="true">' + n + '</span><span class="sr">영작한 문장 ' + n + '개</span></span>' : "";
+  return n ? '<span class="wr">' + ICON_PEN + '<span aria-hidden="true">' + n + '</span><span class="sr">만든 대화 ' + n + '개</span></span>' : "";
 }
 
 function renderReviewCard() {
@@ -5099,79 +5130,119 @@ X.rv.addEventListener("click", e => {
 let detailId = null;
 let detailOpts = {};
 
-/* 연습장 'AI 연습 프롬프트 복사'(2026-10-04 문구). 중괄호 자리는 그 표현의 데이터 — 핵심·추가 표현 같은 형식.
-   대사 = 표현이 들어간 그 카드의 첫 대사(sourceLine), 표현 설명 = ex.ko */
-function practicePrompt(it) {
-  const line = sourceLine(it) || { en: "", ko: "" };
-  return '영어 표현 "' + it.ex.phrase + '"(' + shortMeaning(it.ex) + ')으로 말하기 연습을 하고 싶어.\n' +
-    '- 이 표현이 나온 상황: ' + it.card.title + ' — ' + it.card.situation + '\n' +
-    '- 실제 대사: "' + line.en + '" (' + line.ko + ')\n' +
-    '- 표현 설명: ' + it.ex.ko + '\n\n' +
-    '1) 롤플레이 3개: 상대방(직원, 친구, 동료 등)이 나에게 실제로 할 법한 말이나 상황을 주고, 내가 이 표현을 써서 자연스럽게 대답하거나 말을 꺼내게 해줘. 각각 누가 하는 말인지, 한국어 뜻도 같이 적어줘. 이 표현이 억지로 들어가는 상황은 빼줘.\n' +
-    '2) 영작 10개: 전부 내가 누군가에게 직접 하는 말(대화체)로만. "~했다", "~하셨어" 같은 일기·서술체는 넣지 마. 각 문장 앞에 (직원에게), (친구에게)처럼 누구에게 하는 말인지 붙여줘. 이 표현이 자연스럽게 들어가는 상황으로, 일상·여행·직장·친구 등 다양하게, 짧은 것부터 조금 긴 순서로. 영어로 말했을 때 15단어를 넘지 않게.\n' +
-    '정답은 내가 답을 보낸 다음에 보여줘.\n\n' +
-    '내가 답을 보내면 문장마다: 내 답 → 원어민이 실제로 쓰는 자연스러운 문장 → 고친 이유(한국어로 짧게) → 같은 뜻의 다른 자연스러운 표현 1개.\n\n' +
-    '첨삭이 모두 끝나면 마지막에 롤플레이와 영작 전부를 아래 형식으로 한 번에 정리해줘. 다른 말은 붙이지 말고 이 형식만. 내가 복사하기 쉽게 [정리]부터 끝까지 전부 코드블록(```) 안에 넣어줘.\n' +
-    '[정리]\n' +
-    'KO: (누구에게) 한국어 문장 또는 롤플레이 상황\n' +
-    'ME: 내가 쓴 답\n' +
-    'EN: 고친 자연스러운 문장\n' +
-    'TIP: 고친 이유 한 줄\n' +
-    '---';
+/* ---- 연습장 '내 대화'(2026-10-28, 예전 단문 '내 문장'을 바꿈): 나 ↔ 상대 대화(최소 4줄 = 주고받기 2번)로 표현을 써 봄 ----
+   카드 { id, title, date, at, rv, lines: [{ who: "me"|"them", ko, me?, en, tip?, rv? }] } — study.items[id].sessions[날짜].cards에 저장(날짜 묶음은 그대로).
+   흐름: [+ 대화 추가](또는 예문·말해 보기의 [대화 만들기]) → 줄마다 KO·내 영작(ME)·고친 영어(EN) → [AI 첨삭 프롬프트 복사] → 받은 [대화문]을 붙여넣고 [채우기] → [저장].
+   새 대화 편집 중인 글은 study.items[id].draft = { title, lines }로 자동 저장(시트를 닫아도 남음). 수정 중인 저장 카드는 저장 안 함 */
+const DLG_MIN = 4;
+const dlgWho = w => w === "them" ? "them" : "me";
+const dlgWhoKo = w => w === "them" ? "상대" : "나";
+const dlgClean = s => String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+const dlgBlank = who => ({ who, ko: "", me: "", en: "", tip: "" });
+const dlgValid = c => !!(c && typeof c === "object" && Array.isArray(c.lines) && c.lines.length);
+let dlg = null;                 // 편집 중인 대화 { id: "new" | 카드 id, x: 표현 id, title, lines }
+let dlgTimer = null;
+function dlgSkeleton(seed) {
+  const lines = [dlgBlank("me"), dlgBlank("them"), dlgBlank("me"), dlgBlank("them")];
+  if (seed) Object.assign(lines[0], { ko: seed.ko || "", en: seed.en || "" });   // 예문·말해 보기 문장 = 첫 '나' 줄 아이디어
+  return lines;
 }
+function dlgDraftOf(id) {
+  const s = study.items[id], d = s && s.draft;
+  if (!d || typeof d !== "object" || !Array.isArray(d.lines) || !d.lines.length) return null;
+  return { id: "new", x: id, title: String(d.title || ""), lines: d.lines.map(l => Object.assign(dlgBlank(dlgWho(l && l.who)), {
+    ko: String((l && l.ko) || ""), me: String((l && l.me) || ""), en: String((l && l.en) || ""), tip: String((l && l.tip) || "") })) };
+}
+const dlgHasText = d => !!(d && (d.title.trim() || d.lines.some(l => (l.ko + l.me + l.en + l.tip).trim())));
+function dlgSaveDraft() {
+  clearTimeout(dlgTimer); dlgTimer = null;
+  if (!dlg || dlg.id !== "new") return;
+  const s = study.items[dlg.x];
+  if (!s) return;
+  if (dlgHasText(dlg)) s.draft = { title: dlg.title, lines: dlg.lines.map(l => ({ who: l.who, ko: l.ko, me: l.me, en: l.en, tip: l.tip })) };
+  else delete s.draft;
+  saveStudy();
+}
+function flushNote() { if (dlgTimer) dlgSaveDraft(); }
 
-/* ---- 연습장 문장 카드: [정리] 블록 읽기 → 미리보기 → 저장 → 날짜별 카드(펼치면 고친 영어·내 답·팁) ----
-   [정리] 형식: 카드마다 KO:(필수) ME: EN:(필수) TIP:, 카드 사이 ---. 읽기는 너그럽게(parseDrill):
-   코드블록 ```·굵게 **·번호(1. 1))·글머리(- •)·앞뒤 공백·전각 콜론(：)·대소문자 무시, --- 없어도 KO가 나오면 새 카드, 이름표 없는 줄은 앞 칸에 이어 붙임.
-   KO·EN이 없는 카드나 카드 밖에서 버려지는 줄이 있으면 partial → 붙여넣은 원문을 그 날짜 메모로 같이 저장(내용이 사라지지 않게) */
-function parseDrill(raw) {
-  const cards = [];
-  let cur = null, field = null, lost = 0, bad = 0;
-  const push = () => { if (cur) { if (cur.ko && cur.en) cards.push(cur); else bad++; } cur = null; field = null; };
+/* AI 첨삭 프롬프트(구어체 필수). 지금 편집 중인 대화를 넣음 */
+function dlgPrompt(it, d) {
+  const line = sourceLine(it);
+  const body = d.lines.map(l => {
+    const en = dlgClean(l.me) || dlgClean(l.en);
+    return (l.who === "me" ? "나" : "상대") + ": " + (dlgClean(l.ko) || "(한국어 없음)") + "\n   영어: " + (en || "(아직 못 씀 — 한국어 뜻에 맞게 새로 써줘)");
+  }).join("\n");
+  return '영어 표현 "' + it.ex.phrase + '"(' + shortMeaning(it.ex) + ')을 써 보려고 내가 만든 짧은 대화문이야. 첨삭해줘.\n' +
+    '- 이 표현이 나온 상황: ' + it.card.title + ' — ' + it.card.situation + '\n' +
+    (line ? '- 실제 대사: "' + line.en + '" (' + line.ko + ')\n' : "") +
+    '\n규칙\n' +
+    '- 미국 원어민이 일상에서 자주 쓰는 대화체·구어체로만 고쳐줘. 실제로 입으로 하는 말처럼(축약형 OK).\n' +
+    '- 문어체·교과서체 문장, 한국어를 그대로 옮긴 어색한 직역은 절대 쓰지 마.\n' +
+    '- 내가 하려던 뜻은 살려줘. 나 ↔ 상대 순서와 줄 수는 그대로 두고, 이 표현이 자연스럽게 들어가게.\n' +
+    '- 영어를 아직 못 쓴 줄은 한국어 뜻에 맞게 새로 써줘.\n' +
+    '- 한 줄은 한 호흡에 말할 길이(15단어 이하).\n' +
+    '- 줄마다 고친 영어 + 바로 아래 짧고 자연스러운 한국어 해석. 고친 이유가 있으면 그 줄 바로 아래 TIP: 한 줄(한국어로 짧게).\n\n' +
+    '다른 말은 붙이지 말고 아래 형식만. 내가 복사하기 쉽게 [대화문]부터 끝까지 전부 코드블록(```) 안에 넣어줘.\n' +
+    '[대화문]\n' +
+    'TITLE: 대화 주제(한국어로 짧게)\n' +
+    'ME: 내 말(고친 영어)\n' +
+    'KO: 한국어 해석\n' +
+    'TIP: 고친 이유(없으면 이 줄 빼기)\n' +
+    'THEM: 상대 말(영어)\n' +
+    'KO: 한국어 해석\n\n' +
+    '내가 만든 대화' + (dlgClean(d.title) ? '(' + dlgClean(d.title) + ')' : "") + ':\n' + body;
+}
+/* [대화문] 읽기(너그럽게): ME/나 = 나, THEM/AI/상대 = 상대, KO, TIP, TITLE. 코드블록·굵게·번호·글머리·전각 콜론 무시, 이름표 없는 줄은 앞 칸에 이어 붙임 */
+function dlgLabel(s) {
+  const k = String(s).trim().toLowerCase().replace(/\s+/g, " ");
+  if (/^(me|나|내 말|user)$/.test(k)) return "me";
+  if (/^(them|ai|상대|상대방|you|other)$/.test(k)) return "them";
+  if (/^(ko|kr|한국어|해석|뜻)$/.test(k)) return "ko";
+  if (/^(tip|팁)$/.test(k)) return "tip";
+  if (/^(title|제목|주제)$/.test(k)) return "title";
+  return null;
+}
+function parseDlg(raw) {
+  const lines = [];
+  let cur = null, field = null, title = "";
+  const push = () => { if (cur && cur.en.trim()) lines.push({ who: cur.who, ko: dlgClean(cur.ko), en: dlgClean(cur.en), tip: dlgClean(cur.tip) }); cur = null; field = null; };
   String(raw || "").replace(/\r/g, "").split("\n").forEach(src => {
     let line = src.replace(/```[\w-]*/g, "").trim();
-    if (!line) return;
-    if (/^[-—–_=*·•─━]{3,}$/.test(line)) { push(); return; }                    // 구분선
+    if (!line || /^[-—–_=*·•─━]{3,}$/.test(line)) return;
     line = line.replace(/\*\*|__/g, "").replace(/：/g, ":").trim();
-    if (/^\[?\s*정리\s*\]/.test(line)) return;                                  // [정리] 머리
-    if (/^#{1,6}\s/.test(line)) { field = null; return; }                       // 마크다운 제목
+    if (/^\[?\s*대화문\s*\]?$/.test(line) || /^#{1,6}\s/.test(line)) return;
     line = line.replace(/^(?:\d+\s*[.)]\s*|[-*•·]\s+|>\s*)+/, "").trim();
-    const m = line.match(/^(KO|ME|EN|TIP)\s*:\s*(.*)$/i);
-    if (m) {
-      const k = m[1].toLowerCase(), v = m[2].trim();
-      if (k === "ko") { push(); cur = { ko: v, me: "", en: "", tip: "" }; }
-      else if (!cur) { lost++; return; }
-      else cur[k] = cur[k] ? cur[k] + " " + v : v;
-      field = k;
-    } else if (cur && field) cur[field] = (cur[field] + " " + line).trim();
-    else lost++;
+    const m = line.match(/^([A-Za-z가-힣][A-Za-z가-힣 ]{0,7}?)\s*:\s*(.*)$/), k = m && dlgLabel(m[1]);
+    if (k === "title") { if (!title) title = m[2].trim().replace(/^["“'(（]+|["”')）]+$/g, ""); field = null; return; }
+    if (k === "me" || k === "them") { push(); cur = { who: k, en: m[2], ko: "", tip: "" }; field = "en"; return; }
+    if (k === "ko" || k === "tip") { if (cur) { cur[k] = (cur[k] + " " + m[2]).trim(); field = k; } return; }
+    if (cur && field) cur[field] = (cur[field] + " " + line).trim();
   });
   push();
-  return { cards, partial: bad > 0 || lost > 0 };
+  return { lines, title };
 }
-/* 맞았는지: 대소문자·문장 부호·둥근 따옴표 차이는 무시. ME가 없으면 맞음/틀림 판단 안 함 */
-const drillNorm = s => String(s || "").toLowerCase().replace(/[‘’`]/g, "'").replace(/[^a-z0-9']+/g, " ").trim();
-const drillHasMe = c => !!(c.me && c.me.trim());
-const drillWrong = c => drillHasMe(c) && drillNorm(c.me) !== drillNorm(c.en);
+
+/* 저장된 대화 카드 */
 function drillCards(id) {
   const s = study.items[id], out = [];
-  if (!s || !s.sessions) return out;
-  Object.keys(s.sessions).sort().forEach(d => ((s.sessions[d] && s.sessions[d].cards) || []).forEach(c => out.push(c)));
+  if (!s || !s.sessions || typeof s.sessions !== "object") return out;
+  Object.keys(s.sessions).sort().forEach(d => ((s.sessions[d] && s.sessions[d].cards) || []).forEach(c => { if (dlgValid(c)) out.push(c); }));
   return out;
 }
-function drillHasAny(id) {
-  const s = study.items[id];
-  return !!(s && s.sessions && Object.keys(s.sessions).some(d => s.sessions[d] && ((s.sessions[d].cards || []).length || (s.sessions[d].memos || []).length)));
-}
+const drillHasAny = id => drillCards(id).length > 0;
 function findDrill(id, cid) {
   const s = study.items[id];
   if (!s || !s.sessions) return null;
   for (const d of Object.keys(s.sessions)) {
-    const list = (s.sessions[d] && s.sessions[d].cards) || [], k = list.findIndex(c => c.id === cid);
+    const list = (s.sessions[d] && s.sessions[d].cards) || [], k = list.findIndex(c => c && c.id === cid);
     if (k >= 0) return { list, k, c: list[k], d };
   }
   return null;
 }
+/* 맞았는지: 대소문자·문장 부호·둥근 따옴표 차이는 무시. ME가 없으면 맞음/틀림 판단 안 함 */
+const drillNorm = s => String(s || "").toLowerCase().replace(/[‘’`]/g, "'").replace(/[^a-z0-9']+/g, " ").trim();
+const drillHasMe = c => !!(c && c.me && String(c.me).trim());
+const drillWrong = c => drillHasMe(c) && drillNorm(c.me) !== drillNorm(c.en);
 let drillSeq = 0;
 const drillNewId = () => "d" + Date.now().toString(36) + (drillSeq++).toString(36) + Math.random().toString(36).slice(2, 5);
 /* 내 답에서 고친 문장과 다른 단어 표시(단어 단위 LCS — 같은 단어는 흐리게 그대로, 다른 단어는 <mark>) */
@@ -5194,93 +5265,114 @@ function drillKoHtml(ko) {
   const m = String(ko).match(/^\s*[(（]([^)）]{1,24})[)）]\s*([\s\S]*)$/);
   return m ? '<span class="dc-who">' + esc(m[1]) + '</span>' + esc(m[2]) : esc(ko);
 }
-const dcOpen = new Set();       // 펼친 문장 카드
-const memoOpen = new Set();     // 펼친 메모(날짜)
-let dcEdit = null;              // 수정 중인 카드 id("new" = 새 문장)
-let dcDel = null;               // '정말 삭제' 확인 중인 카드 id / "m:날짜:번호"
-/* 카드 하나. o = { edit: 수정·삭제 버튼, ex: 형광펜용 표현 } (복습 덱의 내 문장 카드는 rvCardHtml이 따로 그림) */
-function drillCardHtml(c, o) {
-  if (o.edit && dcEdit === c.id) return drillFormHtml(c);
-  const open = dcOpen.has(c.id), right = drillHasMe(c) && !drillWrong(c);
-  return '<div class="dc' + (open ? " open" : "") + '" data-dc="' + esc(c.id) + '">' +
+const dcOpen = new Set();       // 펼친 대화 카드
+let dcDel = null;               // '정말 삭제' 확인 중인 카드 id
+const dlgTitleOf = c => dlgClean(c.title) || koDate(c.date || studyToday()) + " 대화";
+/* 저장된 대화 하나: 접으면 제목·줄 수, 펼치면 대화(나/상대, 고친 영어 노래방식·단어 탭) + 전체 듣기 + 수정·삭제 */
+function dlgCardHtml(c, ex) {
+  if (dlg && dlg.id === c.id) return dlgFormHtml();
+  const open = dcOpen.has(c.id), me = c.lines.filter(l => l.who !== "them").length;
+  return '<div class="dc dlg' + (open ? " open" : "") + '" data-dc="' + esc(c.id) + '">' +
     '<button class="dc-front" type="button" data-dc-toggle aria-expanded="' + open + '">' +
-      '<span class="dc-ko">' + drillKoHtml(c.ko) + '</span>' +
-      (right ? '<span class="dc-ok">정답</span>' : "") +
+      '<span class="dc-ko"><b class="dlg-title">' + esc(dlgTitleOf(c)) + '</b><small class="dlg-meta">' + esc(koDate(c.date || studyToday())) + ' · ' + c.lines.length + '줄 · 내 말 ' + me + '줄</small></span>' +
       '<span class="dc-chev">' + ICON_CHEVRON + '</span></button>' +
-    '<div class="dc-body">' +
-      '<div class="rd dc-say" data-who="me" data-tap="one"><ul class="dc-ul"><li>' +
-        '<div class="dc-en">' + scriptHtml(c.en, o.ex ? markRanges(c.en, o.ex) : []) + '</div>' +
-        '<button class="spk" type="button" aria-label="고친 문장 듣기" data-rd-one="0">' + ICON_SPEAKER + '</button></li></ul></div>' +
-      (drillHasMe(c) && !right ? '<p class="dc-me"><span class="dc-lab">내 답</span>' + drillDiffHtml(c.me, c.en) + '</p>' : "") +
-      (c.tip ? '<p class="dc-tip"><span class="dc-lab">팁</span>' + esc(c.tip) + '</p>' : "") +
-      (o.edit ? '<div class="dc-act"><button type="button" data-dc-edit>수정</button>' +
+    '<div class="dc-body"' + (open ? ' data-dlg-body' : "") + '>' + (open ?
+      '<div class="tk-bar"><button class="pill tk-play" type="button" data-dlg-play><span class="when-off">' + ICON_SPEAKER + '</span><span class="when-on">' + ICON_STOP + '</span>' +
+        '<span class="when-off">전체 듣기</span><span class="when-on">정지</span></button></div>' +
+      '<p class="tk-hint">듣고 따라 말해 보세요 · 단어를 누르면 그 자리부터</p>' +
+      '<div class="tk-lines">' + c.lines.map((l, i) =>
+        '<div class="tk-l ' + dlgWho(l.who) + '" data-tk-li="' + i + '"><span class="tk-who">' + dlgWhoKo(l.who) + '</span>' +
+          '<div class="tk-en" lang="en">' + scriptHtml(String(l.en || ""), ex ? markRanges(String(l.en || ""), ex) : []) + '</div>' +
+          (l.ko ? '<div class="tk-ko">' + esc(l.ko) + '</div>' : "") +
+          (drillWrong(l) ? '<p class="dc-me"><span class="dc-lab">내 답</span>' + drillDiffHtml(l.me, l.en) + '</p>' : "") +
+          (l.tip ? '<p class="dc-tip"><span class="dc-lab">팁</span>' + esc(l.tip) + '</p>' : "") + '</div>').join("") + '</div>' +
+      '<div class="dc-act"><button type="button" data-dc-edit>수정</button>' +
         '<button type="button" class="' + (dcDel === c.id ? "danger" : "") + '" data-dc-del>' + (dcDel === c.id ? "정말 삭제" : "삭제") + '</button></div>' : "") +
     '</div></div>';
 }
-function drillFormHtml(c) {
-  const v = c || {};
-  const f = (k, label, ph) => '<label class="dc-f"><span>' + label + '</span>' +
-    '<textarea class="dc-in" rows="2" data-f="' + k + '"' + (k === "me" || k === "en" ? ' lang="en"' : "") + ' placeholder="' + esc(ph) + '">' + esc(v[k] || "") + '</textarea></label>';
-  return '<div class="dc dc-form" data-dc="' + esc(c ? c.id : "new") + '">' +
-    f("ko", "KO · 한국어 (누구에게)", "(친구에게) 한국어 문장") +
-    f("me", "ME · 내 답 (없어도 돼요)", "") +
-    f("en", "EN · 고친 영어 문장", "") +
-    f("tip", "TIP · 고친 이유 (없어도 돼요)", "") +
-    '<div class="dc-act"><button type="button" data-dc-cancel>취소</button><button type="button" class="pri" data-dc-save>저장</button></div></div>';
+/* 편집기: 제목 + 줄마다 (나/상대 — 눌러서 바꿈) KO · ME · EN (+ TIP) + [줄 삭제], [+ 줄 추가], 첨삭 프롬프트 복사, [대화문] 붙여넣기 → 채우기, 취소·저장 */
+function dlgFormHtml() {
+  const d = dlg, n = d.lines.length;
+  const next = dlgWho(n && d.lines[n - 1].who === "me" ? "them" : "me");
+  const f = (l, i, k, ph) => '<textarea class="dc-in" rows="1" data-lf="' + k + '"' + (k === "ko" || k === "tip" ? "" : ' lang="en"') +
+    ' placeholder="' + esc(ph) + '" aria-label="' + (i + 1) + '번째 줄 ' + esc(ph) + '">' + esc(l[k] || "") + '</textarea>';
+  return '<div class="dc dc-form dlg-form" data-dc="' + esc(d.id) + '" data-dlg-form>' +
+    '<label class="dc-f"><span>제목 (없어도 돼요)</span><input class="dc-in" type="text" maxlength="40" data-dlg-title value="' + esc(d.title) + '" placeholder="예: 카페에서 주문 바꾸기"></label>' +
+    '<ol class="dlg-lines">' + d.lines.map((l, i) =>
+      '<li class="dlg-ln ' + l.who + '" data-ln="' + i + '"><div class="dlg-ln-h">' +
+        '<button class="dlg-who" type="button" data-dlg-who aria-label="말하는 사람 바꾸기">' + dlgWhoKo(l.who) + '</button>' +
+        '<span class="dlg-n">' + (i + 1) + '</span>' +
+        '<button class="dlg-rm" type="button" data-dlg-rm' + (n <= DLG_MIN ? " disabled" : "") + '>줄 삭제</button></div>' +
+        f(l, i, "ko", "한국어") + f(l, i, "me", "내 영작 (없어도 돼요)") + f(l, i, "en", "고친 영어") +
+        (l.tip ? f(l, i, "tip", "팁") : "") + '</li>').join("") + '</ol>' +
+    '<button class="dc-add" type="button" data-dlg-add>+ 줄 추가 (' + dlgWhoKo(next) + ')</button>' +
+    '<button class="btn w-copy" type="button" data-dlg-copy>' +
+      '<span class="w-ico when-off">' + ICON_COPY + '</span><span class="w-ico when-on">' + ICON_CHECK + '</span>' +
+      '<span class="when-off">AI 첨삭 프롬프트 복사</span><span class="when-on">복사됨</span></button>' +
+    '<div class="w-label-row"><label class="w-label" for="dlgPaste">첨삭 결과 붙여넣기</label><button class="w-paste" type="button" data-paste="dlgPaste">클립보드에서 붙여넣기</button></div>' +
+    '<textarea class="w-area" id="dlgPaste" rows="3" placeholder="AI가 준 [대화문] 블록을 붙여넣고 [채우기]를 누르세요. 줄마다 고친 영어·한국어가 들어가요."></textarea>' +
+    '<p class="note" id="dlgPasteMsg"></p>' +
+    '<div class="dc-act"><button type="button" data-dlg-fill>채우기</button><button type="button" data-dc-cancel>취소</button><button type="button" class="pri" data-dc-save>저장</button></div></div>';
 }
-/* 날짜별 묶음(최신이 위, 묶음 안은 연습한 순서) + 메모는 묶음 맨 아래에 접어서. 편집 모드면 맨 위 [+ 문장 추가] */
+/* 연습장 목록: 맨 위 [+ 대화 추가](또는 새 대화 편집기) + 저장한 대화(최신이 위) */
 function drillHtml(id, o) {
-  const s = study.items[id], ses = (s && s.sessions) || {};
-  const days = Object.keys(ses).filter(d => ses[d] && ((ses[d].cards || []).length || (ses[d].memos || []).length)).sort().reverse();
-  if (!days.length && !o.edit) return "";
+  const cards = drillCards(id).slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.at || 0) - (a.at || 0));
+  const editing = dlg && dlg.x === id;
+  if (!cards.length && !o.edit && !editing) return "";
   let h = "";
-  if (o.edit) h += dcEdit === "new" ? drillFormHtml(null) : '<button class="dc-add" type="button" data-dc-add>+ 문장 추가</button>';
-  h += days.map(d => {
-    const g = ses[d], cards = g.cards || [], memos = g.memos || [];
-    return '<div class="dg"><div class="dg-head"><span>' + esc(koDate(d)) + '</span>' + (cards.length ? '<span>' + cards.length + '문장</span>' : "") + '</div>' +
-      cards.map(c => drillCardHtml(c, o)).join("") +
-      (memos.length ? '<details class="dg-memo" data-memo-day="' + esc(d) + '"' + (memoOpen.has(d) ? " open" : "") + '><summary>메모' + (memos.length > 1 ? " " + memos.length + "개" : "") + '<span class="h-chev">' + ICON_CHEVRON + '</span></summary>' +
-        memos.map((mm, k) => '<div class="dg-mtext">' + esc(String(mm.text || "").trim()) + '</div>' +
-          (o.edit ? '<div class="dc-act"><button type="button" class="' + (dcDel === "m:" + d + ":" + k ? "danger" : "") + '" data-memo-del="' + esc(d) + ':' + k + '">' +
-            (dcDel === "m:" + d + ":" + k ? "정말 삭제" : "메모 삭제") + '</button></div>' : "")).join("") + '</details>' : "") +
-    '</div>';
-  }).join("");
+  if (o.edit) h += editing && dlg.id === "new" ? dlgFormHtml() : '<button class="dc-add" type="button" data-dc-add>+ 대화 추가</button>';
+  h += cards.map(c => dlgCardHtml(c, o.ex)).join("");
   return '<div class="drill" data-drill="' + esc(id) + '" data-edit="' + (o.edit ? 1 : 0) + '">' + h + '</div>';
 }
 function rerenderDrill() {
+  if (tkBusySheet()) Player.stop();
   sheetBody.querySelectorAll("[data-drill]").forEach(el => {
     const it = EXPR_BY_ID[el.dataset.drill];
     el.outerHTML = drillHtml(el.dataset.drill, { edit: el.dataset.edit === "1", ex: it && it.ex });
   });
+  sheetBody.querySelectorAll("[data-dlg-form] textarea.dc-in").forEach(autoGrow);
 }
-/* 정리하기 칸 미리보기: "13개 문장을 찾았어요" + 목록 + [저장]. 못 읽었거나 일부만 읽었으면 원문을 메모로도 */
-function drillPreviewHtml(raw) {
-  if (!String(raw || "").trim()) return "";
-  const r = parseDrill(raw), n = r.cards.length;
-  const sub = !n ? "저장하면 붙여넣은 글을 그대로 메모로 남겨요." : r.partial ? "일부는 형식을 읽지 못해서, 붙여넣은 원문도 메모로 같이 저장해요." : "";
-  return '<div class="dp-box"><p class="dp-msg">' + (n ? n + "개 문장을 찾았어요" : "[정리] 형식을 읽지 못했어요") + '</p>' +
-    (sub ? '<p class="note">' + sub + '</p>' : "") +
-    (n ? '<ol class="dp-list">' + r.cards.map(c => '<li><span class="dp-ko">' + esc(c.ko) + '</span><span class="dp-en" lang="en">' + esc(c.en) + '</span></li>').join("") + '</ol>' : "") +
-    '<div class="btn-row"><button class="btn" type="button" data-dp-clear>비우기</button>' +
-    '<button class="btn dp-save" type="button" data-dp-save>' + (n ? "저장" : "메모로 저장") + '</button></div></div>';
+const tkBusySheet = () => Array.from(sheetBody.querySelectorAll("[data-dlg-body]")).some(b => b._rd && b._rd.state().active);
+/* 저장된 대화 듣기: 줄 순서대로, 나 = 내 목소리(voiceMe), 상대 = 상대 목소리(voiceThem), ElevenLabs(키가 없으면 폰 기본 음성). tkReader와 같은 방식 */
+function dlgReader(body) {
+  if (body._rd) return body._rd;
+  const btn = body.querySelector("[data-dlg-play]");
+  const rows = () => Array.from(body.querySelectorAll(".tk-l"));
+  const isMe = r => r.classList.contains("me");
+  const mark = i => rows().forEach((r, k) => r.classList.toggle("tk-cur", k === i));
+  body._rd = createReader({
+    items: () => rows().map(r => ({ el: r.querySelector(".sc"), who: isMe(r) ? "me" : "them", voice: isMe(r) ? settings.voiceMe : settings.voiceThem, engine: "eleven" })),
+    rate: () => settings.speed,
+    gap: k => { const r = rows(); return r[k + 1] && isMe(r[k + 1]) !== isMe(r[k]) ? 550 : 300; },
+    tapSingle: false,
+    onItem: i => {
+      mark(i);
+      const r = rows()[i], v = sheetBody.getBoundingClientRect(), b = r && r.getBoundingClientRect();
+      if (b && (b.top < v.top + 12 || b.bottom > v.bottom - 40)) sheetBody.scrollTo({ top: Math.max(0, sheetBody.scrollTop + b.top - v.top - v.height * 0.3), behavior: "smooth" });
+    },
+    onChange: () => { const s = body._rd.state(); if (btn) btn.classList.toggle("playing", s.active); body.classList.toggle("tk-on", s.active); },
+    onEnd: () => { if (btn) btn.classList.remove("playing"); body.classList.remove("tk-on"); mark(-1); }
+  });
+  return body._rd;
 }
-function drillSave(id, raw) {
-  const s = study.items[id];
-  if (!s || !String(raw || "").trim()) return;
-  const r = parseDrill(raw), t = studyToday(), g = drillDay(s, t), now = Date.now();
-  r.cards.forEach((c, k) => g.cards.push({ id: drillNewId(), ko: c.ko, me: c.me, en: c.en, tip: c.tip, date: t, at: now + k, rv: 0 }));
-  if (!r.cards.length || r.partial) g.memos.push({ text: String(raw).trim(), at: now });
-  delete s.draft;
-  const ok = saveStudy();
-  toast(!ok ? "저장이 안 돼요" : r.cards.length ? r.cards.length + "개 문장을 저장했어요" + (r.partial ? " · 원문은 메모로" : "") : "메모로 저장했어요");
-}
-/* 복습 덱 '내 문장' 카드 고르기: 틀렸던 문장(ME ≠ EN) 먼저 → 가장 오래전에 복습에 나온 문장(rv, 안 나온 건 0) → 먼저 만든 것 */
+/* 복습 덱 '내 대화' 카드 고르기: 대화의 내(나) 줄 중 고친 영어가 있는 것 — 틀렸던 줄(ME ≠ EN) 먼저 → 가장 오래전에 복습에 나온 줄(줄의 rv) → 먼저 만든 것.
+   돌려주는 것은 줄을 감싼 객체 { id, ko, me, en, tip, at, rv, ctx(바로 앞 상대 말), line(원래 줄 — rv를 여기에 남김) } */
 function pickMine(id, n) {
-  return drillCards(id).slice().sort((a, b) =>
-    (drillWrong(b) ? 1 : 0) - (drillWrong(a) ? 1 : 0) || (a.rv || 0) - (b.rv || 0) || (a.at || 0) - (b.at || 0)).slice(0, n);
+  const out = [];
+  drillCards(id).forEach(c => c.lines.forEach((l, k) => {
+    if (!l || l.who === "them" || !String(l.en || "").trim()) return;
+    const p = c.lines[k - 1];
+    out.push({ id: c.id + "." + k, ko: String(l.ko || ""), me: String(l.me || ""), en: String(l.en), tip: String(l.tip || ""),
+      at: (c.at || 0) + k, rv: l.rv || 0, ctx: p && p.who === "them" ? String(p.en || "") : "", line: l });
+  }));
+  return out.sort((a, b) => (drillWrong(b) ? 1 : 0) - (drillWrong(a) ? 1 : 0) || a.rv - b.rv || a.at - b.at).slice(0, n);
+}
+/* 드라이브 '내 문장': 표현마다 대화 n개(최신부터) — 줄은 순서대로 전부 */
+function mineDialogs(id, n) {
+  return drillCards(id).slice().sort((a, b) => (b.at || 0) - (a.at || 0)).slice(0, n);
 }
 
-/* 표현 상세 맨 위 학습 상자: 상태 알약 + 영작한 문장 수 알약(2026-10-08) / 미학습·중단이면 [학습하기](중단했지만 영작 기록이 있으면 위에 한 줄) */
+/* 표현 상세 맨 위 학습 상자: 상태 알약 + 만든 대화 수 알약 / 미학습·중단이면 [학습하기](중단했지만 연습장 기록이 있으면 위에 한 줄) */
 function studyBoxHtml(it) {
   const id = it.id, st = statusOf(id), s = study.items[id], wr = writtenPill(writtenCount(id));
   if (st === "learning") {
@@ -5297,39 +5389,34 @@ function studyBoxHtml(it) {
       '<p class="note">' + (full ? "내일 다시 고를 수 있어요. 복습은 개수에 포함되지 않아요." :
         "오늘 새로 고른 표현 " + picksToday() + " / " + DAILY_PICKS + " · 1·3·7·14·30일 뒤에 복습이 돌아와요.") + '</p></div>';
 }
-/* 표현 상세에서 영작 표시만 새로(연습장 문장 저장·수정·삭제 직후) + 뒤쪽 표현 목록도 */
+/* 표현 상세에서 영작 표시만 새로(대화 저장·수정·삭제 직후) + 뒤쪽 표현 목록도 */
 function refreshWritten() {
   const it = EXPR_BY_ID[detailId], box = sheetOpen && it ? sheetBody.querySelector("[data-study-box]") : null;
   if (box) box.outerHTML = studyBoxHtml(it);
   if (currentTab === "expr") renderExprList();
 }
 
+/* 순서(2026-10-28): 예문 → 직접 말해 보기(펼쳐 둠) → 썰 → 연습장 → 상황 카드로 */
 function detailHtml(it) {
   const id = it.id;
   const st = statusOf(id);
-  const s = study.items[id];
   const studyBox = studyBoxHtml(it);
-  /* 연습장: 학습 중이면 프롬프트 복사 + 정리하기(붙여넣으면 미리보기 → 저장) + 내 문장 카드(수정·삭제·추가). 아니면 기록이 있을 때만 카드 */
-  const draft = (s && s.draft) || "";
-  const practice = st === "learning" ?
-    '<section class="practice"><h4 class="sec-h">연습장</h4>' +
-      '<button class="btn w-copy" type="button" data-practice-copy>' +
-        '<span class="w-ico when-off">' + ICON_COPY + '</span><span class="w-ico when-on">' + ICON_CHECK + '</span>' +
-        '<span class="when-off">AI 연습 프롬프트 복사</span><span class="when-on">복사됨</span></button>' +
-      '<div class="w-label-row"><label class="w-label" for="noteToday">정리하기</label><button class="w-paste" type="button" data-paste="noteToday">클립보드에서 붙여넣기</button></div>' +
-      '<textarea class="w-area" id="noteToday" rows="4" placeholder="AI가 마지막에 준 [정리] 블록을 그대로 붙여넣으세요. 문장 카드로 나눠서 저장해요.">' + esc(draft) + '</textarea>' +
-      '<div class="dp" id="drillPrev">' + drillPreviewHtml(draft) + '</div>' +
-      '<h4 class="sec-h dc-h">내 문장</h4>' + drillHtml(id, { edit: true, ex: it.ex }) +
-    '</section>' :
-    (drillHasAny(id) ? '<section class="practice"><h4 class="sec-h">연습장 기록</h4>' + drillHtml(id, { edit: true, ex: it.ex }) + '</section>' : "");
+  /* 연습장: 학습 중이면 늘 보임(+ 대화 추가). 아니면 저장한 대화가 있거나 편집 중일 때만 */
+  const practice = st === "learning" || drillHasAny(id) || (dlg && dlg.x === id) ?
+    '<section class="practice" data-practice><h4 class="sec-h">' + (st === "learning" ? "연습장 · 내 대화" : "연습장 기록 · 내 대화") + '</h4>' +
+      '<p class="note">나 ↔ 상대가 주고받는 대화(4줄 이상)로 이 표현을 써 보세요. AI 첨삭 프롬프트로 구어체로 고친 뒤 붙여넣어 저장하면, 전체 듣기로 따라 말할 수 있어요.</p>' +
+      drillHtml(id, { edit: true, ex: it.ex }) +
+    '</section>' : "";
   const goCard = detailOpts.fromCard ? "" :
     '<button class="btn go-card" type="button" data-go-card>이 표현이 나온 상황 카드로 가기</button>';
   return (it.kind === "extra" ? '<p class="x-extra-note">대화에 연한 점선 밑줄로 나오는 추가 표현</p>' : "") +
     (it.ex.ko ? '<p class="xp-ko">' + esc(it.ex.ko) + '</p>' : "") +
     studyBox + pcExprBtn(it) +
-    examplesHtml(it.ex) + storyHtml(it.ex) + drillsHtml(it) + practice + goCard;
+    examplesHtml(it.ex, true) + drillsHtml(it) + storyHtml(it.ex) + practice + goCard;
 }
-/* 직접 말해 보기 10문장(data/drills.js, 2026-10-06): 표현 상세 아래쪽에 접어서. 펼치면 (누구에게) 한국어 + 영어(내 목소리, 노래방식·단어 탭)·전체 듣기.
+/* [대화 만들기] 버튼(예문·말해 보기 문장마다, 표현 상세에서만) */
+const mkBtn = (kind, i) => '<button class="mk-btn" type="button" data-mk="' + kind + '" data-mk-i="' + i + '">+ 대화 만들기</button>';
+/* 직접 말해 보기 10문장(data/drills.js, 2026-10-06): 예문 바로 아래에 늘 펼쳐서(2026-10-28 — 접어 두면 안 보인다는 요청). (누구에게) 한국어 + 영어(내 목소리, 노래방식·단어 탭)·전체 듣기.
    복습 덱(오늘 복습·자유 복습)에도 예문과 함께 섞여 나옴(deckCards) */
 const DRILLS = window.DRILL_DATA && typeof window.DRILL_DATA === "object" ? window.DRILL_DATA : {};
 const drillsOf = id => (Array.isArray(DRILLS[id]) ? DRILLS[id] : []).filter(d => d && d.ko && d.en);
@@ -5338,11 +5425,10 @@ function drillsHtml(it) {
   if (!list.length) return "";
   const items = list.map((d, i) =>
     '<li><div class="dr-ko">' + drillKoHtml(d.ko) + '</div><div class="ex-en">' + scriptHtml(d.en, markRanges(d.en, it.ex)) + '</div>' +
-    '<button class="spk" type="button" aria-label="문장 듣기" data-rd-one="' + i + '">' + ICON_SPEAKER + '</button></li>').join("");
-  return '<details class="dr-sec"><summary><span>직접 말해 보기 <small>' + list.length + '문장</small></span><span class="h-chev">' + ICON_CHEVRON + '</span></summary>' +
+    '<button class="spk" type="button" aria-label="문장 듣기" data-rd-one="' + i + '">' + ICON_SPEAKER + '</button>' + mkBtn("dr", i) + '</li>').join("");
+  return '<section class="rd dr-sec" data-who="me" data-tap="one"><div class="sec-row"><h4 class="sec-h">직접 말해 보기 <small>' + list.length + '문장</small></h4>' + rdPlayBtn("전체 듣기") + '</div>' +
     '<p class="note">한국어를 보고 영어로 말해 본 뒤 확인하세요. 복습 카드에도 섞여 나와요.</p>' +
-    '<section class="rd" data-who="me" data-tap="one"><div class="sec-row"><h4 class="sec-h">직접 말해 보기</h4>' + rdPlayBtn("전체 듣기") + '</div>' +
-    '<ol class="ex dr-list">' + items + '</ol></section></details>';
+    '<ol class="ex dr-list">' + items + '</ol></section>';
 }
 /* "이 표현 연습하기": 시작 화면 없이 연습 모드(예문 5개 → 썰). 표현 상세(복습 덱에는 없음) */
 function pcExprBtn(it) {
@@ -5354,10 +5440,12 @@ function pcExprBtn(it) {
 function openExprDetail(id, opts) {
   const it = EXPR_BY_ID[id];
   if (!it) return;
+  flushNote();
   detailId = id;
   detailOpts = opts || {};
-  dcEdit = null; dcDel = null;
+  dlg = dlgDraftOf(id); dcDel = null;
   showSheet((CATEGORY_EMOJI[it.card.category] || "") + " " + (it.ci + 1) + ". " + it.card.title, it.ex.phrase, detailHtml(it));
+  sheetBody.querySelectorAll("[data-dlg-form] textarea.dc-in").forEach(autoGrow);
 }
 function refreshDetail() {
   const it = EXPR_BY_ID[detailId];
@@ -5365,62 +5453,159 @@ function refreshDetail() {
   const y = sheetBody.scrollTop;
   sheetBody.innerHTML = detailHtml(it);
   sheetBody.scrollTop = y;
+  sheetBody.querySelectorAll("[data-dlg-form] textarea.dc-in").forEach(autoGrow);
+}
+function focusDrillForm(sel) {
+  const f = sheetBody.querySelector("[data-dlg-form]");
+  if (!f) return;
+  f.scrollIntoView({ block: "start", behavior: "smooth" });
+  const k = f.querySelector(sel || '[data-lf]');
+  if (k) k.focus({ preventScroll: true });
 }
 
-/* 연습장 클릭: 미리보기 저장·비우기, 카드 펼치기, 수정·삭제·추가, 메모 펼치기·삭제. 처리했으면 true
-   (카드 안 고친 영어의 스피커·단어 탭은 시트 공통 .rd 처리가 맡음 — 여기선 건드리지 않음) */
+/* 연습장 클릭: [대화 만들기]·추가·줄 추가/삭제/화자 바꾸기·프롬프트 복사·채우기·저장·취소, 카드 펼치기·듣기·수정·삭제. 처리했으면 true */
 function onDrillClick(t) {
   const id = detailId;
   let el;
-  if (t.closest("[data-dp-save]")) {
-    const ta = document.getElementById("noteToday");
-    if (!ta || !ta.value.trim()) return true;
-    clearTimeout(noteTimer); pendingNote = null;
-    buzz(); drillSave(id, ta.value);
-    refreshDetail(); refreshWritten();
+  if ((el = t.closest("[data-mk]"))) {
+    const it = EXPR_BY_ID[id];
+    if (!it) return true;
+    const k = +el.dataset.mkI, src = el.dataset.mk === "dr" ? drillsOf(id)[k] : (it.ex.examples || [])[k];
+    if (!src) return true;
+    if (!study.items[id]) {
+      toast("학습하기를 먼저 눌러 주세요");
+      const box = sheetBody.querySelector("[data-study-box]");
+      if (box) box.scrollIntoView({ block: "center", behavior: "smooth" });
+      return true;
+    }
+    if (dlg && dlg.x === id && dlgHasText(dlg)) { toast("쓰던 대화가 있어요 · 저장하거나 취소한 뒤 다시 눌러 주세요"); focusDrillForm(); return true; }
+    buzz();
+    dlg = { id: "new", x: id, title: "", lines: dlgSkeleton({ ko: src.ko, en: src.en }) };
+    dcDel = null;
+    dlgSaveDraft();
+    refreshDetail();
+    focusDrillForm('[data-ln="0"] [data-lf="me"]');
     return true;
   }
-  if (t.closest("[data-dp-clear]")) {
-    const ta = document.getElementById("noteToday");
-    if (ta) ta.value = "";
-    clearTimeout(noteTimer); pendingNote = null;
-    saveDraftNow(id, "");
-    document.getElementById("drillPrev").innerHTML = "";
+  if (t.closest("[data-dc-add]")) {
+    if (!study.items[id]) { toast("학습하기를 먼저 눌러 주세요"); return true; }
+    buzz(); dlg = { id: "new", x: id, title: "", lines: dlgSkeleton(null) }; dcDel = null;
+    rerenderDrill(); focusDrillForm();
     return true;
+  }
+  const form = t.closest("[data-dlg-form]");
+  if (form && dlg) {
+    if ((el = t.closest("[data-dlg-add]"))) {
+      const n = dlg.lines.length;
+      dlg.lines.push(dlgBlank(n && dlg.lines[n - 1].who === "me" ? "them" : "me"));
+      buzz(); dlgSaveDraft(); rerenderDrill();
+      focusDrillForm('[data-ln="' + n + '"] [data-lf="ko"]');
+      return true;
+    }
+    if ((el = t.closest("[data-dlg-rm]"))) {
+      if (dlg.lines.length <= DLG_MIN) { toast("대화는 4줄(주고받기 2번) 이상이어야 해요"); return true; }
+      dlg.lines.splice(+el.closest("[data-ln]").dataset.ln, 1);
+      buzz(); dlgSaveDraft(); rerenderDrill();
+      return true;
+    }
+    if ((el = t.closest("[data-dlg-who]"))) {
+      const l = dlg.lines[+el.closest("[data-ln]").dataset.ln];
+      if (l) l.who = l.who === "me" ? "them" : "me";
+      buzz(); dlgSaveDraft(); rerenderDrill();
+      return true;
+    }
+    if ((el = t.closest("[data-dlg-copy]"))) {
+      const it = EXPR_BY_ID[id];
+      if (!it) return true;
+      copyText(dlgPrompt(it, dlg)).then(ok => {
+        if (!ok) { toast("복사하지 못했어요"); return; }
+        buzz(); el.classList.add("done");
+        setTimeout(() => el.classList.remove("done"), 1600);
+      });
+      return true;
+    }
+    if (t.closest("[data-dlg-fill]")) {
+      const ta = document.getElementById("dlgPaste"), r = parseDlg(ta ? ta.value : "");
+      if (!r.lines.length) { toast("ME: · THEM: 줄을 찾지 못했어요"); return true; }
+      const old = dlg.lines;
+      dlg.lines = r.lines.map((l, i) => ({ who: l.who, ko: l.ko, en: l.en, tip: l.tip, me: old[i] && old[i].who === l.who ? old[i].me : "" }));
+      while (dlg.lines.length < DLG_MIN) dlg.lines.push(dlgBlank(dlg.lines[dlg.lines.length - 1].who === "me" ? "them" : "me"));
+      if (r.title && !dlg.title.trim()) dlg.title = r.title;
+      buzz(); dlgSaveDraft(); rerenderDrill();
+      toast(r.lines.length + "줄을 채웠어요 · 확인하고 저장하세요");
+      return true;
+    }
+    if (t.closest("[data-dc-cancel]")) {
+      if (dlg.id === "new") { const s = study.items[id]; if (s) { delete s.draft; saveStudy(); } }
+      clearTimeout(dlgTimer); dlgTimer = null;
+      dlg = null; buzz(); rerenderDrill();
+      return true;
+    }
+    if (t.closest("[data-dc-save]")) {
+      const s = study.items[id];
+      if (!s) return true;
+      const lines = dlg.lines.map(l => {
+        const o = { who: dlgWho(l.who), ko: dlgClean(l.ko), en: dlgClean(l.en) }, me = dlgClean(l.me), tip = dlgClean(l.tip);
+        if (me) o.me = me;
+        if (tip) o.tip = tip;
+        return o;
+      }).filter(l => l.ko || l.en || l.me || l.tip);
+      if (lines.length < DLG_MIN) { toast("대화는 4줄(주고받기 2번) 이상이어야 해요"); return true; }
+      if (lines.some(l => !l.ko || !l.en)) { toast("줄마다 한국어와 고친 영어를 써 주세요"); return true; }
+      if (!lines.some(l => l.who === "me") || !lines.some(l => l.who === "them")) { toast("나와 상대가 둘 다 있어야 해요"); return true; }
+      const title = dlgClean(dlg.title);
+      let cid = dlg.id;
+      if (dlg.id === "new") {
+        const tday = studyToday();
+        cid = drillNewId();
+        drillDay(s, tday).cards.push({ id: cid, title, date: tday, at: Date.now(), rv: 0, lines });
+        delete s.draft;
+      } else {
+        const f = findDrill(id, dlg.id);
+        if (f) Object.assign(f.c, { title, lines });
+      }
+      clearTimeout(dlgTimer); dlgTimer = null;
+      dlg = null; dcOpen.add(cid);
+      toast(saveStudy() ? "대화를 저장했어요 · " + lines.length + "줄" : "저장이 안 돼요");
+      buzz(); refreshDetail(); refreshWritten();
+      const card = sheetBody.querySelector('[data-dc="' + cid + '"]');
+      if (card) card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      return true;
+    }
+    return false;
   }
   if ((el = t.closest("[data-dc-toggle]"))) {
-    const dc = el.closest("[data-dc]"), cid = dc.dataset.dc, open = !dcOpen.has(cid);
-    if (open) dcOpen.add(cid); else dcOpen.delete(cid);
-    dc.classList.toggle("open", open);
-    el.setAttribute("aria-expanded", String(open));
-    if (dcDel === cid) { dcDel = null; rerenderDrill(); }
-    buzz();
+    const cid = el.closest("[data-dc]").dataset.dc;
+    if (dcOpen.has(cid)) dcOpen.delete(cid); else dcOpen.add(cid);
+    if (dcDel === cid) dcDel = null;
+    buzz(); rerenderDrill();
     return true;
   }
-  if ((el = t.closest(".dg-memo > summary"))) {
-    const d = el.parentNode.dataset.memoDay;
-    setTimeout(() => { if (el.parentNode.open) memoOpen.add(d); else memoOpen.delete(d); });
-    return true;
-  }
-  if (t.closest("[data-dc-add]")) { buzz(); dcEdit = "new"; dcDel = null; rerenderDrill(); focusDrillForm(); return true; }
-  if (t.closest("[data-dc-edit]")) { buzz(); dcEdit = t.closest("[data-dc]").dataset.dc; dcDel = null; rerenderDrill(); focusDrillForm(); return true; }
-  if (t.closest("[data-dc-cancel]")) { dcEdit = null; rerenderDrill(); return true; }
-  if (t.closest("[data-dc-save]")) {
-    const form = t.closest("[data-dc]"), v = {};
-    form.querySelectorAll("[data-f]").forEach(x => { v[x.dataset.f] = x.value.replace(/\s+/g, " ").trim(); });
-    if (!v.ko || !v.en) { toast("KO(한국어)와 EN(고친 영어)은 꼭 써 주세요"); return true; }
-    const s = study.items[id];
-    if (!s) return true;
-    if (form.dataset.dc === "new") {
-      const tday = studyToday();
-      drillDay(s, tday).cards.push({ id: drillNewId(), ko: v.ko, me: v.me, en: v.en, tip: v.tip, date: tday, at: Date.now(), rv: 0 });
-    } else {
-      const f = findDrill(id, form.dataset.dc);
-      if (f) Object.assign(f.c, { ko: v.ko, me: v.me, en: v.en, tip: v.tip });
+  const body = t.closest("[data-dlg-body]");
+  if (body) {
+    if (t.closest("[data-dlg-play]")) {
+      const rd = dlgReader(body);
+      if (rd.state().active) { Player.stop(); return true; }
+      if (!settings.apiKey) toast("ElevenLabs 키가 없어서 폰 기본 음성으로 읽어요 · 설정 › 음성");
+      Player.stop(); buzz();
+      rd.play(0, 0, false);
+      return true;
     }
-    dcEdit = null;
-    toast(saveStudy() ? "저장했어요" : "저장이 안 돼요");
-    buzz(); rerenderDrill(); refreshWritten();
+    const row = t.closest(".tk-l");
+    if (row) {
+      const i = +row.dataset.tkLi, w = t.closest(".w"), rd = dlgReader(body);
+      buzz();
+      if (w) rd.seek(i, +w.dataset.w); else rd.play(i, 0, false);
+      return true;
+    }
+  }
+  if (t.closest("[data-dc-edit]")) {
+    const f = findDrill(id, t.closest("[data-dc]").dataset.dc);
+    if (!f) return true;
+    if (dlg && dlg.id === "new" && dlgHasText(dlg)) { toast("쓰던 새 대화가 있어요 · 저장하거나 취소한 뒤 수정해 주세요"); return true; }
+    buzz();
+    dlg = { id: f.c.id, x: id, title: String(f.c.title || ""), lines: f.c.lines.map(l => ({ who: dlgWho(l.who), ko: String(l.ko || ""), me: String(l.me || ""), en: String(l.en || ""), tip: String(l.tip || "") })) };
+    dcDel = null; rerenderDrill(); focusDrillForm();
     return true;
   }
   if ((el = t.closest("[data-dc-del]"))) {
@@ -5429,34 +5614,27 @@ function onDrillClick(t) {
     const f = findDrill(id, cid);
     if (f) f.list.splice(f.k, 1);
     dcDel = null; dcOpen.delete(cid);
-    saveStudy(); buzz(); toast("문장을 지웠어요"); rerenderDrill(); refreshWritten();
-    return true;
-  }
-  if ((el = t.closest("[data-memo-del]"))) {
-    const [d, k] = el.dataset.memoDel.split(":"), key = "m:" + d + ":" + k, s = study.items[id];
-    if (dcDel !== key) { dcDel = key; rerenderDrill(); return true; }
-    const g = s && s.sessions && s.sessions[d];
-    if (g && g.memos) g.memos.splice(+k, 1);
-    dcDel = null;
-    saveStudy(); buzz(); toast("메모를 지웠어요"); rerenderDrill();
+    saveStudy(); buzz(); toast("대화를 지웠어요"); rerenderDrill(); refreshWritten();
     return true;
   }
   return false;
 }
-function focusDrillForm() {
-  const f = sheetBody.querySelector(".dc-form");
-  if (!f) return;
-  f.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  const k = f.querySelector('[data-f="ko"]');
-  if (k) k.focus({ preventScroll: true });
-}
-/* 정리하기 칸에 쓰다 만 글(draft)은 자동 저장 — 시트를 닫아도 남음. [저장]하면 카드·메모로 옮기고 비움 */
-let noteTimer = null;
-function saveDraftNow(id, text) {
-  const s = study.items[id];
-  if (!s) return;
-  if (text.trim()) s.draft = text; else delete s.draft;
-  saveStudy();
+/* 편집기 입력: 메모리(dlg)에 바로, 새 대화면 0.3초 뒤 draft로 자동 저장. 붙여넣기 칸은 찾은 줄 수만 알려 줌 */
+function onDrillInput(e) {
+  const t = e.target;
+  if (t.id === "dlgPaste") {
+    const m = document.getElementById("dlgPasteMsg"), n = parseDlg(t.value).lines.length;
+    if (m) m.textContent = !t.value.trim() ? "" : n ? n + "줄을 찾았어요 · [채우기]를 누르세요" : "[대화문] 형식을 읽지 못했어요 (ME: · THEM: · KO:)";
+    return;
+  }
+  if (!dlg || !t.closest("[data-dlg-form]")) return;
+  if (t.matches("[data-dlg-title]")) dlg.title = t.value;
+  else if (t.dataset.lf) {
+    const l = dlg.lines[+t.closest("[data-ln]").dataset.ln];
+    if (l) l[t.dataset.lf] = t.value;
+    autoGrow(t);
+  } else return;
+  if (dlg.id === "new") { clearTimeout(dlgTimer); dlgTimer = setTimeout(dlgSaveDraft, 300); }
 }
 
 /* ================= 복습 덱(플래시카드 — 2026-10-06, 예전 시트 '떠올리기 → 내가 연습한 문장 → 기억남/헷갈림'을 바꿈) =================
@@ -5504,8 +5682,8 @@ function deckCards(id, now) {
   out.push({ x: id, t: "p", ko: shortMeaning(it.ex), en: line ? line.en : sayPhrase(it.ex.phrase), lko: line ? line.ko || "" : "", line: !!line,
     who: line && line.who !== "me" ? "them" : "me" });
   pickMine(id, MINE_MAX).forEach(c => {
-    c.rv = now;
-    out.push({ x: id, t: "m", ref: c.id, ko: c.ko, en: c.en, me: c.me || "", tip: c.tip || "", who: "me" });
+    if (c.line) c.line.rv = now;                       // 대화의 그 줄에 남김(다음엔 오래된 줄부터)
+    out.push({ x: id, t: "m", ref: c.id, ko: c.ko, en: c.en, me: c.me || "", tip: c.tip || "", ctx: c.ctx || "", who: "me" });
   });
   const exs = it.ex.examples || [], drs = drillsOf(id);
   /* ③ 채우기: 예문 5개 + 직접 말해 보기(drills) 10문장 중에서 가장 오래전에 나온 것부터(같으면 무작위 — 처음엔 예문·말해 보기가 섞여 나옴).
@@ -5648,9 +5826,10 @@ window.addEventListener("popstate", () => {
 const rvCur = () => RV.s && RV.s.q[RV.s.i];
 function rvCardHtml(c) {
   const it = EXPR_BY_ID[c.x], ex = it ? it.ex : null;
-  const chip = '<span class="fc-kind' + (c.t === "m" ? " mine" : "") + '">' + (c.t === "p" ? "표현" : c.t === "m" ? "내 문장" : c.t === "d" ? "말해 보기" : "예문") +
+  const chip = '<span class="fc-kind' + (c.t === "m" ? " mine" : "") + '">' + (c.t === "p" ? "표현" : c.t === "m" ? "내 대화" : c.t === "d" ? "말해 보기" : "예문") +
     (c.rep ? ' <span class="rep">· 다시 ' + c.rep + '</span>' : "") + '</span>';
   const front = '<div class="fc-mid"><p class="fc-q">' + (c.t === "m" || c.t === "d" ? drillKoHtml(c.ko) : esc(c.ko)) + '</p>' +
+      (c.t === "m" && c.ctx ? '<p class="fc-sit"><b>상대</b> <span lang="en">' + esc(c.ctx) + '</span></p>' : "") +
       (c.t === "p" && it ? '<p class="fc-sit"><b>' + esc(((CATEGORY_EMOJI[it.card.category] || "") + " " + it.card.title).trim()) + '</b> — ' + esc(it.card.situation) + '</p>' : "") +
     '</div><p class="fc-hint">영어로 말해 본 뒤 탭해서 뒤집기</p>';
   const back = '<div class="fc-mid">' +
@@ -6099,17 +6278,6 @@ sheetBody.addEventListener("click", async e => {
     refreshDetail(); renderExprTab();
     return;
   }
-  const cp = t.closest("[data-practice-copy]");
-  if (cp) {
-    const it = EXPR_BY_ID[detailId];
-    if (!it) return;
-    const ok = await copyText(practicePrompt(it));
-    if (!ok) { toast("복사하지 못했어요"); return; }
-    buzz();
-    cp.classList.add("done");
-    setTimeout(() => cp.classList.remove("done"), 1600);
-    return;
-  }
   if (t.closest("[data-go-card]")) {
     const it = EXPR_BY_ID[detailId];
     if (!it) return;
@@ -6118,21 +6286,7 @@ sheetBody.addEventListener("click", async e => {
     setTimeout(() => jumpTo(it.ci), 60);
   }
 });
-let pendingNote = null;
-function flushNote() {
-  clearTimeout(noteTimer);
-  if (pendingNote) { saveDraftNow(pendingNote.id, pendingNote.text); pendingNote = null; }
-}
-sheetBody.addEventListener("input", e => {
-  if (e.target.id !== "noteToday" || !detailId) return;
-  pendingNote = { id: detailId, text: e.target.value };
-  clearTimeout(noteTimer);
-  noteTimer = setTimeout(() => {
-    flushNote();
-    const p = document.getElementById("drillPrev");
-    if (p) p.innerHTML = drillPreviewHtml(e.target.value);
-  }, 300);
-});
+sheetBody.addEventListener("input", e => { if (detailId) onDrillInput(e); });
 
 renderExprTab();
 document.addEventListener("visibilitychange", () => {
@@ -6603,7 +6757,7 @@ const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", sha
 /* 표현 범위(학습 중·오늘 복습)에서 들을 것(2026-10-08): xParts = 고른 것(하나 이상) ex 예문 / story 썰 / drill 직접 말해 보기 / mine 내 문장(연습장),
    xMine = 내 문장 개수 all 전부 / "3" 표현마다 3개(복습 덱 pickMine과 같은 기준 — 틀린 것 → 오래 안 나온 것). 기본은 예문 + 썰(예전과 같은 재생) */
 const X_PARTS = [["ex", "예문"], ["story", "썰"], ["drill", "직접 말해 보기"], ["mine", "내 문장"]];
-const X_MINE = [["all", "전부"], ["3", "표현마다 3개"]];
+const X_MINE = [["all", "전부"], ["3", "표현마다 대화 3개"]];
 function xPartsHtml(o) {
   return '<div class="cbx3 cbx4" role="group" aria-label="들을 것 (여러 개 선택)">' + X_PARTS.map(x =>
     '<button class="cbx" type="button" role="checkbox" data-dv-xp="' + x[0] + '" aria-checked="' + o.xParts.includes(x[0]) + '"><span class="box" aria-hidden="true">' + ICON_CHECK + '</span>' + x[1] + '</button>').join("") + '</div>';
@@ -6618,7 +6772,7 @@ function xPartsNote(o) {
   if (x.includes("ex")) seq.push("예문 5개");
   if (x.includes("story")) seq.push("썰 문장");
   if (x.includes("drill")) seq.push("말해 보기 10문장");
-  if (x.includes("mine")) seq.push(o.xMine === "all" ? "내 문장 전부" : "내 문장 3개");
+  if (x.includes("mine")) seq.push(o.xMine === "all" ? "내 대화 전부" : "내 대화 3개");
   return '<b>재생 순서</b> · ' + seq.join(" → ");
 }
 /* 내 대화문 범위(2026-10-06): talkRange all 전체 / fav 즐겨찾기 / one 하나만(talkId), talkEcho = 따라 말하기 none 없음 / all 문장마다 / me 내 대사만 / role 역할극 */
@@ -6708,9 +6862,12 @@ function buildDrive(o) {
     /* 표현 범위만(2026-10-08): 직접 말해 보기 10문장(내 목소리, 미리 만든 음성) → 연습장 내 문장(고친 영어 EN, 내 목소리 — 폰 저장 음성 → 키로 만들기 → 폰 기본 음성).
        내 문장은 기록을 읽기만 함(복습 덱과 달리 rv를 안 바꿈). 위치 key는 번호 대신 문장 카드 id(mid — 순서가 바뀌어도 같은 문장으로 이어 듣기) */
     if (withDrill) drillsOf(it.id).forEach((d, n, arr) => push(Object.assign({ kind: "drill", text: d.en, ko: d.ko, who: "me", n: n + 1, total: arr.length }, base)));
+    /* 내 대화(2026-10-28): 표현마다 대화 mineN개(최신부터), 대화 줄을 순서대로 — 나 = 내 목소리, 상대 = 상대 목소리. 위치 key = 대화 id.줄 번호 */
     if (mineN) {
-      const mine = pickMine(it.id, mineN).filter(c => c && String(c.en || "").trim());
-      mine.forEach((c, n) => push(Object.assign({ kind: "mine", text: String(c.en).trim(), ko: c.ko || "", who: "me", n: n + 1, total: mine.length, mid: c.id }, base)));
+      const mine = [];
+      mineDialogs(it.id, mineN).forEach(c => c.lines.forEach((l, k) => { if (l && String(l.en || "").trim()) mine.push({ c, l, k }); }));
+      mine.forEach((m, n) => push(Object.assign({ kind: "mine", text: String(m.l.en).trim(), ko: m.l.ko || "", who: m.l.who === "them" ? "them" : "me",
+        n: n + 1, total: mine.length, mid: m.c.id + "." + m.k }, base)));
     }
   };
   if (talkScope) {
@@ -6771,7 +6928,7 @@ function driveLabels(k) {
       it.kind === "phrase" ? ph + " · 핵심 표현" :
       it.kind === "ex" ? ph + " · 예문 " + it.n + "/" + it.total :
       it.kind === "drill" ? ph + " · 말해 보기 " + it.n + "/" + it.total :
-      it.kind === "mine" ? ph + " · 내 문장 " + it.n + "/" + it.total : ph + " · 썰" + (it.total > 1 ? " " + it.n + "/" + it.total : "")
+      it.kind === "mine" ? ph + " · 내 대화 " + it.n + "/" + it.total : ph + " · 썰" + (it.total > 1 ? " " + it.n + "/" + it.total : "")
   ];
 }
 function dvBlockIndex(k) {
@@ -6787,7 +6944,7 @@ function dvEl(k) {
   el.className = "dv-line k-" + it.kind + (it.who === "me" ? " me" : "") + (it.text.length > 120 ? " long" : "") +
     (dvRoleOn(D.opts, it) ? " role-me" : "");                   // 역할극: 내 말은 차례가 오기 전까지 영어를 가림
   const who = it.kind === "dlg" || it.kind === "tl" ? it.name : it.kind === "phrase" ? "핵심 표현" : it.kind === "ex" ? "예문 " + it.n :
-    it.kind === "drill" ? "말해 보기 · " + it.n + "/" + it.total : it.kind === "mine" ? "내 문장 · " + it.n + "/" + it.total :
+    it.kind === "drill" ? "말해 보기 · " + it.n + "/" + it.total : it.kind === "mine" ? "내 대화 · " + it.n + "/" + it.total :
     it.kind === "q" ? "오늘의 질문" : it.kind === "wr" ? "내 일기 · " + it.n + "/" + it.total : "썰" + (it.total > 1 ? " · " + it.n + "/" + it.total : "");
   el.innerHTML = '<div class="dv-who">' + esc(who) + '</div>' +
     '<div class="dv-en" lang="en">' + scriptHtml(it.text, it.ex && it.kind !== "phrase" ? markRanges(it.text, it.ex) : []) + '</div>' +
@@ -7157,7 +7314,7 @@ function dvSetupHtml() {
   const mins = Math.max(1, Math.round((words * 0.4 / o.rate + pl.items.length * 0.6) / 60));
   const empty = talkScope ? (!talks.items.length ? "저장한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 붙여넣어 보세요" :
       o.talkRange === "fav" ? "즐겨찾기한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 ☆을 눌러 주세요" : "들을 대화문을 하나 골라 주세요") : o.scope === "cat" && !o.cats.length ? "카테고리를 하나 이상 골라 주세요" :
-    exprScope && driveExprs(o).length ? (o.xParts.length === 1 && o.xParts[0] === "mine" ? "연습장에 저장한 내 문장이 없어요 · 표현 상세 '연습장'에서 저장해 보세요" : "고른 내용이 있는 표현이 없어요") :
+    exprScope && driveExprs(o).length ? (o.xParts.length === 1 && o.xParts[0] === "mine" ? "연습장에 저장한 내 대화가 없어요 · 표현 상세 '연습장'에서 저장해 보세요" : "고른 내용이 있는 표현이 없어요") :
     o.scope === "learning" ? "학습 중인 표현이 없어요 · 표현 탭에서 '학습하기'를 시작해 보세요" :
     o.scope === "due" ? "오늘 복습할 표현이 없어요" :
     diaryScope ? (!nDiary ? "첨삭을 붙여넣은 일기가 없어요 · 글쓰기 탭에서 첨삭을 붙여넣어 보세요" : o.diaryRange === "fav" ? "즐겨찾기한 일기가 없어요 · 글쓰기 탭 '듣기용'에서 ☆을 눌러 주세요" : "이 기간에 첨삭 받은 일기가 없어요") :
@@ -8458,10 +8615,11 @@ function showSheet(ctx, title, html, foot) {
 function rdPlayBtn(label) {
   return '<button class="pill rd-play" type="button" data-rd-play data-label="' + esc(label) + '">' + ICON_PLAY + '<span>' + esc(label) + '</span></button>';
 }
-function examplesHtml(ex) {
+/* mk = 표현 상세면 문장마다 [대화 만들기](연습장 대화 편집기에 이 문장을 첫 '나' 줄 아이디어로) */
+function examplesHtml(ex, mk) {
   const items = (ex.examples || []).map((x, i) =>
     '<li><div class="ex-en">' + scriptHtml(x.en, markRanges(x.en, ex)) + '</div><div class="ex-ko">' + esc(x.ko) + '</div>' +
-    '<button class="spk" type="button" aria-label="예문 듣기" data-rd-one="' + i + '">' + ICON_SPEAKER + '</button></li>'
+    '<button class="spk" type="button" aria-label="예문 듣기" data-rd-one="' + i + '">' + ICON_SPEAKER + '</button>' + (mk ? mkBtn("ex", i) : "") + '</li>'
   ).join("");
   return '<section class="rd" data-who="them" data-tap="one"><div class="sec-row"><h4 class="sec-h">예문</h4>' + rdPlayBtn("예문 전체 듣기") + '</div>' +
     '<ol class="ex">' + items + '</ol></section>';
