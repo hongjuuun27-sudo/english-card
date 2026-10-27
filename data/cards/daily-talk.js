@@ -372,7 +372,7 @@
       { who: "me", en: "We used to work together.", ko: "예전에 같이 일했어요.",
         chunks: "We used to work together.",
         tips: [{ target: "used to", ko: "'예전엔 ~했다'. '유즈드 투'가 아니라 '유스터'처럼." }] },
-      { who: "stranger", en: "No way! I went to college with her. Small world!", ko: "말도 안 돼! 전 에밀리랑 대학 같이 다녔어요. 세상 좁네요!",
+      { who: "stranger", en: "No way! I went to college with her. Small world!", ko: "어머, 정말요? 전 에밀리랑 대학 같이 다녔어요. 세상 좁네요!",
         chunks: "No way! / I went to college with‿her. / Small world!",
         tips: [{ target: "with her", ko: "h가 약해져 '위더r'처럼 이어져요." },
                { target: "world", ko: "r을 말았다가 l로 끝내요. '월드'보다 '워r얼드'." }] },

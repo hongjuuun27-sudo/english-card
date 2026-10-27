@@ -1157,7 +1157,7 @@
       { ko: "사지 않고 옷을 잠깐 맡아 달라고 할 때, 뭐라고 하지?", line: 4 }
     ],
     dialogue: [
-      { who: "clerk", en: "Ah, gotcha. Wanna try a size up?", ko: "아, 그렇구나. 한 사이즈 큰 거 입어 보실래요?",
+      { who: "clerk", en: "Ah, gotcha. Wanna try a size up?", ko: "아, 그렇군요. 한 사이즈 큰 거 입어 보실래요?",
         chunks: "Ah, gotcha. / Wanna try‿a size‿up?",
         tips: [{ target: "Wanna", ko: "want to를 줄인 말, '워너'." }] },
       { who: "me", en: "Hmm, I think I'll pass for now.", ko: "음, 지금은 괜찮을 것 같아요.",
