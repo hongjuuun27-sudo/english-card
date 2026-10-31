@@ -1685,7 +1685,7 @@
 <script>
 /* ================= 데이터 받기 ================= */
 /* 카드는 파일 순서와 상관없이 id 순서로 보여 줌 */
-/* 카드 순서: id 순서. 단 '다른 선택' 카드(variantOf = 원래 카드 id)는 원래 카드 바로 뒤에(같은 원래 카드의 다른 선택끼리는 id 순).
+/* 카드 순서: 목록 챕터별로 묶은 뒤 id 순서. 단 '다른 선택' 카드(variantOf = 원래 카드 id)는 원래 카드 바로 뒤에(같은 원래 카드의 다른 선택끼리는 id 순).
    id는 그대로라 본 카드·이어 보기·학습 기록은 영향 없음. 피드·목록·카테고리 목록·드라이브·연습 모두 이 순서를 씀 */
 const CARDS = (() => {
   const byId = (window.CARD_DATA || []).slice().sort((a, b) => a.id - b.id);
@@ -1697,7 +1697,11 @@ const CARDS = (() => {
   const put = c => { if (done.has(c)) return; done.add(c); out.push(c); (kids[c.id] || []).forEach(put); };
   byId.forEach(c => { if (!isVar(c)) put(c); });
   byId.forEach(put);                                        // 잘못 이어진 것(서로를 가리킴 등)도 빠지지 않게 — 검사 도구가 문제로 잡음
-  return out;
+  /* 목록(챕터) 순서로 묶기: 챕터 순서 = 위 순서에서 그 챕터가 처음 나온 순서(목록 시트와 같음). 챕터 안은 위 순서 그대로.
+     그래서 상황 탭을 위아래로 넘기면 공항·숙소 안에서 이어지고, 끝나면 목록의 다음 챕터로 감. 번호(id)는 그대로 */
+  const catRank = {};
+  out.forEach(c => { if (!(c.category in catRank)) catRank[c.category] = Object.keys(catRank).length; });
+  return out.map((c, k) => [c, k]).sort((a, b) => catRank[a[0].category] - catRank[b[0].category] || a[1] - b[1]).map(x => x[0]);
 })();
 const CARD_INDEX_BY_ID = {};
 CARDS.forEach((c, i) => { CARD_INDEX_BY_ID[c.id] = i; });
