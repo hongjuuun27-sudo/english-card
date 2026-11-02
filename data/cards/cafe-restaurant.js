@@ -4093,5 +4093,345 @@
       }
     ],
     extraExpressions: []
+  },
+  {
+    id: 82,
+    category: "카페·식당",
+    title: "패스트푸드점에서 세트 주문하기",
+    situation: "맥도날드 카운터에서 버거 세트를 주문해요. 사이즈와 음료를 고르고, 케첩도 부탁해요.",
+    hooks: [
+      { ko: "'쿼터파운더 치즈로 할게요'는 뭐라고 하지?", line: 2 },
+      { ko: "'라지 세트로 해 주세요'는 뭐라고 하지?", line: 4 },
+      { ko: "'탄산음료를 초콜릿 셰이크로 바꿀 수 있을까요?'는 뭐라고 하지?", line: 6 }
+    ],
+    dialogue: [
+      { who: "staff", en: "Hey there, welcome to McDonald's! What sounds good?", ko: "안녕하세요, 맥도날드입니다! 뭘로 하시겠어요?",
+        chunks: "Hey there, / welcome to McDonald's! / What sounds good?",
+        tips: [{ target: "What sounds good", ko: "'뭐가 당기세요?'. 주문받을 때 자주 해요." }] },
+      { who: "me", en: "Hi, I'll do a Quarter Pounder with cheese.", ko: "안녕하세요, 쿼터파운더 치즈로 할게요.",
+        chunks: "Hi, / I'll do a Quarter Pounder / with cheese.",
+        tips: [{ target: "I'll do", ko: "'아일 두'. 주문할 때 '~로 할게요'." },
+               { target: "Quarter Pounder", ko: "'쿼러r 파운더r'." }] },
+      { who: "staff", en: "Just the sandwich, or the meal with fries and a drink?", ko: "버거만 드릴까요, 아니면 감자튀김이랑 음료 있는 세트로 드릴까요?",
+        chunks: "Just the sandwich, / or the meal / with fries and a drink?",
+        tips: [{ target: "meal", ko: "패스트푸드점에서는 '세트'." }] },
+      { who: "me", en: "Make it a large meal, please.", ko: "라지 세트로 해 주세요.",
+        chunks: "Make‿it a large meal, / please.",
+        tips: [{ target: "Make it a", ko: "'메이킷 어'처럼 이어서." }] },
+      { who: "staff", en: "Large meal. What would you like to drink?", ko: "라지 세트요. 음료는 뭘로 하시겠어요?",
+        chunks: "Large meal. / What would you like to drink?",
+        tips: [{ target: "would you", ko: "'우쥬'." }] },
+      { who: "me", en: "Could I swap the soda for a chocolate shake?", ko: "탄산음료를 초콜릿 셰이크로 바꿀 수 있을까요?",
+        chunks: "Could‿I swap the soda / for a chocolate shake?",
+        tips: [{ target: "swap", ko: "'스왑'. '바꾸다'." },
+               { target: "soda", ko: "탄산음료. '소우다'." }] },
+      { who: "staff", en: "You can, but it's a dollar fifty more.", ko: "가능한데, 1달러 50센트 추가돼요.",
+        chunks: "You can, / but it's a dollar fifty more.",
+        tips: [{ target: "a dollar fifty", ko: "1달러 50센트. '달러'와 '센트'는 흔히 빼고 말해요." }] },
+      { who: "me", en: "That's fine. Oh, and two ketchups, please.", ko: "괜찮아요. 아, 그리고 케첩 두 개 주세요.",
+        chunks: "That's fine. / Oh, / and two ketchups, please.",
+        tips: [{ target: "ketchups", ko: "케첩 봉지 개수를 셀 때는 ketchups라고 해요." }] },
+      { who: "staff", en: "Easy enough. That'll be twelve forty-nine.", ko: "그럼요. 12달러 49센트입니다.",
+        chunks: "Easy enough. / That'll be twelve forty-nine.",
+        tips: [{ target: "twelve forty-nine", ko: "12달러 49센트. '트웰v 포r티나인'." }] }
+    ],
+    expressions: [
+      {
+        id: "c82-e1",
+        phrase: "I'll do ~.",
+        forms: ["we'll do"],
+        teaser: "주문할 때 '~로 할게요'를 가볍게 말하려면?",
+        ko: "'~로 할게요'라는 뜻이에요. 미국 사람들이 주문할 때 아주 많이 쓰는 말이에요. I'll have ~.와 같은 뜻인데 더 가볍게 들려요. 여럿이면 We'll do ~.라고 해요. 비슷한 표현: I'll have ~. / I'll go with ~.",
+        examples: [
+          { en: "I'll do the spicy chicken sandwich.", ko: "매운 치킨 샌드위치로 할게요.",
+            chunks: "I'll do the spicy / chicken sandwich.",
+            tips: [{ target: "spicy", ko: "'스파이시'." }] },
+          { en: "I'll do a small fries, too.", ko: "작은 감자튀김도 하나 할게요.",
+            chunks: "I'll do a small fries, / too.",
+            tips: [{ target: "small fries", ko: "감자튀김은 a small fries처럼 말해요." }] },
+          { en: "We'll do two number threes.", ko: "저희는 3번 세트 두 개로 할게요.",
+            chunks: "We'll do / two number threes.",
+            tips: [{ target: "number threes", ko: "메뉴 번호. '넘버r 쓰리즈'." }] },
+          { en: "I'll do the same thing as her.", ko: "저도 저분이랑 같은 걸로 할게요.",
+            chunks: "I'll do the same thing / as her.",
+            tips: [{ target: "same thing", ko: "'쎄임 띵'." }] },
+          { en: "For dessert, I'll do the apple pie.", ko: "디저트는 애플파이로 할게요.",
+            chunks: "For dessert, / I'll do the apple pie.",
+            tips: [{ target: "dessert", ko: "'디저r트'. 뒤에 힘." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My first week in Texas, / I always said / “I want” / when I ordered.",
+              ko: "텍사스에서 첫 주에 나는 주문할 때마다 “I want”라고 했어.",
+              tips: [{ target: "first week", ko: "'f퍼r스트 윅'." }] },
+            { chunks: "A coworker told me / it sounded / a little bossy.",
+              ko: "동료가 그건 좀 명령하는 것처럼 들린다고 알려 줬어.",
+              tips: [{ target: "bossy", ko: "'보시'. '명령조인'." }] },
+            { chunks: "She said locals just go, / “I'll do / the brisket plate.”",
+              ko: "현지 사람들은 그냥 “브리스킷 플레이트로 할게요”라고 한대.",
+              tips: [{ target: "brisket", ko: "소 양지 바비큐. '브리스킷'." }] },
+            { chunks: "Now I say it everywhere, / and it feels so natural.",
+              ko: "이제는 어디서든 그렇게 말하는데, 정말 자연스러워.",
+              tips: [{ target: "natural", ko: "'내추럴'." }] }
+          ],
+          en: "My first week in Texas, I always said “I want” when I ordered. A coworker told me it sounded a little bossy. She said locals just go, “I'll do the brisket plate.” Now I say it everywhere, and it feels so natural.",
+          ko: "텍사스에서 첫 주에 나는 주문할 때마다 “I want”라고 했어. 동료가 그건 좀 명령하는 것처럼 들린다고 알려 줬어. 현지 사람들은 그냥 “브리스킷 플레이트로 할게요”라고 한대. 이제는 어디서든 그렇게 말하는데, 정말 자연스러워."
+        }
+      },
+      {
+        id: "c82-e2",
+        phrase: "make it a meal",
+        forms: ["make it a ~ meal", "make that a ~ meal", "make that a meal", "made it a meal"],
+        teaser: "버거만 말고 '세트로 할게요'라고 하려면?",
+        ko: "'세트로 할게요'라는 뜻이에요. 미국 패스트푸드점에서는 세트를 meal이나 combo라고 해요. 버거 이름 뒤에 Make it a meal.이라고 하면 감자튀김과 음료가 같이 나와요. 사이즈를 넣어서 Make it a large meal.이라고도 해요. 비슷한 표현: I'll get the combo. / Can I get that as a combo?",
+        examples: [
+          { en: "Make it a meal with a Sprite.", ko: "세트로 하고 음료는 스프라이트로 주세요.",
+            chunks: "Make‿it a meal / with a Sprite.",
+            tips: [{ target: "Sprite", ko: "'스프라잇'." }] },
+          { en: "Can you make that a medium meal?", ko: "그거 미디엄 세트로 해 주실 수 있어요?",
+            chunks: "Can you make that / a medium meal?",
+            tips: [{ target: "medium", ko: "'미디엄'." }] },
+          { en: "If you make it a meal, you save two bucks.", ko: "세트로 하시면 2달러 아끼세요.",
+            chunks: "If you make‿it a meal, / you save two bucks.",
+            tips: [{ target: "bucks", ko: "'달러'의 구어." }] },
+          { en: "Let's make it a meal and share the fries.", ko: "세트로 하고 감자튀김은 나눠 먹자.",
+            chunks: "Let's make‿it a meal / and share the fries.",
+            tips: [{ target: "share", ko: "'셰어r'." }] },
+          { en: "Did you want to make that a meal?", ko: "세트로 하시겠어요?",
+            chunks: "Did you want to make that / a meal?",
+            tips: [{ target: "Did you want to", ko: "'디쥬 원투'. 공손하게 물을 때." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At a drive-thru in Ohio, / I ordered / just a burger.",
+              ko: "오하이오의 드라이브스루에서 버거 하나만 시켰어.",
+              tips: [{ target: "drive-thru", ko: "차에 탄 채 주문하는 곳. '드라이브 쓰루'." }] },
+            { chunks: "The speaker crackled, / “Want to make‿it a meal?”",
+              ko: "스피커가 지직거리며 “세트로 하실래요?” 했어.",
+              tips: [{ target: "crackled", ko: "'지직거렸다'. '크래클드'." }] },
+            { chunks: "I said yes / without thinking / and got a giant soda.",
+              ko: "생각도 안 하고 그러겠다고 해서 엄청 큰 탄산음료를 받았지.",
+              tips: [{ target: "giant", ko: "'자이언트'." }] },
+            { chunks: "I don't even drink soda, / so it melted / in my cup holder.",
+              ko: "난 탄산음료를 마시지도 않아서, 그건 컵 홀더에서 다 녹아 버렸어.",
+              tips: [{ target: "cup holder", ko: "차 안의 컵 꽂이." }] }
+          ],
+          en: "At a drive-thru in Ohio, I ordered just a burger. The speaker crackled, “Want to make it a meal?” I said yes without thinking and got a giant soda. I don't even drink soda, so it melted in my cup holder.",
+          ko: "오하이오의 드라이브스루에서 버거 하나만 시켰어. 스피커가 지직거리며 “세트로 하실래요?” 했어. 생각도 안 하고 그러겠다고 해서 엄청 큰 탄산음료를 받았지. 난 탄산음료를 마시지도 않아서, 그건 컵 홀더에서 다 녹아 버렸어."
+        }
+      },
+      {
+        id: "c82-e3",
+        phrase: "swap ~ for ~",
+        forms: ["swapped ~ for ~", "swapping ~ for ~"],
+        teaser: "세트에 딸린 걸 '다른 걸로 바꿀 수 있어요?'라고 물으려면?",
+        ko: "'~를 …로 바꾸다'라는 뜻이에요. 세트에 딸린 음료·사이드를 다른 걸로 바꾸고 싶을 때 Could I swap ~ for ~?라고 해요. 추가 요금이 붙기도 해요. 비슷한 표현: Can I substitute ~? / Can I get ~ instead of ~?",
+        examples: [
+          { en: "Could I swap the fries for a salad?", ko: "감자튀김을 샐러드로 바꿀 수 있을까요?",
+            chunks: "Could‿I swap the fries / for a salad?",
+            tips: [{ target: "salad", ko: "'샐럿'." }] },
+          { en: "You can swap the toast for fruit.", ko: "토스트는 과일로 바꾸실 수 있어요.",
+            chunks: "You can swap the toast / for fruit.",
+            tips: [{ target: "fruit", ko: "'f루트'." }] },
+          { en: "Can I swap the bacon for sausage?", ko: "베이컨을 소시지로 바꿀 수 있어요?",
+            chunks: "Can‿I swap the bacon / for sausage?",
+            tips: [{ target: "sausage", ko: "'소시쥐'." }] },
+          { en: "There's a charge to swap the side for onion rings.", ko: "사이드를 어니언링으로 바꾸시면 추가 요금이 있어요.",
+            chunks: "There's a charge / to swap the side / for onion rings.",
+            tips: [{ target: "charge", ko: "'요금'. '차r쥐'." }] },
+          { en: "She swapped her latte for an iced tea.", ko: "그 친구는 라테를 아이스티로 바꿨어.",
+            chunks: "She swapped her latte / for an iced tea.",
+            tips: [{ target: "swapped", ko: "'스왑트'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "In Nashville, / I wanted hot chicken, / but I'm terrible with spice.",
+              ko: "내슈빌에서 핫치킨이 먹고 싶었는데, 난 매운 걸 정말 못 먹어.",
+              tips: [{ target: "hot chicken", ko: "내슈빌 명물 매운 치킨." }] },
+            { chunks: "I asked / to swap the hot sauce / for a mild one.",
+              ko: "매운 소스를 순한 걸로 바꿔 달라고 했어.",
+              tips: [{ target: "mild", ko: "'마일드'. '순한'." }] },
+            { chunks: "The cook laughed / and said, / “Then it's just chicken.”",
+              ko: "요리사가 웃으면서 “그럼 그냥 치킨인데요” 했어.",
+              tips: [{ target: "cook", ko: "'쿡'. 요리사." }] },
+            { chunks: "I got it mild anyway, / and it was still amazing.",
+              ko: "그래도 순한 맛으로 받았는데, 그래도 끝내줬어.",
+              tips: [{ target: "anyway", ko: "'그래도'." }] }
+          ],
+          en: "In Nashville, I wanted hot chicken, but I'm terrible with spice. I asked to swap the hot sauce for a mild one. The cook laughed and said, “Then it's just chicken.” I got it mild anyway, and it was still amazing.",
+          ko: "내슈빌에서 핫치킨이 먹고 싶었는데, 난 매운 걸 정말 못 먹어. 매운 소스를 순한 걸로 바꿔 달라고 했어. 요리사가 웃으면서 “그럼 그냥 치킨인데요” 했어. 그래도 순한 맛으로 받았는데, 그래도 끝내줬어."
+        }
+      }
+    ],
+    extraExpressions: []
+  },
+  {
+    id: 83,
+    category: "카페·식당",
+    title: "인앤아웃에서 버거 내 맘대로 주문하기",
+    situation: "인앤아웃 카운터에서 더블더블 세트를 시켜요. 양파를 빼고 애니멀 스타일로 바꾸고, 셰이크도 하나 추가해요.",
+    hooks: [
+      { ko: "'더블더블 세트 주세요. 양파는 빼 주세요'는 뭐라고 하지?", line: 2 },
+      { ko: "'애니멀 스타일로 해 주실 수 있어요?'는 뭐라고 하지?", line: 4 },
+      { ko: "'그리고 같이 먹을 바닐라 셰이크도요'는 뭐라고 하지?", line: 8 }
+    ],
+    dialogue: [
+      { who: "staff", en: "Hi, welcome to In-N-Out! What are you craving?", ko: "안녕하세요, 인앤아웃입니다! 뭐가 드시고 싶으세요?",
+        chunks: "Hi, / welcome to In-N-Out! / What are you craving?",
+        tips: [{ target: "craving", ko: "'당기다'. '크레이빙'." }] },
+      { who: "me", en: "A Double-Double combo, please. Hold the onions.", ko: "더블더블 세트 주세요. 양파는 빼 주세요.",
+        chunks: "A Double-Double combo, / please. / Hold the onions.",
+        tips: [{ target: "Double-Double", ko: "패티 두 장·치즈 두 장 버거." },
+               { target: "Hold the onions", ko: "'홀드 디 어니언즈'." }] },
+      { who: "staff", en: "No onions. Any other changes to the burger?", ko: "양파 빼고요. 버거에 다른 거 바꾸실 거 있으세요?",
+        chunks: "No onions. / Any other changes / to the burger?",
+        tips: [{ target: "changes", ko: "'체인쥐즈'." }] },
+      { who: "me", en: "Yes, can I get it Animal Style?", ko: "네, 애니멀 스타일로 해 주실 수 있어요?",
+        chunks: "Yes, / can‿I get‿it Animal Style?",
+        tips: [{ target: "Animal Style", ko: "인앤아웃 비밀 메뉴. '애니멀 스타일'." }] },
+      { who: "staff", en: "Sure. Animal Style comes with grilled onions, though. Still want no onions?", ko: "네. 근데 애니멀 스타일에는 구운 양파가 들어가요. 그래도 양파 빼 드릴까요?",
+        chunks: "Sure. / Animal Style comes / with grilled onions, though. / Still want no onions?",
+        tips: [{ target: "grilled onions", ko: "'그릴드 어니언즈'. 구운 양파." },
+               { target: "though", ko: "'근데'. '도우'." }] },
+      { who: "me", en: "Oh, then keep the grilled ones. Just no raw onions.", ko: "아, 그럼 구운 건 넣어 주세요. 생양파만 빼 주세요.",
+        chunks: "Oh, / then keep the grilled ones. / Just no raw onions.",
+        tips: [{ target: "raw", ko: "'날것의'. '로'." }] },
+      { who: "staff", en: "Got it. And what drink comes with your combo?", ko: "알겠습니다. 세트 음료는 뭘로 하시겠어요?",
+        chunks: "Got it. / And what drink / comes with your combo?",
+        tips: [{ target: "comes with", ko: "'~에 딸려 나오다'." }] },
+      { who: "me", en: "Lemonade. And a vanilla shake to go with that.", ko: "레모네이드요. 그리고 같이 먹을 바닐라 셰이크도요.",
+        chunks: "Lemonade. / And a vanilla shake / to go with that.",
+        tips: [{ target: "to go with", ko: "'~에 곁들일'. 포장(to go)이 아니에요." }] },
+      { who: "staff", en: "Great choice. You're number fifty-two.", ko: "잘 고르셨어요. 52번이세요.",
+        chunks: "Great choice. / You're number fifty-two.",
+        tips: [{ target: "fifty-two", ko: "'f피f티 투'." }] }
+    ],
+    expressions: [
+      {
+        id: "c83-e1",
+        phrase: "hold the ~",
+        teaser: "버거에서 '양파는 빼 주세요'라고 하려면?",
+        ko: "'~는 빼 주세요'라는 뜻이에요. 버거·샌드위치·음료에서 특정 재료를 빼 달라고 할 때 써요. Hold the onions.처럼 재료 이름만 붙이면 끝. No onions, please.라고 해도 돼요. Hold the door!(문 좀 잡아 주세요)의 hold와는 뜻이 달라요. 비슷한 표현: without ~ / Can you leave off ~?",
+        examples: [
+          { en: "Hold the pickles, please.", ko: "피클은 빼 주세요.",
+            chunks: "Hold the pickles, / please.",
+            tips: [{ target: "pickles", ko: "'피클즈'." }] },
+          { en: "Could you hold the mayo on that?", ko: "거기 마요네즈는 빼 주시겠어요?",
+            chunks: "Could you hold the mayo / on that?",
+            tips: [{ target: "mayo", ko: "마요네즈. '메이오'." }] },
+          { en: "I asked them to hold the cheese.", ko: "치즈 빼 달라고 했어.",
+            chunks: "I asked them / to hold the cheese.",
+            tips: [{ target: "asked them", ko: "'애스크뎀'." }] },
+          { en: "A turkey sandwich, but hold the tomato.", ko: "칠면조 샌드위치요, 토마토는 빼고요.",
+            chunks: "A turkey sandwich, / but hold the tomato.",
+            tips: [{ target: "tomato", ko: "'터메이로'." }] },
+          { en: "Did you want me to hold the sauce?", ko: "소스 빼 드릴까요?",
+            chunks: "Did you want me / to hold the sauce?",
+            tips: [{ target: "want me to", ko: "'원미투'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "My friend in Seattle / orders every burger / the same way.",
+              ko: "시애틀에 사는 내 친구는 버거를 늘 똑같이 시켜.",
+              tips: [{ target: "the same way", ko: "'똑같은 방식으로'." }] },
+            { chunks: "Hold the lettuce, / hold the tomato, / hold the pickles.",
+              ko: "양상추 빼고, 토마토 빼고, 피클 빼고.",
+              tips: [{ target: "lettuce", ko: "'레러스'." }] },
+            { chunks: "One cashier finally asked, / “So, / just meat and bread?”",
+              ko: "어느 날 계산원이 결국 “그럼 고기랑 빵만요?” 하고 물었어.",
+              tips: [{ target: "cashier", ko: "계산원. '캐쉬어r'." }] },
+            { chunks: "He said yes, / and the whole line / started laughing.",
+              ko: "친구가 그렇다고 하니까 줄 선 사람들이 다 웃기 시작했어.",
+              tips: [{ target: "the whole line", ko: "'줄 선 사람 전부'." }] }
+          ],
+          en: "My friend in Seattle orders every burger the same way. Hold the lettuce, hold the tomato, hold the pickles. One cashier finally asked, “So, just meat and bread?” He said yes, and the whole line started laughing.",
+          ko: "시애틀에 사는 내 친구는 버거를 늘 똑같이 시켜. 양상추 빼고, 토마토 빼고, 피클 빼고. 어느 날 계산원이 결국 “그럼 고기랑 빵만요?” 하고 물었어. 친구가 그렇다고 하니까 줄 선 사람들이 다 웃기 시작했어."
+        }
+      },
+      {
+        id: "c83-e2",
+        phrase: "Animal Style",
+        forms: ["animal-style"],
+        teaser: "인앤아웃 비밀 메뉴를 시킬 때 붙이는 말은?",
+        ko: "'인앤아웃 비밀 메뉴 스타일'이라는 뜻이에요. 인앤아웃에서 버거나 감자튀김 뒤에 붙여요. 버거는 머스터드를 발라 구운 패티에 구운 양파·특제 소스·피클이 더 들어가고, 감자튀김은 치즈·소스·구운 양파가 올라가요. 메뉴판에 없어도 다 알아들어요. 비슷한 표현: Protein Style(빵 대신 양상추) / off the secret menu",
+        examples: [
+          { en: "Can I get the fries Animal Style?", ko: "감자튀김 애니멀 스타일로 주시겠어요?",
+            chunks: "Can‿I get the fries / Animal Style?",
+            tips: [{ target: "fries", ko: "'f프라이즈'." }] },
+          { en: "Two cheeseburgers, both Animal Style.", ko: "치즈버거 두 개요, 둘 다 애니멀 스타일로요.",
+            chunks: "Two cheeseburgers, / both Animal Style.",
+            tips: [{ target: "both", ko: "'보우th'." }] },
+          { en: "Animal Style fries are kind of messy.", ko: "애니멀 스타일 감자튀김은 좀 지저분해.",
+            chunks: "Animal Style fries / are kind of messy.",
+            tips: [{ target: "messy", ko: "'지저분한'. '메시'." }] },
+          { en: "Is Animal Style extra?", ko: "애니멀 스타일은 추가 요금 있어요?",
+            chunks: "Is Animal Style extra?",
+            tips: [{ target: "extra", ko: "'추가 요금이 붙는'." }] },
+          { en: "You have to try a burger Animal Style.", ko: "버거는 꼭 애니멀 스타일로 먹어 봐.",
+            chunks: "You have to try a burger / Animal Style.",
+            tips: [{ target: "have to", ko: "'해f투'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "Before my first trip / to California, / I studied the In-N-Out menu.",
+              ko: "처음 캘리포니아에 가기 전에 인앤아웃 메뉴를 공부했어.",
+              tips: [{ target: "studied", ko: "'스터디드'." }] },
+            { chunks: "It only had burgers, / fries, / and drinks.",
+              ko: "버거, 감자튀김, 음료밖에 없었어.",
+              tips: [{ target: "only", ko: "'오운리'." }] },
+            { chunks: "Then the guy ahead of me / ordered his fries / “Animal Style.”",
+              ko: "그런데 내 앞 사람이 감자튀김을 “애니멀 스타일”로 시키더라.",
+              tips: [{ target: "ahead of me", ko: "'내 앞에'." }] },
+            { chunks: "I copied him, / and now I can't eat them / any other way.",
+              ko: "따라 시켰는데, 이제 다른 식으로는 못 먹겠어.",
+              tips: [{ target: "any other way", ko: "'다른 식으로는'." }] }
+          ],
+          en: "Before my first trip to California, I studied the In-N-Out menu. It only had burgers, fries, and drinks. Then the guy ahead of me ordered his fries “Animal Style.” I copied him, and now I can't eat them any other way.",
+          ko: "처음 캘리포니아에 가기 전에 인앤아웃 메뉴를 공부했어. 버거, 감자튀김, 음료밖에 없었어. 그런데 내 앞 사람이 감자튀김을 “애니멀 스타일”로 시키더라. 따라 시켰는데, 이제 다른 식으로는 못 먹겠어."
+        }
+      },
+      {
+        id: "c83-e3",
+        phrase: "to go with ~",
+        teaser: "주문에 '같이 먹을 ~도요'라고 하나 더 얹으려면?",
+        ko: "'~에 곁들일, ~랑 같이 먹을'이라는 뜻이에요. 주문에 하나 더 얹을 때 And a ~ to go with that.처럼 써요. to go(포장)와 헷갈리기 쉬운데, 뒤에 with가 붙으면 '어울리게 곁들일'이라는 뜻이에요. 옷이나 물건이 '~와 어울리는'이라고 할 때도 써요. 비슷한 표현: on the side / with that",
+        examples: [
+          { en: "Do you have a sauce to go with the nuggets?", ko: "너겟이랑 같이 먹을 소스 있어요?",
+            chunks: "Do you have a sauce / to go with the nuggets?",
+            tips: [{ target: "nuggets", ko: "'너깃츠'." }] },
+          { en: "We need something sweet to go with this coffee.", ko: "이 커피랑 먹을 단 게 필요해.",
+            chunks: "We need something sweet / to go with this coffee.",
+            tips: [{ target: "something sweet", ko: "'단 것'." }] },
+          { en: "A side salad to go with the pasta, please.", ko: "파스타에 곁들일 사이드 샐러드도 주세요.",
+            chunks: "A side salad / to go with the pasta, / please.",
+            tips: [{ target: "side salad", ko: "곁들이는 작은 샐러드." }] },
+          { en: "Would you like a drink to go with that?", ko: "같이 드실 음료도 드릴까요?",
+            chunks: "Would you like a drink / to go with that?",
+            tips: [{ target: "Would you like", ko: "'우쥬 라익'." }] },
+          { en: "I'll grab some fries to go with my burger.", ko: "버거랑 같이 먹을 감자튀김도 살게요.",
+            chunks: "I'll grab some fries / to go with my burger.",
+            tips: [{ target: "grab", ko: "'사다, 집다'." }] }
+        ],
+        story: {
+          sentences: [
+            { chunks: "At a diner in Chicago, / I ordered / pancakes and coffee.",
+              ko: "시카고의 다이너에서 팬케이크랑 커피를 시켰어.",
+              tips: [{ target: "diner", ko: "미국식 간이 식당. '다이너r'." }] },
+            { chunks: "The server asked / if I wanted bacon / to go with that.",
+              ko: "직원이 같이 먹을 베이컨도 줄지 물었어.",
+              tips: [{ target: "bacon", ko: "'베이컨'." }] },
+            { chunks: "I only heard “to go,” / so I said, / “No, I'm eating here.”",
+              ko: "난 “to go”만 들려서 “아니요, 여기서 먹을 거예요” 했지.",
+              tips: [{ target: "eating here", ko: "'여기서 먹다'." }] },
+            { chunks: "She just smiled / and brought me bacon / anyway.",
+              ko: "직원은 그냥 웃더니 베이컨을 가져다줬어.",
+              tips: [{ target: "brought", ko: "'브롯'. bring의 과거." }] }
+          ],
+          en: "At a diner in Chicago, I ordered pancakes and coffee. The server asked if I wanted bacon to go with that. I only heard “to go,” so I said, “No, I'm eating here.” She just smiled and brought me bacon anyway.",
+          ko: "시카고의 다이너에서 팬케이크랑 커피를 시켰어. 직원이 같이 먹을 베이컨도 줄지 물었어. 난 “to go”만 들려서 “아니요, 여기서 먹을 거예요” 했지. 직원은 그냥 웃더니 베이컨을 가져다줬어."
+        }
+      }
+    ],
+    extraExpressions: []
   }
 );

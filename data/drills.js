@@ -2582,5 +2582,77 @@ window.DRILL_DATA = {
     { ko: "(은행 직원에게) 여기서 작은 지폐로 뽑을 수 있어요?", en: "Can I take out small bills here?" },
     { ko: "(친구에게) 작은 지폐가 다 떨어졌어.", en: "I'm out of small bills." },
     { ko: "(가이드에게) 투어 팁은 작은 지폐로 준비하면 돼요?", en: "Should we bring small bills for tips on the tour?" }
+  ],
+  "c82-e1": [
+    { ko: "(직원에게) 에그 맥머핀으로 할게요.", en: "I'll do the Egg McMuffin." },
+    { ko: "(직원에게) 오늘의 수프랑 샌드위치 반쪽으로 할게요.", en: "I'll do the soup of the day and a half sandwich." },
+    { ko: "(직원에게) 아이스 커피 스몰로 할게요.", en: "I'll do a small iced coffee." },
+    { ko: "(바텐더에게) 생맥주 아무거나로 할게요.", en: "I'll do whatever you have on draft." },
+    { ko: "(직원에게) 저희는 치킨 텐더 바스켓 두 개로 할게요.", en: "We'll do two chicken tender baskets." },
+    { ko: "(직원에게) 팬케이크 브렉퍼스트로 할게요.", en: "I'll do the pancake breakfast, please." },
+    { ko: "(직원에게) 음료는 물로 할게요.", en: "For the drink, I'll do water." },
+    { ko: "(서버에게) 스테이크로 할게요, 미디엄으로요.", en: "I'll do the steak, medium." },
+    { ko: "(친구에게) 난 그냥 너랑 같은 걸로 할게.", en: "I'll do the same as you." },
+    { ko: "(직원에게) 사이드는 코울슬로로 할게요.", en: "I'll do coleslaw for the side." }
+  ],
+  "c82-e2": [
+    { ko: "(직원에게) 치킨 샌드위치요, 세트로 해 주세요.", en: "A chicken sandwich, and make it a meal." },
+    { ko: "(직원에게) 그거 라지 세트로 바꿔 주실 수 있어요?", en: "Could you make that a large meal instead?" },
+    { ko: "(직원에게) 세트로 하면 얼마예요?", en: "How much is it if I make it a meal?" },
+    { ko: "(직원에게) 버거만 시켰는데, 세트로 바꿔도 돼요?", en: "I ordered just the burger. Can I make it a meal?" },
+    { ko: "(친구에게) 세트로 하는 게 더 싸.", en: "It's cheaper to make it a meal." },
+    { ko: "(직원에게) 세트로 할게요. 음료는 다이어트 콜라로요.", en: "I'll make it a meal. Diet Coke for the drink." },
+    { ko: "(직원에게) 스몰 세트로 해 주세요. 배가 별로 안 고파서요.", en: "Make it a small meal. I'm not that hungry." },
+    { ko: "(친구에게) 내가 세트로 하면 감자튀김 같이 먹자.", en: "If I make it a meal, let's share the fries." },
+    { ko: "(직원에게) 너겟 10조각이요, 미디엄 세트로요.", en: "Ten-piece nuggets, and make it a medium meal." },
+    { ko: "(친구에게) 세트로 할걸 그랬어. 너무 목말라.", en: "I should've made it a meal. I'm so thirsty." }
+  ],
+  "c82-e3": [
+    { ko: "(직원에게) 감자튀김을 구운 감자로 바꿀 수 있어요?", en: "Can I swap the fries for a baked potato?" },
+    { ko: "(직원에게) 콜라를 아이스티로 바꿔 주실 수 있어요?", en: "Could you swap the Coke for an iced tea?" },
+    { ko: "(직원에게) 흰 빵을 통밀빵으로 바꿔도 돼요?", en: "Can I swap the white bread for wheat?" },
+    { ko: "(서버에게) 감자를 샐러드로 바꾸면 추가 요금 있어요?", en: "Is it extra to swap the potatoes for salad?" },
+    { ko: "(친구에게) 내 피클이랑 네 할라피뇨 바꾸자.", en: "Let's swap my pickles for your jalapeños." },
+    { ko: "(직원에게) 일반 우유를 귀리 우유로 바꿔 주세요.", en: "Please swap the regular milk for oat milk." },
+    { ko: "(호텔 직원에게) 킹 침대를 퀸 침대 두 개로 바꿀 수 있을까요?", en: "Could we swap the king bed for two queens?" },
+    { ko: "(직원에게) 소스를 랜치로 바꿔도 될까요?", en: "Could I swap the sauce for ranch?" },
+    { ko: "(친구에게) 나 오늘은 커피를 차로 바꿨어.", en: "I swapped my coffee for tea today." },
+    { ko: "(직원에게) 사이드 하나를 과일 컵으로 바꾸고 싶어요.", en: "I'd like to swap one side for a fruit cup." }
+  ],
+  "c83-e1": [
+    { ko: "(직원에게) 토마토는 빼 주세요.", en: "Hold the tomatoes, please." },
+    { ko: "(직원에게) 휘핑크림 빼 주실 수 있어요?", en: "Can you hold the whipped cream?" },
+    { ko: "(직원에게) 브리또 하나요, 할라피뇨는 빼고요.", en: "One burrito, but hold the jalapeños." },
+    { ko: "(서버에게) 제 샐러드에 크루통은 빼 주세요.", en: "Please hold the croutons on my salad." },
+    { ko: "(직원에게) 얼음은 빼 주세요.", en: "Hold the ice, please." },
+    { ko: "(직원에게) 버거 두 개 다 머스터드 빼 주세요.", en: "Hold the mustard on both burgers." },
+    { ko: "(친구에게) 내 거 양파 빼 달라고 해 줘.", en: "Ask them to hold the onions on mine." },
+    { ko: "(직원에게) 마요네즈 빼 달라고 했는데, 들어 있어요.", en: "I asked you to hold the mayo, but it's on here." },
+    { ko: "(직원에게) 치즈 빼면 더 싸져요?", en: "Is it cheaper if you hold the cheese?" },
+    { ko: "(서버에게) 소금은 빼 주실 수 있어요? 짠 걸 못 먹어서요.", en: "Could you hold the salt? I can't eat salty food." }
+  ],
+  "c83-e2": [
+    { ko: "(직원에게) 감자튀김도 애니멀 스타일로 해 주세요.", en: "Make the fries Animal Style, too." },
+    { ko: "(직원에게) 치즈버거 하나, 애니멀 스타일로 주세요.", en: "One cheeseburger, Animal Style, please." },
+    { ko: "(친구에게) 애니멀 스타일이 뭔지 알아?", en: "Do you know what Animal Style is?" },
+    { ko: "(직원에게) 애니멀 스타일 버거에는 뭐가 올라가요?", en: "What comes on a burger Animal Style?" },
+    { ko: "(친구에게) 애니멀 스타일 감자튀김 나눠 먹자.", en: "Let's split some Animal Style fries." },
+    { ko: "(직원에게) 애니멀 스타일로 해 주시고, 피클은 빼 주세요.", en: "Animal Style, but no pickles, please." },
+    { ko: "(친구에게) 애니멀 스타일은 메뉴판에 없어.", en: "Animal Style isn't on the menu." },
+    { ko: "(직원에게) 더블더블을 애니멀 스타일로 바꿀 수 있어요?", en: "Can I change my Double-Double to Animal Style?" },
+    { ko: "(친구에게) 애니멀 스타일 처음 먹어 봤어. 진짜 맛있더라.", en: "I tried Animal Style for the first time. So good." },
+    { ko: "(직원에게) 애니멀 스타일 감자튀김 하나 더 주세요.", en: "One more order of Animal Style fries, please." }
+  ],
+  "c83-e3": [
+    { ko: "(직원에게) 버거랑 같이 먹을 밀크셰이크 하나 주세요.", en: "A milkshake to go with my burger, please." },
+    { ko: "(서버에게) 스테이크에 어울리는 와인 추천해 주실 수 있어요?", en: "Can you suggest a wine to go with the steak?" },
+    { ko: "(직원에게) 이 칩이랑 같이 먹을 살사 있어요?", en: "Do you have salsa to go with these chips?" },
+    { ko: "(친구에게) 피자랑 마실 맥주 좀 사 올게.", en: "I'll pick up some beer to go with the pizza." },
+    { ko: "(서버에게) 수프랑 같이 먹을 빵 좀 주실 수 있어요?", en: "Could I have some bread to go with my soup?" },
+    { ko: "(친구에게) 이 셔츠랑 어울리는 바지가 없어.", en: "I don't have pants to go with this shirt." },
+    { ko: "(직원에게) 커피랑 같이 먹을 머핀 하나 추가할게요.", en: "I'll add a muffin to go with my coffee." },
+    { ko: "(점원에게) 이 원피스랑 어울리는 신발 있어요?", en: "Do you have shoes to go with this dress?" },
+    { ko: "(친구에게) 케이크랑 마실 커피 내릴게.", en: "I'll make coffee to go with the cake." },
+    { ko: "(직원에게) 버거랑 같이 먹기 좋은 사이드는 뭐예요?", en: "What side would you recommend to go with the burger?" }
   ]
 };
