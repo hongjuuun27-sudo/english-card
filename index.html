@@ -638,6 +638,11 @@
   .td-go{ width:100%; margin-top:16px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
   .td-go.sub{ color:var(--text); background:var(--bg); border-color:var(--line); }
   .td-sec{ margin-top:30px; }
+  .td-pause{ margin-top:18px; padding:14px 16px; border-radius:18px; border:1px solid var(--line); }
+  .td-pause .td-h{ margin-bottom:0; }
+  .td-pause .td-go{ margin-top:12px; }
+  .set-group .td-go{ margin-top:0; }
+  .st-pause{ margin:8px 2px 10px; font-size:15px; line-height:1.55; color:var(--text-2); }
   .td-h{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:12px; }
   .td-h h3{ margin:0; font-size:16px; font-weight:750; color:var(--text); }
   .td-h small{ font-size:13.5px; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
@@ -4703,15 +4708,16 @@ const EXPR_BY_ID = {};
     });
 })();
 
-/* 학습 기록: { items: { 표현id: { status, startedOn, step, due, history:[{date, ok}], sessions, draft } }, picks: { 날짜: [표현id] } }
+/* 학습 기록: { items: { 표현id: { status, startedOn, step, due, history:[{date, ok}], sessions, draft } }, picks: { 날짜: [표현id] }, paused, pausedOn }
+   paused/pausedOn = 표현 복습 중지(2026-11-03) — 같은 저장에 있어서 앱을 업데이트해도(서비스워커 캐시와 상관없이) 그대로 남음
    sessions = 연습장 날짜별 연습 묶음 { "YYYY-MM-DD": { cards: [문장 카드 { id, ko, me, en, tip, date, at, rv }], memos: [{ text, at }] } }, draft = 정리하기 칸에 쓰다 만 글.
    (2026-10-04 전에는 notes: { 날짜: 글 } — 앱을 열 때 그 날짜의 메모로 옮김, migrateNotes) */
 const study = (() => {
   try {
     const s = JSON.parse(localStorage.getItem(STUDY_KEY) || "null");
-    if (s && typeof s === "object") return { items: s.items && typeof s.items === "object" ? s.items : {}, picks: s.picks && typeof s.picks === "object" ? s.picks : {}, mine: s.mine || 0 };
+    if (s && typeof s === "object") return { items: s.items && typeof s.items === "object" ? s.items : {}, picks: s.picks && typeof s.picks === "object" ? s.picks : {}, mine: s.mine || 0, paused: !!s.paused, pausedOn: typeof s.pausedOn === "string" ? s.pausedOn : null };
   } catch (e) {}
-  return { items: {}, picks: {}, mine: 1 };
+  return { items: {}, picks: {}, mine: 1, paused: false, pausedOn: null };
 })();
 function saveStudy() {
   try { localStorage.setItem(STUDY_KEY, JSON.stringify(study)); return true; } catch (e) { return false; }
@@ -4766,6 +4772,7 @@ function picksToday() {
 }
 
 function startLearning(id) {
+  if (isStudyPaused()) { toast(PAUSED_MSG); return false; }
   const t = studyToday();
   if (picksToday() >= DAILY_PICKS) return false;
   const s = study.items[id] || {};
@@ -4792,10 +4799,56 @@ function stopLearning(id) {
 }
 /* 오늘 복습할 표현: 날짜가 지난(밀린) 것까지 모두, 오래된 것부터 */
 function dueList() {
+  if (isStudyPaused()) return [];
   const t = studyToday();
   return Object.keys(study.items)
     .filter(id => EXPR_BY_ID[id] && study.items[id].status === "learning" && study.items[id].due && study.items[id].due <= t)
     .sort((a, b) => study.items[a].due.localeCompare(study.items[b].due) || a.localeCompare(b));
+}
+/* 표현 복습 중지·재개(2026-11-03): 중지한 동안은 복습 덱·오늘 할 일·새 표현 고르기가 멈춤(자유 복습은 날짜를 안 바꾸니 그대로 됨).
+   재개하면 멈춘 일수만큼 학습 중인 표현의 due를 뒤로 밀어서 중지 직전 상태부터 이어감(달력이 흘러도 복습이 한꺼번에 쌓이지 않음) */
+const PAUSED_MSG = "표현 복습이 중지돼 있어요. 설정에서 재개해 주세요.";
+function isStudyPaused() { return !!study.paused; }
+function pausedDays() {
+  return study.paused ? Math.max(0, dayNumber(studyToday()) - dayNumber(study.pausedOn || studyToday())) : 0;
+}
+function pauseStudy() {
+  if (study.paused) return;
+  study.paused = true;
+  study.pausedOn = studyToday();
+  saveStudy();
+  /* 설정 위에서 복습 덱이 열려 있으면 닫음 — 중지 뒤에도 채점하면 due가 오늘 기준으로 잡힌 뒤 재개 때 또 밀려 늦어질 수 있음 */
+  if (typeof RV !== "undefined" && RV.open) closeReview();
+  toast("표현 복습을 중지했어요. 재개할 때까지 복습 일수가 멈춰요.");
+  refreshStudyPause();
+}
+function resumeStudy() {
+  if (!study.paused) return;
+  const from = study.pausedOn || studyToday();
+  const days = Math.max(0, dayNumber(studyToday()) - dayNumber(from));
+  if (days > 0) Object.keys(study.items).forEach(id => {
+    const s = study.items[id];
+    if (s && s.status === "learning" && s.due) s.due = addDays(s.due, days);
+  });
+  study.paused = false;
+  study.pausedOn = null;
+  saveStudy();
+  toast(days > 0 ? "표현 복습을 재개했어요. 복습 일수를 " + days + "일 뒤로 미뤘어요." : "표현 복습을 재개했어요.");
+  refreshStudyPause();
+}
+/* 중지·재개 뒤 화면: 오늘 탭 · 표현 탭(복습 카드·배지) · 열려 있는 설정 · 표현 상세의 학습 상자 */
+function refreshStudyPause() {
+  renderToday();
+  renderReviewCard();
+  updateBadges();
+  if (stOpen) {
+    const body = stEl.querySelector(".st-body"), top = body ? body.scrollTop : 0;
+    stEl.innerHTML = settingsHtml();
+    const nb = stEl.querySelector(".st-body");
+    if (nb) nb.scrollTop = top;
+  }
+  const it = EXPR_BY_ID[detailId], box = sheetOpen && it ? sheetBody.querySelector("[data-study-box]") : null;
+  if (box) box.outerHTML = studyBoxHtml(it);
 }
 /* 복습 평가(다음 복습 날짜)는 복습 덱의 gradeRate — 표현 카드들을 처음 봤을 때의 '알았음' 비율로 (2026-10-06, 예전 grade(기억남/헷갈림)를 바꿈) */
 function dueText(id) {
@@ -4872,6 +4925,12 @@ function renderReviewCard() {
   const freeBtn = main => '<button class="btn ' + (main ? "rv-start" : "rv-free") + '" type="button" data-review-free>자유 복습 · 지금 연습하기</button>' +
     '<p class="rv-free-note">' + (learned > FREE_N ? freeRoundText(false).replace(/<\/?b>/g, "") + " · 오래전에 본 표현부터" :
       learned ? "학습한 표현 " + learned + "개" + (learned < FREE_N ? " + 안 배운 표현 " + (FREE_N - learned) + "개" : "") : "안 배운 표현 " + FREE_N + "개 미리 보기") + ' · 복습 날짜는 그대로예요</p>';
+  if (isStudyPaused()) {
+    const n = pausedDays();
+    X.rv.innerHTML = head + '<p class="rv-empty">표현 복습이 중지돼 있어요.' + (n ? " " + n + "일째 멈춰 있어요." : "") + ' 재개하면 중지 직전부터 이어가요.</p>' +
+      '<button class="btn rv-start" type="button" data-study-resume>표현 복습 재개</button>' + freeBtn(false);
+    return;
+  }
   if (!due.length) {
     X.rv.innerHTML = head + '<p class="rv-empty">' + (learned ?
       "오늘 복습할 표현이 없어요. 다음 복습일에 다시 알려 드릴게요. 지금 연습하고 싶으면 자유 복습을 해 보세요." :
@@ -5127,6 +5186,7 @@ const teaserRot = makeRotator({
 X.rv.addEventListener("click", e => {
   const one = e.target.closest("[data-review]");
   if (e.target.closest("[data-review-free]")) { buzz(); startFreeReview(); return; }
+  if (e.target.closest("[data-study-resume]")) { buzz(); resumeStudy(); return; }
   if (one || e.target.closest("[data-review-start]")) { buzz(); startReview(); }   // 목록의 표현을 눌러도 같은 덱(오늘 복습할 표현 전부를 섞음)
 });
 
@@ -5748,6 +5808,7 @@ function rvRefresh(s, due) {
 }
 /* 오늘 탭 '지금 할 일'·표현 탭 '오늘의 복습' → 덱(같은 날 하던 덱이 있으면 이어서) */
 function startReview() {
+  if (isStudyPaused()) { toast(PAUSED_MSG); return; }
   const due = dueList();
   let s = rvLoad();
   if (s) rvRefresh(s, due);
@@ -5763,6 +5824,7 @@ function startReview() {
 
 /* 표현의 다음 복습 날짜: 처음 본 카드들의 '알았음' 비율(rate 0~1) */
 function gradeRate(id, rate) {
+  if (isStudyPaused()) return { rate: rate, out: "paused", due: (study.items[id] && study.items[id].due) || null };
   const s = study.items[id];
   if (!s) return null;
   const t = studyToday(), step = s.step || 0;
@@ -6273,7 +6335,7 @@ sheetBody.addEventListener("click", async e => {
   if (pe) { practiceExpr(pe.dataset.pcExpr); return; }
   if (t.closest("[data-study-start]")) {
     if (startLearning(detailId)) { buzz(); toast("학습 시작! 내일 첫 복습이 돌아와요"); }
-    else toast("오늘은 3개 다 골랐어요");
+    else if (!isStudyPaused()) toast("오늘은 3개 다 골랐어요");   // 중지 중이면 startLearning이 이미 안내함
     refreshDetail(); renderExprTab();
     return;
   }
@@ -6350,8 +6412,9 @@ function nextCardIdx() {
   return (last + 1 + L) % L;
 }
 function nowTask(s) {
-  if (s.due) return { kind: "review" };
-  if (s.picks < DAILY_PICKS && s.newLeft) return { kind: "new" };
+  const paused = isStudyPaused();          // 표현 복습 중지 중이면 복습·새 표현은 건너뜀(상황 카드·일기는 그대로)
+  if (s.due && !paused) return { kind: "review" };
+  if (!paused && s.picks < DAILY_PICKS && s.newLeft) return { kind: "new" };
   if (!s.cards && CARDS.length) {
     const ci = nextCardIdx(), x = allHooks().find(h => h.ci === ci);
     return x ? { kind: "hook", ci, x } : { kind: "card", ci };
@@ -6401,6 +6464,10 @@ function renderToday() {
   const s = todayStats(), task = nowTask(s);
   const gear = '<button class="gear" type="button" data-open-settings aria-label="설정">' + ICON_SLIDERS + '</button>';
   const btn = (act, label, sub) => '<button class="btn td-go' + (sub ? " sub" : "") + '" type="button" data-td="' + act + '">' + esc(label) + '</button>';
+  const pauseHtml = isStudyPaused() ? '<section class="td-sec td-pause" aria-label="표현 복습 중지 중"><div class="td-h"><h3>표현 복습 중지 중</h3>' +
+      (pausedDays() ? '<small>' + pausedDays() + '일째</small>' : "") + '</div>' +
+    '<p class="td-sub">복습 일수가 멈춰 있어요. 재개하면 중지 직전부터 이어가요.</p>' +
+    '<button class="btn td-go sub" type="button" data-study-resume>재개</button></section>' : "";
   let now;
   if (task.kind === "review") {
     const rp = reviewProgress();       // 같은 날 하던 덱이 있으면 이어서
@@ -6429,7 +6496,7 @@ function renderToday() {
     const nTm = Object.keys(study.items).filter(id => EXPR_BY_ID[id] && study.items[id].status === "learning" && study.items[id].due && study.items[id].due <= tm).length;
     now = '<section class="td-now" aria-label="오늘 할 일 끝"><span class="td-label">오늘 할 일 끝</span>' +
       '<p class="td-title">오늘 목표를 모두 채웠어요</p>' +
-      '<p class="td-sub">' + (nTm ? "내일 복습할 표현 " + nTm + "개 예정" : "내일 복습할 표현은 없어요") + '</p>' + btn("cards", "상황 카드 더 보기", true) + '</section>';
+      '<p class="td-sub">' + (isStudyPaused() ? "표현 복습은 중지 중이에요" : nTm ? "내일 복습할 표현 " + nTm + "개 예정" : "내일 복습할 표현은 없어요") + '</p>' + btn("cards", "상황 카드 더 보기", true) + '</section>';
   }
   /* ② 오늘 진행 */
   const prog = [
@@ -6473,13 +6540,14 @@ function renderToday() {
     '<button class="td-rgo" type="button" data-td="resume">이어 듣기</button></div></section>' : "";
   todayEl.innerHTML =
     '<header class="w-top"><div><div class="w-date">' + esc(koDate(s.t, true)) + '</div><h2 class="w-title">오늘</h2></div>' + gear + '</header>' +
-    now + progHtml + weekHtml + skillHtml + resumeHtml;
+    pauseHtml + now + progHtml + weekHtml + skillHtml + resumeHtml;
 }
 /* 지금 할 일 → 그 일이 바로 시작(해당 탭의 2단계) */
 todayEl.addEventListener("click", e => {
   const t = e.target;
   let el;
   if ((el = t.closest("[data-td-filter]"))) { buzz(); openExprFiltered(el.dataset.tdFilter); return; }
+  if (t.closest("[data-study-resume]")) { buzz(); resumeStudy(); return; }
   if ((el = t.closest("[data-td-day]"))) {           // 최근 7일: 그날 한 것(다시 그리지 않고 그 줄만 바꿈)
     buzz();
     tdDay = el.dataset.tdDay;
@@ -8825,6 +8893,14 @@ function settingsHtml() {
         '</div>' +
       '</section>' +
       '<section class="st-sec" id="stReview" aria-label="복습"><h3>복습</h3>' +
+        '<div class="set-group"><span class="set-label">표현 복습</span>' +
+          (isStudyPaused() ?
+            '<p class="st-pause">중지됨 · ' + (pausedDays() ? pausedDays() + "일째 멈춰 있음" : "오늘 멈춤") + '</p>' +
+            '<div class="btn-row"><button class="btn td-go" type="button" data-study-resume>표현 복습 재개</button></div>' :
+            '<p class="st-pause">지금 켜져 있어요. 중지하면 복습 일수가 멈춰요.</p>' +
+            '<div class="btn-row"><button class="btn" type="button" data-study-pause>표현 복습 중지</button></div>') +
+          '<p class="note">앱을 업데이트해도 중지/재개 상태가 그대로 남아요. 중지한 동안은 복습 날짜가 밀리지 않고, 재개하면 멈춘 만큼 due가 뒤로 가요.</p>' +
+        '</div>' +
         '<div class="set-group"><span class="set-label">카드를 뒤집으면 영어 자동 재생</span>' +
           seg("fcAuto", [["true", "켜기"], ["false", "끄기"]]) +
           '<p class="note">복습 카드의 뒷면이 나오면 영어 문장을 바로 읽어 줘요. 꺼도 카드의 스피커 버튼으로 들을 수 있어요.</p>' +
@@ -8897,6 +8973,8 @@ stEl.addEventListener("click", e => {
   const t = e.target;
   let el;
   if (t.closest("[data-st-close]")) { buzz(); closeSettings(); return; }
+  if (t.closest("[data-study-pause]")) { buzz(); pauseStudy(); return; }
+  if (t.closest("[data-study-resume]")) { buzz(); resumeStudy(); return; }
   if ((el = t.closest(".seg button"))) {
     const name = el.parentNode.dataset.set, v = el.dataset.v;
     settings[name] = name === "speed" ? parseFloat(v) : name === "rotateSec" ? parseInt(v, 10) : name === "rotate" || name === "fcAuto" || name === "fcRemote" ? v === "true" : name === "fcEcho" ? parseInt(v, 10) : name === "textZoom" ? parseFloat(v) : v;
