@@ -48,9 +48,9 @@
   - 검증: `... --verify 1,2,...,80`(id·파일·단어 시간 개수)
 - 문장을 고친 뒤에는 바뀐 문장만 다시 만들고, 어떤 카드에도 안 쓰이는 음성(manifest 항목과 mp3)을 지운 다음 `--verify`를 돌림
 
-## 필사(쇼츠 탭)
+## 필사 탭
 
-- 쇼츠 탭 맨 위 [쇼츠|필사]. 28일 필사 교재(`/workspace/workbook/hanjang-28day`)와 같은 계획: Day N = `CARDS.slice((N-1)*3, N*3)`(Day 1 = 2026-11-15, Day 28은 2장). 카드마다 대화 → 핵심 표현마다 예문 → 말해보기(`drillsOf`) → 썰 문장(`storySents`)
+- 하단 다섯째 탭 = 필사(탭 키·화면 id는 예전 이름 `shorts`/`#viewShorts`). 쇼츠 화면은 UI에서 연결 안 함(`data/shorts.js`와 코드는 남아 있음). 28일 필사 교재(`/workspace/workbook/hanjang-28day`)와 같은 계획: Day N = `CARDS.slice((N-1)*3, N*3)`(Day 1 = 2026-11-15, Day 28은 2장). 카드마다 대화 → 핵심 표현마다 예문 → 말해보기(`drillsOf`) → 썰 문장(`storySents`)
 - 기록은 `engcards.pilsa.v1`만 씀(다른 키는 안 건드림). 카드를 추가하면 Day 28 뒤 카드는 필사에 안 나옴(28일 고정)
 
 ## 테스트

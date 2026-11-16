@@ -1490,7 +1490,7 @@
   }
   .toast.on{ opacity:1; transform:translate(-50%, 0); }
 
-  /* ---------- 쇼츠 탭(sh-): 유튜브 쇼츠 음성 + 자동자막(노래방식 채우기, 문장·단어 탭/진행 바 드래그 = 그 자리부터 이어 듣기) ---------- */
+  /* ---------- 쇼츠(sh-, 2026-11-16부터 화면에서 안 씀 — 다섯째 탭은 필사): 유튜브 쇼츠 음성 + 자동자막. .shview는 필사 화면이 씀 ---------- */
   .shview{ overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain;
     padding:calc(env(safe-area-inset-top, 0px) + 14px) max(var(--pad), env(safe-area-inset-right)) calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 24px) max(var(--pad), env(safe-area-inset-left)); }
   .sh-list{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
@@ -1519,10 +1519,8 @@
   .sh-line.cur .w.now{ background:rgba(255,214,0,.55); border-radius:4px; box-shadow:0 0 0 2px rgba(255,214,0,.55); color:#1b1b1b; }
   :root{ --sh-hl:rgba(255,214,0,.16); }
 
-  /* ---------- 쇼츠 탭 › 필사(ps-, 2026-11-16): [쇼츠|필사] → Day 고르기 → 문장마다 ① 따라 쓰기 ② 떠올려 쓰기. 키보드가 올라오면 문제가 보이게 위로 맞춤(psFit) ---------- */
-  .ps-sub{ margin-top:16px; }
-  .ps-sub button{ height:46px; font-size:16px; }
-  .ps-now{ margin-top:16px; padding:16px; border-radius:18px; background:var(--bg-2); border:1px solid var(--line); }
+  /* ---------- 필사 탭(ps-, 2026-11-16): Day 고르기 → 문장마다 ① 따라 쓰기 ② 떠올려 쓰기. 키보드가 올라오면 문제가 보이게 위로 맞춤(psFit) ---------- */
+  .ps-now{ margin-top:18px; padding:16px; border-radius:18px; background:var(--bg-2); border:1px solid var(--line); }
   .ps-now-h{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; font-size:19px; font-weight:700; }
   .ps-now-h span{ font-size:15px; font-weight:600; color:var(--muted); }
   .ps-badge{ font-size:12px !important; font-weight:700 !important; padding:1px 8px; border-radius:999px; color:var(--accent) !important; background:var(--accent-soft); border:1px solid var(--accent-line); }
@@ -1551,9 +1549,10 @@
   .ps-step{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--accent); }
   .ps-step .ps-cnt{ margin-left:auto; font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
   .ps-ctx{ margin-top:3px; font-size:13px; line-height:1.45; color:var(--faint); }
-  .ps-en{ margin:9px 0 0; font-size:21px; line-height:1.45; font-weight:650; letter-spacing:-.005em; }
+  .ps-en-row{ display:flex; align-items:flex-start; gap:10px; margin-top:9px; }   /* 영어(줄바꿈 자유) + 스피커(오른쪽, 따로) — 상황 탭 .fc-en-row와 같은 짜임 */
+  .ps-en{ flex:1; min-width:0; margin:0; font-size:21px; line-height:1.45; font-weight:650; letter-spacing:-.005em; overflow-wrap:anywhere; }
   .ps-en.peek{ font-size:18px; color:var(--accent); }
-  .ps-en .spk{ display:inline-flex; vertical-align:-4px; margin-left:4px; }
+  .ps-en-row .spk{ flex:none; margin-top:-2px; }
   .ps-ko{ margin:7px 0 0; font-size:16px; line-height:1.55; color:var(--text-2); }
   .ps-sess.recall .ps-ko{ font-size:20px; line-height:1.5; font-weight:600; color:var(--text); }
   .ps-kohint{ margin:6px 0 0; font-size:13px; color:var(--faint); }
@@ -1700,8 +1699,8 @@
       <section class="dv-screen" id="dvSetup"></section>
     </section>
 
-    <!-- 쇼츠 탭(sh-): 쇼츠 음성 + 자막(노래방식). 내용은 스크립트(쇼츠 부분)가 채움 -->
-    <section class="view shview off" id="viewShorts" aria-label="쇼츠" inert></section>
+    <!-- 필사 탭(ps-): Day 목록 · 따라 쓰기/떠올려 쓰기. 탭 키·id는 예전 이름(shorts) 그대로. 내용은 스크립트(필사 부분)가 채움 -->
+    <section class="view shview off" id="viewShorts" aria-label="필사" inert></section>
   </div>
 
   <nav class="tabbar" role="tablist" aria-label="화면 전환">
@@ -1725,8 +1724,8 @@
       <span>드라이브</span>
     </button>
     <button class="tab" id="tabShorts" type="button" role="tab" data-tab="shorts" aria-selected="false">
-      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 9.2v5.6l4.5-2.8z" fill="currentColor"/></svg></span>
-      <span>쇼츠</span>
+      <span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/><path d="M14.5 5.5l3 3"/><path d="M13 20h7"/></svg></span>
+      <span>필사</span>
     </button>
   </nav>
 </div>
@@ -6702,8 +6701,8 @@ function openHook(x) {
   row._hook = setTimeout(() => row.classList.remove("hook-hi"), 2400);
 }
 
-/* ================= 쇼츠 탭(sh-) =================
-   첫 화면은 쇼츠 목록(window.SHORTS = data/shorts.js). 누르면 재생 화면: 재생 버튼 + 진행 바(드래그 = 그 자리부터) + 자막.
+/* ================= 쇼츠(sh-) — 2026-11-16부터 화면에서 연결 안 됨(다섯째 탭 = 필사, 아래). 코드·data/shorts.js는 남겨 둠 =================
+   예전 첫 화면은 쇼츠 목록(window.SHORTS = data/shorts.js). 누르면 재생 화면: 재생 버튼 + 진행 바(드래그 = 그 자리부터) + 자막.
    자막은 문장 단위(cues: start·end 초, w = 단어별 시작 초). 지금 문장은 노란 배경, 단어는 노래방식으로 채움.
    문장/단어를 누르면 그 자리부터 이어서 재생. 기록은 localStorage 'sh-pos'({ [id]: 마지막 위치 초 }) */
 const SH_KEY = "sh-pos";
@@ -6774,15 +6773,19 @@ function shSeek(t, play) {
   shSync();
   if (play && a.paused) a.play().catch(() => {});
 }
+/* 다섯째 탭(키 "shorts")을 열면 → 필사만. 쇼츠 화면(shRenderShorts)으로 가는 길은 없음 */
 function shRender() {
+  if (SH.item) { shStop(); SH.item = null; SH.audio = null; }
+  psRender();
+}
+function shRenderShorts() {
   const v = SH.view;
-  if (!SH.item && PS.sub === "pilsa") { psRender(); return; }      // 필사(아래 '필사' 부분)
   psScreen = null;
   v.style.paddingBottom = "";
-  if (!SHORTS.length) { v.innerHTML = psSubSeg() + '<p class="note">쇼츠가 없어요.</p>'; return; }
+  if (!SHORTS.length) { v.innerHTML = '<p class="note">쇼츠가 없어요.</p>'; return; }
   if (!SH.item) {
     v.innerHTML = '<header class="w-top"><div><div class="w-date">쇼츠</div><h2 class="w-title">들으면서 따라 읽기</h2>' +
-      '<p class="sh-src">유튜브 쇼츠 음성 + 자동자막 · 학습용</p></div></header>' + psSubSeg() +
+      '<p class="sh-src">유튜브 쇼츠 음성 + 자동자막 · 학습용</p></div></header>' +
       '<div class="sh-list">' + SHORTS.map((s, si) =>
         '<button class="sh-item" type="button" data-sh="open" data-si="' + si + '"><span class="sh-item-t">' + esc(s.title) + '</span>' +
         '<span class="sh-item-s">' + esc(s.channel) + ' · ' + shFmt(s.duration) + ' · ' + s.cues.length + '문장</span>' + ICON_ARROW + '</button>').join("") + '</div>';
@@ -6807,8 +6810,8 @@ SH.view.addEventListener("click", e => {
   const b = e.target.closest("[data-sh]");
   if (b) {
     const a = b.dataset.sh;
-    if (a === "open") { const s = SHORTS[+b.dataset.si]; if (s) { shOpen(s); shRender(); SH.view.scrollTop = 0; buzz(); } return; }
-    if (a === "list") { shStop(); shSavePos(); SH.item = null; SH.audio = null; shRender(); SH.view.scrollTop = 0; return; }
+    if (a === "open") { const s = SHORTS[+b.dataset.si]; if (s) { shOpen(s); shRenderShorts(); SH.view.scrollTop = 0; buzz(); } return; }
+    if (a === "list") { shStop(); shSavePos(); SH.item = null; SH.audio = null; shRenderShorts(); SH.view.scrollTop = 0; return; }
     if (a === "toggle" && SH.audio) { if (SH.audio.paused) SH.audio.play().catch(() => {}); else SH.audio.pause(); return; }
     return;
   }
@@ -6819,14 +6822,14 @@ SH.view.addEventListener("click", e => {
   shSeek(t, true);
 });
 
-/* ================= 쇼츠 탭 › 필사(ps-, 2026-11-16) =================
-   쇼츠 탭 맨 위 [쇼츠|필사]. 28일 손글씨 필사 교재(workbook/hanjang-28day)와 같은 계획을 타자로:
+/* ================= 필사 탭(ps-, 2026-11-16) =================
+   다섯째 탭(키·화면 id는 예전 이름 "shorts"/#viewShorts)을 누르면 바로 필사. 28일 손글씨 필사 교재(workbook/hanjang-28day)와 같은 계획을 타자로:
    Day N = CARDS.slice((N-1)*3, N*3)(앱 화면 순서, Day 1 = 2026-11-15 … Day 28 = 2026-12-12, Day 28은 2장).
    카드마다 대화 전체 → 핵심 표현(extraExpressions 제외)마다 예문 5개 → 말해보기 10개(drillsOf) → 썰 문장(storySents).
    문장마다 ① 따라 쓰기(영어+한국어 보고) → ② 떠올려 쓰기(한국어만). 채점은 너그럽게(psToks: 대소문자·공백·문장 부호·둥근 따옴표·악센트·흔한 줄임말).
    틀리면 단어 단위로 표시(psDiff)하고 맞을 때까지 다시. 떠올려 쓰기에서 틀리거나 정답 보기를 누른 문장은 Day 끝 '다시 쓰기'(떠올려 쓰기)로 —
    다시 쓰기에서도 틀리면 맞힌 뒤 줄 맨 뒤로 한 번 더. 줄이 비면 Day 완료.
-   기록 engcards.pilsa.v1(다른 키는 건드리지 않음) { v: 1, sub: "shorts"|"pilsa", day, dayOn: 고른 날짜, scr: "home"|"sess",
+   기록 engcards.pilsa.v1(다른 키는 건드리지 않음) { v: 1, sub: "pilsa"(예전 [쇼츠|필사] 자리 — 남아 있는 "shorts"는 무시), day, dayOn: 고른 날짜, scr: "home"|"sess",
      days: { [N]: { s: { [문장 키]: 1 따라 씀 | 2 떠올려 씀 | 4 틀린 적 있음 }, rq: [다시 쓰기 남은 키], at: 지금 문장 키, ph: "main"|"retry" } } }
    문장 키 = 종류:카드·표현 id:번호:영어 해시 — 카드 글이 바뀌면 그 문장만 처음부터(나머지 기록은 그대로). 지금 위치는 기록에서 다시 계산(psPos) */
 const PS_KEY = "engcards.pilsa.v1";
@@ -6837,10 +6840,10 @@ const PS = (() => {
   if (!s || typeof s !== "object") s = {};
   const days = s.days && typeof s.days === "object" && !Array.isArray(s.days) ? s.days : {};
   const day = Number.isInteger(s.day) && s.day >= 1 && s.day <= PS_DAYS ? s.day : 0;
-  return { v: 1, sub: s.sub === "pilsa" ? "pilsa" : "shorts", day, dayOn: typeof s.dayOn === "string" ? s.dayOn : "", scr: s.scr === "sess" ? "sess" : "home", days };
+  return { v: 1, sub: "pilsa", day, dayOn: typeof s.dayOn === "string" ? s.dayOn : "", scr: s.scr === "sess" ? "sess" : "home", days };
 })();
 function psSave() { try { localStorage.setItem(PS_KEY, JSON.stringify(PS)); } catch (e) {} }
-let psScreen = null;                                   // 지금 쇼츠 탭에 그려진 필사 화면 ("home" / "sess" / null = 쇼츠)
+let psScreen = null;                                   // 지금 필사 탭에 그려진 화면 ("home" / "sess" / null = 아직 안 그림)
 const P = { day: 1, pos: null, missed: false, peek: false, busy: false };
 /* 오늘의 Day(날짜 범위 밖이면 1 또는 28) / Day N의 날짜 "11월 16일" */
 function psTodayDay() { return Math.min(PS_DAYS, Math.max(1, dayNumber(dateKey()) - dayNumber(PS_DAY1) + 1)); }
@@ -6954,12 +6957,6 @@ function psDiff(en, typed, show) {
 const psSame = (en, typed) => psDiff(en, typed, false).ok;
 
 /* ---- 화면 ---- */
-function psSubSeg() {
-  const sub = SH.item ? "shorts" : PS.sub;
-  return '<div class="seg ps-sub" role="group" aria-label="쇼츠 또는 필사">' +
-    '<button type="button" data-ps-sub="shorts" aria-pressed="' + (sub === "shorts") + '">쇼츠</button>' +
-    '<button type="button" data-ps-sub="pilsa" aria-pressed="' + (sub === "pilsa") + '">필사</button></div>';
-}
 function psRender() {
   if (PS.scr === "sess" && psScreen === "sess" && SH.view.querySelector(".ps-sess")) { psFit(); return; }   // 탭을 오가도 쓰던 글은 그대로
   if (PS.scr === "sess") psOpen(psDay(), false); else psHome();
@@ -6970,8 +6967,8 @@ function psHome() {
   v.style.paddingBottom = "";
   const pct = x => (x.total ? Math.round(x.done / x.total * 100) : 0);
   const where = !pos ? "" : pos.retry ? "다시 쓰기부터" : (pos.idx + 1) + "번째 문장 · " + (pos.step === 1 ? "① 따라 쓰기" : "② 떠올려 쓰기") + "부터";
-  v.innerHTML = '<header class="w-top"><div><div class="w-date">쇼츠</div><h2 class="w-title">28일 필사</h2>' +
-      '<p class="sh-src">영어를 보고 따라 쓰고, 한국어만 보고 떠올려 써요</p></div></header>' + psSubSeg() +
+  v.innerHTML = '<header class="w-top"><div><div class="w-date">' + esc(koDate(dateKey(), true)) + '</div><h2 class="w-title">28일 필사</h2>' +
+      '<p class="sh-src">영어를 보고 따라 쓰고, 한국어만 보고 떠올려 써요</p></div></header>' +
     '<section class="ps-now" aria-label="고른 Day">' +
       '<div class="ps-now-h">Day ' + cur + ' <span>· ' + psDate(cur) + '</span>' + (cur === today ? '<span class="ps-badge">오늘</span>' : '') + '</div>' +
       '<ol class="ps-cards">' + CARDS.slice((cur - 1) * 3, cur * 3).map(c => '<li>' + esc(c.title) + '</li>').join("") + '</ol>' +
@@ -7038,8 +7035,9 @@ function psShow() {
   if (it.ex) ctx.push(it.ex.phrase);
   const step = pos.retry ? "다시 쓰기 · 떠올려 쓰기" : recall ? "② 떠올려 쓰기" : "① 따라 쓰기";
   const ko = it.ko || it.koAll;
-  const enHtml = '<p class="ps-en' + (recall ? ' peek' : '') + '" lang="en">' + esc(it.en) +
-    ' <button class="spk" type="button" aria-label="문장 듣기" data-ps="say">' + ICON_SPEAKER + '</button></p>';
+  /* 영어가 보일 때만(따라 쓰기 · 떠올려 쓰기에서 정답 보기 뒤) 영어 오른쪽에 스피커 — 글 안에 끼우지 않음(겹침 방지) */
+  const enHtml = '<div class="ps-en-row"><p class="ps-en' + (recall ? ' peek' : '') + '" lang="en">' + esc(it.en) + '</p>' +
+    '<button class="spk" type="button" aria-label="문장 듣기" data-ps="say">' + ICON_SPEAKER + '</button></div>';
   card.innerHTML = '<div class="ps-step">' + step + '<span class="ps-cnt">' + (pos.retry ? st.retry + "개 남음" : (pos.idx + 1) + " / " + st.total) + '</span></div>' +
     '<div class="ps-ctx">' + esc(ctx.join(" · ")) + '</div>' +
     (!recall || P.peek ? enHtml : '') +
@@ -7124,13 +7122,6 @@ SH.view.addEventListener("input", e => {
   psSubmit();
 });
 SH.view.addEventListener("click", e => {
-  const sub = e.target.closest("[data-ps-sub]");
-  if (sub) {
-    if (sub.dataset.psSub === PS.sub) return;
-    PS.sub = sub.dataset.psSub; psSave(); buzz();
-    shRender(); SH.view.scrollTop = 0;
-    return;
-  }
   const day = e.target.closest("[data-ps-day]");
   if (day) {
     PS.day = +day.dataset.psDay; PS.dayOn = dateKey(); psSave(); buzz();
@@ -7173,7 +7164,7 @@ SH.view.addEventListener("click", e => {
 SH.view.addEventListener("mousedown", e => { if (e.target.closest('.ps-btns [data-ps]') && document.activeElement && document.activeElement.matches(".ps-in")) e.preventDefault(); });
 
 /* ================= 하단 탭 =================
-   [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
+   [오늘 | 상황 | 표현 | 드라이브 | 필사(탭 키는 예전 이름 "shorts")]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
    탭을 오가도 각 화면의 상태(보던 카드·모드·스크롤·입력)는 그대로(.view.off는 visibility:hidden이라 남아 있음) */
 try { localStorage.removeItem("engcards.tab.v1"); } catch (e) {}
 const VIEWS = { today: todayEl, cards: feed, expr: X.view, write: W.view, drive: document.getElementById("viewDrive"), shorts: SH.view };
