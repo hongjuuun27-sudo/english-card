@@ -1519,6 +1519,61 @@
   .sh-line.cur .w.now{ background:rgba(255,214,0,.55); border-radius:4px; box-shadow:0 0 0 2px rgba(255,214,0,.55); color:#1b1b1b; }
   :root{ --sh-hl:rgba(255,214,0,.16); }
 
+  /* ---------- 쇼츠 탭 › 필사(ps-, 2026-11-16): [쇼츠|필사] → Day 고르기 → 문장마다 ① 따라 쓰기 ② 떠올려 쓰기. 키보드가 올라오면 문제가 보이게 위로 맞춤(psFit) ---------- */
+  .ps-sub{ margin-top:16px; }
+  .ps-sub button{ height:46px; font-size:16px; }
+  .ps-now{ margin-top:16px; padding:16px; border-radius:18px; background:var(--bg-2); border:1px solid var(--line); }
+  .ps-now-h{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; font-size:19px; font-weight:700; }
+  .ps-now-h span{ font-size:15px; font-weight:600; color:var(--muted); }
+  .ps-badge{ font-size:12px !important; font-weight:700 !important; padding:1px 8px; border-radius:999px; color:var(--accent) !important; background:var(--accent-soft); border:1px solid var(--accent-line); }
+  .ps-cards{ margin:8px 0 0; padding:0 0 0 20px; font-size:15px; line-height:1.6; color:var(--text-2); }
+  .ps-meter{ display:flex; align-items:center; gap:10px; margin-top:12px; font-size:14px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .ps-bar{ flex:1; height:8px; border-radius:99px; background:var(--bg-3); overflow:hidden; }
+  .ps-bar i{ display:block; height:100%; border-radius:inherit; background:var(--accent); }
+  .ps-now .note{ margin-top:6px; }
+  .ps-go{ width:100%; margin-top:14px; color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .ps-h{ margin:24px 2px 8px; font-size:13px; font-weight:600; letter-spacing:.04em; color:var(--faint); }
+  .ps-days{ display:flex; flex-direction:column; gap:6px; }
+  .ps-day{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:5px 12px; width:100%; min-height:58px; padding:10px 14px; text-align:left; border-radius:14px; background:var(--bg-2); border:1px solid var(--line); }
+  .ps-day[aria-pressed="true"]{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+  .ps-day-n{ min-width:56px; font-size:16px; font-weight:700; }
+  .ps-day-d{ font-size:14px; color:var(--muted); }
+  .ps-day-c{ font-size:13px; color:var(--faint); text-align:right; font-variant-numeric:tabular-nums; }
+  .ps-day-c.ok{ color:var(--accent); font-weight:700; }
+  .ps-day .ps-bar{ grid-column:1 / 4; height:4px; }
+  .ps-sess{ display:flex; flex-direction:column; gap:12px; }
+  .ps-sess [hidden]{ display:none !important; }   /* .btn·.w-area의 display보다 우선 */
+  .ps-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .ps-pos{ font-size:14px; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .ps-pos b{ color:var(--text); }
+  .ps-sess > .ps-bar{ flex:none; height:6px; }
+  .ps-card{ padding:13px 16px 15px; border-radius:18px; background:var(--bg-2); border:1px solid var(--line); }
+  .ps-step{ display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--accent); }
+  .ps-step .ps-cnt{ margin-left:auto; font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
+  .ps-ctx{ margin-top:3px; font-size:13px; line-height:1.45; color:var(--faint); }
+  .ps-en{ margin:9px 0 0; font-size:21px; line-height:1.45; font-weight:650; letter-spacing:-.005em; }
+  .ps-en.peek{ font-size:18px; color:var(--accent); }
+  .ps-en .spk{ display:inline-flex; vertical-align:-4px; margin-left:4px; }
+  .ps-ko{ margin:7px 0 0; font-size:16px; line-height:1.55; color:var(--text-2); }
+  .ps-sess.recall .ps-ko{ font-size:20px; line-height:1.5; font-weight:600; color:var(--text); }
+  .ps-kohint{ margin:6px 0 0; font-size:13px; color:var(--faint); }
+  .ps-diff{ padding:11px 14px; border-radius:14px; background:var(--bg-3); border:1px solid var(--line); font-size:18px; line-height:1.75; }
+  .ps-diff[hidden]{ display:none; }
+  .ps-diff.ok{ color:var(--accent); font-weight:700; border-color:var(--accent-line); }
+  .ps-diff .bad{ color:var(--again); text-decoration:line-through; text-decoration-thickness:2px; }
+  .ps-diff .miss{ color:var(--accent); font-weight:700; border-bottom:2px solid var(--accent); }
+  .ps-diff .gap{ display:inline-block; min-width:2.4em; height:1.05em; margin:0 2px; vertical-align:-3px; border-radius:5px; background:var(--bg-2); border:1.5px dashed var(--again); }
+  .ps-diff-k{ display:block; margin-top:4px; font-size:13px; line-height:1.5; color:var(--faint); }
+  .ps-in{ min-height:96px; font-size:19px; line-height:1.5; }
+  .ps-sess.kb .ps-in{ min-height:64px; }
+  .ps-btns{ display:flex; gap:8px; }
+  .ps-btns .btn{ flex:1; }
+  .ps-btns .ps-ok{ flex:1.6; }
+  .ps-sess .ps-ok{ color:var(--on-accent); background:var(--accent); border-color:transparent; }
+  .ps-done{ padding:22px 16px; border-radius:18px; text-align:center; background:var(--bg-2); border:1px solid var(--line); }
+  .ps-done h3{ margin:0; font-size:22px; }
+  .ps-done .btn-row{ margin-top:16px; }
+
   @media (prefers-reduced-motion: reduce){
     *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
   }
@@ -6721,10 +6776,13 @@ function shSeek(t, play) {
 }
 function shRender() {
   const v = SH.view;
-  if (!SHORTS.length) { v.innerHTML = '<p class="note">쇼츠가 없어요.</p>'; return; }
+  if (!SH.item && PS.sub === "pilsa") { psRender(); return; }      // 필사(아래 '필사' 부분)
+  psScreen = null;
+  v.style.paddingBottom = "";
+  if (!SHORTS.length) { v.innerHTML = psSubSeg() + '<p class="note">쇼츠가 없어요.</p>'; return; }
   if (!SH.item) {
     v.innerHTML = '<header class="w-top"><div><div class="w-date">쇼츠</div><h2 class="w-title">들으면서 따라 읽기</h2>' +
-      '<p class="sh-src">유튜브 쇼츠 음성 + 자동자막 · 학습용</p></div></header>' +
+      '<p class="sh-src">유튜브 쇼츠 음성 + 자동자막 · 학습용</p></div></header>' + psSubSeg() +
       '<div class="sh-list">' + SHORTS.map((s, si) =>
         '<button class="sh-item" type="button" data-sh="open" data-si="' + si + '"><span class="sh-item-t">' + esc(s.title) + '</span>' +
         '<span class="sh-item-s">' + esc(s.channel) + ' · ' + shFmt(s.duration) + ' · ' + s.cues.length + '문장</span>' + ICON_ARROW + '</button>').join("") + '</div>';
@@ -6760,6 +6818,359 @@ SH.view.addEventListener("click", e => {
   const t = w && c.w && c.w[+w.dataset.wi] != null ? c.w[+w.dataset.wi] : c.start;
   shSeek(t, true);
 });
+
+/* ================= 쇼츠 탭 › 필사(ps-, 2026-11-16) =================
+   쇼츠 탭 맨 위 [쇼츠|필사]. 28일 손글씨 필사 교재(workbook/hanjang-28day)와 같은 계획을 타자로:
+   Day N = CARDS.slice((N-1)*3, N*3)(앱 화면 순서, Day 1 = 2026-11-15 … Day 28 = 2026-12-12, Day 28은 2장).
+   카드마다 대화 전체 → 핵심 표현(extraExpressions 제외)마다 예문 5개 → 말해보기 10개(drillsOf) → 썰 문장(storySents).
+   문장마다 ① 따라 쓰기(영어+한국어 보고) → ② 떠올려 쓰기(한국어만). 채점은 너그럽게(psToks: 대소문자·공백·문장 부호·둥근 따옴표·악센트·흔한 줄임말).
+   틀리면 단어 단위로 표시(psDiff)하고 맞을 때까지 다시. 떠올려 쓰기에서 틀리거나 정답 보기를 누른 문장은 Day 끝 '다시 쓰기'(떠올려 쓰기)로 —
+   다시 쓰기에서도 틀리면 맞힌 뒤 줄 맨 뒤로 한 번 더. 줄이 비면 Day 완료.
+   기록 engcards.pilsa.v1(다른 키는 건드리지 않음) { v: 1, sub: "shorts"|"pilsa", day, dayOn: 고른 날짜, scr: "home"|"sess",
+     days: { [N]: { s: { [문장 키]: 1 따라 씀 | 2 떠올려 씀 | 4 틀린 적 있음 }, rq: [다시 쓰기 남은 키], at: 지금 문장 키, ph: "main"|"retry" } } }
+   문장 키 = 종류:카드·표현 id:번호:영어 해시 — 카드 글이 바뀌면 그 문장만 처음부터(나머지 기록은 그대로). 지금 위치는 기록에서 다시 계산(psPos) */
+const PS_KEY = "engcards.pilsa.v1";
+const PS_DAY1 = "2026-11-15", PS_DAYS = 28;
+const PS = (() => {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(PS_KEY) || "null"); } catch (e) {}
+  if (!s || typeof s !== "object") s = {};
+  const days = s.days && typeof s.days === "object" && !Array.isArray(s.days) ? s.days : {};
+  const day = Number.isInteger(s.day) && s.day >= 1 && s.day <= PS_DAYS ? s.day : 0;
+  return { v: 1, sub: s.sub === "pilsa" ? "pilsa" : "shorts", day, dayOn: typeof s.dayOn === "string" ? s.dayOn : "", scr: s.scr === "sess" ? "sess" : "home", days };
+})();
+function psSave() { try { localStorage.setItem(PS_KEY, JSON.stringify(PS)); } catch (e) {} }
+let psScreen = null;                                   // 지금 쇼츠 탭에 그려진 필사 화면 ("home" / "sess" / null = 쇼츠)
+const P = { day: 1, pos: null, missed: false, peek: false, busy: false };
+/* 오늘의 Day(날짜 범위 밖이면 1 또는 28) / Day N의 날짜 "11월 16일" */
+function psTodayDay() { return Math.min(PS_DAYS, Math.max(1, dayNumber(dateKey()) - dayNumber(PS_DAY1) + 1)); }
+function psDate(n) { const p = PS_DAY1.split("-").map(Number), d = new Date(p[0], p[1] - 1, p[2] + n - 1); return (d.getMonth() + 1) + "월 " + d.getDate() + "일"; }
+/* 고른 Day: 오늘 고른 게 있으면 그것, 날짜가 바뀌었으면 오늘의 Day */
+function psDay() { return PS.day && PS.dayOn === dateKey() ? PS.day : psTodayDay(); }
+function psHash(s) { let h = 0; for (const ch of s) h = (Math.imul(h, 31) + ch.codePointAt(0)) | 0; return (h >>> 0).toString(36); }
+
+/* Day N의 문장 목록 [{ k, en, ko, kind, card, ex, who, sn, koAll }] (교재와 같은 양·순서) */
+const PS_ITEMS = {};
+function psItems(n) {
+  if (PS_ITEMS[n]) return PS_ITEMS[n];
+  const out = [];
+  const add = (t, id, i, en, ko, o) => {
+    en = stripGloss(en).replace(/\s+/g, " ").trim();
+    if (en) out.push(Object.assign({ k: t + ":" + id + ":" + i + ":" + psHash(en), en, ko: String(ko || "").trim() }, o));
+  };
+  CARDS.slice((n - 1) * 3, n * 3).forEach(c => {
+    (c.dialogue || []).forEach((l, i) => add("d", c.id, i, l.en, l.ko, { card: c, kind: "대화", who: l.who }));
+    (c.expressions || []).forEach(e => {
+      (e.examples || []).forEach((x, i) => add("x", e.id, i, x.en, x.ko, { card: c, ex: e, kind: "예문" }));
+      drillsOf(e.id).forEach((d, i) => add("r", e.id, i, d.en, d.ko, { card: c, ex: e, kind: "말해보기" }));
+      const st = e.story;
+      if (!st || !st.en) return;
+      /* 문장별 한국어: sentences[i].ko → 없으면 썰 한국어를 문장 부호로 나눠 개수가 맞을 때 → 그래도 없으면 썰 전체 한국어를 힌트로 */
+      const ss = storySents(st), koAll = String(st.ko || "").trim();
+      const koSplit = koAll.split(/(?<=[.!?。…]["”’']?)\s+/).filter(t => t.trim());
+      ss.forEach((s, i) => {
+        const ko = s.data && s.data.ko ? s.data.ko : (koSplit.length === ss.length ? koSplit[i] : "");
+        add("s", e.id, i, s.text, ko, { card: c, ex: e, kind: "썰", sn: [i + 1, ss.length], koAll: ko ? "" : koAll });
+      });
+    });
+  });
+  return (PS_ITEMS[n] = out);
+}
+function psDayRec(n, make) {
+  let d = PS.days[n];
+  if (!d || typeof d !== "object") { if (!make) return { s: {}, rq: [] }; d = PS.days[n] = {}; }
+  if (!d.s || typeof d.s !== "object") d.s = {};
+  if (!Array.isArray(d.rq)) d.rq = [];
+  return d;
+}
+/* 지금 할 문장: 떠올려 쓰기를 안 한 첫 문장(따라 쓰기를 했으면 ② 단계) → 다 했으면 다시 쓰기 줄 맨 앞 → 없으면 null(완료) */
+function psPos(n) {
+  const items = psItems(n), d = psDayRec(n), f = it => +d.s[it.k] || 0;
+  const it = items.find(x => !(f(x) & 2));
+  if (it) return { it, step: f(it) & 1 ? 2 : 1, retry: false, idx: items.indexOf(it) };
+  const k = d.rq.find(k => items.some(x => x.k === k));
+  if (k) return { it: items.find(x => x.k === k), step: 2, retry: true, idx: items.findIndex(x => x.k === k) };
+  return null;
+}
+function psStats(n) {
+  const items = psItems(n), d = psDayRec(n), keys = new Set(items.map(x => x.k));
+  const done = items.filter(x => (+d.s[x.k] || 0) & 2).length, retry = d.rq.filter(k => keys.has(k)).length;
+  return { total: items.length, done, retry, complete: !!items.length && done === items.length && !retry };
+}
+
+/* ---- 채점: 단어로 나눠 비교. 단어마다 { o: 쓴 그대로, c: [비교용 조각] } ---- */
+const PS_FULL = { "can't": ["can", "not"], "cannot": ["can", "not"], "won't": ["will", "not"], "shan't": ["shall", "not"], "ain't": ["is", "not"], "let's": ["let", "us"], "y'all": ["you", "all"] };
+const PS_SIS = new Set(["it", "that", "what", "he", "she", "there", "here", "who", "where", "how", "when", "why", "this", "everything", "nothing", "something", "someone", "everyone", "everybody", "somebody", "nobody"]);
+function psCanon(w) {
+  w = w.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[‘’ʼ`´]/g, "'").replace(/[^\p{L}\p{N}']/gu, "").replace(/^'+|'+$/g, "");
+  if (!w) return [];
+  if (PS_FULL[w]) return PS_FULL[w];
+  let m;
+  if ((m = /^(.+)n't$/.exec(w))) return [m[1], "not"];
+  if ((m = /^(.+)'(re|ve|ll|d|m)$/.exec(w))) return [m[1], { re: "are", ve: "have", ll: "will", d: "would|had", m: "am" }[m[2]]];
+  if ((m = /^(.+)'s$/.exec(w)) && PS_SIS.has(m[1])) return [m[1], "is|has"];
+  return [w];
+}
+function psToks(s) {
+  return String(s || "").replace(/[-‐‑–—―]/g, " ").split(/\s+/).map(o => ({ o, c: psCanon(o) })).filter(w => w.c.length);
+}
+const psEq = (a, b) => a === b || (a.includes("|") && a.split("|").includes(b)) || (b.includes("|") && b.split("|").includes(a));
+/* 정답 en과 쓴 글 → { ok, html }. LCS로 맞춘 뒤 쓴 단어 중 틀린·남는 것 = 빨간 줄, 빠진 정답 단어 = 빈칸(show면 그 단어) */
+function psDiff(en, typed, show) {
+  const A = psToks(en), B = psToks(typed), a = [], b = [];
+  A.forEach((w, i) => w.c.forEach(c => a.push({ c, i })));
+  B.forEach((w, j) => w.c.forEach(c => b.push({ c, j })));
+  const n = a.length, m = b.length, L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = psEq(a[i].c, b[j].c) ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const ok = L[0][0] === n && n === m;
+  const ops = [];
+  let i = 0, j = 0;
+  while (i < n || j < m) {
+    if (i < n && j < m && psEq(a[i].c, b[j].c)) { ops.push(["=", i, j]); i++; j++; }
+    else if (j < m && (i >= n || L[i][j + 1] >= L[i + 1][j])) { ops.push(["+", -1, j]); j++; }
+    else { ops.push(["-", i, -1]); i++; }
+  }
+  const badB = new Set(), missA = new Set();
+  ops.forEach(o => { if (o[0] === "+") badB.add(b[o[2]].j); if (o[0] === "-") missA.add(a[o[1]].i); });
+  const out = [], seenA = new Set(), seenB = new Set();
+  let nb = 0, nm = 0;
+  ops.forEach(o => {
+    if (o[2] >= 0) {
+      const jj = b[o[2]].j;
+      if (!seenB.has(jj)) { seenB.add(jj); const bad = badB.has(jj); nb += bad; out.push(bad ? '<span class="bad">' + esc(B[jj].o) + '</span>' : esc(B[jj].o)); }
+    }
+    if (o[0] === "-") {
+      const ii = a[o[1]].i;
+      if (!seenA.has(ii)) {
+        seenA.add(ii); nm++;
+        const w = A[ii].o.replace(/^[^\p{L}\p{N}']+|[^\p{L}\p{N}']+$/gu, "");
+        out.push(show ? '<span class="miss">' + esc(w) + '</span>' : '<span class="gap" style="width:' + Math.min(6, Math.max(2.4, w.length * .6)).toFixed(1) + 'em" aria-label="빠진 단어"></span>');
+      }
+    }
+  });
+  const key = [nb ? "빨간 줄 = 틀리거나 필요 없는 단어 " + nb + "개" : "", nm ? (show ? "초록 = 빠진 단어 " : "빈칸 = 빠진 단어 ") + nm + "개" : ""].filter(Boolean).join(" · ");
+  return { ok, html: (out.join(" ") || "&nbsp;") + '<span class="ps-diff-k">' + (key || "문장 부호만 다르면 맞은 걸로 쳐요") + '</span>' };
+}
+const psSame = (en, typed) => psDiff(en, typed, false).ok;
+
+/* ---- 화면 ---- */
+function psSubSeg() {
+  const sub = SH.item ? "shorts" : PS.sub;
+  return '<div class="seg ps-sub" role="group" aria-label="쇼츠 또는 필사">' +
+    '<button type="button" data-ps-sub="shorts" aria-pressed="' + (sub === "shorts") + '">쇼츠</button>' +
+    '<button type="button" data-ps-sub="pilsa" aria-pressed="' + (sub === "pilsa") + '">필사</button></div>';
+}
+function psRender() {
+  if (PS.scr === "sess" && psScreen === "sess" && SH.view.querySelector(".ps-sess")) { psFit(); return; }   // 탭을 오가도 쓰던 글은 그대로
+  if (PS.scr === "sess") psOpen(psDay(), false); else psHome();
+}
+function psHome() {
+  const v = SH.view, cur = psDay(), today = psTodayDay(), st = psStats(cur), pos = psPos(cur);
+  psScreen = "home";
+  v.style.paddingBottom = "";
+  const pct = x => (x.total ? Math.round(x.done / x.total * 100) : 0);
+  const where = !pos ? "" : pos.retry ? "다시 쓰기부터" : (pos.idx + 1) + "번째 문장 · " + (pos.step === 1 ? "① 따라 쓰기" : "② 떠올려 쓰기") + "부터";
+  v.innerHTML = '<header class="w-top"><div><div class="w-date">쇼츠</div><h2 class="w-title">28일 필사</h2>' +
+      '<p class="sh-src">영어를 보고 따라 쓰고, 한국어만 보고 떠올려 써요</p></div></header>' + psSubSeg() +
+    '<section class="ps-now" aria-label="고른 Day">' +
+      '<div class="ps-now-h">Day ' + cur + ' <span>· ' + psDate(cur) + '</span>' + (cur === today ? '<span class="ps-badge">오늘</span>' : '') + '</div>' +
+      '<ol class="ps-cards">' + CARDS.slice((cur - 1) * 3, cur * 3).map(c => '<li>' + esc(c.title) + '</li>').join("") + '</ol>' +
+      '<div class="ps-meter"><div class="ps-bar"><i style="width:' + pct(st) + '%"></i></div><span data-ps-count>' + st.done + ' / ' + st.total + ' 문장</span></div>' +
+      (st.complete ? '<p class="note">이 Day를 다 썼어요 🎉</p>' : where ? '<p class="note">' + where + (st.retry ? ' · 다시 쓰기 ' + st.retry + '개 남음' : '') + '</p>' : '') +
+      '<button class="btn ps-go" type="button" data-ps="go">' + (st.complete ? "처음부터 다시 쓰기" : st.done || (pos && pos.step === 2) ? "이어서 쓰기" : "시작하기") + '</button>' +
+    '</section>' +
+    '<h3 class="ps-h">Day 고르기</h3><div class="ps-days">' + Array.from({ length: PS_DAYS }, (_, k) => {
+      const n = k + 1, s = psStats(n);
+      return '<button class="ps-day" type="button" data-ps-day="' + n + '" aria-pressed="' + (n === cur) + '">' +
+        '<span class="ps-day-n">Day ' + n + '</span><span class="ps-day-d">' + psDate(n) + (n === today ? ' <span class="ps-badge">오늘</span>' : '') + '</span>' +
+        '<span class="ps-day-c' + (s.complete ? ' ok' : '') + '">' + (s.complete ? '완료' : s.done + ' / ' + s.total) + '</span>' +
+        '<span class="ps-bar"><i style="width:' + pct(s) + '%"></i></span></button>';
+    }).join("") + '</div>';
+}
+/* 필사 화면: 한 번만 그리고(입력칸을 그대로 둬야 키보드가 안 닫힘) 문장이 바뀌면 psShow로 안쪽만 바꿈 */
+function psOpen(n, focus) {
+  const v = SH.view;
+  P.day = n; P.missed = false; P.peek = false; P.busy = false;
+  PS.scr = "sess"; psSave();
+  psScreen = "sess";
+  v.innerHTML = '<div class="ps-sess">' +
+    '<div class="ps-top"><button class="btn sh-back" type="button" data-ps="home">' + ICON_BACK + 'Day 목록</button>' +
+      '<div class="ps-pos"><b>Day ' + n + '</b> · ' + psDate(n) + '<br><span data-ps-count></span></div></div>' +
+    '<div class="ps-bar"><i></i></div>' +
+    '<div class="ps-card" aria-live="polite"></div>' +
+    '<div class="ps-diff" aria-live="polite" hidden></div>' +
+    '<textarea class="w-area ps-in" rows="3" lang="en" placeholder="영어로 쓰고 Enter" aria-label="영어 문장 쓰기" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text" enterkeyhint="done"></textarea>' +
+    '<div class="ps-btns"><button class="btn" type="button" data-ps="peek">정답 보기</button><button class="btn ps-ok" type="button" data-ps="check">확인</button></div>' +
+  '</div>';
+  v.scrollTop = 0;
+  psShow();
+  if (focus) v.querySelector(".ps-in").focus({ preventScroll: true });
+  psFit();
+}
+function psShow() {
+  const v = SH.view, sess = v.querySelector(".ps-sess");
+  if (!sess) return;
+  const n = P.day, st = psStats(n), pos = P.pos = psPos(n);
+  const d = psDayRec(n, true);
+  d.at = pos ? pos.it.k : null; d.ph = pos && pos.retry ? "retry" : "main";
+  psSave();
+  v.querySelector(".ps-top [data-ps-count]").textContent = st.done + " / " + st.total + " 문장" + (st.retry ? " · 다시 쓰기 " + st.retry : "");
+  v.querySelector(".ps-sess > .ps-bar i").style.width = (st.total ? Math.round(st.done / st.total * 100) : 0) + "%";
+  const card = sess.querySelector(".ps-card"), diff = sess.querySelector(".ps-diff"), ta = sess.querySelector(".ps-in"), btns = sess.querySelector(".ps-btns");
+  diff.hidden = true; diff.className = "ps-diff"; diff.innerHTML = "";
+  if (!pos) {                                          // Day 완료
+    sess.classList.remove("recall", "kb");
+    ta.hidden = true; btns.hidden = true;
+    if (document.activeElement === ta) ta.blur();
+    card.className = "ps-done";
+    card.innerHTML = '<h3>Day ' + n + ' 완료 🎉</h3><p class="note">' + st.total + '문장을 따라 쓰고 떠올려 썼어요.</p>' +
+      '<div class="btn-row"><button class="btn" type="button" data-ps="home">Day 목록</button>' +
+      (n < PS_DAYS ? '<button class="btn ps-ok" type="button" data-ps="next">Day ' + (n + 1) + ' →</button>' : '') + '</div>';
+    psFit();
+    return;
+  }
+  const it = pos.it, recall = pos.step === 2;
+  sess.classList.toggle("recall", recall);
+  ta.hidden = false; btns.hidden = false;
+  card.className = "ps-card";
+  btns.querySelector('[data-ps="peek"]').hidden = !recall;
+  const ctx = [it.card.title, it.kind + (it.kind === "대화" ? " " + (it.who === "me" ? "나" : WHO_LABEL[it.who] || it.who) : it.sn ? " " + it.sn[0] + "/" + it.sn[1] : "")];
+  if (it.ex) ctx.push(it.ex.phrase);
+  const step = pos.retry ? "다시 쓰기 · 떠올려 쓰기" : recall ? "② 떠올려 쓰기" : "① 따라 쓰기";
+  const ko = it.ko || it.koAll;
+  const enHtml = '<p class="ps-en' + (recall ? ' peek' : '') + '" lang="en">' + esc(it.en) +
+    ' <button class="spk" type="button" aria-label="문장 듣기" data-ps="say">' + ICON_SPEAKER + '</button></p>';
+  card.innerHTML = '<div class="ps-step">' + step + '<span class="ps-cnt">' + (pos.retry ? st.retry + "개 남음" : (pos.idx + 1) + " / " + st.total) + '</span></div>' +
+    '<div class="ps-ctx">' + esc(ctx.join(" · ")) + '</div>' +
+    (!recall || P.peek ? enHtml : '') +
+    '<p class="ps-ko">' + esc(ko || "") + '</p>' +
+    (!it.ko && it.koAll ? '<p class="ps-kohint">이 문장만 따로 된 번역이 없어 썰 전체 뜻을 보여 줘요 (' + it.sn[0] + '번째 문장)</p>' : '') +
+    (!ko ? '<p class="ps-kohint">한국어 뜻이 없는 문장이에요. 위 영어를 떠올려 써 보세요.</p>' : '');
+  ta.placeholder = recall ? "한국어를 보고 영어로 쓰고 Enter" : "위 영어를 그대로 쓰고 Enter";
+  psFit();
+}
+function psSubmit() {
+  const sess = SH.view.querySelector(".ps-sess"), pos = P.pos;
+  if (!sess || !pos || P.busy) return;
+  const ta = sess.querySelector(".ps-in"), diff = sess.querySelector(".ps-diff");
+  const typed = ta.value.replace(/\s+/g, " ").trim();
+  if (!typed) { toast("영어로 써 주세요"); return; }
+  const r = psDiff(pos.it.en, typed, pos.step === 1 || P.peek), d = psDayRec(P.day, true), k = pos.it.k;
+  if (!r.ok) {
+    if (pos.step === 2) {
+      P.missed = true;
+      if (!pos.retry) { d.s[k] = (+d.s[k] || 0) | 4; if (!d.rq.includes(k)) d.rq.push(k); psSave(); }
+    }
+    diff.hidden = false; diff.className = "ps-diff"; diff.innerHTML = r.html;
+    try { if (navigator.vibrate) navigator.vibrate([20, 40, 20]); } catch (e) {}
+    psFit();
+    return;
+  }
+  if (pos.retry) { d.rq = d.rq.filter(x => x !== k); if (P.missed) d.rq.push(k); }   // 다시 쓰기에서 또 틀렸으면 맨 뒤로 한 번 더
+  else d.s[k] = (+d.s[k] || 0) | (pos.step === 1 ? 1 : 2);
+  psSave();
+  const wasMain = !pos.retry && pos.step === 2;
+  P.busy = true;
+  diff.hidden = false; diff.className = "ps-diff ok"; diff.textContent = "맞았어요 ✓";
+  buzz();
+  setTimeout(() => {
+    if (!SH.view.contains(sess)) { P.busy = false; return; }
+    P.busy = false; P.missed = false; P.peek = false;
+    ta.value = "";
+    psShow();
+    if (wasMain && P.pos && P.pos.retry) toast("다시 쓰기 " + psStats(P.day).retry + "개 — 틀렸던 문장을 한 번 더 떠올려 써요");
+  }, 450);
+}
+/* 키보드가 올라오면(visualViewport가 줄어듦) 아래에 키보드 높이만큼 여백을 주고, 문제 카드 맨 위가 보이는 영역 맨 위에 오게 스크롤.
+   입력칸 아래가 가려질 땐 문제 카드가 잘리지 않는 만큼만 더 올림 */
+function psFit() {
+  const v = SH.view, sess = v.querySelector(".ps-sess");
+  if (!sess) { v.style.paddingBottom = ""; return; }
+  const ta = sess.querySelector(".ps-in"), card = sess.querySelector(".ps-card, .ps-done");
+  const vv = window.visualViewport, vh = vv ? vv.height : innerHeight, top = vv ? vv.offsetTop : 0;
+  const typing = currentTab === "shorts" && document.activeElement === ta;
+  const kb = typing ? Math.max(0, Math.round(innerHeight - vh)) : 0;
+  sess.classList.toggle("kb", kb > 80);
+  v.style.paddingBottom = kb ? kb + 40 + "px" : "";
+  if (!typing || !card) return;
+  const cr = card.getBoundingClientRect(), tr = ta.getBoundingClientRect();
+  let dy = cr.top - (top + 8);                                 // 문제 카드 맨 위 → 보이는 영역 맨 위
+  const over = tr.bottom - dy - (top + vh - 6);                // 그래도 입력칸이 가려지는 만큼
+  if (over > 0) dy += Math.min(over, Math.max(0, cr.height - 40 - (tr.bottom - tr.top)));
+  if (Math.abs(dy) > 1) v.scrollTop += dy;
+}
+(() => {
+  const vv = window.visualViewport;
+  const fit = () => { if (psScreen === "sess") requestAnimationFrame(psFit); };
+  if (vv) { vv.addEventListener("resize", fit); vv.addEventListener("scroll", fit); }
+  addEventListener("resize", fit);
+})();
+SH.view.addEventListener("focusin", e => { if (e.target.matches(".ps-in")) { document.body.classList.add("typing"); requestAnimationFrame(psFit); setTimeout(psFit, 350); } });
+SH.view.addEventListener("focusout", e => { if (e.target.matches(".ps-in")) { document.body.classList.remove("typing"); setTimeout(psFit, 100); } });
+SH.view.addEventListener("keydown", e => {
+  if (!e.target.matches(".ps-in") || e.key !== "Enter" || e.shiftKey || e.isComposing) return;
+  e.preventDefault();
+  psSubmit();
+});
+/* 폰 키보드가 keydown 없이 줄바꿈만 보낼 때(keyCode 229 등)도 Enter = 확인 */
+SH.view.addEventListener("beforeinput", e => {
+  if (!e.target.matches(".ps-in") || (e.inputType !== "insertLineBreak" && e.inputType !== "insertParagraph")) return;
+  e.preventDefault();
+  psSubmit();
+});
+SH.view.addEventListener("input", e => {
+  if (!e.target.matches(".ps-in") || !/\n/.test(e.target.value)) return;
+  e.target.value = e.target.value.replace(/\n+/g, " ").trim();
+  psSubmit();
+});
+SH.view.addEventListener("click", e => {
+  const sub = e.target.closest("[data-ps-sub]");
+  if (sub) {
+    if (sub.dataset.psSub === PS.sub) return;
+    PS.sub = sub.dataset.psSub; psSave(); buzz();
+    shRender(); SH.view.scrollTop = 0;
+    return;
+  }
+  const day = e.target.closest("[data-ps-day]");
+  if (day) {
+    PS.day = +day.dataset.psDay; PS.dayOn = dateKey(); psSave(); buzz();
+    psHome(); SH.view.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+  const b = e.target.closest("[data-ps]");
+  if (!b) return;
+  const a = b.dataset.ps, sess = SH.view.querySelector(".ps-sess");
+  if (a === "go") {
+    const n = psDay();
+    if (psStats(n).complete) {
+      if (!confirm("Day " + n + " 기록을 지우고 처음부터 다시 쓸까요?")) return;
+      delete PS.days[n]; psSave();
+    }
+    buzz(); psOpen(n, true);
+  } else if (a === "home") {
+    Player.stop(); PS.scr = "home"; psSave();
+    const ta = sess && sess.querySelector(".ps-in");
+    if (ta && document.activeElement === ta) ta.blur();
+    psHome(); SH.view.scrollTop = 0; buzz();
+  } else if (a === "next") {
+    PS.day = P.day + 1; PS.dayOn = dateKey(); buzz(); psOpen(PS.day, true);
+  } else if (a === "check") {
+    psSubmit();
+  } else if (a === "peek" && P.pos) {
+    /* 정답 보기: 영어를 보여 주지만 틀린 걸로(다시 쓰기 줄에) — 맞게 다시 써야 넘어감 */
+    const d = psDayRec(P.day, true), k = P.pos.it.k;
+    P.peek = true; P.missed = true;
+    if (!P.pos.retry) { d.s[k] = (+d.s[k] || 0) | 4; if (!d.rq.includes(k)) d.rq.push(k); }
+    psSave();
+    const ta = sess.querySelector(".ps-in"), keep = ta.value;
+    psShow(); ta.value = keep;
+    ta.focus({ preventScroll: true });
+  } else if (a === "say" && P.pos) {
+    Player.play(P.pos.it.en, P.pos.it.kind === "대화" && P.pos.it.who !== "me" ? "them" : "me", b);
+  }
+});
+/* 확인·정답 보기를 눌러도 입력칸 포커스(=키보드)가 안 빠지게 */
+SH.view.addEventListener("mousedown", e => { if (e.target.closest('.ps-btns [data-ps]') && document.activeElement && document.activeElement.matches(".ps-in")) e.preventDefault(); });
 
 /* ================= 하단 탭 =================
    [오늘 | 상황 | 표현 | 글쓰기 | 드라이브]. 앱을 켜면 항상 오늘 탭. 지금 탭을 다시 누르면 그 탭의 첫 화면(맨 위)으로.
