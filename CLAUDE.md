@@ -53,6 +53,7 @@
 - `index.html#check`(헤드리스 크롬으로 열어도 됨) — 문제 0개
 - 모든 `data/*.js`, `data/cards/*.js`, `sw.js`에 `node --check`
 - 드라이브 모드에서 새 카드가 대화 → 표현 → 예문 → 썰 순서로 나오는지, `Prebuilt.has()`로 음성이 잡히는지 확인
+  - 범위 '카드 선택'(`scope: "pick"`, `cardIds`)에 새 카드 번호(예: `81-83`)만 넣으면 그 카드만 재생됨. 따라하기 횟수는 `echoTimes`(0·1·2·3·5, `shadow`는 `echoTimes > 0`과 같이 저장), 재생 화면 자막은 `caption`(ko·both·en)
 
 ## 작업 방식
 

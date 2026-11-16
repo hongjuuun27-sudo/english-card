@@ -231,7 +231,9 @@
   .row.them{ align-self:flex-start; align-items:flex-start; }
   .row.me{ align-self:flex-end; align-items:flex-end; }
   .row.off{ display:none; }
-  .row.pop{ animation:popIn .38s cubic-bezier(.2,.8,.2,1) both; }
+  /* 줄 나타나기: 끝나면 JS(popRow)가 .pop을 뗌. fill은 backwards(끝난 뒤 남는 효과 없음) — 'both'로 남아 있으면 안드로이드 크롬에서
+     전체 보기로 한꺼번에 나타난 화면 밖 줄이 말풍선 배경·한글 없이 글자(안쪽 .en 페이드)만 그려지는 일이 있었음(2026-11-16) */
+  .row.pop{ animation:popIn .38s cubic-bezier(.2,.8,.2,1) backwards; }
   @keyframes popIn{ from{ opacity:0; transform:translateY(10px) scale(.98); } to{ opacity:1; transform:none; } }
   .who{ display:none; font-size:13px; color:var(--faint); margin:0 8px 5px; }
   .row.first-them .who{ display:block; }
@@ -263,8 +265,8 @@
   .row.me.kq-on .bubble{ background:var(--accent-soft); border-color:var(--accent-line); border-style:dashed; color:var(--text); }
   .row.them.kq-on .bubble{ border-color:var(--line); border-style:dashed; }   /* 읽기 어려움: 아직 확인 안 한 상대 대사 */
   .row.kq-on .en, .row.kq-on .ko{ display:none; }
-  .row.kq-on .kq{ display:block; font-size:16.5px; line-height:1.5; animation:fadeIn .25s ease both; }
-  .m-read .row.me:not(.kq-on) .en, .m-read.rhard .row.them:not(.kq-on) .en{ animation:fadeIn .25s ease both; }
+  .row.kq-on .kq{ display:block; font-size:16.5px; line-height:1.5; animation:fadeIn .25s ease backwards; }
+  .m-read .row.me:not(.kq-on) .en, .m-read.rhard .row.them:not(.kq-on) .en{ animation:fadeIn .25s ease backwards; }
   .hint{ display:none; font-size:12.5px; color:var(--faint); margin:6px 8px 0; }
   .m-read .row.me.kq-on .hint, .m-read.rhard .row.them.kq-on .hint{ display:block; }
   .m-read.rhard .row.me .hint{ display:none; }   /* 어려움은 첫 상대 대사에만 안내 */
@@ -332,7 +334,7 @@
   .spk.playing svg{ animation:pulse 1s ease-in-out infinite; }
   .card:not(.m-read) .row .spk{ display:none; }   /* 줄마다 스피커는 읽기 모드에만 */
   .m-read .row.kq-on .spk{ display:none; }     /* 읽기 모드: 영어가 보이는 줄에만 (한글인 줄은 탭해서 영어로 바뀌었을 때) */
-  .m-read .row.me:not(.kq-on) .spk{ animation:fadeIn .25s ease both; }
+  .m-read .row.me:not(.kq-on) .spk{ animation:fadeIn .25s ease backwards; }
   @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
 
   .typing .dots{ display:flex; gap:5px; padding:16px 17px; }
@@ -1315,7 +1317,31 @@
   .dv-cur .dv-line.dv-quiz .dv-ko{ font-size:21px; line-height:1.45; color:var(--text); }   /* 기다리는 동안은 한국어가 문제라 크게 */
   .dv-next .dv-line.role-me .dv-en{ display:none; }
   .dv-next .dv-line.role-me .dv-ko{ display:block; }
+  /* 자막(2026-11-16, opts.caption — 재생 화면 #dvPlay의 cap-ko / cap-en, 한영 같이는 클래스 없음 = 예전 모양).
+     한글만: 영어를 숨기고 한국어를 크게(앞뒤 문장도 한국어). 한국어가 없는 문장(.no-ko — 내 일기 등)은 영어 그대로.
+     영어만: 한국어를 숨김. 단 역할극 내 차례(.dv-quiz)·다음 줄 미리보기(role-me)는 한국어가 문제라 그대로 보임 */
+  .dv-capbar{ flex:none; padding:10px max(var(--pad), env(safe-area-inset-right)) 0 max(var(--pad), env(safe-area-inset-left)); }
+  .dv-capbar .seg button{ height:44px; font-size:15px; }
+  .cap-ko .dv-line:not(.no-ko) .dv-en{ display:none; }
+  .cap-ko .dv-prev .dv-line:not(.no-ko) .dv-ko, .cap-ko .dv-next .dv-line:not(.no-ko) .dv-ko{ display:block; }
+  .cap-ko .dv-cur .dv-line:not(.no-ko) .dv-ko{ margin-top:0; font-size:25px; line-height:1.45; font-weight:600; color:var(--text); }
+  .cap-en .dv-line:not(.dv-quiz) .dv-ko{ display:none; }
+  .cap-en .dv-next .dv-line.role-me .dv-ko{ display:block; }
   .dv-echo4 button{ font-size:13.5px; padding:0 4px; }
+  .dv-echo5 button, .dv-echo-n button{ padding:0 4px; }
+  .dv-echo-n{ margin-top:10px; }
+  /* 카드 선택(scope pick): 번호 글 칸 + [적용], 카테고리마다 제목·모두 고르기 + 카드 칩(.dv-cat) */
+  .dv-pick{ margin-top:12px; }
+  .dv-ids{ display:flex; gap:8px; }
+  .dv-ids .field{ flex:1; min-width:0; }
+  .dv-ids .btn{ flex:none; height:48px; padding:0 18px; font-size:15.5px; }
+  .dv-pcat{ margin-top:16px; }
+  .dv-pcat-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:15px; font-weight:650; color:var(--text-2); }
+  .dv-pall{ height:40px; padding:0 12px; border-radius:999px; font-size:13.5px; color:var(--accent); }
+  .dv-pall:active{ background:var(--line); }
+  .dv-pcat .dv-cats{ margin-top:8px; }
+  .dv-pc{ height:auto; min-height:44px; padding:8px 14px; text-align:left; line-height:1.35; }
+  .dv-pc b{ font-variant-numeric:tabular-nums; margin-right:2px; }
   .dv-echo{ display:flex; flex-direction:column; align-items:center; gap:7px; color:var(--accent); font-weight:600; }
   .dv-echo i{ display:block; width:140px; height:5px; border-radius:3px; background:var(--accent-soft); overflow:hidden; }
   .dv-echo b{ display:block; height:100%; width:100%; border-radius:3px; background:var(--accent); transform-origin:left; animation:dvEcho linear both; }
@@ -2993,10 +3019,16 @@ function createReader(o) {
           if (o.before) { await o.before(k, k === i); if (!alive()) return; }   // 문장 앞에 할 일(드라이브 모드 효과음)
           const it = items[k];
           const sc = it.script || SCRIPTS[+it.el.dataset.sc];
-          await Player.enqueue(sc.speech, it.who, it.btn || null, {
-            script: sc, from: (it.from || 0) + from, to: it.to, voice: it.voice, engine: it.engine, rate: o.rate ? o.rate() : undefined,
-            track: makeTrack(it.el, wk => { if (alive()) { word = wk; if (o.onWord) o.onWord(k, wk); } }, it.offset)
-          });
+          /* again(k, 몇 번째로 들었는지 0~): true면 같은 문장을 처음부터 한 번 더(드라이브 따라하기 횟수 — 그 사이 쉬는 시간은 again 안에서) */
+          for (let r = 0; ; r++, from = 0) {
+            await Player.enqueue(sc.speech, it.who, it.btn || null, {
+              script: sc, from: (it.from || 0) + from, to: it.to, voice: it.voice, engine: it.engine, rate: o.rate ? o.rate() : undefined,
+              track: makeTrack(it.el, wk => { if (alive()) { word = wk; if (o.onWord) o.onWord(k, wk); } }, it.offset)
+            });
+            if (!alive() || single || !o.again || !(await o.again(k, r))) break;
+            if (!alive()) return;
+            word = 0;
+          }
           if (!alive() || single) break;
           if (k < items.length - 1) await sleep(typeof o.gap === "function" ? o.gap(k) : o.gap == null ? 400 : o.gap);
         }
@@ -3315,10 +3347,25 @@ function toggleRate(card) {
 }
 
 /* ---------- 읽기: 떠올리고 확인하기 ---------- */
+/* 줄 나타나기 애니메이션(.pop): 끝나면(또는 애니메이션이 안 돌아도 .6초 뒤) 클래스를 뗌 — 줄에 애니메이션이 남아 있지 않게 */
+function popRow(row) {
+  clearTimeout(row._pop);
+  const done = () => { clearTimeout(row._pop); row.classList.remove("pop"); row.removeEventListener("animationend", onEnd); };
+  const onEnd = e => { if (e.target === row) done(); };   // 안쪽 .en·.kq의 fadeIn 끝 알림은 무시
+  row.addEventListener("animationend", onEnd);
+  row.classList.add("pop");
+  row._pop = setTimeout(done, 600);
+}
+/* 여러 줄을 한꺼번에 보일 때(전체 보기 등): 새로 나온 줄 중 지금 화면 안에 보이는 줄만 나타나기 애니메이션, 화면 밖 줄은 바로 그대로 그림
+   (여러 줄을 한꺼번에 opacity 0에서 시작하면 안드로이드 크롬에서 아래쪽 줄이 말풍선·한글 없이 그려지는 일이 있었음) */
+function popInView(card, rows) {
+  const b = card.querySelector(".body").getBoundingClientRect();
+  rows.forEach(r => { const q = r.getBoundingClientRect(); if (q.height && q.bottom > b.top && q.top < b.bottom) popRow(r); });
+}
 function showRow(card, row) {
   card._st.focus = +row.dataset.l;
   row.classList.remove("off");
-  row.classList.add("pop");
+  popRow(row);
   follow(card, row);
   if (+row.dataset.l === rowsOf(card).length - 1) markCardDone(cardIdx(card));   // 읽기: 마지막 줄까지 나옴 = 끝까지 봄
 }
@@ -3359,10 +3406,9 @@ function readAll(card) {
   st.timer = null;
   card.querySelectorAll(".typing").forEach(x => x.remove());
   const rows = rowsOf(card);
-  rows.forEach(r => {
-    if (r.classList.contains("off")) { r.classList.remove("off"); r.classList.add("pop"); }
-    r.classList.remove("kq-on");
-  });
+  const shown = rows.filter(r => r.classList.contains("off"));
+  rows.forEach(r => r.classList.remove("off", "kq-on"));
+  popInView(card, shown);
   st.shown = rows.length;
   st.full = true;
   markCardDone(cardIdx(card));                       // 읽기 [전체 보기] = 끝까지 봄
@@ -3404,7 +3450,7 @@ function shadowGo(card, i) {
   st.idx = i;
   st.focus = i;
   rows.forEach((r, j) => {
-    if (j === i && r.classList.contains("off")) r.classList.add("pop");
+    if (j === i && r.classList.contains("off")) popRow(r);
     r.classList.toggle("off", j > i);
     r.classList.toggle("past", j < i);
     r.classList.toggle("cur", j === i);
@@ -3428,11 +3474,13 @@ function blindPaint(card) {
   const st = card._st;
   card.classList.toggle("masked", !st.revealed);
   card.classList.toggle("peek", st.peek && !st.revealed);
+  const shown = [];
   rowsOf(card).forEach((r, j) => {
     const on = st.revealed || (st.peek && j === st.idx);
-    if (on && r.classList.contains("off")) r.classList.add("pop");
+    if (on && r.classList.contains("off")) shown.push(r);
     r.classList.toggle("off", !on);
   });
+  popInView(card, shown);
   setCur(card, st.revealed ? -1 : st.idx);         // 줄 강조(.cur) · 말하는 쪽 아이콘 · "3 / 6"
 }
 function blindGo(card, i) {
@@ -3472,7 +3520,9 @@ function midStart(card, i, w) {
   st.timer = null;
   if (!st.started) {
     st.started = true;
-    rowsOf(card).forEach(r => { r.classList.remove("off"); r.classList.add("pop"); });
+    const rows = rowsOf(card).filter(r => r.classList.contains("off"));
+    rows.forEach(r => r.classList.remove("off"));
+    popInView(card, rows);
   }
   if (!i) card.querySelector(".body").scrollTo({ top: 0, behavior: "smooth" });
   st.rd.play(i || 0, w || 0, false);
@@ -6436,14 +6486,13 @@ function driveResumeInfo() {
   if (!p) return null;
   const o = Object.assign({}, D.opts, { scope: p.scope, cats: p.cats ? String(p.cats).split(",").filter(Boolean) : D.opts.cats });
   if (p.scope === "diary" && p.range) o.diaryRange = p.range;
+  if (p.scope === "pick" && typeof p.ids === "string") o.cardIds = parseCardIds(p.ids);
   if (p.scope === "talk" && p.range) { const r = String(p.range); o.talkRange = r.startsWith("one:") ? "one" : r; if (r.startsWith("one:")) o.talkId = r.slice(4); }
   let pl = buildDrive(o);
   if (o.order === "random" && Array.isArray(p.order) && pl.blocks.length > 1) pl = dvReorder(pl, p.order);
   const k = dvResumeIdx(pl, o, p);
   if (k < 0) return null;
-  let words = 0;
-  const rest = pl.items.slice(k);
-  rest.forEach(it => { words += getScript(it.text).words.length * (dvEchoOn(o, it) || dvRoleOn(o, it) ? 2 : 1); });
+  const rest = pl.items.slice(k), words = dvWords(o, rest);
   return { o, label: p.label || "", left: rest.length, mins: Math.max(1, Math.round((words * 0.4 / o.rate + rest.length * 0.6) / 60)) };
 }
 
@@ -6778,7 +6827,7 @@ setInterval(() => {
      [새 일기 효과음(새 카드와 같은 소리)] 그날의 질문(영어, 상대 목소리) → 듣기용 본문(listenBody)을 문장 단위로(글쓰기 목소리 voiceWrite). 내용 옵션은 숨김.
      문장마다 음성을 따로 캐시하므로 듣기용 본문을 고치면 바뀐 문장만 다음 재생 때 새로 만들어짐(글쓰기 탭 듣기와 같은 음성) */
 const DRIVE_KEY = "engcards.drive.v1";
-const DRIVE_SCOPES = { all: "전체 카드", cat: "카테고리 선택", learning: "학습 중인 표현", due: "오늘 복습할 표현", diary: "내 일기", talk: "내 대화문" };
+const DRIVE_SCOPES = { all: "전체 카드", cat: "카테고리 선택", pick: "카드 선택", learning: "학습 중인 표현", due: "오늘 복습할 표현", diary: "내 일기", talk: "내 대화문" };
 /* 내용(드라이브·연습 모드 공통): 체크박스 3개 [대화문] [예문] [썰](하나 이상, 2026-10-05 — 예전 3개 + 2개 두 줄에서 바꿈).
    저장값은 조합 이름 하나: dialogue 대화만 / examples 대화+예문 / story 대화+예문+썰 / dlgStory 대화+썰(새로)
    / exOnly 예문만 / storyOnly 썰만 / exStory 예문+썰(새로, 대화 없이). [대화, 예문, 썰] */
@@ -6825,7 +6874,7 @@ function contentNote(c, drive, expr) {
   let s = seq.join(" → ").replace(/표현마다 → /g, "표현마다 ");
   return '<b>' + (drive ? "재생 순서" : "연습 순서") + '</b> · ' + s;
 }
-const DV_DEFAULT = { scope: "all", cats: [], content: "story", order: "seq", shadow: false, rate: 1, diaryRange: "30", talkRange: "all", talkId: "", talkEcho: "me", xParts: ["ex", "story"], xMine: "3" };
+const DV_DEFAULT = { scope: "all", cats: [], cardIds: [], content: "story", order: "seq", shadow: false, echoTimes: 0, caption: "both", rate: 1, diaryRange: "30", talkRange: "all", talkId: "", talkEcho: "me", xParts: ["ex", "story"], xMine: "3" };
 /* 표현 범위(학습 중·오늘 복습)에서 들을 것(2026-10-08): xParts = 고른 것(하나 이상) ex 예문 / story 썰 / drill 직접 말해 보기 / mine 내 문장(연습장),
    xMine = 내 문장 개수 all 전부 / "3" 표현마다 3개(복습 덱 pickMine과 같은 기준 — 틀린 것 → 오래 안 나온 것). 기본은 예문 + 썰(예전과 같은 재생) */
 const X_PARTS = [["ex", "예문"], ["story", "썰"], ["drill", "직접 말해 보기"], ["mine", "내 문장"]];
@@ -6856,12 +6905,58 @@ function talksFor(o) {
   if (o.talkRange === "one") return talks.items.filter(t => t.id === o.talkId);
   return talks.items.slice();
 }
-/* 따라 말할 시간이 붙는 문장인지(드라이브 '따라 말할 시간' · 내 대화문 '따라 말하기'). 역할극은 쉬는 시간이 문장 앞(dvRoleWait) */
+/* 따라 말할 시간이 붙는 문장인지(드라이브 '따라하기 횟수' · 내 대화문 '따라 말하기'). 역할극은 쉬는 시간이 문장 앞(dvRoleWait) */
 function dvEchoOn(o, it) {
   if (it.kind === "tl") return o.talkEcho === "all" || (o.talkEcho === "me" && it.who === "me");
-  return o.shadow;                                  // 썰도 한 문장씩이라 문장마다(2026-10-06)
+  return o.shadow;                                  // 썰도 한 문장씩이라 문장마다(2026-10-06). shadow = echoTimes > 0
 }
-const dvRoleOn = (o, it) => it.kind === "tl" && it.who === "me" && o.talkEcho === "role";   // order: seq 차례대로 / random 랜덤(카드·표현 순서를 섞음)
+const dvRoleOn = (o, it) => it.kind === "tl" && it.who === "me" && o.talkEcho === "role";
+/* 따라하기 횟수(2026-11-16, echoTimes 0 없음 / 1·2·3·5번): 문장마다 '듣기 → 문장 길이만큼 따라 말할 시간'을 몇 번 되풀이할지.
+   예전 저장의 shadow: true(문장 길이만큼 쉬기)는 1번. 내 대화문은 따라 말하기(talkEcho)가 쉬는 문장을 정하고 횟수는 최소 1번(역할극은 '기다림 → 내 말'을 되풀이) */
+const ECHO_TIMES = [0, 1, 2, 3, 5];
+/* 재생 화면 자막(2026-11-16): ko 한글만 / both 한영 같이(기본, 예전 모양) / en 영어만. 재생 중에도 바로 바꿈(dvCapSet — 재생 목록·위치는 그대로) */
+const DV_CAPTIONS = [["ko", "한글만"], ["both", "한영 같이"], ["en", "영어만"]];
+const dvCapHtml = o => '<div class="seg" role="group" aria-label="자막">' + DV_CAPTIONS.map(x =>
+  '<button type="button" data-dv-cap="' + x[0] + '" aria-pressed="' + (o.caption === x[0]) + '">' + x[1] + '</button>').join("") + '</div>';
+function dvCapPaint() {
+  const c = D.opts.caption;
+  dvPlayEl.classList.toggle("cap-ko", c === "ko");
+  dvPlayEl.classList.toggle("cap-en", c === "en");
+  document.querySelectorAll("[data-dv-cap]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.dvCap === c)));
+}
+function dvCapSet(c) {
+  if (!DV_CAPTIONS.some(x => x[0] === c) || c === D.opts.caption) return;
+  D.opts.caption = c;
+  saveDrive();
+  dvCapPaint();
+}
+const dvEchoN = (o, it) => dvRoleOn(o, it) || (it.kind === "tl" && dvEchoOn(o, it)) ? Math.max(1, o.echoTimes) : dvEchoOn(o, it) ? o.echoTimes : 0;
+/* 재생 시간 어림용 단어 수: 따라 말하기가 붙는 문장은 (듣기 + 쉬기) × 횟수 */
+const dvWords = (o, items) => items.reduce((n, it) => { const e = dvEchoN(o, it); return n + getScript(it.text).words.length * (e ? 2 * e : 1); }, 0);
+
+/* 카드 선택(2026-11-16, scope pick): 카드 번호(id) 목록 cardIds. 글 칸은 "12-20"(– ~도 됨) · "1, 5, 7" · 섞어서. 없는 번호·이상한 글은 무시.
+   재생 순서는 입력 순서가 아니라 CARDS 순서(목록·챕터 순서) */
+function parseCardIds(text) {
+  const have = new Set(CARDS.map(c => c.id)), max = Math.max(0, ...have), out = new Set();
+  String(text || "").replace(/[–—~〜]/g, "-").replace(/\s*-\s*/g, "-").split(/[^\d-]+/).forEach(t => {
+    let m;
+    if ((m = /^(\d+)-(\d+)$/.exec(t))) {
+      const a = Math.min(+m[1], +m[2]), b = Math.min(max, Math.max(+m[1], +m[2]));
+      for (let i = a; i <= b; i++) if (have.has(i)) out.add(i);
+    } else if (/^\d+$/.test(t) && have.has(+t)) out.add(+t);
+  });
+  return Array.from(out).sort((a, b) => a - b);
+}
+/* 번호 목록 → 글 칸에 보일 글(이어진 번호는 범위로) 예) [1, 5, 12, 13, 14] → "1, 5, 12-14" */
+function cardIdsText(ids) {
+  const out = [];
+  ids.slice().sort((a, b) => a - b).forEach(i => {
+    const last = out[out.length - 1];
+    if (last && i === last[1] + 1) last[1] = i; else out.push([i, i]);
+  });
+  return out.map(r => r[0] === r[1] ? String(r[0]) : r[0] + "-" + r[1]).join(", ");
+}
+const idsKey = ids => ids.slice().sort((a, b) => a - b).join(",");   // 위치 저장·이어 듣기에서 같은 카드 선택인지 비교   // order: seq 차례대로 / random 랜덤(카드·표현 순서를 섞음)
 
 /* 저장: { opts: 시작 화면 옵션, pos: 마지막 위치 { scope, cats, key(문장), block(카드·표현), cid, bi, label } } */
 function loadDrive() {
@@ -6872,8 +6967,12 @@ function loadDrive() {
       if (!DRIVE_SCOPES[o.scope]) o.scope = "all";
       if (!CONTENT_KEYS[o.content]) o.content = "story";
       o.cats = Array.isArray(o.cats) ? o.cats.filter(c => typeof c === "string") : [];
+      o.cardIds = Array.isArray(o.cardIds) ? parseCardIds(o.cardIds.filter(Number.isInteger).join(",")) : [];
       o.order = o.order === "random" ? "random" : "seq";
-      o.shadow = !!o.shadow;
+      const so = s.opts && typeof s.opts === "object" ? s.opts : {};
+      o.echoTimes = ECHO_TIMES.includes(so.echoTimes) ? so.echoTimes : so.shadow ? 1 : 0;   // 예전 저장(echoTimes 없음): shadow true = 1번
+      o.shadow = o.echoTimes > 0;
+      o.caption = DV_CAPTIONS.some(x => x[0] === o.caption) ? o.caption : "both";
       o.rate = o.rate === 0.8 ? 0.8 : 1;
       o.diaryRange = diaryRangeOf(o.diaryRange);
       o.talkRange = TALK_RANGES.some(x => x[0] === o.talkRange) ? o.talkRange : "all";
@@ -6885,7 +6984,7 @@ function loadDrive() {
       return { opts: o, pos: s.pos && typeof s.pos === "object" && s.pos.key ? s.pos : null };
     }
   } catch (e) {}
-  return { opts: Object.assign({}, DV_DEFAULT), pos: null };
+  return { opts: Object.assign({}, DV_DEFAULT, { cats: [], cardIds: [] }), pos: null };
 }
 const D = Object.assign(loadDrive(), {
   open: false, screen: "setup",
@@ -6968,8 +7067,10 @@ function buildDrive(o) {
       if (items.length === start + 1) items.pop();   // 고른 것이 하나도 없는 표현(예: 내 문장만 골랐는데 내 문장이 없음)은 표현 읽기만 남지 않게 통째로 뺌
     });
   } else {
+    const pick = o.scope === "pick" ? new Set(o.cardIds) : null;
     CARDS.forEach((card, ci) => {
       if (o.scope === "cat" && !o.cats.includes(card.category)) return;
+      if (pick && !pick.has(card.id)) return;
       const b = blocks.length, d = card.dialogue || [], start = items.length;
       blocks.push({ kind: "card", ci, cid: card.id, key: "c" + card.id, start });
       if (hasDlg(o.content)) d.forEach((line, n) => push({ kind: "dlg", text: line.en, ko: line.ko || "", who: whoOf(line), name: whoLabel(line.who), fx: n === 0 ? "card" : null, block: b, ci, n: n + 1, total: d.length }));
@@ -7014,7 +7115,7 @@ function dvEl(k) {
   const it = D.pl.items[k];
   const el = document.createElement("div");
   el.className = "dv-line k-" + it.kind + (it.who === "me" ? " me" : "") + (it.text.length > 120 ? " long" : "") +
-    (dvRoleOn(D.opts, it) ? " role-me" : "");                   // 역할극: 내 말은 차례가 오기 전까지 영어를 가림
+    (dvRoleOn(D.opts, it) ? " role-me" : "") + (it.ko ? "" : " no-ko");                   // 역할극: 내 말은 차례가 오기 전까지 영어를 가림
   const who = it.kind === "dlg" || it.kind === "tl" ? it.name : it.kind === "phrase" ? "핵심 표현" : it.kind === "ex" ? "예문 " + it.n :
     it.kind === "drill" ? "말해 보기 · " + it.n + "/" + it.total : it.kind === "mine" ? "내 대화 · " + it.n + "/" + it.total :
     it.kind === "q" ? "오늘의 질문" : it.kind === "wr" ? "내 일기 · " + it.n + "/" + it.total : "썰" + (it.total > 1 ? " · " + it.n + "/" + it.total : "");
@@ -7032,6 +7133,7 @@ D.rd = createReader({
   rate: () => D.opts.rate,
   before: (k, first) => dvBefore(k, first),
   gap: k => dvGap(k),
+  again: (k, r) => dvAgain(k, r),
   onItem: k => dvOnItem(k),
   onEnd: complete => dvOnEnd(complete),
   onChange: () => dvPaintCtl()
@@ -7051,15 +7153,16 @@ async function dvBefore(k, first) {
 }
 /* 역할극: 내 차례면 영어를 가린 채(한국어만) 먼저 기다림 → 그동안 영어로 말해 보고 → 정답(내 말) 재생.
    기다리는 시간은 소리를 듣기 전이라 단어 수로 어림(단어 × 0.38초 ÷ 속도, 1.5~12초) + 0.8초. 일시정지 중엔 시간이 안 감, 다른 문장으로 옮기면 그만둠 */
-async function dvRoleWait(k) {
-  const it = D.pl.items[k], el = dvEl(k), my = Player.getToken();
+async function dvRoleWait(k, round) {
+  const it = D.pl.items[k], el = dvEl(k), my = Player.getToken(), n = dvEchoN(D.opts, it);
+  const label = "내 차례예요 · 영어로 말해 보세요" + (n > 1 ? " · " + (round || 1) + " / " + n : "");
   let left = Math.round(Math.min(12, Math.max(1.5, getScript(it.text).words.length * 0.38 / D.opts.rate)) * 1000) + 800, shown = false;
   el.classList.add("dv-quiz");
   try {
     while (left > 0) {
       if (Player.getToken() !== my || !D.open) return;
       if (Player.isPaused()) { shown = false; await sleep(150); continue; }
-      if (!shown || !D.echo) { dvEcho(left, "내 차례예요 · 영어로 말해 보세요"); shown = true; }
+      if (!shown || !D.echo) { dvEcho(left, label); shown = true; }
       const t0 = performance.now();
       await sleep(100);
       if (!Player.isPaused()) left -= performance.now() - t0;   // 실제로 흐른 시간만큼(타이머가 늦게 와도 맞게)
@@ -7069,16 +7172,58 @@ async function dvRoleWait(k) {
     if (D.echo) { D.echo = false; dvPaintCtl(); }   // 정답이 나올 때 '내 차례예요' 막대를 지움
   }
 }
-/* 문장 사이: 카드·표현이 바뀌면 조금 더 쉬고, '따라 말할 시간'이면 방금 문장 길이만큼 쉼(썰도 2026-10-06부터 한 문장씩이라 문장마다) */
+/* 따라 말할 시간(문장 길이 1.2~12초). 길이를 못 쟀으면 단어 수로 어림 */
+function dvEchoMs(it) {
+  let len = Player.lastLength();
+  if (!len) len = getScript(it.text).words.length * 0.38 / D.opts.rate;
+  return Math.round(Math.min(12, Math.max(1.2, len)) * 1000);
+}
+const dvEchoLabel = (round, n) => "따라 말해 보세요" + (n > 1 ? " · " + round + " / " + n : "");
+/* 따라하기 횟수(2026-11-16): 문장을 r+1번째로 다 들은 뒤. 남은 횟수가 있으면 '따라 말해 보세요 · 1 / 2'만큼 기다리고 true(같은 문장 한 번 더).
+   마지막 횟수의 쉬는 시간은 문장 사이(dvGap) — 단 재생 목록의 마지막 문장은 문장 사이가 없어서 여기서 쉼.
+   역할극 내 말: 남은 횟수가 있으면 다시 영어를 가리고 기다린 뒤(dvRoleWait) 한 번 더.
+   일시정지 중엔 시간이 안 감. 다른 문장으로 옮기거나·닫으면(Player 토큰이 바뀜) 바로 그만둠 */
+async function dvAgain(k, r) {
+  const it = D.pl && D.pl.items[k];
+  if (!it || !D.open) return false;
+  const n = dvEchoN(D.opts, it), my = Player.getToken();
+  if (dvRoleOn(D.opts, it)) {
+    if (r + 1 >= n) return false;
+    await dvRoleWait(k, r + 2);
+    return Player.getToken() === my && D.open;
+  }
+  const last = k === D.pl.items.length - 1;
+  if (!n || (r + 1 >= n && !last)) return false;
+  await dvWait(dvEchoMs(it) + 250, dvEchoLabel(r + 1, n));
+  return r + 1 < n && Player.getToken() === my && D.open;
+}
+/* ms만큼 기다리며 막대(label) 표시. 일시정지 중엔 시간이 안 감, 다른 문장으로 옮기면 그만둠 */
+async function dvWait(ms, label) {
+  const my = Player.getToken();
+  let left = ms, shown = false;
+  try {
+    while (left > 0) {
+      if (Player.getToken() !== my || !D.open) return;
+      if (Player.isPaused()) { shown = false; await sleep(150); continue; }
+      if (!shown || !D.echo) { dvEcho(left, label); shown = true; }
+      const t0 = performance.now();
+      await sleep(100);
+      if (!Player.isPaused()) left -= performance.now() - t0;
+    }
+  } finally {
+    if (D.echo) { D.echo = false; dvPaintCtl(); }
+  }
+}
+/* 문장 사이: 카드·표현이 바뀌면 조금 더 쉬고, '따라 말할 시간'이면 방금 문장 길이만큼 쉼(썰도 2026-10-06부터 한 문장씩이라 문장마다).
+   따라하기 2번 이상이면 마지막 횟수의 쉬는 시간(앞 횟수는 dvAgain) */
 function dvGap(k) {
   const it = D.pl.items[k], nx = D.pl.items[k + 1];
   let ms = nx && nx.block !== it.block ? 900 : nx && nx.fx ? 650 :
     nx && it.kind === "story" && nx.kind === "story" && nx.n > 1 ? 300 : 450;   // 같은 썰의 다음 문장은 조금 짧게(잘라 낸 소리 끝에 쉼이 들어 있음)
-  if (dvEchoOn(D.opts, it)) {
-    let len = Player.lastLength();
-    if (!len) len = getScript(it.text).words.length * 0.38 / D.opts.rate;   // 길이를 못 쟀으면 단어 수로 어림
-    const echo = Math.round(Math.min(12, Math.max(1.2, len)) * 1000);
-    dvEcho(echo);
+  const n = dvEchoOn(D.opts, it) ? dvEchoN(D.opts, it) : 0;
+  if (n) {
+    const echo = dvEchoMs(it);
+    dvEcho(echo, dvEchoLabel(n, n));
     ms = Math.max(ms, echo + 250);
   }
   return ms;
@@ -7109,6 +7254,7 @@ function dvPlayHtml() {
       '<button class="dv-x" type="button" data-dv="close" aria-label="드라이브 모드 나가기">' + ICON_X + '</button>' +
       '<div class="dv-loc"><div class="dv-loc1"></div><div class="dv-loc2"></div></div>' +
     '</header>' +
+    '<div class="dv-capbar">' + dvCapHtml(D.opts) + '</div>' +
     '<div class="dv-stage">' +
       '<div class="dv-prev" aria-hidden="true"></div>' +
       '<div class="dv-scroll"><div class="dv-cur"></div></div>' +
@@ -7343,7 +7489,7 @@ function dvSavePos() {
   if (!D.pl || !D.pl.items[D.idx] || D.done) return;
   const it = D.pl.items[D.idx], bl = D.pl.items[D.idx] && D.pl.blocks[dvBlockIndex(D.idx)];
   D.pos = {
-    scope: D.opts.scope, cats: catsKey(D.opts.cats), key: it.key, block: bl ? bl.key : "",
+    scope: D.opts.scope, cats: catsKey(D.opts.cats), ids: D.opts.scope === "pick" ? idsKey(D.opts.cardIds) : undefined, key: it.key, block: bl ? bl.key : "",
     range: D.pl.diaryScope ? D.opts.diaryRange : D.pl.talkScope ? talkRangeKey(D.opts) : undefined,
     cid: it.ci != null ? CARDS[it.ci].id : undefined, bi: dvBlockIndex(D.idx),
     label: dvBlockTitle(it) + " · " + driveLabels(D.idx)[1],
@@ -7355,7 +7501,7 @@ function dvSavePos() {
 function dvResumeIdx(pl, o, p) {        // o·p를 안 주면 지금 옵션(D.opts)·저장 위치(D.pos) — 오늘 탭 '이어 듣기'는 멈췄을 때의 범위로 계산
   o = o || D.opts;
   p = p || D.pos;
-  if (!p || !pl.items.length || p.scope !== o.scope || (p.scope === "cat" && p.cats !== catsKey(o.cats)) ||
+  if (!p || !pl.items.length || p.scope !== o.scope || (p.scope === "cat" && p.cats !== catsKey(o.cats)) || (p.scope === "pick" && p.ids !== idsKey(o.cardIds)) ||
     (p.scope === "diary" && p.range !== o.diaryRange) || (p.scope === "talk" && p.range !== talkRangeKey(o))) return -1;
   const k = pl.items.findIndex(it => it.key === p.key);
   if (k >= 0) return k;
@@ -7381,11 +7527,10 @@ function dvSetupHtml() {
   const seg = (name, list, cls) => '<div class="seg' + (cls ? " " + cls : "") + '" data-dv-set="' + name + '">' +
     list.map(x => '<button type="button" data-v="' + x[0] + '" aria-pressed="' + (String(o[name]) === String(x[0])) + '">' + x[1] + '</button>').join("") + '</div>';
   const resumeK = dvResumeIdx(pl);
-  let words = 0;
-  pl.items.forEach(it => { words += getScript(it.text).words.length * (dvEchoOn(o, it) || dvRoleOn(o, it) ? 2 : 1); });
+  const words = dvWords(o, pl.items);
   const mins = Math.max(1, Math.round((words * 0.4 / o.rate + pl.items.length * 0.6) / 60));
   const empty = talkScope ? (!talks.items.length ? "저장한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 붙여넣어 보세요" :
-      o.talkRange === "fav" ? "즐겨찾기한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 ☆을 눌러 주세요" : "들을 대화문을 하나 골라 주세요") : o.scope === "cat" && !o.cats.length ? "카테고리를 하나 이상 골라 주세요" :
+      o.talkRange === "fav" ? "즐겨찾기한 대화문이 없어요 · 글쓰기 탭 '내 대화문'에서 ☆을 눌러 주세요" : "들을 대화문을 하나 골라 주세요") : o.scope === "cat" && !o.cats.length ? "카테고리를 하나 이상 골라 주세요" : o.scope === "pick" && !o.cardIds.length ? "카드를 하나 이상 골라 주세요" :
     exprScope && driveExprs(o).length ? (o.xParts.length === 1 && o.xParts[0] === "mine" ? "연습장에 저장한 내 대화가 없어요 · 표현 상세 '연습장'에서 저장해 보세요" : "고른 내용이 있는 표현이 없어요") :
     o.scope === "learning" ? "학습 중인 표현이 없어요 · 표현 탭에서 '학습하기'를 시작해 보세요" :
     o.scope === "due" ? "오늘 복습할 표현이 없어요" :
@@ -7401,6 +7546,7 @@ function dvSetupHtml() {
       '<div class="set-group"><span class="set-label">범위</span><div class="dv-scope">' +
         opt("all", "카드 " + CARDS.length + "장") +
         opt("cat", o.scope === "cat" && o.cats.length ? o.cats.length + "개 고름" : "골라서 듣기") +
+        opt("pick", o.cardIds.length ? o.cardIds.length + "장 고름" : "번호로 고르기") +
         opt("learning", nLearn + "개") +
         opt("due", nDue + "개") +
         opt("diary", nDiary + "편") +
@@ -7414,6 +7560,7 @@ function dvSetupHtml() {
       (o.scope === "cat" ? '<div class="dv-cats">' + cats.map(n =>
         '<button class="dv-cat" type="button" data-dv-cat="' + esc(n) + '" aria-pressed="' + o.cats.includes(n) + '">' +
           (CATEGORY_EMOJI[n] || "") + " " + esc(n) + " " + CARDS.filter(c => c.category === n).length + '</button>').join("") + '</div>' : "") +
+      (o.scope === "pick" ? dvPickHtml(o, cats) : "") +
       '</div>' +
       (diaryScope || talkScope ? "" : exprScope ?
       '<div class="set-group"><span class="set-label">들을 것 (여러 개 선택)</span>' +
@@ -7440,12 +7587,19 @@ function dvSetupHtml() {
           me: "AI 말은 듣기만 하고, 내 말이 끝난 뒤에만 그 길이만큼 기다려요. 그동안 따라 말해 보세요.",
           role: "AI 말을 듣고, 내 차례에는 영어를 가린 채(한국어만 보여요) 먼저 기다려요. 그동안 영어로 말해 본 뒤 정답(내 말)이 나와요."
         })[o.talkEcho] + '</p>' +
+        (o.talkEcho !== "none" ? '<div class="seg dv-echo-n" data-dv-set="echoTimes">' + ECHO_TIMES.filter(n => n).map(n =>
+          '<button type="button" data-v="' + n + '" aria-pressed="' + (Math.max(1, o.echoTimes) === n) + '">' + n + '번</button>').join("") + '</div>' +
+          '<p class="note">' + (o.talkEcho === "role" ? "내 차례(기다림 → 내 말)를 " : "듣기 → 따라 말할 시간을 ") + Math.max(1, o.echoTimes) + "번 되풀이해요. (카드 범위의 따라하기 횟수와 같은 설정)</p>" : "") +
       '</div>' :
-      '<div class="set-group"><span class="set-label">따라 말할 시간</span>' +
-        seg("shadow", [["false", "없음"], ["true", "문장 길이만큼 쉬기"]]) +
-        '<p class="note">' + (o.shadow ? "한 문장이 끝나면 그 문장 길이만큼 조용히 기다려요. 그동안 소리 내어 따라 말해 보세요. (썰은 길어서 쉬지 않고 넘어가요)" : "쉬지 않고 이어서 들려줘요.") + '</p>' +
+      '<div class="set-group"><span class="set-label">따라하기 횟수</span>' +
+        seg("echoTimes", ECHO_TIMES.map(n => [n, n ? n + "번" : "없음"]), "dv-echo5") +
+        '<p class="note">' + (!o.echoTimes ? "쉬지 않고 이어서 들려줘요." :
+          o.echoTimes === 1 ? "한 문장이 끝나면 그 문장 길이만큼 조용히 기다려요. 그동안 소리 내어 따라 말해 보세요." :
+          "한 문장을 듣고 그 길이만큼 따라 말하기를 " + o.echoTimes + "번 되풀이한 뒤 다음 문장으로 넘어가요.") + '</p>' +
       '</div>') +
       '<div class="set-group"><span class="set-label">속도</span>' + seg("rate", [["0.8", "0.8x"], ["1", "1.0x"]]) + '</div>' +
+      '<div class="set-group"><span class="set-label">자막</span>' + dvCapHtml(o) +
+        '<p class="note">재생 화면 위쪽에서도 언제든 바꿀 수 있어요.</p></div>' +
       '<div class="set-group"><span class="set-label">미리 받아두기</span><div id="dvPre"></div></div>' +
     '</div>' +
     '<footer class="dv-sfoot">' +
@@ -7456,6 +7610,23 @@ function dvSetupHtml() {
         '<button class="btn main" type="button" data-dv="start"' + (pl.items.length ? "" : " disabled") + '><span>시작</span></button>') +
       '</div>' +
     '</footer>';
+}
+/* 카드 선택: 번호 글 칸(범위·쉼표) + 카테고리별 카드 목록(탭해서 고르기). 둘은 같은 cardIds — 목록을 누르면 글 칸이, 글 칸을 [적용]하면(또는 칸을 떠나면) 목록이 바뀜 */
+function dvPickHtml(o, cats) {
+  const sel = new Set(o.cardIds);
+  return '<div class="dv-pick">' +
+      '<div class="dv-ids"><input class="field dv-ids-in" id="dvIds" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" ' +
+        'aria-label="카드 번호 (범위나 쉼표)" placeholder="예: 12-20 또는 1, 5, 7" value="' + esc(cardIdsText(o.cardIds)) + '">' +
+        '<button class="btn" type="button" data-dv="ids-apply">적용</button></div>' +
+      '<p class="note">예: 12-20 또는 1, 5, 7 · 섞어서 1, 5, 12-20도 돼요. 재생은 목록 순서대로예요.</p>' +
+      cats.map(n => {
+        const list = CARDS.filter(c => c.category === n), all = list.every(c => sel.has(c.id));
+        return '<div class="dv-pcat"><div class="dv-pcat-h"><span>' + (CATEGORY_EMOJI[n] || "") + " " + esc(n) + '</span>' +
+            '<button class="dv-pall" type="button" data-dv-pickcat="' + esc(n) + '">' + (all ? "모두 해제" : "모두 고르기") + '</button></div>' +
+          '<div class="dv-cats">' + list.map(c =>
+            '<button class="dv-cat dv-pc" type="button" data-dv-card="' + c.id + '" aria-pressed="' + sel.has(c.id) + '"><b>' + c.id + '</b> ' + esc(c.title) + '</button>').join("") + '</div></div>';
+      }).join("") +
+    '</div>';
 }
 function dvRenderSetup() {
   const body = dvSetupEl.querySelector(".dv-sbody");
@@ -7575,6 +7746,7 @@ function dvScreen(name) {
   const q = s => dvPlayEl.querySelector(s);
   D.ui = { prev: q(".dv-prev"), cur: q(".dv-cur"), next: q(".dv-next"), scroll: q(".dv-scroll"),
     loc1: q(".dv-loc1"), loc2: q(".dv-loc2"), note: q(".dv-note"), toggle: q('[data-dv="toggle"]') };
+  dvCapPaint();
   q(".dv-block-label").textContent = D.pl.talkScope ? "다음 대화문" : D.pl.diaryScope ? "다음 일기" : D.pl.exprScope ? "다음 표현" : "다음 카드";
   dvMediaHandlers(true);
   dvLock(true);
@@ -7673,6 +7845,7 @@ window.addEventListener("popstate", () => {
 function onDriveClick(e) {
   const t = e.target;
   let el;
+  if ((el = t.closest("[data-dv-cap]"))) { buzz(); dvCapSet(el.dataset.dvCap); return; }   // 자막: 재생 화면을 다시 그리지 않고 클래스만
   if ((el = t.closest("[data-dv]"))) {
     if (el.disabled) return;
     const a = el.dataset.dv;
@@ -7685,6 +7858,7 @@ function onDriveClick(e) {
     else if (a === "prev") dvStep(-1);
     else if (a === "next") dvStep(1);
     else if (a === "block") dvNextBlock();
+    else if (a === "ids-apply") dvApplyIds();
     else if (a === "pre-count") dvPreCount();
     else if (a === "pre-run") dvPreRun();
     else if (a === "pre-stop") { D.pre.cancel = true; dvPaintPre(); }
@@ -7699,6 +7873,12 @@ function onDriveClick(e) {
   } else if ((el = t.closest("[data-dv-cat]"))) {
     const n = el.dataset.dvCat;
     o.cats = o.cats.includes(n) ? o.cats.filter(x => x !== n) : o.cats.concat([n]);
+  } else if ((el = t.closest("[data-dv-card]"))) {
+    const id = +el.dataset.dvCard;
+    o.cardIds = o.cardIds.includes(id) ? o.cardIds.filter(x => x !== id) : parseCardIds(o.cardIds.concat([id]).join(","));
+  } else if ((el = t.closest("[data-dv-pickcat]"))) {
+    const ids = CARDS.filter(c => c.category === el.dataset.dvPickcat).map(c => c.id);
+    o.cardIds = ids.every(id => o.cardIds.includes(id)) ? o.cardIds.filter(x => !ids.includes(x)) : parseCardIds(o.cardIds.concat(ids).join(","));
   } else if ((el = t.closest("[data-dv-talk]"))) {
     o.talkId = el.dataset.dvTalk;
   } else if ((el = t.closest("[data-dv-cbx]"))) {
@@ -7707,7 +7887,8 @@ function onDriveClick(e) {
     xPartsToggle(o, el.dataset.dvXp);
   } else if ((el = t.closest("[data-dv-set] button"))) {
     const name = el.parentNode.dataset.dvSet, v = el.dataset.v;
-    o[name] = name === "rate" ? parseFloat(v) : name === "shadow" ? v === "true" : v;
+    o[name] = name === "rate" ? parseFloat(v) : name === "echoTimes" ? (ECHO_TIMES.includes(+v) ? +v : 0) : v;
+    if (name === "echoTimes") o.shadow = o.echoTimes > 0;   // 예전 코드·저장과 같이(shadow = 따라하기 있음)
     if (name === "diaryRange") { diary.listenRange = v; saveDiary(); }   // 글쓰기 탭 '듣기용' 범위와 같이
     if (name === "talkRange" && v === "one" && !talks.items.some(x => x.id === o.talkId) && talks.items[0]) o.talkId = talks.items[0].id;   // 하나만: 처음엔 최신 대화문
   } else return;
@@ -7718,6 +7899,20 @@ function onDriveClick(e) {
 }
 driveEl.addEventListener("click", onDriveClick);
 dvSetupEl.addEventListener("click", onDriveClick);
+/* 카드 선택 글 칸: [적용] · 칸을 떠날 때(change) · 완료(Enter) → 번호를 읽어 목록에 반영. 바뀐 게 없으면 다시 그리지 않음 */
+function dvApplyIds() {
+  const inp = document.getElementById("dvIds");
+  if (!inp || D.opts.scope !== "pick") return;
+  const ids = parseCardIds(inp.value);
+  if (inp.value.trim() && !ids.length) toast("카드 번호를 찾지 못했어요 · 예: 12-20 또는 1, 5, 7");
+  if (idsKey(ids) === idsKey(D.opts.cardIds)) { inp.value = cardIdsText(ids); return; }
+  D.opts.cardIds = ids;
+  saveDrive();
+  if (D.pre.state !== "running") D.pre = { state: "idle" };
+  dvRenderSetup();
+}
+dvSetupEl.addEventListener("change", e => { if (e.target.id === "dvIds") dvApplyIds(); });
+dvSetupEl.addEventListener("keydown", e => { if (e.target.id === "dvIds" && e.key === "Enter") { e.preventDefault(); e.target.blur(); dvApplyIds(); } });
 
 /* 화면이 꺼지거나 다른 앱으로 가면: ElevenLabs 음성은 계속 재생(잠금화면에서도 들을 수 있게),
    내장 음성은 백그라운드에서 끊기므로 그 문장에서 멈춰 기다림. 돌아오면 화면 꺼짐 방지를 다시 켬 */
