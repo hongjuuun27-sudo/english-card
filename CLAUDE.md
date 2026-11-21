@@ -7,7 +7,7 @@
 - `data/drills.js` — 직접 말해 보기(핵심 표현마다 10문장)
 - `data/questions.js` — 글쓰기 질문
 - `audio/` — 미리 만든 음성(`{id}.mp3`)과 `manifest.json`(단어 시간)
-- `sw.js` — 서비스워커. 새 데이터 파일을 추가하면 `CORE` 목록과 `CACHE` 숫자를 같이 고칠 것(지금 `english-card-v29`)
+- `sw.js` — 서비스워커. 새 데이터 파일을 추가하면 `CORE` 목록과 `CACHE` 숫자를 같이 고칠 것(지금 `english-card-v30`)
 
 ## 카드 만들기 — 필수 항목 체크리스트
 
@@ -60,7 +60,7 @@
 - 드라이브 모드에서 새 카드가 대화 → 표현 → 예문 → 썰 순서로 나오는지, `Prebuilt.has()`로 음성이 잡히는지 확인
   - 범위 '카드 선택'(`scope: "pick"`, `cardIds`)에 새 카드 번호(예: `81-83`)만 넣으면 그 카드만 재생됨. 재생 화면 자막은 `caption`(ko·both·en)
   - 듣기 방식 `style`: `flow` 이어서 듣기 / `echo` 따라하기(듣기 → 그 길이만큼 쉼) / `first` 먼저 말하기(한글 → 말할 시간 → 영어). 횟수 `echoTimes`(1·2·3·5, echo·first만). `shadow` = `style !== "flow"`. 옛 저장(`style` 없음)은 `echoTimes > 0`이면 echo, 아니면 flow(`dvStyleFix`)
-  - 먼저 말하기의 말할 시간 = 영어 음성 실제 길이 ÷ 속도(`Player.clipDuration` — 미리 만든 음성·저장된 음성, 없으면 단어 수 ÷ 2.5 ÷ 속도, 최소 1.5초, 위 캡 없음). 한글 단서는 폰에 한국어 음성(`ko-KR`, 폰 기본 우선)이 있으면 그것으로 한 번 읽음(말할 시간에 안 넣음). 한국어 없는 문장은 영어만. 문장마다 `window.__dvFirstLog`에 `{ text, clipSec, gapMs, estimated }`
+  - 먼저 말하기의 말할 시간 = 영어 음성 실제 길이 ÷ 속도(`Player.clipDuration` — 미리 만든 음성·저장된 음성, 없으면 단어 수 ÷ 2.5 ÷ 속도, 최소 1.5초, 위 캡 없음). 한국어 음성은 없음(v30에서 폰 ko-KR 읽기 삭제, 영어 목소리에도 한글 안 넣음). 말할 시간(`.dv-quiz`)엔 자막 설정과 관계없이 한글만·영어 가림, 영어가 나오면 `.dv-quiz`를 벗겨 자막 설정(ko·both·en)대로. 갭이 끝나면 카운트다운(`.dv-echo`)을 `D.echo`와 관계없이 지움(`dvEchoOff`), 효과음 중 문장을 옮기면 옛 문장의 기다림은 시작 안 함. 횟수만큼 (한글만 기다림 → 영어) 반복. 다음 줄 미리보기(`.first-q`)는 영어 가림. 한국어 없는 문장은 영어만. 문장마다 `window.__dvFirstLog`에 `{ text, clipSec, gapMs, estimated }`
   - 내 대화문 역할극(`talkEcho: "role"`)은 따로(`dvRoleWait`, 단어 수 어림)
 
 ## 작업 방식

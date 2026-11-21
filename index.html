@@ -1314,7 +1314,7 @@
   .st-tzen{ margin:0; font-size:18px; line-height:1.45; font-weight:600; color:var(--text); }
   .st-tzko{ margin:4px 0 0; font-size:14px; line-height:1.5; color:var(--muted); }
   .dv-line.dv-quiz .dv-en{ visibility:hidden; }
-  .dv-cur .dv-line.dv-quiz .dv-ko{ font-size:21px; line-height:1.45; color:var(--text); }   /* 기다리는 동안은 한국어가 문제라 크게 */
+  .dv-cur .dv-line.dv-quiz .dv-ko{ display:block; font-size:21px; line-height:1.45; color:var(--text); }   /* 기다리는 동안은 한국어가 문제라 크게(자막 '영어만'이어도 보임) */
   /* 먼저 말하기(2026-11-21, .first-q): 역할극과 같이 다음 줄 미리보기도 영어 대신 한국어(정답이 미리 안 보이게) */
   .dv-next .dv-line.role-me .dv-en, .dv-next .dv-line.first-q .dv-en{ display:none; }
   .dv-next .dv-line.role-me .dv-ko, .dv-next .dv-line.first-q .dv-ko{ display:block; }
@@ -1328,6 +1328,9 @@
   .cap-ko .dv-cur .dv-line:not(.no-ko) .dv-ko{ margin-top:0; font-size:25px; line-height:1.45; font-weight:600; color:var(--text); }
   .cap-en .dv-line:not(.dv-quiz) .dv-ko{ display:none; }
   .cap-en .dv-next .dv-line.role-me .dv-ko, .cap-en .dv-next .dv-line.first-q .dv-ko{ display:block; }
+  /* 먼저 말하기 + 영어만(v30): 기다리는 동안 가린 영어 자리를 비워 두지 않음(영어가 나오면 한국어 자리를 영어가 바로 채움) */
+  .cap-en .dv-cur .dv-line.first-q.dv-quiz .dv-en{ display:none; }
+  .cap-en .dv-cur .dv-line.first-q.dv-quiz .dv-ko{ margin-top:0; }
   .dv-echo4 button{ font-size:13.5px; padding:0 4px; }
   .dv-echo5 button, .dv-echo-n button{ padding:0 4px; }
   .dv-echo-n{ margin-top:10px; }
@@ -2662,10 +2665,10 @@ const Player = (() => {
             if (!deviceVoice) pickVoice();
             parts.forEach((p, idx) => {
               const u = new SpeechSynthesisUtterance(p.t);
-              u.lang = o.lang || "en-US";
-              if (o.voice || deviceVoice) u.voice = o.voice || deviceVoice;
+              u.lang = "en-US";
+              if (deviceVoice) u.voice = deviceVoice;
               u.rate = rate;
-              u.pitch = o.lang ? 1 : who === "me" ? 0.92 : 1.08;
+              u.pitch = who === "me" ? 0.92 : 1.08;
               if (o.track && o.sc) {
                 u.onboundary = e => {
                   if (my !== gen || (e.name && e.name !== "word")) return;
@@ -2673,12 +2676,12 @@ const Player = (() => {
                 };
               }
               if (idx === parts.length - 1) {
-                u.onend = () => { if (my === gen) { if (!o.lang) lastLen = (Date.now() - t0) / 1000; ctl.finish(); } };
+                u.onend = () => { if (my === gen) { lastLen = (Date.now() - t0) / 1000; ctl.finish(); } };
                 u.onerror = () => { if (my === gen) ctl.finish(); };
               }
               speechSynthesis.speak(u);
             });
-            timer = setTimeout(() => { if (my === gen) ctl.finish(); }, 4000 + text.length * (o.lang ? 200 : 110) / rate);   // 일부 안드로이드에서 onend가 안 오는 경우 대비
+            timer = setTimeout(() => { if (my === gen) ctl.finish(); }, 4000 + text.length * 110 / rate);   // 일부 안드로이드에서 onend가 안 오는 경우 대비
           } catch (e) { ctl.finish(); }
         }
       };
@@ -2998,24 +3001,8 @@ const Player = (() => {
     if (d) return { sec: d / rate, estimated: false };
     return times ? { sec: (times[n - 1].e + 0.15) / rate, estimated: false } : est;
   }
-  /* 폰 한국어 음성(ko-KR) — 드라이브 '먼저 말하기'의 한글 단서만. 영어 ElevenLabs 목소리에는 한국어를 넣지 않음.
-     폰 기본(default) → 폰 안에 있는 것(localService) → 아무 한국어 순. 없으면 null */
-  function koVoice() {
-    try {
-      const vs = speechSynthesis.getVoices().filter(v => /^ko/i.test(v.lang));
-      return vs.find(v => v.default) || vs.find(v => v.localService) || vs[0] || null;
-    } catch (e) { return null; }
-  }
-  /* 한국어를 한 번 읽음(일시정지·정지는 영어 내장 음성과 같이 — 이어 듣기면 그 문장 처음부터). 한국어 음성이 없으면 false */
-  async function speakKo(text) {
-    const v = koVoice();
-    if (!v || !String(text || "").trim()) return false;
-    await speakDevice(String(text), "them", 1, { lang: v.lang || "ko-KR", voice: v });
-    return true;
-  }
-
   return { play, enqueue, stop, pause, resume, setRate, seekWord, isPaused, isPlaying, getToken, onChange,
-    onInterrupt, current, lastLength: () => lastLen, isCached, fetchClip, warmClip, clipDuration, koVoice, speakKo };
+    onInterrupt, current, lastLength: () => lastLen, isCached, fetchClip, warmClip, clipDuration };
 })();
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -7288,8 +7275,7 @@ setInterval(() => {
    상황 카드 위쪽 [드라이브] → 시작 화면(옵션) → 재생 화면. 새 재생 로직은 없고 인터랙티브 스크립트의 createReader 하나로 재생:
    재생 목록(D.pl.items)의 문장마다 .sc 요소를 필요할 때 만들어(dvEl) items로 넘기고,
    효과음은 before(), 따라 말할 시간은 gap(), 지금 위치(화면·저장·잠금화면)는 onItem()에서 처리.
-   소리는 모두 Player → AudioCache(다른 화면에서 들은 문장은 그대로 재사용). 한국어는 읽지 않음
-   — 단 듣기 방식 '먼저 말하기'의 한글 단서만 폰 한국어 음성(있을 때)으로 읽음(dvFirstWait).
+   소리는 모두 Player → AudioCache(다른 화면에서 들은 문장은 그대로 재사용). 한국어는 읽지 않음(먼저 말하기의 한글 단서도 화면에만).
    재생 순서
    - 카드 범위: 카드마다 [새 카드 효과음] 대화 전체 → 핵심 표현마다 [표현 효과음] 표현 읽기 → 예문 5개 → 썰
      (내용: 대화문만 = 대화만 / 예문까지 = 대화 → 표현마다 표현 읽기 + 예문 / 썰까지 = + 썰 / 예문만·썰만 = 대화 없이 표현 읽기 + 예문 또는 썰)
@@ -7414,15 +7400,11 @@ function dvCapSet(c) {
   dvCapPaint();
 }
 const dvEchoN = (o, it) => dvRoleOn(o, it) || dvFirstOn(o, it) || (it.kind === "tl" && dvEchoOn(o, it)) ? Math.max(1, o.echoTimes) : dvEchoOn(o, it) ? o.echoTimes : 0;
-/* 재생 시간 어림용 단어 수: 따라 말하기가 붙는 문장은 (듣기 + 쉬기) × 횟수. 먼저 말하기는 (말할 시간 + 영어) × 횟수에
-   한국어 음성이 있으면 한국어 읽기(한 글자 ≈ 0.14초 ≈ 0.35단어)를 한 번 더함 */
-const dvWords = (o, items) => {
-  const ko = o.style === "first" && !!Player.koVoice();
-  return items.reduce((n, it) => {
-    const e = dvEchoN(o, it);
-    return n + getScript(it.text).words.length * (e ? 2 * e : 1) + (ko && dvFirstOn(o, it) ? it.ko.length * 0.35 : 0);
-  }, 0);
-};
+/* 재생 시간 어림용 단어 수: 따라 말하기가 붙는 문장은 (듣기 + 쉬기) × 횟수, 먼저 말하기는 (말할 시간 + 영어) × 횟수 */
+const dvWords = (o, items) => items.reduce((n, it) => {
+  const e = dvEchoN(o, it);
+  return n + getScript(it.text).words.length * (e ? 2 * e : 1);
+}, 0);
 
 /* 카드 선택(2026-11-16, scope pick): 카드 번호(id) 목록 cardIds. 글 칸은 "12-20"(– ~도 됨) · "1, 5, 7" · 섞어서. 없는 번호·이상한 글은 무시.
    재생 순서는 입력 순서가 아니라 CARDS 순서(목록·챕터 순서) */
@@ -7634,19 +7616,20 @@ D.rd = createReader({
    백그라운드에서 내장 음성으로 읽어야 하면(키 없음·인터넷 끊김) 소리가 안 나고 넘어가 버리므로 그 문장에서 멈춰 기다림 */
 async function dvBefore(k, first) {
   if (document.visibilityState === "hidden" && !dvMp3OK(k)) { dvInterrupt(); return; }
-  const it = D.pl.items[k];
+  const it = D.pl.items[k], my = Player.getToken();
   if (it.fx && !(first && D.lastAct === "prev")) {   // [이전 문장]으로 돌아온 경우는 효과음 생략
     const ms = await dvChime(it.fx);
     if (ms) await sleep(ms);
+    if (Player.getToken() !== my) return;           // 효과음 중에 다른 문장으로 옮김 → 옛 문장의 기다림을 새 토큰으로 시작하지 않음(막대가 둘이 되어 영어 위에 남던 문제, v30)
   }
   dvChimeOff();                                    // 음성이 나오기 전에 Web Audio를 끔(효과음 중간에 넘긴 경우도)
   if (dvRoleOn(D.opts, it)) await dvRoleWait(k);
   else if (dvFirstOn(D.opts, it)) await dvFirstWait(k, 1);
 }
-/* 먼저 말하기(2026-11-21): 영어를 가리고 한국어를 크게 → (폰 한국어 음성이 있으면, 첫 번째만) 한국어 읽기 → 영어 음성 길이만큼
-   '영어로 말해 보세요' 카운트다운 → (돌아가서) 영어 재생. 길이는 재생 전에 잼(Player.clipDuration — 실제 소리 길이 ÷ 속도, 위 캡 없음,
-   못 찾으면 단어 수 ÷ 2.5 ÷ 속도). 너무 짧으면 말할 틈이 없어서 최소 1.5초. 한국어 읽기 시간은 말할 시간에 안 넣음.
-   일시정지 중엔 시간이 안 감(한국어 음성도 멈춤), 다른 문장으로 옮기면 그만둠. 기록: window.__dvFirstLog */
+/* 먼저 말하기(2026-11-21, v30): 영어를 가리고 한국어만 크게(.dv-quiz — 자막 설정과 관계없이) → 영어 음성 길이만큼
+   '영어로 말해 보세요' 카운트다운 → (돌아가서) .dv-quiz를 벗기고 영어 재생(이때부터 자막 설정대로). 한국어 음성은 없음.
+   길이는 재생 전에 잼(Player.clipDuration — 실제 소리 길이 ÷ 속도, 위 캡 없음, 못 찾으면 단어 수 ÷ 2.5 ÷ 속도).
+   너무 짧으면 말할 틈이 없어서 최소 1.5초. 일시정지 중엔 시간이 안 감, 다른 문장으로 옮기면 그만둠. 기록: window.__dvFirstLog */
 async function dvFirstWait(k, round) {
   const it = D.pl.items[k], el = dvEl(k), my = Player.getToken(), n = dvEchoN(D.opts, it);
   const alive = () => Player.getToken() === my && D.open;
@@ -7655,8 +7638,6 @@ async function dvFirstWait(k, round) {
     from: audio ? it.a0 : 0, to: audio ? it.a1 : undefined, fetch: dvElevenOK() });
   el.classList.add("dv-quiz");
   try {
-    if (round === 1 && document.visibilityState !== "hidden") await Player.speakKo(it.ko);   // 화면이 꺼져 있으면 폰 음성이 안 나서 건너뜀
-    if (!alive()) return;
     const d = await durP;
     if (!alive()) return;
     const gap = Math.round(Math.max(1.5, d.sec) * 1000);
@@ -7664,6 +7645,7 @@ async function dvFirstWait(k, round) {
     if (alive()) (window.__dvFirstLog = window.__dvFirstLog || []).push({ text: it.text, clipSec: Math.round(d.sec * 100) / 100, gapMs: Math.round(waited), estimated: d.estimated });
   } finally {
     el.classList.remove("dv-quiz");
+    if (!D.waitBy) dvEchoOff();                    // 영어가 나오기 전에 카운트다운을 지움(새 기다림이 이미 시작됐으면 그대로)
   }
 }
 /* 역할극: 내 차례면 영어를 가린 채(한국어만) 먼저 기다림 → 그동안 영어로 말해 보고 → 정답(내 말) 재생.
@@ -7672,10 +7654,11 @@ async function dvRoleWait(k, round) {
   const it = D.pl.items[k], el = dvEl(k), my = Player.getToken(), n = dvEchoN(D.opts, it);
   const label = "내 차례예요 · 영어로 말해 보세요" + (n > 1 ? " · " + (round || 1) + " / " + n : "");
   let left = Math.round(Math.min(12, Math.max(1.5, getScript(it.text).words.length * 0.38 / D.opts.rate)) * 1000) + 800, shown = false;
+  const me = D.waitBy = {};
   el.classList.add("dv-quiz");
   try {
     while (left > 0) {
-      if (Player.getToken() !== my || !D.open) return;
+      if (Player.getToken() !== my || !D.open || D.waitBy !== me) return;
       if (Player.isPaused()) { shown = false; await sleep(150); continue; }
       if (!shown || !D.echo) { dvEcho(left, label); shown = true; }
       const t0 = performance.now();
@@ -7684,7 +7667,7 @@ async function dvRoleWait(k, round) {
     }
   } finally {
     el.classList.remove("dv-quiz");
-    if (D.echo) { D.echo = false; dvPaintCtl(); }   // 정답이 나올 때 '내 차례예요' 막대를 지움
+    if (D.waitBy === me) { D.waitBy = null; dvEchoOff(); }   // 정답이 나올 때 '내 차례예요' 막대를 지움
   }
 }
 /* 따라 말할 시간(문장 길이 1.2~12초). 길이를 못 쟀으면 단어 수로 어림 */
@@ -7702,7 +7685,7 @@ async function dvAgain(k, r) {
   const it = D.pl && D.pl.items[k];
   if (!it || !D.open) return false;
   const n = dvEchoN(D.opts, it), my = Player.getToken();
-  if (dvFirstOn(D.opts, it)) {                     // 먼저 말하기: 남은 횟수가 있으면 다시 가리고 말할 시간(한국어는 안 읽음) → 영어 한 번 더
+  if (dvFirstOn(D.opts, it)) {                     // 먼저 말하기: 남은 횟수가 있으면 다시 가리고(한글만) 말할 시간 → 영어 한 번 더
     if (r + 1 >= n) return false;
     await dvFirstWait(k, r + 2);
     return Player.getToken() === my && D.open;
@@ -7717,13 +7700,14 @@ async function dvAgain(k, r) {
   await dvWait(dvEchoMs(it) + 250, dvEchoLabel(r + 1, n));
   return r + 1 < n && Player.getToken() === my && D.open;
 }
-/* ms만큼 기다리며 막대(label)·남은 초 표시 → 실제로 기다린 ms(일시정지 뺌). 일시정지 중엔 시간이 안 감(이어 들으면 막대도 그 자리부터), 다른 문장으로 옮기면 그만둠 */
+/* ms만큼 기다리며 막대(label)·남은 초 표시 → 실제로 기다린 ms(일시정지 뺌). 일시정지 중엔 시간이 안 감(이어 들으면 막대도 그 자리부터), 다른 문장으로 옮기면 그만둠.
+   끝나면 D.echo와 관계없이 막대를 지움(dvEchoOff — 그 사이 플래그만 내려가 막대가 영어 위에 남던 문제, v30). D.waitBy = 지금 막대를 그리는 기다림(늦게 끝난 옛 기다림이 새 막대를 지우지 않게) */
 async function dvWait(ms, label) {
-  const my = Player.getToken();
+  const my = Player.getToken(), me = D.waitBy = {};
   let left = ms, shown = false;
   try {
     while (left > 0) {
-      if (Player.getToken() !== my || !D.open) break;
+      if (Player.getToken() !== my || !D.open || D.waitBy !== me) break;
       if (Player.isPaused()) { shown = false; await sleep(150); continue; }
       if (!shown || !D.echo) { dvEcho(left, label, ms); shown = true; }
       else dvEchoSec(left);
@@ -7733,7 +7717,7 @@ async function dvWait(ms, label) {
     }
     return ms - Math.max(0, left);
   } finally {
-    if (D.echo) { D.echo = false; dvPaintCtl(); }
+    if (D.waitBy === me) { D.waitBy = null; dvEchoOff(); }
   }
 }
 /* 문장 사이: 카드·표현이 바뀌면 조금 더 쉬고, '따라 말할 시간'이면 방금 문장 길이만큼 쉼(썰도 2026-10-06부터 한 문장씩이라 문장마다).
@@ -7824,6 +7808,13 @@ function dvEcho(ms, label, total) {
   D.ui.note.innerHTML = '<div class="dv-echo"><span>' + (label || "따라 말해 보세요") + '</span>' +
     '<div class="dv-cd"><i><b style="animation-duration:' + Math.round(all) + 'ms;animation-delay:-' + Math.round(all - ms) + 'ms"></b></i>' +
     (total ? '<em aria-hidden="true">' + Math.ceil(ms / 1000) + '</em>' : "") + '</div></div>';
+}
+/* 막대 지우기: 플래그와 관계없이 노트에서 .dv-echo를 걷어 내고 상태 글로 */
+function dvEchoOff() {
+  D.echo = false;
+  const n = D.ui && D.ui.note;
+  if (n && n.querySelector(".dv-echo")) n.textContent = "";
+  dvPaintCtl();
 }
 function dvEchoSec(ms) {
   const e = D.ui && D.ui.note.querySelector(".dv-echo em");
@@ -8130,7 +8121,7 @@ function dvSetupHtml() {
           o.style === "echo" ? "영어를 듣고 그 길이만큼 조용히 기다려요. 그동안 소리 내어 따라 말해 보세요." + (o.echoTimes > 1 ? " (듣기 → 따라 말하기)를 " + o.echoTimes + "번 되풀이해요." : "") :
           "한국어를 먼저 보여 주고, 영어 음성 길이만큼 기다려요. 그동안 영어로 먼저 말해 본 뒤 정답 영어가 나와요." +
             (o.echoTimes > 1 ? " (말해 보기 → 정답)을 " + o.echoTimes + "번 되풀이해요." : "") +
-            (Player.koVoice() ? " 한국어는 폰 한국어 음성으로 한 번 읽어 줘요." : " 이 폰에는 한국어 음성이 없어서 한국어는 화면에만 보여요.") +
+            " 기다리는 동안은 자막 설정과 관계없이 한국어만 보이고, 영어가 나오면 자막 설정대로 보여요." +
             (diaryScope ? " 한국어가 없는 일기 문장은 영어만 들려줘요." : "")) + '</p>' +
       '</div>') +
       '<div class="set-group"><span class="set-label">속도</span>' + seg("rate", [["0.8", "0.8x"], ["1", "1.0x"]]) + '</div>' +
