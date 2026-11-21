@@ -7,7 +7,7 @@
 - `data/drills.js` — 직접 말해 보기(핵심 표현마다 10문장)
 - `data/questions.js` — 글쓰기 질문
 - `audio/` — 미리 만든 음성(`{id}.mp3`)과 `manifest.json`(단어 시간)
-- `sw.js` — 서비스워커. 새 데이터 파일을 추가하면 `CORE` 목록과 `CACHE` 숫자를 같이 고칠 것(지금 `english-card-v30`)
+- `sw.js` — 서비스워커. 새 데이터 파일을 추가하면 `CORE` 목록과 `CACHE` 숫자를 같이 고칠 것(지금 `english-card-v31`)
 
 ## 카드 만들기 — 필수 항목 체크리스트
 
@@ -47,6 +47,13 @@
   - 없는 음성만 만들기: `bash -lc 'node --experimental-websocket /workspace/tools/audio-build.js --cards 47,48,...'`(`--dry`로 목록만 볼 수 있음)
   - 검증: `... --verify 1,2,...,80`(id·파일·단어 시간 개수)
 - 문장을 고친 뒤에는 바뀐 문장만 다시 만들고, 어떤 카드에도 안 쓰이는 음성(manifest 항목과 mp3)을 지운 다음 `--verify`를 돌림
+
+## 상황 카드 넘김
+
+- CSS 스냅 없음(`.feed`는 `overflow:hidden`). 넘김은 `FP`(터치·휠·PageUp/Down)가 정하고 `scrollTop`을 움직임
+- 놓을 때 끈 거리 ≥ 피드 높이 28% → 한 장. 또는 빠른 플릭(≥0.7px/ms) + 60px 이상 → 한 장. 그 밖은 제자리. 한 번에 한 장만
+- `.body`가 그 방향으로 더 스크롤되면 본문만 스크롤(`overscroll-behavior-y:contain`). 끝에 닿은 순간부터 거리를 셈. 같은 제스처로 본문을 스크롤하다 끝에 닿았으면 플릭 없이 거리로만
+- 가로 제스처(|dx| > 1.2|dy|)·탭은 넘김 없음. 끄는 중·넘어가는 중엔 활성 카드를 안 바꿈
 
 ## 필사 탭
 
